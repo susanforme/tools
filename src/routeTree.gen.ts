@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as YamlRouteImport } from './routes/yaml'
 import { Route as XmlRouteImport } from './routes/xml'
 import { Route as UuidRouteImport } from './routes/uuid'
+import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as SqlRouteImport } from './routes/sql'
@@ -20,10 +21,15 @@ import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
+import { Route as IpLookupRouteImport } from './routes/ip-lookup'
+import { Route as HttpStatusRouteImport } from './routes/http-status'
+import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
 import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HashRouteImport } from './routes/hash'
 import { Route as CssRouteImport } from './routes/css'
+import { Route as CorsRouteImport } from './routes/cors'
+import { Route as CookieRouteImport } from './routes/cookie'
 import { Route as CipherRouteImport } from './routes/cipher'
 import { Route as Base64RouteImport } from './routes/base64'
 import { Route as IndexRouteImport } from './routes/index'
@@ -41,6 +47,11 @@ const XmlRoute = XmlRouteImport.update({
 const UuidRoute = UuidRouteImport.update({
   id: '/uuid',
   path: '/uuid',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserAgentRoute = UserAgentRouteImport.update({
+  id: '/user-agent',
+  path: '/user-agent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UrlEncodeRoute = UrlEncodeRouteImport.update({
@@ -83,6 +94,21 @@ const JsRoute = JsRouteImport.update({
   path: '/js',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IpLookupRoute = IpLookupRouteImport.update({
+  id: '/ip-lookup',
+  path: '/ip-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HttpStatusRoute = HttpStatusRouteImport.update({
+  id: '/http-status',
+  path: '/http-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HttpRequestRoute = HttpRequestRouteImport.update({
+  id: '/http-request',
+  path: '/http-request',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HtmlRoute = HtmlRouteImport.update({
   id: '/html',
   path: '/html',
@@ -101,6 +127,16 @@ const HashRoute = HashRouteImport.update({
 const CssRoute = CssRouteImport.update({
   id: '/css',
   path: '/css',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CorsRoute = CorsRouteImport.update({
+  id: '/cors',
+  path: '/cors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookieRoute = CookieRouteImport.update({
+  id: '/cookie',
+  path: '/cookie',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CipherRoute = CipherRouteImport.update({
@@ -123,10 +159,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
+  '/cookie': typeof CookieRoute
+  '/cors': typeof CorsRoute
   '/css': typeof CssRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
+  '/http-request': typeof HttpRequestRoute
+  '/http-status': typeof HttpStatusRoute
+  '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
@@ -135,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/sql': typeof SqlRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
+  '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
   '/yaml': typeof YamlRoute
@@ -143,10 +185,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
+  '/cookie': typeof CookieRoute
+  '/cors': typeof CorsRoute
   '/css': typeof CssRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
+  '/http-request': typeof HttpRequestRoute
+  '/http-status': typeof HttpStatusRoute
+  '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
@@ -155,6 +202,7 @@ export interface FileRoutesByTo {
   '/sql': typeof SqlRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
+  '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
   '/yaml': typeof YamlRoute
@@ -164,10 +212,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
+  '/cookie': typeof CookieRoute
+  '/cors': typeof CorsRoute
   '/css': typeof CssRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
+  '/http-request': typeof HttpRequestRoute
+  '/http-status': typeof HttpStatusRoute
+  '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
@@ -176,6 +229,7 @@ export interface FileRoutesById {
   '/sql': typeof SqlRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
+  '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
   '/yaml': typeof YamlRoute
@@ -186,10 +240,15 @@ export interface FileRouteTypes {
     | '/'
     | '/base64'
     | '/cipher'
+    | '/cookie'
+    | '/cors'
     | '/css'
     | '/hash'
     | '/hmac'
     | '/html'
+    | '/http-request'
+    | '/http-status'
+    | '/ip-lookup'
     | '/js'
     | '/json'
     | '/jwt'
@@ -198,6 +257,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/unicode'
     | '/url-encode'
+    | '/user-agent'
     | '/uuid'
     | '/xml'
     | '/yaml'
@@ -206,10 +266,15 @@ export interface FileRouteTypes {
     | '/'
     | '/base64'
     | '/cipher'
+    | '/cookie'
+    | '/cors'
     | '/css'
     | '/hash'
     | '/hmac'
     | '/html'
+    | '/http-request'
+    | '/http-status'
+    | '/ip-lookup'
     | '/js'
     | '/json'
     | '/jwt'
@@ -218,6 +283,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/unicode'
     | '/url-encode'
+    | '/user-agent'
     | '/uuid'
     | '/xml'
     | '/yaml'
@@ -226,10 +292,15 @@ export interface FileRouteTypes {
     | '/'
     | '/base64'
     | '/cipher'
+    | '/cookie'
+    | '/cors'
     | '/css'
     | '/hash'
     | '/hmac'
     | '/html'
+    | '/http-request'
+    | '/http-status'
+    | '/ip-lookup'
     | '/js'
     | '/json'
     | '/jwt'
@@ -238,6 +309,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/unicode'
     | '/url-encode'
+    | '/user-agent'
     | '/uuid'
     | '/xml'
     | '/yaml'
@@ -247,10 +319,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Base64Route: typeof Base64Route
   CipherRoute: typeof CipherRoute
+  CookieRoute: typeof CookieRoute
+  CorsRoute: typeof CorsRoute
   CssRoute: typeof CssRoute
   HashRoute: typeof HashRoute
   HmacRoute: typeof HmacRoute
   HtmlRoute: typeof HtmlRoute
+  HttpRequestRoute: typeof HttpRequestRoute
+  HttpStatusRoute: typeof HttpStatusRoute
+  IpLookupRoute: typeof IpLookupRoute
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
   JwtRoute: typeof JwtRoute
@@ -259,6 +336,7 @@ export interface RootRouteChildren {
   SqlRoute: typeof SqlRoute
   UnicodeRoute: typeof UnicodeRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
+  UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
   XmlRoute: typeof XmlRoute
   YamlRoute: typeof YamlRoute
@@ -285,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/uuid'
       fullPath: '/uuid'
       preLoaderRoute: typeof UuidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user-agent': {
+      id: '/user-agent'
+      path: '/user-agent'
+      fullPath: '/user-agent'
+      preLoaderRoute: typeof UserAgentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/url-encode': {
@@ -343,6 +428,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ip-lookup': {
+      id: '/ip-lookup'
+      path: '/ip-lookup'
+      fullPath: '/ip-lookup'
+      preLoaderRoute: typeof IpLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/http-status': {
+      id: '/http-status'
+      path: '/http-status'
+      fullPath: '/http-status'
+      preLoaderRoute: typeof HttpStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/http-request': {
+      id: '/http-request'
+      path: '/http-request'
+      fullPath: '/http-request'
+      preLoaderRoute: typeof HttpRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/html': {
       id: '/html'
       path: '/html'
@@ -369,6 +475,20 @@ declare module '@tanstack/react-router' {
       path: '/css'
       fullPath: '/css'
       preLoaderRoute: typeof CssRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cors': {
+      id: '/cors'
+      path: '/cors'
+      fullPath: '/cors'
+      preLoaderRoute: typeof CorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookie': {
+      id: '/cookie'
+      path: '/cookie'
+      fullPath: '/cookie'
+      preLoaderRoute: typeof CookieRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cipher': {
@@ -399,10 +519,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Base64Route: Base64Route,
   CipherRoute: CipherRoute,
+  CookieRoute: CookieRoute,
+  CorsRoute: CorsRoute,
   CssRoute: CssRoute,
   HashRoute: HashRoute,
   HmacRoute: HmacRoute,
   HtmlRoute: HtmlRoute,
+  HttpRequestRoute: HttpRequestRoute,
+  HttpStatusRoute: HttpStatusRoute,
+  IpLookupRoute: IpLookupRoute,
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
   JwtRoute: JwtRoute,
@@ -411,6 +536,7 @@ const rootRouteChildren: RootRouteChildren = {
   SqlRoute: SqlRoute,
   UnicodeRoute: UnicodeRoute,
   UrlEncodeRoute: UrlEncodeRoute,
+  UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,
   XmlRoute: XmlRoute,
   YamlRoute: YamlRoute,

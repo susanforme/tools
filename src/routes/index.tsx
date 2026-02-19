@@ -1,31 +1,43 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Card, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
-import { Badge } from '../components/ui/badge'
+import { createFileRoute, Link } from '@tanstack/react-router';
 import {
+  AlignLeft,
+  Binary,
   Braces,
+  Cookie,
+  Database,
+  Dices,
   FileCode,
   FileCode2,
-  Paintbrush,
-  ShieldCheck,
-  Tag,
-  FileText,
-  Database,
   FileStack,
-  Binary,
-  Link as LinkIcon,
-  Globe,
-  AlignLeft,
-  Shuffle,
-  Hash,
-  Lock,
-  KeyRound,
+  FileText,
   Fingerprint,
-  Dices,
+  Globe,
+  Hash,
+  KeyRound,
+  Link as LinkIcon,
+  ListOrdered,
+  Lock,
+  MapPin,
+  MonitorSmartphone,
+  Network,
+  Paintbrush,
   RotateCw,
-} from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+  Send,
+  ShieldAlert,
+  ShieldCheck,
+  Shuffle,
+  Tag,
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Badge } from '../components/ui/badge';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../components/ui/card';
 
-export const Route = createFileRoute('/')({ component: HomePage })
+export const Route = createFileRoute('/')({ component: HomePage });
 
 const formatterTools = [
   {
@@ -33,7 +45,11 @@ const formatterTools = [
     icon: <Braces className="w-8 h-8 text-amber-500" />,
     titleKey: 'home.tools.json.title',
     descKey: 'home.tools.json.desc',
-    tagKeys: ['home.tools.json.tagFormat', 'home.tools.json.tagMinify', 'home.tools.json.tagValidate'],
+    tagKeys: [
+      'home.tools.json.tagFormat',
+      'home.tools.json.tagMinify',
+      'home.tools.json.tagValidate',
+    ],
     gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
     border: 'hover:border-amber-300 dark:hover:border-amber-700',
   },
@@ -51,7 +67,11 @@ const formatterTools = [
     icon: <Paintbrush className="w-8 h-8 text-violet-500" />,
     titleKey: 'home.tools.css.title',
     descKey: 'home.tools.css.desc',
-    tagKeys: ['home.tools.css.tagFormat', 'home.tools.css.tagMinify', 'home.tools.css.tagScss'],
+    tagKeys: [
+      'home.tools.css.tagFormat',
+      'home.tools.css.tagMinify',
+      'home.tools.css.tagScss',
+    ],
     gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
     border: 'hover:border-violet-300 dark:hover:border-violet-700',
   },
@@ -60,7 +80,11 @@ const formatterTools = [
     icon: <FileCode2 className="w-8 h-8 text-yellow-500" />,
     titleKey: 'home.tools.js.title',
     descKey: 'home.tools.js.desc',
-    tagKeys: ['home.tools.js.tagFormat', 'home.tools.js.tagMinify', 'home.tools.js.tagObfuscate'],
+    tagKeys: [
+      'home.tools.js.tagFormat',
+      'home.tools.js.tagMinify',
+      'home.tools.js.tagObfuscate',
+    ],
     gradient: 'hover:bg-yellow-50 dark:hover:bg-yellow-950/20',
     border: 'hover:border-yellow-300 dark:hover:border-yellow-700',
   },
@@ -69,7 +93,11 @@ const formatterTools = [
     icon: <Tag className="w-8 h-8 text-orange-500" />,
     titleKey: 'home.tools.xml.title',
     descKey: 'home.tools.xml.desc',
-    tagKeys: ['home.tools.xml.tagFormat', 'home.tools.xml.tagValidate', 'home.tools.xml.tagMinify'],
+    tagKeys: [
+      'home.tools.xml.tagFormat',
+      'home.tools.xml.tagValidate',
+      'home.tools.xml.tagMinify',
+    ],
     gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
     border: 'hover:border-orange-300 dark:hover:border-orange-700',
   },
@@ -78,7 +106,10 @@ const formatterTools = [
     icon: <FileText className="w-8 h-8 text-teal-500" />,
     titleKey: 'home.tools.markdown.title',
     descKey: 'home.tools.markdown.desc',
-    tagKeys: ['home.tools.markdown.tagBeautify', 'home.tools.markdown.tagPreview'],
+    tagKeys: [
+      'home.tools.markdown.tagBeautify',
+      'home.tools.markdown.tagPreview',
+    ],
     gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
     border: 'hover:border-teal-300 dark:hover:border-teal-700',
   },
@@ -96,11 +127,15 @@ const formatterTools = [
     icon: <FileStack className="w-8 h-8 text-green-500" />,
     titleKey: 'home.tools.yaml.title',
     descKey: 'home.tools.yaml.desc',
-    tagKeys: ['home.tools.yaml.tagFormat', 'home.tools.yaml.tagValidate', 'home.tools.yaml.tagToJson'],
+    tagKeys: [
+      'home.tools.yaml.tagFormat',
+      'home.tools.yaml.tagValidate',
+      'home.tools.yaml.tagToJson',
+    ],
     gradient: 'hover:bg-green-50 dark:hover:bg-green-950/20',
     border: 'hover:border-green-300 dark:hover:border-green-700',
   },
-]
+];
 
 const encodeTools = [
   {
@@ -117,7 +152,11 @@ const encodeTools = [
     icon: <LinkIcon className="w-8 h-8 text-sky-500" />,
     titleKey: 'home.tools.urlEncode.title',
     descKey: 'home.tools.urlEncode.desc',
-    tagKeys: ['home.tools.urlEncode.tagEncode', 'home.tools.urlEncode.tagDecode', 'home.tools.urlEncode.tagParse'],
+    tagKeys: [
+      'home.tools.urlEncode.tagEncode',
+      'home.tools.urlEncode.tagDecode',
+      'home.tools.urlEncode.tagParse',
+    ],
     gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
     border: 'hover:border-sky-300 dark:hover:border-sky-700',
   },
@@ -126,11 +165,15 @@ const encodeTools = [
     icon: <Globe className="w-8 h-8 text-indigo-500" />,
     titleKey: 'home.tools.unicode.title',
     descKey: 'home.tools.unicode.desc',
-    tagKeys: ['home.tools.unicode.tagEscape', 'home.tools.unicode.tagUtf8', 'home.tools.unicode.tagCodepoints'],
+    tagKeys: [
+      'home.tools.unicode.tagEscape',
+      'home.tools.unicode.tagUtf8',
+      'home.tools.unicode.tagCodepoints',
+    ],
     gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
     border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
   },
-]
+];
 
 const cryptoTools = [
   {
@@ -138,7 +181,11 @@ const cryptoTools = [
     icon: <Hash className="w-8 h-8 text-emerald-500" />,
     titleKey: 'home.tools.hash.title',
     descKey: 'home.tools.hash.desc',
-    tagKeys: ['home.tools.hash.tagMd5', 'home.tools.hash.tagSha256', 'home.tools.hash.tagSha512'],
+    tagKeys: [
+      'home.tools.hash.tagMd5',
+      'home.tools.hash.tagSha256',
+      'home.tools.hash.tagSha512',
+    ],
     gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
     border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
   },
@@ -147,7 +194,11 @@ const cryptoTools = [
     icon: <Lock className="w-8 h-8 text-red-500" />,
     titleKey: 'home.tools.cipher.title',
     descKey: 'home.tools.cipher.desc',
-    tagKeys: ['home.tools.cipher.tagAES', 'home.tools.cipher.tagDES', 'home.tools.cipher.tagModes'],
+    tagKeys: [
+      'home.tools.cipher.tagAES',
+      'home.tools.cipher.tagDES',
+      'home.tools.cipher.tagModes',
+    ],
     gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
     border: 'hover:border-red-300 dark:hover:border-red-700',
   },
@@ -187,41 +238,117 @@ const cryptoTools = [
     gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
     border: 'hover:border-lime-300 dark:hover:border-lime-700',
   },
-]
+];
+
+const networkTools = [
+  {
+    to: '/http-request' as const,
+    icon: <Send className="w-8 h-8 text-blue-500" />,
+    titleKey: 'home.tools.httpRequest.title',
+    descKey: 'home.tools.httpRequest.desc',
+    tagKeys: [
+      'home.tools.httpRequest.tagHeaders',
+      'home.tools.httpRequest.tagBody',
+      'home.tools.httpRequest.tagParams',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
+    to: '/cors' as const,
+    icon: <ShieldAlert className="w-8 h-8 text-orange-500" />,
+    titleKey: 'home.tools.cors.title',
+    descKey: 'home.tools.cors.desc',
+    tagKeys: ['home.tools.cors.tagPreflight', 'home.tools.cors.tagHeaders'],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/cookie' as const,
+    icon: <Cookie className="w-8 h-8 text-amber-500" />,
+    titleKey: 'home.tools.cookie.title',
+    descKey: 'home.tools.cookie.desc',
+    tagKeys: ['home.tools.cookie.tagInspect', 'home.tools.cookie.tagParse'],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
+  {
+    to: '/ip-lookup' as const,
+    icon: <MapPin className="w-8 h-8 text-red-500" />,
+    titleKey: 'home.tools.ipLookup.title',
+    descKey: 'home.tools.ipLookup.desc',
+    tagKeys: ['home.tools.ipLookup.tagGeo', 'home.tools.ipLookup.tagExtract'],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+  {
+    to: '/http-status' as const,
+    icon: <ListOrdered className="w-8 h-8 text-teal-500" />,
+    titleKey: 'home.tools.httpStatus.title',
+    descKey: 'home.tools.httpStatus.desc',
+    tagKeys: [
+      'home.tools.httpStatus.tagReference',
+      'home.tools.httpStatus.tagSearch',
+    ],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
+    to: '/user-agent' as const,
+    icon: <MonitorSmartphone className="w-8 h-8 text-violet-500" />,
+    titleKey: 'home.tools.userAgent.title',
+    descKey: 'home.tools.userAgent.desc',
+    tagKeys: ['home.tools.userAgent.tagBrowser', 'home.tools.userAgent.tagOS'],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+];
 
 type ToolConfig = {
-  to: string
-  icon: React.ReactNode
-  titleKey: string
-  descKey: string
-  tagKeys: string[]
-  gradient: string
-  border: string
-}
+  to: string;
+  icon: React.ReactNode;
+  titleKey: string;
+  descKey: string;
+  tagKeys: string[];
+  gradient: string;
+  border: string;
+};
 
-function ToolCard({ tool, t }: { tool: ToolConfig; t: (key: string) => string }) {
+function ToolCard({
+  tool,
+  t,
+}: {
+  tool: ToolConfig;
+  t: (key: string) => string;
+}) {
   return (
     <Link key={tool.to} to={tool.to} className="group">
-      <Card className={`h-full cursor-pointer transition-all duration-200 ${tool.gradient} ${tool.border}`}>
+      <Card
+        className={`h-full cursor-pointer transition-all duration-200 ${tool.gradient} ${tool.border}`}
+      >
         <CardHeader>
           <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
             {tool.icon}
           </div>
           <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
-          <CardDescription className="text-sm leading-relaxed">{t(tool.descKey)}</CardDescription>
+          <CardDescription className="text-sm leading-relaxed">
+            {t(tool.descKey)}
+          </CardDescription>
           <div className="flex gap-1.5 flex-wrap mt-1">
             {tool.tagKeys.map((key) => (
-              <Badge key={key} variant="secondary" className="text-xs">{t(key)}</Badge>
+              <Badge key={key} variant="secondary" className="text-xs">
+                {t(key)}
+              </Badge>
             ))}
           </div>
         </CardHeader>
       </Card>
     </Link>
-  )
+  );
 }
 
 function HomePage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16">
@@ -242,8 +369,12 @@ function HomePage() {
               <AlignLeft className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold leading-none">{t('home.groupFormat')}</h2>
-              <p className="text-xs text-muted-foreground mt-1">JSON · HTML · CSS · JS · XML · Markdown · SQL · YAML</p>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupFormat')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                JSON · HTML · CSS · JS · XML · Markdown · SQL · YAML
+              </p>
             </div>
             <div className="flex-1 h-px bg-border ml-2" />
           </div>
@@ -261,8 +392,12 @@ function HomePage() {
               <Shuffle className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold leading-none">{t('home.groupEncode')}</h2>
-              <p className="text-xs text-muted-foreground mt-1">Base64 · URL Encode · Unicode</p>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupEncode')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                Base64 · URL Encode · Unicode
+              </p>
             </div>
             <div className="flex-1 h-px bg-border ml-2" />
           </div>
@@ -280,8 +415,12 @@ function HomePage() {
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold leading-none">{t('home.groupCrypto')}</h2>
-              <p className="text-xs text-muted-foreground mt-1">{t('home.cryptoSubtitle')}</p>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupCrypto')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('home.cryptoSubtitle')}
+              </p>
             </div>
             <div className="flex-1 h-px bg-border ml-2" />
           </div>
@@ -291,8 +430,30 @@ function HomePage() {
             ))}
           </div>
         </div>
+
+        {/* 网络 / 请求 */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
+              <Network className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupNetwork')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('home.networkSubtitle')}
+              </p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {networkTools.map((tool) => (
+              <ToolCard key={tool.to} tool={tool} t={t} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
-  )
+  );
 }
-

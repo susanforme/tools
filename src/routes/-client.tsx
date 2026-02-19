@@ -7,6 +7,7 @@ import {
   Braces,
   ChevronDown,
   Code2,
+  Cookie,
   Database,
   Dices,
   FileCode,
@@ -18,9 +19,15 @@ import {
   Hash,
   KeyRound,
   Link as LinkIcon,
+  ListOrdered,
   Lock,
+  MapPin,
+  MonitorSmartphone,
+  Network,
   Paintbrush,
   RotateCw,
+  Send,
+  ShieldAlert,
   ShieldCheck,
   Shuffle,
   Tag,
@@ -125,6 +132,39 @@ const cryptoNavItems: NavItem[] = [
   },
 ];
 
+const networkNavItems: NavItem[] = [
+  {
+    to: '/http-request',
+    icon: <Send className="w-4 h-4 text-blue-500" />,
+    labelKey: 'nav.httpRequest',
+  },
+  {
+    to: '/cors',
+    icon: <ShieldAlert className="w-4 h-4 text-orange-500" />,
+    labelKey: 'nav.cors',
+  },
+  {
+    to: '/cookie',
+    icon: <Cookie className="w-4 h-4 text-amber-500" />,
+    labelKey: 'nav.cookie',
+  },
+  {
+    to: '/ip-lookup',
+    icon: <MapPin className="w-4 h-4 text-red-500" />,
+    labelKey: 'nav.ipLookup',
+  },
+  {
+    to: '/http-status',
+    icon: <ListOrdered className="w-4 h-4 text-teal-500" />,
+    labelKey: 'nav.httpStatus',
+  },
+  {
+    to: '/user-agent',
+    icon: <MonitorSmartphone className="w-4 h-4 text-violet-500" />,
+    labelKey: 'nav.userAgent',
+  },
+];
+
 export default function RootDocument() {
   return (
     <div>
@@ -154,6 +194,11 @@ export default function RootDocument() {
                   labelKey="nav.catCrypto"
                   icon={<ShieldCheck className="w-4 h-4" />}
                   items={cryptoNavItems}
+                />
+                <CategoryMenu
+                  labelKey="nav.catNetwork"
+                  icon={<Network className="w-4 h-4" />}
+                  items={networkNavItems}
                 />
               </div>
               <div className="ml-auto">
