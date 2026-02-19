@@ -29,6 +29,7 @@ import {
   Lock,
   MapPin,
   MonitorSmartphone,
+  Moon,
   Network,
   Paintbrush,
   Regex as RegexIcon,
@@ -37,6 +38,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   Shuffle,
+  Sun,
   Table,
   Tag,
 } from 'lucide-react';
@@ -44,6 +46,44 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LangSwitcher } from '../components/lang-switcher';
 import { TooltipProvider } from '../components/ui/tooltip';
+
+// ─── 主题 Hook ────────────────────────────────────────────
+
+function useTheme() {
+  const [dark, setDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }, [dark]);
+
+  return { dark, toggle: () => setDark((d) => !d) };
+}
+
+// ─── 主题切换按钮 ──────────────────────────────────────────
+
+function ThemeToggle() {
+  const { dark, toggle } = useTheme();
+  return (
+    <button
+      onClick={toggle}
+      aria-label={dark ? '切换为浅色模式' : '切换为深色模式'}
+      className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
+    >
+      {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    </button>
+  );
+}
 
 // ─── 类型 ──────────────────────────────────────────────────
 
@@ -501,7 +541,8 @@ export default function RootDocument() {
 
               <AdaptiveNav />
 
-              <div className="shrink-0">
+              <div className="shrink-0 flex items-center gap-1">
+                <ThemeToggle />
                 <LangSwitcher />
               </div>
             </nav>
