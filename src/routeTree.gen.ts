@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as JsonRouteImport } from './routes/json'
+import { Route as HtmlRouteImport } from './routes/html'
+import { Route as CssRouteImport } from './routes/css'
 import { Route as IndexRouteImport } from './routes/index'
 
+const JsonRoute = JsonRouteImport.update({
+  id: '/json',
+  path: '/json',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/json.lazy').then((d) => d.Route))
+const HtmlRoute = HtmlRouteImport.update({
+  id: '/html',
+  path: '/html',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/html.lazy').then((d) => d.Route))
+const CssRoute = CssRouteImport.update({
+  id: '/css',
+  path: '/css',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/css.lazy').then((d) => d.Route))
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/css': typeof CssRoute
+  '/html': typeof HtmlRoute
+  '/json': typeof JsonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/css': typeof CssRoute
+  '/html': typeof HtmlRoute
+  '/json': typeof JsonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/css': typeof CssRoute
+  '/html': typeof HtmlRoute
+  '/json': typeof JsonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/css' | '/html' | '/json'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/css' | '/html' | '/json'
+  id: '__root__' | '/' | '/css' | '/html' | '/json'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CssRoute: typeof CssRoute
+  HtmlRoute: typeof HtmlRoute
+  JsonRoute: typeof JsonRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/json': {
+      id: '/json'
+      path: '/json'
+      fullPath: '/json'
+      preLoaderRoute: typeof JsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/html': {
+      id: '/html'
+      path: '/html'
+      fullPath: '/html'
+      preLoaderRoute: typeof HtmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/css': {
+      id: '/css'
+      path: '/css'
+      fullPath: '/css'
+      preLoaderRoute: typeof CssRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CssRoute: CssRoute,
+  HtmlRoute: HtmlRoute,
+  JsonRoute: JsonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
