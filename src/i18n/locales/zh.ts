@@ -11,6 +11,8 @@ const zh = {
     base64: 'Base64',
     urlEncode: 'URL 编码',
     unicode: 'Unicode',
+    catFormatter: '格式化工具',
+    catEncode: '编码 / 转换',
   },
   home: {
     title: '开发工具集',

@@ -1,7 +1,22 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Card, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
-import { Braces, FileCode, FileCode2, Paintbrush, ShieldCheck, Tag, FileText, Database, FileStack, Binary, Link as LinkIcon, Globe } from 'lucide-react'
+import {
+  Braces,
+  FileCode,
+  FileCode2,
+  Paintbrush,
+  ShieldCheck,
+  Tag,
+  FileText,
+  Database,
+  FileStack,
+  Binary,
+  Link as LinkIcon,
+  Globe,
+  AlignLeft,
+  Shuffle,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/')({ component: HomePage })
@@ -156,11 +171,19 @@ function HomePage() {
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-10">
+        {/* 格式化工具 */}
         <div>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-            {t('home.groupFormat')}
-          </h2>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
+              <AlignLeft className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">{t('home.groupFormat')}</h2>
+              <p className="text-xs text-muted-foreground mt-1">JSON · HTML · CSS · JS · XML · Markdown · SQL · YAML</p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {formatterTools.map((tool) => (
               <ToolCard key={tool.to} tool={tool} t={t} />
@@ -168,10 +191,18 @@ function HomePage() {
           </div>
         </div>
 
+        {/* 编码 / 转换 */}
         <div>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-            {t('home.groupEncode')}
-          </h2>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500">
+              <Shuffle className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">{t('home.groupEncode')}</h2>
+              <p className="text-xs text-muted-foreground mt-1">Base64 · URL Encode · Unicode</p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {encodeTools.map((tool) => (
               <ToolCard key={tool.to} tool={tool} t={t} />

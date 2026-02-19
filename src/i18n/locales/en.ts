@@ -11,6 +11,8 @@ const en = {
     base64: 'Base64',
     urlEncode: 'URL Encode',
     unicode: 'Unicode',
+    catFormatter: 'Formatter',
+    catEncode: 'Encode / Convert',
   },
   home: {
     title: 'Developer Toolbox',
