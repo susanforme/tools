@@ -284,6 +284,11 @@ const frontendNavItems: NavItem[] = [
     icon: <Palette className="w-4 h-4 text-pink-500" />,
     labelKey: 'nav.colorConverter',
   },
+  {
+    to: '/css-layout',
+    icon: <Layers className="w-4 h-4 text-indigo-500" />,
+    labelKey: 'nav.layout',
+  },
 ];
 
 const ALL_CATEGORIES: CategoryDef[] = [

@@ -39,6 +39,7 @@ const zh = {
     password: '密码生成',
     qrcode: 'QR 二维码',
     colorConverter: '色彩转换器',
+    layout: '布局辅助',
     catOther: '其他',
   },
   home: {
@@ -278,6 +279,13 @@ const zh = {
         tagHex: 'HEX',
         tagRgb: 'RGB',
         tagHsl: 'HSL',
+      },
+      layout: {
+        title: '布局辅助与计算器',
+        desc: 'Flex Gap 计算、Grid 响应式列宽、经典布局模板与可视化沙盒',
+        tagFlex: 'Flex',
+        tagGrid: 'Grid',
+        tagTemplates: '模板',
       },
     },
   },
@@ -894,6 +902,74 @@ const zh = {
     results: '转换结果',
     sliders: '分量调节',
     clear: '清空',
+  },
+  layout: {
+    title: '布局辅助与计算器',
+    desc: 'Flex Gap 计算、Grid 列宽计算、布局模板与可视化沙盒',
+    output: '输出',
+    copy: '复制',
+    copied: '已复制',
+    download: '下载',
+    tab: {
+      flexGap: 'Flex Gap 计算器',
+      gridCalc: 'Grid 列宽计算器',
+      templates: '布局模板',
+      flexSandbox: 'Flexbox 沙盒',
+      gridSandbox: 'Grid 沙盒',
+    },
+    flexGap: {
+      about: '关于 Flex Gap 计算器',
+      aboutDesc:
+        '输入容器宽度、列数和 Gap 值，自动计算子元素应设置的 width 或 flex-basis，并生成对应的 CSS 代码。',
+      containerWidth: '容器宽度',
+      columns: '列数',
+      gap: 'Gap 间距',
+      childWidth: '子元素宽度',
+      formula: '计算公式',
+    },
+    grid: {
+      about: '关于 Grid 列宽计算器',
+      aboutDesc:
+        '基于 auto-fill / auto-fit + minmax() 生成响应式 Grid 布局，支持添加多个响应式断点并预览对应的 CSS。',
+      minItemWidth: '最小列宽',
+      gap: 'Gap 间距',
+      autoMode: '自动模式',
+      fixed: '固定列数',
+      breakpoints: '响应式断点',
+      addBreakpoint: '添加断点',
+      cols: '列数',
+    },
+    tpl: {
+      about: '关于布局模板',
+      aboutDesc:
+        '提供圣杯布局、双飞翼布局、瀑布流、后台管理框架等经典布局的代码，可一键复制 CSS 或 HTML，也可下载为文件。',
+      holyGrail: '圣杯布局',
+      doubleWing: '双飞翼布局',
+      masonry: '瀑布流布局',
+      admin: '后台管理布局',
+    },
+    sandbox: {
+      preview: '预览',
+      itemCount: '子元素数量',
+      flexAbout: '关于 Flexbox 沙盒',
+      flexAboutDesc:
+        '可视化调节 flex-direction、flex-wrap、justify-content、align-items、gap，右侧实时生成对应 CSS 代码。',
+      gridAbout: '关于 Grid 沙盒',
+      gridAboutDesc:
+        '可视化定义 Grid 行列数量和尺寸，通过拖拽选区合并单元格生成 grid-template-areas，右侧实时输出 CSS。',
+    },
+    gridSandbox: {
+      rows: '行数',
+      cols: '列数',
+      rowGap: '行间距',
+      colGap: '列间距',
+      rowSizes: '行尺寸（每行一个值）',
+      colSizes: '列尺寸（每列一个值）',
+      dragHint:
+        '在预览区拖拽选中多个格子即可合并单元格，生成 grid-area 和 grid-template-areas。',
+      clearMerge: '清除合并',
+      mergedAreas: '已合并区域',
+    },
   },
 } as const;
 

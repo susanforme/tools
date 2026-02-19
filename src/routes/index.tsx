@@ -446,6 +446,19 @@ const frontendTools = [
     gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
     border: 'hover:border-pink-300 dark:hover:border-pink-700',
   },
+  {
+    to: '/css-layout' as const,
+    icon: <Layers className="w-8 h-8 text-indigo-500" />,
+    titleKey: 'home.tools.layout.title',
+    descKey: 'home.tools.layout.desc',
+    tagKeys: [
+      'home.tools.layout.tagFlex',
+      'home.tools.layout.tagGrid',
+      'home.tools.layout.tagTemplates',
+    ],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
 ];
 
 type ToolConfig = {
