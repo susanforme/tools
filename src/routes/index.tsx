@@ -16,6 +16,12 @@ import {
   Globe,
   AlignLeft,
   Shuffle,
+  Hash,
+  Lock,
+  KeyRound,
+  Fingerprint,
+  Dices,
+  RotateCw,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -126,6 +132,63 @@ const encodeTools = [
   },
 ]
 
+const cryptoTools = [
+  {
+    to: '/hash' as const,
+    icon: <Hash className="w-8 h-8 text-emerald-500" />,
+    titleKey: 'home.tools.hash.title',
+    descKey: 'home.tools.hash.desc',
+    tagKeys: ['home.tools.hash.tagMd5', 'home.tools.hash.tagSha256', 'home.tools.hash.tagSha512'],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/cipher' as const,
+    icon: <Lock className="w-8 h-8 text-red-500" />,
+    titleKey: 'home.tools.cipher.title',
+    descKey: 'home.tools.cipher.desc',
+    tagKeys: ['home.tools.cipher.tagAES', 'home.tools.cipher.tagDES', 'home.tools.cipher.tagModes'],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+  {
+    to: '/hmac' as const,
+    icon: <KeyRound className="w-8 h-8 text-orange-500" />,
+    titleKey: 'home.tools.hmac.title',
+    descKey: 'home.tools.hmac.desc',
+    tagKeys: ['home.tools.hmac.tagSign', 'home.tools.hmac.tagVerify'],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/jwt' as const,
+    icon: <Fingerprint className="w-8 h-8 text-purple-500" />,
+    titleKey: 'home.tools.jwt.title',
+    descKey: 'home.tools.jwt.desc',
+    tagKeys: ['home.tools.jwt.tagDecode', 'home.tools.jwt.tagExpiry'],
+    gradient: 'hover:bg-purple-50 dark:hover:bg-purple-950/20',
+    border: 'hover:border-purple-300 dark:hover:border-purple-700',
+  },
+  {
+    to: '/uuid' as const,
+    icon: <Dices className="w-8 h-8 text-pink-500" />,
+    titleKey: 'home.tools.uuid.title',
+    descKey: 'home.tools.uuid.desc',
+    tagKeys: ['home.tools.uuid.tagV4', 'home.tools.uuid.tagBatch'],
+    gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
+    border: 'hover:border-pink-300 dark:hover:border-pink-700',
+  },
+  {
+    to: '/rot13' as const,
+    icon: <RotateCw className="w-8 h-8 text-lime-500" />,
+    titleKey: 'home.tools.rot13.title',
+    descKey: 'home.tools.rot13.desc',
+    tagKeys: ['home.tools.rot13.tagRot13', 'home.tools.rot13.tagEntity'],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
+]
+
 type ToolConfig = {
   to: string
   icon: React.ReactNode
@@ -203,8 +266,27 @@ function HomePage() {
             </div>
             <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {encodeTools.map((tool) => (
+              <ToolCard key={tool.to} tool={tool} t={t} />
+            ))}
+          </div>
+        </div>
+
+        {/* 加密 / 安全 */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">{t('home.groupCrypto')}</h2>
+              <p className="text-xs text-muted-foreground mt-1">{t('home.cryptoSubtitle')}</p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {cryptoTools.map((tool) => (
               <ToolCard key={tool.to} tool={tool} t={t} />
             ))}
           </div>

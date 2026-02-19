@@ -19,6 +19,13 @@ import {
   ChevronDown,
   AlignLeft,
   Shuffle,
+  ShieldCheck,
+  Hash,
+  Lock,
+  KeyRound,
+  Fingerprint,
+  Dices,
+  RotateCw,
 } from 'lucide-react'
 import '../i18n'
 import { useTranslation } from 'react-i18next'
@@ -61,6 +68,15 @@ const encodeNavItems: NavItem[] = [
   { to: '/unicode',   icon: <Globe className="w-4 h-4 text-indigo-500" />, labelKey: 'nav.unicode' },
 ]
 
+const cryptoNavItems: NavItem[] = [
+  { to: '/hash',   icon: <Hash className="w-4 h-4 text-emerald-500" />,  labelKey: 'nav.hash' },
+  { to: '/cipher', icon: <Lock className="w-4 h-4 text-red-500" />,      labelKey: 'nav.cipher' },
+  { to: '/hmac',   icon: <KeyRound className="w-4 h-4 text-orange-500" />, labelKey: 'nav.hmac' },
+  { to: '/jwt',    icon: <Fingerprint className="w-4 h-4 text-purple-500" />, labelKey: 'nav.jwt' },
+  { to: '/uuid',   icon: <Dices className="w-4 h-4 text-pink-500" />,    labelKey: 'nav.uuid' },
+  { to: '/rot13',  icon: <RotateCw className="w-4 h-4 text-lime-500" />, labelKey: 'nav.rot13' },
+]
+
 function RootDocument() {
   return (
       <div>
@@ -83,6 +99,11 @@ function RootDocument() {
                     labelKey="nav.catEncode"
                     icon={<Shuffle className="w-4 h-4" />}
                     items={encodeNavItems}
+                  />
+                  <CategoryMenu
+                    labelKey="nav.catCrypto"
+                    icon={<ShieldCheck className="w-4 h-4" />}
+                    items={cryptoNavItems}
                   />
                 </div>
                 <div className="ml-auto">

@@ -11,14 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as YamlRouteImport } from './routes/yaml'
 import { Route as XmlRouteImport } from './routes/xml'
+import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as SqlRouteImport } from './routes/sql'
+import { Route as Rot13RouteImport } from './routes/rot13'
 import { Route as MarkdownRouteImport } from './routes/markdown'
+import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
 import { Route as HtmlRouteImport } from './routes/html'
+import { Route as HmacRouteImport } from './routes/hmac'
+import { Route as HashRouteImport } from './routes/hash'
 import { Route as CssRouteImport } from './routes/css'
+import { Route as CipherRouteImport } from './routes/cipher'
 import { Route as Base64RouteImport } from './routes/base64'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -30,6 +36,11 @@ const YamlRoute = YamlRouteImport.update({
 const XmlRoute = XmlRouteImport.update({
   id: '/xml',
   path: '/xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UuidRoute = UuidRouteImport.update({
+  id: '/uuid',
+  path: '/uuid',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UrlEncodeRoute = UrlEncodeRouteImport.update({
@@ -47,9 +58,19 @@ const SqlRoute = SqlRouteImport.update({
   path: '/sql',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Rot13Route = Rot13RouteImport.update({
+  id: '/rot13',
+  path: '/rot13',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarkdownRoute = MarkdownRouteImport.update({
   id: '/markdown',
   path: '/markdown',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JwtRoute = JwtRouteImport.update({
+  id: '/jwt',
+  path: '/jwt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JsonRoute = JsonRouteImport.update({
@@ -67,9 +88,24 @@ const HtmlRoute = HtmlRouteImport.update({
   path: '/html',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HmacRoute = HmacRouteImport.update({
+  id: '/hmac',
+  path: '/hmac',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HashRoute = HashRouteImport.update({
+  id: '/hash',
+  path: '/hash',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CssRoute = CssRouteImport.update({
   id: '/css',
   path: '/css',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CipherRoute = CipherRouteImport.update({
+  id: '/cipher',
+  path: '/cipher',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Base64Route = Base64RouteImport.update({
@@ -86,28 +122,40 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
+  '/cipher': typeof CipherRoute
   '/css': typeof CssRoute
+  '/hash': typeof HashRoute
+  '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
+  '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
+  '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
   '/yaml': typeof YamlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
+  '/cipher': typeof CipherRoute
   '/css': typeof CssRoute
+  '/hash': typeof HashRoute
+  '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
+  '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
+  '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
   '/yaml': typeof YamlRoute
 }
@@ -115,14 +163,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
+  '/cipher': typeof CipherRoute
   '/css': typeof CssRoute
+  '/hash': typeof HashRoute
+  '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
+  '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
+  '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
   '/yaml': typeof YamlRoute
 }
@@ -131,42 +185,60 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/base64'
+    | '/cipher'
     | '/css'
+    | '/hash'
+    | '/hmac'
     | '/html'
     | '/js'
     | '/json'
+    | '/jwt'
     | '/markdown'
+    | '/rot13'
     | '/sql'
     | '/unicode'
     | '/url-encode'
+    | '/uuid'
     | '/xml'
     | '/yaml'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/base64'
+    | '/cipher'
     | '/css'
+    | '/hash'
+    | '/hmac'
     | '/html'
     | '/js'
     | '/json'
+    | '/jwt'
     | '/markdown'
+    | '/rot13'
     | '/sql'
     | '/unicode'
     | '/url-encode'
+    | '/uuid'
     | '/xml'
     | '/yaml'
   id:
     | '__root__'
     | '/'
     | '/base64'
+    | '/cipher'
     | '/css'
+    | '/hash'
+    | '/hmac'
     | '/html'
     | '/js'
     | '/json'
+    | '/jwt'
     | '/markdown'
+    | '/rot13'
     | '/sql'
     | '/unicode'
     | '/url-encode'
+    | '/uuid'
     | '/xml'
     | '/yaml'
   fileRoutesById: FileRoutesById
@@ -174,14 +246,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Base64Route: typeof Base64Route
+  CipherRoute: typeof CipherRoute
   CssRoute: typeof CssRoute
+  HashRoute: typeof HashRoute
+  HmacRoute: typeof HmacRoute
   HtmlRoute: typeof HtmlRoute
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
+  JwtRoute: typeof JwtRoute
   MarkdownRoute: typeof MarkdownRoute
+  Rot13Route: typeof Rot13Route
   SqlRoute: typeof SqlRoute
   UnicodeRoute: typeof UnicodeRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
+  UuidRoute: typeof UuidRoute
   XmlRoute: typeof XmlRoute
   YamlRoute: typeof YamlRoute
 }
@@ -200,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/xml'
       fullPath: '/xml'
       preLoaderRoute: typeof XmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uuid': {
+      id: '/uuid'
+      path: '/uuid'
+      fullPath: '/uuid'
+      preLoaderRoute: typeof UuidRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/url-encode': {
@@ -223,11 +308,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SqlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rot13': {
+      id: '/rot13'
+      path: '/rot13'
+      fullPath: '/rot13'
+      preLoaderRoute: typeof Rot13RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/markdown': {
       id: '/markdown'
       path: '/markdown'
       fullPath: '/markdown'
       preLoaderRoute: typeof MarkdownRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jwt': {
+      id: '/jwt'
+      path: '/jwt'
+      fullPath: '/jwt'
+      preLoaderRoute: typeof JwtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/json': {
@@ -251,11 +350,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HtmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hmac': {
+      id: '/hmac'
+      path: '/hmac'
+      fullPath: '/hmac'
+      preLoaderRoute: typeof HmacRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hash': {
+      id: '/hash'
+      path: '/hash'
+      fullPath: '/hash'
+      preLoaderRoute: typeof HashRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/css': {
       id: '/css'
       path: '/css'
       fullPath: '/css'
       preLoaderRoute: typeof CssRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cipher': {
+      id: '/cipher'
+      path: '/cipher'
+      fullPath: '/cipher'
+      preLoaderRoute: typeof CipherRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/base64': {
@@ -278,14 +398,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Base64Route: Base64Route,
+  CipherRoute: CipherRoute,
   CssRoute: CssRoute,
+  HashRoute: HashRoute,
+  HmacRoute: HmacRoute,
   HtmlRoute: HtmlRoute,
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
+  JwtRoute: JwtRoute,
   MarkdownRoute: MarkdownRoute,
+  Rot13Route: Rot13Route,
   SqlRoute: SqlRoute,
   UnicodeRoute: UnicodeRoute,
   UrlEncodeRoute: UrlEncodeRoute,
+  UuidRoute: UuidRoute,
   XmlRoute: XmlRoute,
   YamlRoute: YamlRoute,
 }
