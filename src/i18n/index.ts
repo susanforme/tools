@@ -6,27 +6,25 @@ import zh from './locales/zh';
 export type Locale = 'zh' | 'en';
 export const LOCALES: Locale[] = ['en', 'zh'];
 
-export const STORAGE_KEY = 'devtools-lang';
+const STORAGE_KEY = 'devtools-lang';
 
-/**
- * 仅在客户端调用（useEffect 内），用于检测用户偏好语言。
- * 不能在模块顶层同步调用，否则会导致 SSR/hydration 不匹配。
- */
-export function detectClientLanguage(): Locale {
+function detectLanguage(): Locale {
+  if (typeof window === 'undefined') return 'en';
   const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
   if (stored && LOCALES.includes(stored)) return stored;
   const browser = navigator.language.split('-')[0];
   return browser === 'zh' ? 'zh' : 'en';
 }
 
-// 始终以默认语言 'en' 初始化，保证 SSR 与客户端首次 hydration 输出一致。
-// 用户偏好语言在组件 mount 后的 useEffect 中切换。
+// 同步检测，在 init 时直接传入正确语言，避免首屏闪烁
+const initialLang = detectLanguage();
+
 i18n.use(initReactI18next).init({
   resources: {
     zh: { translation: zh },
     en: { translation: en },
   },
-  lng: 'en',
+  lng: initialLang,
   fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });

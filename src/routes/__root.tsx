@@ -1,4 +1,9 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
+import {
+  ClientOnly,
+  HeadContent,
+  Scripts,
+  createRootRoute,
+} from '@tanstack/react-router';
 import React from 'react';
 import appCss from '../styles.css?url';
 
@@ -27,7 +32,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <ClientOnly>{children}</ClientOnly>
         <Scripts />
       </body>
     </html>
