@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Copy, Check } from 'lucide-react'
 import { Button } from './ui/button'
 import Editor from '@monaco-editor/react'
+import { useTranslation } from 'react-i18next'
 
 export interface CodePanelProps {
   input: string
@@ -23,6 +24,7 @@ export function CodePanel({
   language = 'plaintext',
   outputLanguage,
 }: CodePanelProps) {
+  const { t } = useTranslation()
   const resolvedOutputLanguage = outputLanguage ?? language
   const [copied, setCopied] = useState(false)
   const [isDark, setIsDark] = useState(false)
@@ -65,7 +67,7 @@ export function CodePanel({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-            输入
+            {t('panel.input')}
           </label>
           <div className="rounded-md overflow-hidden border border-input">
             <Editor
@@ -81,7 +83,7 @@ export function CodePanel({
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              输出
+              {t('panel.output')}
             </label>
             <Button
               variant="ghost"
@@ -91,7 +93,7 @@ export function CodePanel({
               className="h-6 px-2 text-xs gap-1"
             >
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-              {copied ? '已复制' : '复制'}
+              {copied ? t('panel.copied') : t('panel.copy')}
             </Button>
           </div>
           <div className="rounded-md overflow-hidden border border-input">

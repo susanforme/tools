@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CodePanel } from '../components/code-panel'
 import { Button } from '../components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
@@ -36,6 +37,7 @@ function useHtmlTool(initialInput = '') {
 }
 
 function HtmlPage() {
+  const { t } = useTranslation()
   const fmt = useHtmlTool(DEFAULT_HTML)
   const min = useHtmlTool(DEFAULT_HTML)
 
@@ -53,7 +55,7 @@ function HtmlPage() {
       })
       fmt.setOutput(result)
     } catch (e) {
-      fmt.setError(`格式化失败：${(e as Error).message}`)
+      fmt.setError(t('html.formatError', { msg: (e as Error).message }))
     } finally {
       fmt.setLoading(false)
     }
@@ -76,7 +78,7 @@ function HtmlPage() {
       })
       min.setOutput(result)
     } catch (e) {
-      min.setError(`压缩失败：${(e as Error).message}`)
+      min.setError(t('html.minifyError', { msg: (e as Error).message }))
     } finally {
       min.setLoading(false)
     }
@@ -85,23 +87,23 @@ function HtmlPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
-        <h1 className="text-2xl font-bold">HTML 工具</h1>
-        <p className="text-muted-foreground text-sm mt-1">HTML 代码格式化与压缩</p>
+        <h1 className="text-2xl font-bold">{t('html.title')}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t('html.desc')}</p>
       </div>
 
       <Tabs defaultValue="format">
         <TabsList>
-          <TabsTrigger value="format">格式化</TabsTrigger>
-          <TabsTrigger value="minify">压缩</TabsTrigger>
+          <TabsTrigger value="format">{t('html.tabFormat')}</TabsTrigger>
+          <TabsTrigger value="minify">{t('html.tabMinify')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
             <Button size="sm" onClick={formatHtml} disabled={fmt.loading || !fmt.input.trim()}>
-              {fmt.loading ? '处理中...' : '格式化'}
+              {fmt.loading ? t('html.processing') : t('html.format')}
             </Button>
             <Button size="sm" variant="ghost" onClick={fmt.clear}>
-              清空
+              {t('html.clear')}
             </Button>
           </div>
           <CodePanel
@@ -117,10 +119,10 @@ function HtmlPage() {
         <TabsContent value="minify" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
             <Button size="sm" onClick={minifyHtml} disabled={min.loading || !min.input.trim()}>
-              {min.loading ? '处理中...' : '压缩'}
+              {min.loading ? t('html.processing') : t('html.minify')}
             </Button>
             <Button size="sm" variant="ghost" onClick={min.clear}>
-              清空
+              {t('html.clear')}
             </Button>
           </div>
           <CodePanel

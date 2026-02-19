@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CodePanel } from '../components/code-panel'
 import { Button } from '../components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
@@ -61,6 +62,7 @@ function useTool(initialInput = '') {
 }
 
 function CssPage() {
+  const { t } = useTranslation()
   const fmt = useTool(DEFAULT_CSS)
   const min = useTool(DEFAULT_CSS)
   const scss = useTool(DEFAULT_SCSS)
@@ -79,7 +81,7 @@ function CssPage() {
       })
       fmt.setOutput(result)
     } catch (e) {
-      fmt.setError(`格式化失败：${(e as Error).message}`)
+      fmt.setError(t('css.formatError', { msg: (e as Error).message }))
     } finally {
       fmt.setLoading(false)
     }
@@ -91,7 +93,7 @@ function CssPage() {
       if (!min.input.trim()) return
       min.setOutput(minifyCssString(min.input))
     } catch (e) {
-      min.setError(`压缩失败：${(e as Error).message}`)
+      min.setError(t('css.minifyError', { msg: (e as Error).message }))
     }
   }
 
@@ -105,7 +107,7 @@ function CssPage() {
       })
       scss.setOutput(result.css)
     } catch (e) {
-      scss.setError(`SCSS 编译失败：${(e as Error).message}`)
+      scss.setError(t('css.scssError', { msg: (e as Error).message }))
     } finally {
       scss.setLoading(false)
     }
@@ -114,26 +116,24 @@ function CssPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
-        <h1 className="text-2xl font-bold">CSS / SCSS 工具</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          CSS 格式化、压缩，SCSS 编译为 CSS
-        </p>
+        <h1 className="text-2xl font-bold">{t('css.title')}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t('css.desc')}</p>
       </div>
 
       <Tabs defaultValue="format">
         <TabsList>
-          <TabsTrigger value="format">格式化</TabsTrigger>
-          <TabsTrigger value="minify">压缩</TabsTrigger>
-          <TabsTrigger value="scss">SCSS → CSS</TabsTrigger>
+          <TabsTrigger value="format">{t('css.tabFormat')}</TabsTrigger>
+          <TabsTrigger value="minify">{t('css.tabMinify')}</TabsTrigger>
+          <TabsTrigger value="scss">{t('css.tabScss')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
             <Button size="sm" onClick={formatCss} disabled={fmt.loading || !fmt.input.trim()}>
-              {fmt.loading ? '处理中...' : '格式化'}
+              {fmt.loading ? t('css.processing') : t('css.format')}
             </Button>
             <Button size="sm" variant="ghost" onClick={fmt.clear}>
-              清空
+              {t('css.clear')}
             </Button>
           </div>
           <CodePanel
@@ -149,10 +149,10 @@ function CssPage() {
         <TabsContent value="minify" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
             <Button size="sm" onClick={minifyCss} disabled={!min.input.trim()}>
-              压缩
+              {t('css.minify')}
             </Button>
             <Button size="sm" variant="ghost" onClick={min.clear}>
-              清空
+              {t('css.clear')}
             </Button>
           </div>
           <CodePanel
@@ -172,10 +172,10 @@ function CssPage() {
               onClick={compileScssToCss}
               disabled={scss.loading || !scss.input.trim()}
             >
-              {scss.loading ? '编译中...' : '编译 SCSS'}
+              {scss.loading ? t('css.compiling') : t('css.compile')}
             </Button>
             <Button size="sm" variant="ghost" onClick={scss.clear}>
-              清空
+              {t('css.clear')}
             </Button>
           </div>
           <CodePanel

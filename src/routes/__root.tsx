@@ -1,9 +1,11 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { Link } from '@tanstack/react-router'
 import { TooltipProvider } from '../components/ui/tooltip'
 import { Code2, Braces, FileCode, Paintbrush } from 'lucide-react'
+import '../i18n'
+import { LangSwitcher } from '../components/lang-switcher'
 
 import appCss from '../styles.css?url'
 
@@ -16,16 +18,13 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
   }),
-  shellComponent: RootDocument,
+  component: RootDocument,
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument() {
   return (
-    <html lang="zh-CN">
-      <head>
+      <div>
         <HeadContent />
-      </head>
-      <body>
         <TooltipProvider>
           <div className="min-h-screen flex flex-col bg-background text-foreground">
             <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
@@ -39,9 +38,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   <NavLink to="/html" icon={<FileCode className="w-4 h-4" />} label="HTML" />
                   <NavLink to="/css" icon={<Paintbrush className="w-4 h-4" />} label="CSS / SCSS" />
                 </div>
+                <div className="ml-auto">
+                  <LangSwitcher />
+                </div>
               </nav>
             </header>
-            <main className="flex-1">{children}</main>
+            <main className="flex-1"><Outlet /></main>
           </div>
         </TooltipProvider>
         <TanStackDevtools
@@ -49,8 +51,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           plugins={[{ name: 'Router', render: <TanStackRouterDevtoolsPanel /> }]}
         />
         <Scripts />
-      </body>
-    </html>
+      </div>
   )
 }
 
