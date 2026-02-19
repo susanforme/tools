@@ -3,7 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { Link } from '@tanstack/react-router'
 import { TooltipProvider } from '../components/ui/tooltip'
-import { Code2, Braces, FileCode, Paintbrush } from 'lucide-react'
+import { Code2, Braces, FileCode, Paintbrush, FileCode2, Tag, FileText, Database, FileStack, Binary, Link as LinkIcon, Globe } from 'lucide-react'
 import '../i18n'
 import { LangSwitcher } from '../components/lang-switcher'
 
@@ -37,10 +37,18 @@ function RootDocument() {
                   <Code2 className="w-5 h-5 text-primary" />
                   <span>Dev Tools</span>
                 </Link>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
                   <NavLink to="/json" icon={<Braces className="w-4 h-4" />} label="JSON" />
                   <NavLink to="/html" icon={<FileCode className="w-4 h-4" />} label="HTML" />
                   <NavLink to="/css" icon={<Paintbrush className="w-4 h-4" />} label="CSS / SCSS" />
+                  <NavLink to="/js" icon={<FileCode2 className="w-4 h-4" />} label="JS" />
+                  <NavLink to="/xml" icon={<Tag className="w-4 h-4" />} label="XML" />
+                  <NavLink to="/markdown" icon={<FileText className="w-4 h-4" />} label="Markdown" />
+                  <NavLink to="/sql" icon={<Database className="w-4 h-4" />} label="SQL" />
+                  <NavLink to="/yaml" icon={<FileStack className="w-4 h-4" />} label="YAML" />
+                  <NavLink to="/base64" icon={<Binary className="w-4 h-4" />} label="Base64" />
+                  <NavLink to="/url-encode" icon={<LinkIcon className="w-4 h-4" />} label="URL" />
+                  <NavLink to="/unicode" icon={<Globe className="w-4 h-4" />} label="Unicode" />
                 </div>
                 <div className="ml-auto">
                   <LangSwitcher />

@@ -9,14 +9,57 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as YamlRouteImport } from './routes/yaml'
+import { Route as XmlRouteImport } from './routes/xml'
+import { Route as UrlEncodeRouteImport } from './routes/url-encode'
+import { Route as UnicodeRouteImport } from './routes/unicode'
+import { Route as SqlRouteImport } from './routes/sql'
+import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as JsonRouteImport } from './routes/json'
+import { Route as JsRouteImport } from './routes/js'
 import { Route as HtmlRouteImport } from './routes/html'
 import { Route as CssRouteImport } from './routes/css'
+import { Route as Base64RouteImport } from './routes/base64'
 import { Route as IndexRouteImport } from './routes/index'
 
+const YamlRoute = YamlRouteImport.update({
+  id: '/yaml',
+  path: '/yaml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const XmlRoute = XmlRouteImport.update({
+  id: '/xml',
+  path: '/xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UrlEncodeRoute = UrlEncodeRouteImport.update({
+  id: '/url-encode',
+  path: '/url-encode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnicodeRoute = UnicodeRouteImport.update({
+  id: '/unicode',
+  path: '/unicode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SqlRoute = SqlRouteImport.update({
+  id: '/sql',
+  path: '/sql',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarkdownRoute = MarkdownRouteImport.update({
+  id: '/markdown',
+  path: '/markdown',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JsonRoute = JsonRouteImport.update({
   id: '/json',
   path: '/json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JsRoute = JsRouteImport.update({
+  id: '/js',
+  path: '/js',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HtmlRoute = HtmlRouteImport.update({
@@ -29,6 +72,11 @@ const CssRoute = CssRouteImport.update({
   path: '/css',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Base64Route = Base64RouteImport.update({
+  id: '/base64',
+  path: '/base64',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,45 +85,163 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/base64': typeof Base64Route
   '/css': typeof CssRoute
   '/html': typeof HtmlRoute
+  '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/markdown': typeof MarkdownRoute
+  '/sql': typeof SqlRoute
+  '/unicode': typeof UnicodeRoute
+  '/url-encode': typeof UrlEncodeRoute
+  '/xml': typeof XmlRoute
+  '/yaml': typeof YamlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/base64': typeof Base64Route
   '/css': typeof CssRoute
   '/html': typeof HtmlRoute
+  '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/markdown': typeof MarkdownRoute
+  '/sql': typeof SqlRoute
+  '/unicode': typeof UnicodeRoute
+  '/url-encode': typeof UrlEncodeRoute
+  '/xml': typeof XmlRoute
+  '/yaml': typeof YamlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/base64': typeof Base64Route
   '/css': typeof CssRoute
   '/html': typeof HtmlRoute
+  '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/markdown': typeof MarkdownRoute
+  '/sql': typeof SqlRoute
+  '/unicode': typeof UnicodeRoute
+  '/url-encode': typeof UrlEncodeRoute
+  '/xml': typeof XmlRoute
+  '/yaml': typeof YamlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/css' | '/html' | '/json'
+  fullPaths:
+    | '/'
+    | '/base64'
+    | '/css'
+    | '/html'
+    | '/js'
+    | '/json'
+    | '/markdown'
+    | '/sql'
+    | '/unicode'
+    | '/url-encode'
+    | '/xml'
+    | '/yaml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/css' | '/html' | '/json'
-  id: '__root__' | '/' | '/css' | '/html' | '/json'
+  to:
+    | '/'
+    | '/base64'
+    | '/css'
+    | '/html'
+    | '/js'
+    | '/json'
+    | '/markdown'
+    | '/sql'
+    | '/unicode'
+    | '/url-encode'
+    | '/xml'
+    | '/yaml'
+  id:
+    | '__root__'
+    | '/'
+    | '/base64'
+    | '/css'
+    | '/html'
+    | '/js'
+    | '/json'
+    | '/markdown'
+    | '/sql'
+    | '/unicode'
+    | '/url-encode'
+    | '/xml'
+    | '/yaml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  Base64Route: typeof Base64Route
   CssRoute: typeof CssRoute
   HtmlRoute: typeof HtmlRoute
+  JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
+  MarkdownRoute: typeof MarkdownRoute
+  SqlRoute: typeof SqlRoute
+  UnicodeRoute: typeof UnicodeRoute
+  UrlEncodeRoute: typeof UrlEncodeRoute
+  XmlRoute: typeof XmlRoute
+  YamlRoute: typeof YamlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/yaml': {
+      id: '/yaml'
+      path: '/yaml'
+      fullPath: '/yaml'
+      preLoaderRoute: typeof YamlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/xml': {
+      id: '/xml'
+      path: '/xml'
+      fullPath: '/xml'
+      preLoaderRoute: typeof XmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/url-encode': {
+      id: '/url-encode'
+      path: '/url-encode'
+      fullPath: '/url-encode'
+      preLoaderRoute: typeof UrlEncodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unicode': {
+      id: '/unicode'
+      path: '/unicode'
+      fullPath: '/unicode'
+      preLoaderRoute: typeof UnicodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sql': {
+      id: '/sql'
+      path: '/sql'
+      fullPath: '/sql'
+      preLoaderRoute: typeof SqlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/markdown': {
+      id: '/markdown'
+      path: '/markdown'
+      fullPath: '/markdown'
+      preLoaderRoute: typeof MarkdownRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/json': {
       id: '/json'
       path: '/json'
       fullPath: '/json'
       preLoaderRoute: typeof JsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/js': {
+      id: '/js'
+      path: '/js'
+      fullPath: '/js'
+      preLoaderRoute: typeof JsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/html': {
@@ -92,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CssRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/base64': {
+      id: '/base64'
+      path: '/base64'
+      fullPath: '/base64'
+      preLoaderRoute: typeof Base64RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,9 +277,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  Base64Route: Base64Route,
   CssRoute: CssRoute,
   HtmlRoute: HtmlRoute,
+  JsRoute: JsRoute,
   JsonRoute: JsonRoute,
+  MarkdownRoute: MarkdownRoute,
+  SqlRoute: SqlRoute,
+  UnicodeRoute: UnicodeRoute,
+  UrlEncodeRoute: UrlEncodeRoute,
+  XmlRoute: XmlRoute,
+  YamlRoute: YamlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
