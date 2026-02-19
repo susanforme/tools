@@ -26,6 +26,7 @@ import {
   MonitorSmartphone,
   Network,
   Paintbrush,
+  Regex as RegexIcon,
   RotateCw,
   Send,
   ShieldAlert,
@@ -98,6 +99,11 @@ const encodeNavItems: NavItem[] = [
     to: '/unicode',
     icon: <Globe className="w-4 h-4 text-indigo-500" />,
     labelKey: 'nav.unicode',
+  },
+  {
+    to: '/regex',
+    icon: <RegexIcon className="w-4 h-4 text-fuchsia-500" />,
+    labelKey: 'nav.regex',
   },
 ];
 

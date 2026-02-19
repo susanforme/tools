@@ -22,6 +22,7 @@ import {
   MonitorSmartphone,
   Network,
   Paintbrush,
+  Regex as RegexIcon,
   RotateCw,
   Send,
   ShieldAlert,
@@ -174,6 +175,19 @@ const encodeTools = [
     ],
     gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
     border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/regex' as const,
+    icon: <RegexIcon className="w-8 h-8 text-fuchsia-500" />,
+    titleKey: 'home.tools.regex.title',
+    descKey: 'home.tools.regex.desc',
+    tagKeys: [
+      'home.tools.regex.tagTest',
+      'home.tools.regex.tagHighlight',
+      'home.tools.regex.tagLibrary',
+    ],
+    gradient: 'hover:bg-fuchsia-50 dark:hover:bg-fuchsia-950/20',
+    border: 'hover:border-fuchsia-300 dark:hover:border-fuchsia-700',
   },
 ];
 

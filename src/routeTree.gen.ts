@@ -19,6 +19,7 @@ import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as Rot13RouteImport } from './routes/rot13'
+import { Route as RegexRouteImport } from './routes/regex'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as JwtRouteImport } from './routes/jwt'
@@ -86,6 +87,11 @@ const SqlRoute = SqlRouteImport.update({
 const Rot13Route = Rot13RouteImport.update({
   id: '/rot13',
   path: '/rot13',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegexRoute = RegexRouteImport.update({
+  id: '/regex',
+  path: '/regex',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NumberBaseRoute = NumberBaseRouteImport.update({
@@ -198,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
+  '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
+  '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
+  '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/markdown'
     | '/number-base'
+    | '/regex'
     | '/rot13'
     | '/sql'
     | '/table-convert'
@@ -321,6 +331,7 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/markdown'
     | '/number-base'
+    | '/regex'
     | '/rot13'
     | '/sql'
     | '/table-convert'
@@ -351,6 +362,7 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/markdown'
     | '/number-base'
+    | '/regex'
     | '/rot13'
     | '/sql'
     | '/table-convert'
@@ -382,6 +394,7 @@ export interface RootRouteChildren {
   JwtRoute: typeof JwtRoute
   MarkdownRoute: typeof MarkdownRoute
   NumberBaseRoute: typeof NumberBaseRoute
+  RegexRoute: typeof RegexRoute
   Rot13Route: typeof Rot13Route
   SqlRoute: typeof SqlRoute
   TableConvertRoute: typeof TableConvertRoute
@@ -464,6 +477,13 @@ declare module '@tanstack/react-router' {
       path: '/rot13'
       fullPath: '/rot13'
       preLoaderRoute: typeof Rot13RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regex': {
+      id: '/regex'
+      path: '/regex'
+      fullPath: '/regex'
+      preLoaderRoute: typeof RegexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/number-base': {
@@ -614,6 +634,7 @@ const rootRouteChildren: RootRouteChildren = {
   JwtRoute: JwtRoute,
   MarkdownRoute: MarkdownRoute,
   NumberBaseRoute: NumberBaseRoute,
+  RegexRoute: RegexRoute,
   Rot13Route: Rot13Route,
   SqlRoute: SqlRoute,
   TableConvertRoute: TableConvertRoute,
