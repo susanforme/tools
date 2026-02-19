@@ -32,11 +32,13 @@ import {
   Moon,
   Network,
   Paintbrush,
+  QrCode,
   Regex as RegexIcon,
   RotateCw,
   Send,
   ShieldAlert,
   ShieldCheck,
+  ShieldPlus,
   Shuffle,
   Sun,
   Table,
@@ -262,6 +264,16 @@ const textNavItems: NavItem[] = [
     to: '/datetime',
     icon: <Clock className="w-4 h-4 text-blue-500" />,
     labelKey: 'nav.datetime',
+  },
+  {
+    to: '/password',
+    icon: <ShieldPlus className="w-4 h-4 text-emerald-600" />,
+    labelKey: 'nav.password',
+  },
+  {
+    to: '/qrcode',
+    icon: <QrCode className="w-4 h-4 text-blue-500" />,
+    labelKey: 'nav.qrcode',
   },
 ];
 

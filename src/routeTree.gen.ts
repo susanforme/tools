@@ -21,6 +21,8 @@ import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as Rot13RouteImport } from './routes/rot13'
 import { Route as RegexRouteImport } from './routes/regex'
+import { Route as QrcodeRouteImport } from './routes/qrcode'
+import { Route as PasswordRouteImport } from './routes/password'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as JwtRouteImport } from './routes/jwt'
@@ -99,6 +101,16 @@ const Rot13Route = Rot13RouteImport.update({
 const RegexRoute = RegexRouteImport.update({
   id: '/regex',
   path: '/regex',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QrcodeRoute = QrcodeRouteImport.update({
+  id: '/qrcode',
+  path: '/qrcode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PasswordRoute = PasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NumberBaseRoute = NumberBaseRouteImport.update({
@@ -217,6 +229,8 @@ export interface FileRoutesByFullPath {
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
+  '/password': typeof PasswordRoute
+  '/qrcode': typeof QrcodeRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
@@ -250,6 +264,8 @@ export interface FileRoutesByTo {
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
+  '/password': typeof PasswordRoute
+  '/qrcode': typeof QrcodeRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
@@ -284,6 +300,8 @@ export interface FileRoutesById {
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
+  '/password': typeof PasswordRoute
+  '/qrcode': typeof QrcodeRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
@@ -319,6 +337,8 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/markdown'
     | '/number-base'
+    | '/password'
+    | '/qrcode'
     | '/regex'
     | '/rot13'
     | '/sql'
@@ -352,6 +372,8 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/markdown'
     | '/number-base'
+    | '/password'
+    | '/qrcode'
     | '/regex'
     | '/rot13'
     | '/sql'
@@ -385,6 +407,8 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/markdown'
     | '/number-base'
+    | '/password'
+    | '/qrcode'
     | '/regex'
     | '/rot13'
     | '/sql'
@@ -419,6 +443,8 @@ export interface RootRouteChildren {
   JwtRoute: typeof JwtRoute
   MarkdownRoute: typeof MarkdownRoute
   NumberBaseRoute: typeof NumberBaseRoute
+  PasswordRoute: typeof PasswordRoute
+  QrcodeRoute: typeof QrcodeRoute
   RegexRoute: typeof RegexRoute
   Rot13Route: typeof Rot13Route
   SqlRoute: typeof SqlRoute
@@ -517,6 +543,20 @@ declare module '@tanstack/react-router' {
       path: '/regex'
       fullPath: '/regex'
       preLoaderRoute: typeof RegexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qrcode': {
+      id: '/qrcode'
+      path: '/qrcode'
+      fullPath: '/qrcode'
+      preLoaderRoute: typeof QrcodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/password': {
+      id: '/password'
+      path: '/password'
+      fullPath: '/password'
+      preLoaderRoute: typeof PasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/number-base': {
@@ -675,6 +715,8 @@ const rootRouteChildren: RootRouteChildren = {
   JwtRoute: JwtRoute,
   MarkdownRoute: MarkdownRoute,
   NumberBaseRoute: NumberBaseRoute,
+  PasswordRoute: PasswordRoute,
+  QrcodeRoute: QrcodeRoute,
   RegexRoute: RegexRoute,
   Rot13Route: Rot13Route,
   SqlRoute: SqlRoute,
