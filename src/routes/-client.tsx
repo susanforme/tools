@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Clock,
   Code2,
+  Contrast,
   Cookie,
   Database,
   Dices,
@@ -284,6 +285,11 @@ const frontendNavItems: NavItem[] = [
     to: '/color-converter',
     icon: <Palette className="w-4 h-4 text-pink-500" />,
     labelKey: 'nav.colorConverter',
+  },
+  {
+    to: '/contrast',
+    icon: <Contrast className="w-4 h-4 text-blue-500" />,
+    labelKey: 'nav.contrast',
   },
   {
     to: '/css-layout',

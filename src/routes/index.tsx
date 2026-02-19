@@ -6,6 +6,7 @@ import {
   Braces,
   CaseSensitive,
   Clock,
+  Contrast,
   Cookie,
   Database,
   Dices,
@@ -446,6 +447,19 @@ const frontendTools = [
     ],
     gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
     border: 'hover:border-pink-300 dark:hover:border-pink-700',
+  },
+  {
+    to: '/contrast' as const,
+    icon: <Contrast className="w-8 h-8 text-blue-500" />,
+    titleKey: 'home.tools.contrast.title',
+    descKey: 'home.tools.contrast.desc',
+    tagKeys: [
+      'home.tools.contrast.tagAA',
+      'home.tools.contrast.tagAAA',
+      'home.tools.contrast.tagWCAG',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
   },
   {
     to: '/css-layout' as const,

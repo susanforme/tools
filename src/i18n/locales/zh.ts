@@ -39,6 +39,7 @@ const zh = {
     password: '密码生成',
     qrcode: 'QR 二维码',
     colorConverter: '色彩转换器',
+    contrast: '对比度检查',
     layout: '布局辅助',
     cssAnimation: 'CSS 动画生成器',
     catOther: '其他',
@@ -59,7 +60,8 @@ const zh = {
     groupOther: '其他',
     otherSubtitle: '文本处理及其他实用工具',
     groupFrontend: '前端工具',
-    frontendSubtitle: '色彩转换 · CSS 辅助 · CSS 动画生成器 · 设计开发工具',
+    frontendSubtitle:
+      '色彩转换 · 对比度检查 · CSS 辅助 · CSS 动画生成器 · 设计开发工具',
     tools: {
       json: {
         title: 'JSON 工具',
@@ -280,6 +282,13 @@ const zh = {
         tagHex: 'HEX',
         tagRgb: 'RGB',
         tagHsl: 'HSL',
+      },
+      contrast: {
+        title: 'WCAG 对比度检查',
+        desc: '输入前景色与背景色，实时检测是否符合 WCAG AA / AAA 无障碍标准',
+        tagAA: 'AA',
+        tagAAA: 'AAA',
+        tagWCAG: 'WCAG',
       },
       layout: {
         title: '布局辅助与计算器',
@@ -1010,6 +1019,30 @@ const zh = {
     addKf: '添加关键帧',
     removeKf: '删除',
     kfOffset: '时间进度（%）',
+  },
+  contrast: {
+    title: 'WCAG 对比度检查',
+    desc: '输入前景色与背景色，实时计算对比度，检测是否符合 WCAG AA / AAA 无障碍标准',
+    fgColor: '前景色（文字）',
+    bgColor: '背景色',
+    swap: '互换颜色',
+    pass: '通过',
+    fail: '未通过',
+    aaNormal: 'AA 普通文本',
+    aaLarge: 'AA 大号文本',
+    aaaNormal: 'AAA 普通文本',
+    aaaLarge: 'AAA 大号文本',
+    ratingExcellent: '优秀（AAA 全部通过）',
+    ratingGood: '良好（AA 全部通过）',
+    ratingPartial: '部分通过（仅大号文本 AA）',
+    ratingFail: '未通过任何标准',
+    previewLarge: '大号文本预览 18pt / 粗体 14pt',
+    previewNormal:
+      '普通文本预览 — WCAG 无障碍规范要求普通文本（小于 18pt）满足更高的对比度标准。',
+    noteAA: 'AA 标准：普通文本 ≥ 4.5:1，大号文本（≥18pt 或粗体 ≥14pt）≥ 3:1',
+    noteAAA: 'AAA 标准：普通文本 ≥ 7:1，大号文本 ≥ 4.5:1',
+    noteLarge:
+      '大号文本定义：字号 ≥ 18pt（24px），或粗体且字号 ≥ 14pt（约 18.67px）',
   },
 } as const;
 

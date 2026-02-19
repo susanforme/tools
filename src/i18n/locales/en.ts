@@ -18,6 +18,7 @@ const en = {
     catConvert: 'Data Conversion',
     catFrontend: 'Frontend Tools',
     colorConverter: 'Color Converter',
+    contrast: 'Contrast Checker',
     layout: 'Layout Helpers',
     cssAnimation: 'CSS Animation Maker',
     catOther: 'Other',
@@ -40,7 +41,7 @@ const en = {
     otherSubtitle: 'Text processing and other utilities',
     groupFrontend: 'Frontend Tools',
     frontendSubtitle:
-      'Color Converter · CSS Helpers · CSS Animation Maker · Design & Dev Utilities',
+      'Color Converter · Contrast Checker · CSS Helpers · CSS Animation Maker · Design & Dev Utilities',
     tools: {
       json: {
         title: 'JSON Tools',
@@ -226,6 +227,13 @@ const en = {
         tagHex: 'HEX',
         tagRgb: 'RGB',
         tagHsl: 'HSL',
+      },
+      contrast: {
+        title: 'Contrast Checker',
+        desc: 'Check foreground/background color contrast ratio against WCAG AA and AAA standards',
+        tagAA: 'AA',
+        tagAAA: 'AAA',
+        tagWCAG: 'WCAG',
       },
       layout: {
         title: 'Layout Helpers',
@@ -963,6 +971,30 @@ const en = {
     addKf: 'Add Keyframe',
     removeKf: 'Remove',
     kfOffset: 'Progress (%)',
+  },
+  contrast: {
+    title: 'Contrast Checker',
+    desc: 'Enter foreground and background colors to calculate the contrast ratio and check WCAG AA / AAA compliance',
+    fgColor: 'Foreground color (text)',
+    bgColor: 'Background color',
+    swap: 'Swap colors',
+    pass: 'Pass',
+    fail: 'Fail',
+    aaNormal: 'AA Normal text',
+    aaLarge: 'AA Large text',
+    aaaNormal: 'AAA Normal text',
+    aaaLarge: 'AAA Large text',
+    ratingExcellent: 'Excellent (AAA all pass)',
+    ratingGood: 'Good (AA all pass)',
+    ratingPartial: 'Partial (AA large text only)',
+    ratingFail: 'Fail (none)',
+    previewLarge: 'Large text preview — 18pt / bold 14pt',
+    previewNormal:
+      'Normal text preview — WCAG requires normal text (below 18pt) to meet a higher contrast threshold.',
+    noteAA: 'AA: Normal text ≥ 4.5:1 · Large text (≥18pt or bold ≥14pt) ≥ 3:1',
+    noteAAA: 'AAA: Normal text ≥ 7:1 · Large text ≥ 4.5:1',
+    noteLarge:
+      'Large text: font size ≥ 18pt (24 px), or bold and ≥ 14pt (≈18.67 px)',
   },
 } as const;
 

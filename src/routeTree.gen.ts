@@ -41,6 +41,7 @@ import { Route as CssAnimationRouteImport } from './routes/css-animation'
 import { Route as CssRouteImport } from './routes/css'
 import { Route as CorsRouteImport } from './routes/cors'
 import { Route as CookieRouteImport } from './routes/cookie'
+import { Route as ContrastRouteImport } from './routes/contrast'
 import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
 import { Route as Base64RouteImport } from './routes/base64'
@@ -206,6 +207,11 @@ const CookieRoute = CookieRouteImport.update({
   path: '/cookie',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContrastRoute = ContrastRouteImport.update({
+  id: '/contrast',
+  path: '/contrast',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ColorConverterRoute = ColorConverterRouteImport.update({
   id: '/color-converter',
   path: '/color-converter',
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
+  '/contrast': typeof ContrastRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
@@ -270,6 +277,7 @@ export interface FileRoutesByTo {
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
+  '/contrast': typeof ContrastRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
@@ -309,6 +317,7 @@ export interface FileRoutesById {
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
+  '/contrast': typeof ContrastRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/base64'
     | '/cipher'
     | '/color-converter'
+    | '/contrast'
     | '/cookie'
     | '/cors'
     | '/css'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/base64'
     | '/cipher'
     | '/color-converter'
+    | '/contrast'
     | '/cookie'
     | '/cors'
     | '/css'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/base64'
     | '/cipher'
     | '/color-converter'
+    | '/contrast'
     | '/cookie'
     | '/cors'
     | '/css'
@@ -464,6 +476,7 @@ export interface RootRouteChildren {
   Base64Route: typeof Base64Route
   CipherRoute: typeof CipherRoute
   ColorConverterRoute: typeof ColorConverterRoute
+  ContrastRoute: typeof ContrastRoute
   CookieRoute: typeof CookieRoute
   CorsRoute: typeof CorsRoute
   CssRoute: typeof CssRoute
@@ -724,6 +737,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookieRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contrast': {
+      id: '/contrast'
+      path: '/contrast'
+      fullPath: '/contrast'
+      preLoaderRoute: typeof ContrastRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/color-converter': {
       id: '/color-converter'
       path: '/color-converter'
@@ -760,6 +780,7 @@ const rootRouteChildren: RootRouteChildren = {
   Base64Route: Base64Route,
   CipherRoute: CipherRoute,
   ColorConverterRoute: ColorConverterRoute,
+  ContrastRoute: ContrastRoute,
   CookieRoute: CookieRoute,
   CorsRoute: CorsRoute,
   CssRoute: CssRoute,
