@@ -6,7 +6,7 @@
     "#/*": "./src/*"
   },
   "scripts": {
-    "dev": "portless tools vite dev --host",
+    "dev": "portless proxy stop && PORTLESS_HTTPS=1 portless proxy start --https && PORTLESS_HTTPS=1 portless tools vite dev --host",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run"
