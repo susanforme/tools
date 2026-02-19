@@ -32,6 +32,7 @@ import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
 import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HashRouteImport } from './routes/hash'
+import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssRouteImport } from './routes/css'
 import { Route as CorsRouteImport } from './routes/cors'
@@ -155,6 +156,11 @@ const HashRoute = HashRouteImport.update({
   path: '/hash',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DatetimeRoute = DatetimeRouteImport.update({
+  id: '/datetime',
+  path: '/datetime',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CsvConvertRoute = CsvConvertRouteImport.update({
   id: '/csv-convert',
   path: '/csv-convert',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/datetime': typeof DatetimeRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/datetime': typeof DatetimeRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -264,6 +272,7 @@ export interface FileRoutesById {
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/datetime': typeof DatetimeRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/cors'
     | '/css'
     | '/csv-convert'
+    | '/datetime'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/cors'
     | '/css'
     | '/csv-convert'
+    | '/datetime'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/cors'
     | '/css'
     | '/csv-convert'
+    | '/datetime'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -395,6 +407,7 @@ export interface RootRouteChildren {
   CorsRoute: typeof CorsRoute
   CssRoute: typeof CssRoute
   CsvConvertRoute: typeof CsvConvertRoute
+  DatetimeRoute: typeof DatetimeRoute
   HashRoute: typeof HashRoute
   HmacRoute: typeof HmacRoute
   HtmlRoute: typeof HtmlRoute
@@ -583,6 +596,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HashRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/datetime': {
+      id: '/datetime'
+      path: '/datetime'
+      fullPath: '/datetime'
+      preLoaderRoute: typeof DatetimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/csv-convert': {
       id: '/csv-convert'
       path: '/csv-convert'
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   CorsRoute: CorsRoute,
   CssRoute: CssRoute,
   CsvConvertRoute: CsvConvertRoute,
+  DatetimeRoute: DatetimeRoute,
   HashRoute: HashRoute,
   HmacRoute: HmacRoute,
   HtmlRoute: HtmlRoute,

@@ -9,6 +9,7 @@ import {
   CaseSensitive,
   ChevronDown,
   ChevronRight,
+  Clock,
   Code2,
   Cookie,
   Database,
@@ -22,6 +23,7 @@ import {
   Globe,
   Hash,
   KeyRound,
+  Layers,
   Link as LinkIcon,
   ListOrdered,
   Lock,
@@ -216,6 +218,11 @@ const textNavItems: NavItem[] = [
     icon: <CaseSensitive className="w-4 h-4 text-lime-600" />,
     labelKey: 'nav.text',
   },
+  {
+    to: '/datetime',
+    icon: <Clock className="w-4 h-4 text-blue-500" />,
+    labelKey: 'nav.datetime',
+  },
 ];
 
 const ALL_CATEGORIES: CategoryDef[] = [
@@ -245,8 +252,8 @@ const ALL_CATEGORIES: CategoryDef[] = [
     items: convertNavItems,
   },
   {
-    labelKey: 'nav.catText',
-    icon: <CaseSensitive className="w-4 h-4" />,
+    labelKey: 'nav.catOther',
+    icon: <Layers className="w-4 h-4" />,
     items: textNavItems,
   },
 ];

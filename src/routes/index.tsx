@@ -5,6 +5,7 @@ import {
   Binary,
   Braces,
   CaseSensitive,
+  Clock,
   Cookie,
   Database,
   Dices,
@@ -16,6 +17,7 @@ import {
   Globe,
   Hash,
   KeyRound,
+  Layers,
   Link as LinkIcon,
   ListOrdered,
   Lock,
@@ -386,6 +388,19 @@ const textTools = [
     gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
     border: 'hover:border-lime-300 dark:hover:border-lime-700',
   },
+  {
+    to: '/datetime' as const,
+    icon: <Clock className="w-8 h-8 text-blue-500" />,
+    titleKey: 'home.tools.datetime.title',
+    descKey: 'home.tools.datetime.desc',
+    tagKeys: [
+      'home.tools.datetime.tagUnix',
+      'home.tools.datetime.tagTimezone',
+      'home.tools.datetime.tagDiff',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
 ];
 
 type ToolConfig = {
@@ -561,18 +576,18 @@ function HomePage() {
           </div>
         </div>
 
-        {/* 文本工具 */}
+        {/* 其他 */}
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-lime-500/10 text-lime-600">
-              <CaseSensitive className="w-4 h-4" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-500/10 text-slate-500">
+              <Layers className="w-4 h-4" />
             </div>
             <div>
               <h2 className="text-base font-semibold leading-none">
-                {t('home.groupText')}
+                {t('home.groupOther')}
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
-                {t('home.textSubtitle')}
+                {t('home.otherSubtitle')}
               </p>
             </div>
             <div className="flex-1 h-px bg-border ml-2" />
