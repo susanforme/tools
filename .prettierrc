@@ -1,0 +1,13 @@
+{
+  "semi": true,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "printWidth": 80,
+  "proseWrap": "always",
+  "trailingComma": "all",
+  "plugins": [
+    "prettier-plugin-embed",
+    "prettier-plugin-packagejson",
+    "prettier-plugin-organize-imports"
+  ]
+}
