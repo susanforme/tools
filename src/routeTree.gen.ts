@@ -29,6 +29,7 @@ import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
 import { Route as IpLookupRouteImport } from './routes/ip-lookup'
+import { Route as ImageRouteImport } from './routes/image'
 import { Route as HttpStatusRouteImport } from './routes/http-status'
 import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
@@ -147,6 +148,11 @@ const IpLookupRoute = IpLookupRouteImport.update({
   path: '/ip-lookup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImageRoute = ImageRouteImport.update({
+  id: '/image',
+  path: '/image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HttpStatusRoute = HttpStatusRouteImport.update({
   id: '/http-status',
   path: '/http-status',
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
+  '/image': typeof ImageRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
+  '/image': typeof ImageRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
+  '/image': typeof ImageRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/html'
     | '/http-request'
     | '/http-status'
+    | '/image'
     | '/ip-lookup'
     | '/js'
     | '/json'
@@ -410,6 +420,7 @@ export interface FileRouteTypes {
     | '/html'
     | '/http-request'
     | '/http-status'
+    | '/image'
     | '/ip-lookup'
     | '/js'
     | '/json'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/html'
     | '/http-request'
     | '/http-status'
+    | '/image'
     | '/ip-lookup'
     | '/js'
     | '/json'
@@ -489,6 +501,7 @@ export interface RootRouteChildren {
   HtmlRoute: typeof HtmlRoute
   HttpRequestRoute: typeof HttpRequestRoute
   HttpStatusRoute: typeof HttpStatusRoute
+  ImageRoute: typeof ImageRoute
   IpLookupRoute: typeof IpLookupRoute
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
@@ -653,6 +666,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IpLookupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/image': {
+      id: '/image'
+      path: '/image'
+      fullPath: '/image'
+      preLoaderRoute: typeof ImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/http-status': {
       id: '/http-status'
       path: '/http-status'
@@ -793,6 +813,7 @@ const rootRouteChildren: RootRouteChildren = {
   HtmlRoute: HtmlRoute,
   HttpRequestRoute: HttpRequestRoute,
   HttpStatusRoute: HttpStatusRoute,
+  ImageRoute: ImageRoute,
   IpLookupRoute: IpLookupRoute,
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,

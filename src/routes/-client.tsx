@@ -23,6 +23,7 @@ import {
   Fingerprint,
   Globe,
   Hash,
+  ImageIcon,
   KeyRound,
   Layers,
   Link as LinkIcon,
@@ -300,6 +301,11 @@ const frontendNavItems: NavItem[] = [
     to: '/css-animation',
     icon: <Sparkles className="w-4 h-4 text-violet-500" />,
     labelKey: 'nav.cssAnimation',
+  },
+  {
+    to: '/image',
+    icon: <ImageIcon className="w-4 h-4 text-sky-500" />,
+    labelKey: 'nav.imageTool',
   },
 ];
 

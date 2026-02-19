@@ -17,6 +17,7 @@ import {
   Fingerprint,
   Globe,
   Hash,
+  ImageIcon,
   KeyRound,
   Layers,
   Link as LinkIcon,
@@ -486,6 +487,20 @@ const frontendTools = [
     ],
     gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
     border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/image' as const,
+    icon: <ImageIcon className="w-8 h-8 text-sky-500" />,
+    titleKey: 'home.tools.imageTool.title',
+    descKey: 'home.tools.imageTool.desc',
+    tagKeys: [
+      'home.tools.imageTool.tagConvert',
+      'home.tools.imageTool.tagBase64',
+      'home.tools.imageTool.tagRetina',
+      'home.tools.imageTool.tagSkeleton',
+    ],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
   },
 ];
 
