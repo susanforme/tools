@@ -25,10 +25,11 @@ import {
   Shuffle,
   Tag,
 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LangSwitcher } from '../components/lang-switcher';
 import { TooltipProvider } from '../components/ui/tooltip';
-import '../i18n';
+import { detectClientLanguage, setLanguage } from '../i18n';
 
 type NavItem = { to: string; icon: React.ReactNode; labelKey: string };
 
@@ -127,6 +128,12 @@ const cryptoNavItems: NavItem[] = [
 ];
 
 export default function RootDocument() {
+  // hydration 完成后切换为用户偏好语言，避免 SSR 阶段不匹配
+  useEffect(() => {
+    const lang = detectClientLanguage();
+    setLanguage(lang);
+  }, []);
+
   return (
     <div>
       <TooltipProvider>
