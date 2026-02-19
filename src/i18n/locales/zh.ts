@@ -33,10 +33,12 @@ const zh = {
     tableConvert: 'HTML Table ↔ CSV/JSON',
     numberBase: '进制转换',
     regex: '正则工具',
+    text: '文本处理',
+    catText: '文本工具',
   },
   home: {
     title: '开发工具集',
-    subtitle: '常用前端开发辅助工具，所有处理均在本地完成，不上传任何数据',
+    subtitle: '所有处理均在本地完成，不上传任何数据',
     localProcess: '本地处理，数据安全',
     groupFormat: '格式化工具',
     groupEncode: '编码 / 转换',
@@ -47,6 +49,8 @@ const zh = {
     cryptoDesc: '安全与数据处理工具',
     groupConvert: '数据转换 / 互转',
     convertSubtitle: 'CSV↔JSON · XML↔JSON · HTML Table↔CSV · 进制转换',
+    groupText: '文本工具',
+    textSubtitle: '去重 · 去空行 · 排序 · Diff · 词频 · 大小写',
     tools: {
       json: {
         title: 'JSON 工具',
@@ -232,6 +236,13 @@ const zh = {
         tagTest: '测试',
         tagHighlight: '高亮',
         tagLibrary: '模式库',
+      },
+      text: {
+        title: '文本处理工具',
+        desc: '去重复行、去空行、行排序、Diff 比较、行/词统计、大小写转换',
+        tagDedupe: '去重',
+        tagSort: '排序',
+        tagDiff: 'Diff',
       },
     },
   },

@@ -16,6 +16,7 @@ import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnicodeRouteImport } from './routes/unicode'
+import { Route as TextRouteImport } from './routes/text'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as Rot13RouteImport } from './routes/rot13'
@@ -72,6 +73,11 @@ const UrlEncodeRoute = UrlEncodeRouteImport.update({
 const UnicodeRoute = UnicodeRouteImport.update({
   id: '/unicode',
   path: '/unicode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TextRoute = TextRouteImport.update({
+  id: '/text',
+  path: '/text',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TableConvertRoute = TableConvertRouteImport.update({
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
+  '/text': typeof TextRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
+  '/text': typeof TextRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -271,6 +279,7 @@ export interface FileRoutesById {
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
+  '/text': typeof TextRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -304,6 +313,7 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/sql'
     | '/table-convert'
+    | '/text'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/sql'
     | '/table-convert'
+    | '/text'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/sql'
     | '/table-convert'
+    | '/text'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
@@ -398,6 +410,7 @@ export interface RootRouteChildren {
   Rot13Route: typeof Rot13Route
   SqlRoute: typeof SqlRoute
   TableConvertRoute: typeof TableConvertRoute
+  TextRoute: typeof TextRoute
   UnicodeRoute: typeof UnicodeRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
@@ -456,6 +469,13 @@ declare module '@tanstack/react-router' {
       path: '/unicode'
       fullPath: '/unicode'
       preLoaderRoute: typeof UnicodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/text': {
+      id: '/text'
+      path: '/text'
+      fullPath: '/text'
+      preLoaderRoute: typeof TextRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/table-convert': {
@@ -638,6 +658,7 @@ const rootRouteChildren: RootRouteChildren = {
   Rot13Route: Rot13Route,
   SqlRoute: SqlRoute,
   TableConvertRoute: TableConvertRoute,
+  TextRoute: TextRoute,
   UnicodeRoute: UnicodeRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,

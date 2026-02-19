@@ -33,11 +33,12 @@ const en = {
     tableConvert: 'HTML Table ↔ CSV/JSON',
     numberBase: 'Number Base',
     regex: 'Regex Tester',
+    text: 'Text Tools',
+    catText: 'Text Tools',
   },
   home: {
     title: 'Developer Toolbox',
-    subtitle:
-      'Common frontend developer utilities. All processing is done locally — no data is uploaded.',
+    subtitle: 'All processing is done locally — no data is uploaded.',
     localProcess: 'Local processing, data stays private',
     groupFormat: 'Formatter Tools',
     groupEncode: 'Encoding / Conversion',
@@ -49,6 +50,8 @@ const en = {
     cryptoDesc: 'Security and data processing tools',
     groupConvert: 'Data Conversion',
     convertSubtitle: 'CSV↔JSON · XML↔JSON · HTML Table↔CSV · Number Base',
+    groupText: 'Text Tools',
+    textSubtitle: 'Dedupe · Remove Empty · Sort · Diff · Word Freq · Case',
     tools: {
       json: {
         title: 'JSON Tools',
@@ -234,6 +237,13 @@ const en = {
         tagTest: 'Test',
         tagHighlight: 'Highlight',
         tagLibrary: 'Library',
+      },
+      text: {
+        title: 'Text Tools',
+        desc: 'Deduplicate lines, remove empty lines, sort, diff, word frequency and case conversion',
+        tagDedupe: 'Dedupe',
+        tagSort: 'Sort',
+        tagDiff: 'Diff',
       },
     },
   },

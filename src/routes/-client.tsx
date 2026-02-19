@@ -6,6 +6,7 @@ import {
   ArrowLeftRight,
   Binary,
   Braces,
+  CaseSensitive,
   ChevronDown,
   Code2,
   Cookie,
@@ -81,6 +82,14 @@ const formatterNavItems: NavItem[] = [
     to: '/yaml',
     icon: <FileStack className="w-4 h-4 text-green-500" />,
     labelKey: 'nav.yaml',
+  },
+];
+
+const textNavItems: NavItem[] = [
+  {
+    to: '/text',
+    icon: <CaseSensitive className="w-4 h-4 text-lime-600" />,
+    labelKey: 'nav.text',
   },
 ];
 
@@ -235,6 +244,11 @@ export default function RootDocument() {
                   labelKey="nav.catConvert"
                   icon={<ArrowLeftRight className="w-4 h-4" />}
                   items={convertNavItems}
+                />
+                <CategoryMenu
+                  labelKey="nav.catText"
+                  icon={<CaseSensitive className="w-4 h-4" />}
+                  items={textNavItems}
                 />
               </div>
               <div className="ml-auto">

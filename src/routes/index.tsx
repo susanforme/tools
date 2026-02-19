@@ -4,6 +4,7 @@ import {
   ArrowLeftRight,
   Binary,
   Braces,
+  CaseSensitive,
   Cookie,
   Database,
   Dices,
@@ -371,6 +372,22 @@ const convertTools = [
   },
 ];
 
+const textTools = [
+  {
+    to: '/text' as const,
+    icon: <CaseSensitive className="w-8 h-8 text-lime-600" />,
+    titleKey: 'home.tools.text.title',
+    descKey: 'home.tools.text.desc',
+    tagKeys: [
+      'home.tools.text.tagDedupe',
+      'home.tools.text.tagSort',
+      'home.tools.text.tagDiff',
+    ],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
+];
+
 type ToolConfig = {
   to: string;
   icon: React.ReactNode;
@@ -539,6 +556,29 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {convertTools.map((tool) => (
+              <ToolCard key={tool.to} tool={tool} t={t} />
+            ))}
+          </div>
+        </div>
+
+        {/* 文本工具 */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-lime-500/10 text-lime-600">
+              <CaseSensitive className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupText')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('home.textSubtitle')}
+              </p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {textTools.map((tool) => (
               <ToolCard key={tool.to} tool={tool} t={t} />
             ))}
           </div>
