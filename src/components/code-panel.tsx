@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Copy, Check } from 'lucide-react'
-import { Textarea } from './ui/textarea'
 import { Button } from './ui/button'
+import Editor from '@monaco-editor/react'
 
 export interface CodePanelProps {
   input: string
@@ -9,22 +9,50 @@ export interface CodePanelProps {
   onInputChange: (v: string) => void
   inputPlaceholder?: string
   error?: string | null
+  language?: string
+  /** 输出面板使用不同语言（如 SCSS→CSS），默认与 language 相同 */
+  outputLanguage?: string
 }
 
 export function CodePanel({
   input,
   output,
   onInputChange,
-  inputPlaceholder,
+  inputPlaceholder: _inputPlaceholder,
   error,
+  language = 'plaintext',
+  outputLanguage,
 }: CodePanelProps) {
+  const resolvedOutputLanguage = outputLanguage ?? language
   const [copied, setCopied] = useState(false)
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    setIsDark(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   const handleCopy = async () => {
     if (!output) return
     await navigator.clipboard.writeText(output)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const theme = isDark ? 'vs-dark' : 'light'
+
+  const baseOptions = {
+    minimap: { enabled: false },
+    fontSize: 13,
+    lineNumbers: 'on' as const,
+    wordWrap: 'on' as const,
+    scrollBeyondLastLine: false,
+    automaticLayout: true,
+    tabSize: 2,
+    renderLineHighlight: 'all' as const,
   }
 
   return (
@@ -39,13 +67,16 @@ export function CodePanel({
           <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             输入
           </label>
-          <Textarea
-            className="min-h-[480px] font-mono text-sm resize-y"
-            placeholder={inputPlaceholder ?? '在此粘贴内容...'}
-            value={input}
-            onChange={(e) => onInputChange(e.target.value)}
-            spellCheck={false}
-          />
+          <div className="rounded-md overflow-hidden border border-input">
+            <Editor
+              height="480px"
+              language={language}
+              value={input}
+              onChange={(v) => onInputChange(v ?? '')}
+              theme={theme}
+              options={baseOptions}
+            />
+          </div>
         </div>
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
@@ -63,13 +94,15 @@ export function CodePanel({
               {copied ? '已复制' : '复制'}
             </Button>
           </div>
-          <Textarea
-            className="min-h-[480px] font-mono text-sm resize-y bg-muted/30"
-            readOnly
-            value={output}
-            placeholder="处理结果将在此显示..."
-            spellCheck={false}
-          />
+          <div className="rounded-md overflow-hidden border border-input">
+            <Editor
+              height="480px"
+              language={resolvedOutputLanguage}
+              value={output}
+              theme={theme}
+              options={{ ...baseOptions, readOnly: true }}
+            />
+          </div>
         </div>
       </div>
     </div>

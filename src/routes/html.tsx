@@ -8,8 +8,20 @@ export const Route = createFileRoute('/html')({
   component: HtmlPage,
 })
 
-function useHtmlTool() {
-  const [input, setInput] = useState('')
+const DEFAULT_HTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>示例页面</title>
+</head>
+<body>
+  <h1>Hello, World!</h1>
+  <p>这是一段示例 HTML。</p>
+</body>
+</html>`
+
+function useHtmlTool(initialInput = '') {
+  const [input, setInput] = useState(initialInput)
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -24,8 +36,8 @@ function useHtmlTool() {
 }
 
 function HtmlPage() {
-  const fmt = useHtmlTool()
-  const min = useHtmlTool()
+  const fmt = useHtmlTool(DEFAULT_HTML)
+  const min = useHtmlTool(DEFAULT_HTML)
 
   const formatHtml = async () => {
     fmt.setError(null)
@@ -98,6 +110,7 @@ function HtmlPage() {
             onInputChange={fmt.setInput}
             inputPlaceholder="<html><head></head><body>...</body></html>"
             error={fmt.error}
+            language="html"
           />
         </TabsContent>
 
@@ -116,6 +129,7 @@ function HtmlPage() {
             onInputChange={min.setInput}
             inputPlaceholder="<html><head></head><body>...</body></html>"
             error={min.error}
+            language="html"
           />
         </TabsContent>
       </Tabs>

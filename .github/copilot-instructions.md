@@ -82,6 +82,7 @@ function YourToolPage() {
         onInputChange={setInput}
         inputPlaceholder="在此粘贴内容..."
         error={error}
+        language="plaintext"
       />
     </div>
   )
@@ -90,15 +91,17 @@ function YourToolPage() {
 
 ### CodePanel
 
-公共双栏面板，接受以下 props：
+公共双栏面板（基于 **Monaco Editor**），接受以下 props：
 
 | Prop | 类型 | 说明 |
 |------|------|------|
 | `input` | `string` | 输入内容 |
 | `output` | `string` | 输出内容（只读） |
 | `onInputChange` | `(v: string) => void` | 输入变更回调 |
-| `inputPlaceholder` | `string?` | 输入框占位文本 |
+| `inputPlaceholder` | `string?` | 保留字段，Monaco 中暂不生效 |
 | `error` | `string \| null?` | 错误信息（红色提示条） |
+| `language` | `string?` | Monaco 语言标识，如 `json` / `html` / `css` / `scss` |
+| `outputLanguage` | `string?` | 输出面板单独语言（如 SCSS→CSS 时传 `css`），默认同 `language` |
 
 ## 样式规范
 

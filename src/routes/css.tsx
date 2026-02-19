@@ -18,8 +18,37 @@ function minifyCssString(css: string): string {
     .trim()
 }
 
-function useTool() {
-  const [input, setInput] = useState('')
+const DEFAULT_CSS = `.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background-color: #f9f9f9;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}`
+
+const DEFAULT_SCSS = `$primary: #3b82f6;
+$spacing: 8px;
+
+.container {
+  display: flex;
+  gap: $spacing * 2;
+  padding: $spacing;
+
+  .title {
+    font-size: 24px;
+    color: $primary;
+    &:hover { opacity: 0.8; }
+  }
+}`
+
+function useTool(initialInput = '') {
+  const [input, setInput] = useState(initialInput)
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -32,9 +61,9 @@ function useTool() {
 }
 
 function CssPage() {
-  const fmt = useTool()
-  const min = useTool()
-  const scss = useTool()
+  const fmt = useTool(DEFAULT_CSS)
+  const min = useTool(DEFAULT_CSS)
+  const scss = useTool(DEFAULT_SCSS)
 
   const formatCss = async () => {
     fmt.setError(null)
@@ -113,6 +142,7 @@ function CssPage() {
             onInputChange={fmt.setInput}
             inputPlaceholder={`.container{display:flex;gap:8px;}`}
             error={fmt.error}
+            language="css"
           />
         </TabsContent>
 
@@ -131,6 +161,7 @@ function CssPage() {
             onInputChange={min.setInput}
             inputPlaceholder={`.container {\n  display: flex;\n  gap: 8px;\n}`}
             error={min.error}
+            language="css"
           />
         </TabsContent>
 
@@ -153,6 +184,8 @@ function CssPage() {
             onInputChange={scss.setInput}
             inputPlaceholder={`$primary: #3b82f6;\n\n.container {\n  color: $primary;\n  &:hover { opacity: 0.8; }\n}`}
             error={scss.error}
+            language="scss"
+            outputLanguage="css"
           />
         </TabsContent>
       </Tabs>

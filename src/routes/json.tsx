@@ -15,8 +15,15 @@ export const Route = createFileRoute('/json')({
   component: JsonPage,
 })
 
+const DEFAULT_JSON = `{
+  "name": "Alice",
+  "age": 30,
+  "skills": ["TypeScript", "React"],
+  "address": { "city": "Shanghai", "zip": "200000" }
+}`
+
 function JsonPage() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState(DEFAULT_JSON)
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [indent, setIndent] = useState('2')
@@ -115,6 +122,7 @@ function JsonPage() {
         onInputChange={setInput}
         inputPlaceholder={'{ "key": "value" }'}
         error={error}
+        language="json"
       />
     </div>
   )
