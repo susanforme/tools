@@ -39,6 +39,7 @@ import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssRouteImport } from './routes/css'
 import { Route as CorsRouteImport } from './routes/cors'
 import { Route as CookieRouteImport } from './routes/cookie'
+import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
 import { Route as Base64RouteImport } from './routes/base64'
 import { Route as IndexRouteImport } from './routes/index'
@@ -193,6 +194,11 @@ const CookieRoute = CookieRouteImport.update({
   path: '/cookie',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ColorConverterRoute = ColorConverterRouteImport.update({
+  id: '/color-converter',
+  path: '/color-converter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CipherRoute = CipherRouteImport.update({
   id: '/cipher',
   path: '/cipher',
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
+  '/color-converter': typeof ColorConverterRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
+  '/color-converter': typeof ColorConverterRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
@@ -284,6 +292,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
   '/cipher': typeof CipherRoute
+  '/color-converter': typeof ColorConverterRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/'
     | '/base64'
     | '/cipher'
+    | '/color-converter'
     | '/cookie'
     | '/cors'
     | '/css'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/'
     | '/base64'
     | '/cipher'
+    | '/color-converter'
     | '/cookie'
     | '/cors'
     | '/css'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/'
     | '/base64'
     | '/cipher'
+    | '/color-converter'
     | '/cookie'
     | '/cors'
     | '/css'
@@ -427,6 +439,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Base64Route: typeof Base64Route
   CipherRoute: typeof CipherRoute
+  ColorConverterRoute: typeof ColorConverterRoute
   CookieRoute: typeof CookieRoute
   CorsRoute: typeof CorsRoute
   CssRoute: typeof CssRoute
@@ -671,6 +684,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookieRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/color-converter': {
+      id: '/color-converter'
+      path: '/color-converter'
+      fullPath: '/color-converter'
+      preLoaderRoute: typeof ColorConverterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cipher': {
       id: '/cipher'
       path: '/cipher'
@@ -699,6 +719,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Base64Route: Base64Route,
   CipherRoute: CipherRoute,
+  ColorConverterRoute: ColorConverterRoute,
   CookieRoute: CookieRoute,
   CorsRoute: CorsRoute,
   CssRoute: CssRoute,

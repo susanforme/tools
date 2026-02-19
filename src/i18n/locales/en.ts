@@ -16,7 +16,9 @@ const en = {
     catCrypto: 'Crypto / Security',
     catNetwork: 'Network / Request',
     catConvert: 'Data Conversion',
-    httpRequest: 'HTTP Request',
+    catFrontend: 'Frontend Tools',
+    colorConverter: 'Color Converter',
+    catOther: 'Other',
     cors: 'CORS Test',
     cookie: 'Cookie Inspector',
     ipLookup: 'IP Lookup',
@@ -37,7 +39,6 @@ const en = {
     datetime: 'Date / Time',
     password: 'Password',
     qrcode: 'QR Code',
-    catOther: 'Other',
   },
   home: {
     title: 'Developer Toolbox',
@@ -55,6 +56,8 @@ const en = {
     convertSubtitle: 'CSV↔JSON · XML↔JSON · HTML Table↔CSV · Number Base',
     groupOther: 'Other',
     otherSubtitle: 'Text processing and other utilities',
+    groupFrontend: 'Frontend Tools',
+    frontendSubtitle: 'Color Converter · CSS Helpers · Design & Dev Utilities',
     tools: {
       json: {
         title: 'JSON Tools',
@@ -233,6 +236,13 @@ const en = {
         tagBinary: 'Binary',
         tagDecimal: 'Decimal',
         tagHex: 'Hex',
+      },
+      colorConverter: {
+        title: 'Color Converter',
+        desc: 'Real-time HEX / RGB(A) / HSL(A) conversion with color picker and channel sliders',
+        tagHex: 'HEX',
+        tagRgb: 'RGB',
+        tagHsl: 'HSL',
       },
       regex: {
         title: 'Regex Tester',
@@ -876,6 +886,20 @@ const en = {
     samplePostcode:
       'Beijing 100000, Shanghai 200000, invalid 99999 and 1000000',
     sampleHtmlTag: '<div class="box"><p>Hello <strong>World</strong></p></div>',
+  },
+  colorConverter: {
+    title: 'Color Converter',
+    desc: 'Real-time conversion between HEX, RGB(A) and HSL(A) with color picker and channel sliders',
+    inputLabel: 'Enter color',
+    eyeDropper: 'Pick',
+    parseError:
+      'Unrecognized color format — please enter a valid HEX, RGB(A) or HSL(A) value',
+    hint: 'Supports #hex, rgb(), rgba(), hsl(), hsla() — paste any CSS color value for auto-detection',
+    preview: 'Color preview',
+    alphaNote: 'Alpha (opacity): {{alpha}}',
+    results: 'Conversion results',
+    sliders: 'Channel sliders',
+    clear: 'Clear',
   },
 } as const;
 

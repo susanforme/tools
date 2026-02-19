@@ -32,6 +32,7 @@ import {
   Moon,
   Network,
   Paintbrush,
+  Palette,
   QrCode,
   Regex as RegexIcon,
   RotateCw,
@@ -277,6 +278,14 @@ const textNavItems: NavItem[] = [
   },
 ];
 
+const frontendNavItems: NavItem[] = [
+  {
+    to: '/color-converter',
+    icon: <Palette className="w-4 h-4 text-pink-500" />,
+    labelKey: 'nav.colorConverter',
+  },
+];
+
 const ALL_CATEGORIES: CategoryDef[] = [
   {
     labelKey: 'nav.catFormatter',
@@ -302,6 +311,11 @@ const ALL_CATEGORIES: CategoryDef[] = [
     labelKey: 'nav.catConvert',
     icon: <ArrowLeftRight className="w-4 h-4" />,
     items: convertNavItems,
+  },
+  {
+    labelKey: 'nav.catFrontend',
+    icon: <Palette className="w-4 h-4" />,
+    items: frontendNavItems,
   },
   {
     labelKey: 'nav.catOther',

@@ -16,6 +16,7 @@ const zh = {
     catCrypto: '加密 / 安全',
     catNetwork: '网络 / 请求',
     catConvert: '数据转换',
+    catFrontend: '前端工具',
     httpRequest: 'HTTP 请求',
     cors: 'CORS 测试',
     cookie: 'Cookie 检查器',
@@ -37,6 +38,7 @@ const zh = {
     datetime: '时间 / 日期',
     password: '密码生成',
     qrcode: 'QR 二维码',
+    colorConverter: '色彩转换器',
     catOther: '其他',
   },
   home: {
@@ -54,6 +56,8 @@ const zh = {
     convertSubtitle: 'CSV↔JSON · XML↔JSON · HTML Table↔CSV · 进制转换',
     groupOther: '其他',
     otherSubtitle: '文本处理及其他实用工具',
+    groupFrontend: '前端工具',
+    frontendSubtitle: '色彩转换 · CSS 辅助 · 设计开发工具',
     tools: {
       json: {
         title: 'JSON 工具',
@@ -267,6 +271,13 @@ const zh = {
         tagGenerate: '生成',
         tagDecode: '识别',
         tagCustom: '自定义',
+      },
+      colorConverter: {
+        title: '色彩转换器',
+        desc: 'HEX、RGB(A)、HSL(A) 格式实时互转，支持取色器与分量调节',
+        tagHex: 'HEX',
+        tagRgb: 'RGB',
+        tagHsl: 'HSL',
       },
     },
   },
@@ -870,6 +881,19 @@ const zh = {
     sampleIdCard: '证件：110101199001011234，另一个 320102198505151234X',
     samplePostcode: '北京 100000，上海 200000，无效 99999 和 1000000',
     sampleHtmlTag: '<div class="box"><p>Hello <strong>World</strong></p></div>',
+  },
+  colorConverter: {
+    title: '色彩转换器',
+    desc: 'HEX、RGB(A)、HSL(A) 格式实时互转，支持取色器与分量调节',
+    inputLabel: '输入颜色',
+    eyeDropper: '取色',
+    parseError: '无法识别的颜色格式，请输入有效的 HEX、RGB(A) 或 HSL(A) 值',
+    hint: '支持 #hex、rgb()、rgba()、hsl()、hsla() 格式，粘贴任意 CSS 颜色值即可自动识别',
+    preview: '颜色预览',
+    alphaNote: '透明度（Alpha）：{{alpha}}',
+    results: '转换结果',
+    sliders: '分量调节',
+    clear: '清空',
   },
 } as const;
 

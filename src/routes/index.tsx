@@ -25,6 +25,7 @@ import {
   MonitorSmartphone,
   Network,
   Paintbrush,
+  Palette,
   QrCode,
   Regex as RegexIcon,
   RotateCw,
@@ -431,6 +432,22 @@ const textTools = [
   },
 ];
 
+const frontendTools = [
+  {
+    to: '/color-converter' as const,
+    icon: <Palette className="w-8 h-8 text-pink-500" />,
+    titleKey: 'home.tools.colorConverter.title',
+    descKey: 'home.tools.colorConverter.desc',
+    tagKeys: [
+      'home.tools.colorConverter.tagHex',
+      'home.tools.colorConverter.tagRgb',
+      'home.tools.colorConverter.tagHsl',
+    ],
+    gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
+    border: 'hover:border-pink-300 dark:hover:border-pink-700',
+  },
+];
+
 type ToolConfig = {
   to: string;
   icon: React.ReactNode;
@@ -622,6 +639,29 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {textTools.map((tool) => (
+              <ToolCard key={tool.to} tool={tool} t={t} />
+            ))}
+          </div>
+        </div>
+
+        {/* 前端工具 */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-pink-500/10 text-pink-500">
+              <Palette className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupFrontend')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('home.frontendSubtitle')}
+              </p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {frontendTools.map((tool) => (
               <ToolCard key={tool.to} tool={tool} t={t} />
             ))}
           </div>
