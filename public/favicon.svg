@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="slash" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景圆角矩形 -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+
+  <!-- 左尖括号 < -->
+  <polyline
+    points="7,10 3,16 7,22"
+    fill="none"
+    stroke="#f59e0b"
+    stroke-width="2.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- 右尖括号 > -->
+  <polyline
+    points="25,10 29,16 25,22"
+    fill="none"
+    stroke="#60a5fa"
+    stroke-width="2.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- 斜杠 / -->
+  <line
+    x1="20"
+    y1="9"
+    x2="12"
+    y2="23"
+    stroke="url(#slash)"
+    stroke-width="2.8"
+    stroke-linecap="round"
+  />
+</svg>
