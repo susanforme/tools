@@ -18,17 +18,17 @@ const JsonRoute = JsonRouteImport.update({
   id: '/json',
   path: '/json',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/json.lazy').then((d) => d.Route))
+} as any)
 const HtmlRoute = HtmlRouteImport.update({
   id: '/html',
   path: '/html',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/html.lazy').then((d) => d.Route))
+} as any)
 const CssRoute = CssRouteImport.update({
   id: '/css',
   path: '/css',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/css.lazy').then((d) => d.Route))
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
