@@ -10,13 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as YamlRouteImport } from './routes/yaml'
+import { Route as XmlJsonRouteImport } from './routes/xml-json'
 import { Route as XmlRouteImport } from './routes/xml'
 import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnicodeRouteImport } from './routes/unicode'
+import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as Rot13RouteImport } from './routes/rot13'
+import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
@@ -27,6 +30,7 @@ import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
 import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HashRouteImport } from './routes/hash'
+import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssRouteImport } from './routes/css'
 import { Route as CorsRouteImport } from './routes/cors'
 import { Route as CookieRouteImport } from './routes/cookie'
@@ -37,6 +41,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const YamlRoute = YamlRouteImport.update({
   id: '/yaml',
   path: '/yaml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const XmlJsonRoute = XmlJsonRouteImport.update({
+  id: '/xml-json',
+  path: '/xml-json',
   getParentRoute: () => rootRouteImport,
 } as any)
 const XmlRoute = XmlRouteImport.update({
@@ -64,6 +73,11 @@ const UnicodeRoute = UnicodeRouteImport.update({
   path: '/unicode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TableConvertRoute = TableConvertRouteImport.update({
+  id: '/table-convert',
+  path: '/table-convert',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SqlRoute = SqlRouteImport.update({
   id: '/sql',
   path: '/sql',
@@ -72,6 +86,11 @@ const SqlRoute = SqlRouteImport.update({
 const Rot13Route = Rot13RouteImport.update({
   id: '/rot13',
   path: '/rot13',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NumberBaseRoute = NumberBaseRouteImport.update({
+  id: '/number-base',
+  path: '/number-base',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarkdownRoute = MarkdownRouteImport.update({
@@ -124,6 +143,11 @@ const HashRoute = HashRouteImport.update({
   path: '/hash',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CsvConvertRoute = CsvConvertRouteImport.update({
+  id: '/csv-convert',
+  path: '/csv-convert',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CssRoute = CssRouteImport.update({
   id: '/css',
   path: '/css',
@@ -162,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
+  '/csv-convert': typeof CsvConvertRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -172,13 +197,16 @@ export interface FileRoutesByFullPath {
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
+  '/number-base': typeof NumberBaseRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
+  '/table-convert': typeof TableConvertRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
+  '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
 }
 export interface FileRoutesByTo {
@@ -188,6 +216,7 @@ export interface FileRoutesByTo {
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
+  '/csv-convert': typeof CsvConvertRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -198,13 +227,16 @@ export interface FileRoutesByTo {
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
+  '/number-base': typeof NumberBaseRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
+  '/table-convert': typeof TableConvertRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
+  '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
 }
 export interface FileRoutesById {
@@ -215,6 +247,7 @@ export interface FileRoutesById {
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
+  '/csv-convert': typeof CsvConvertRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -225,13 +258,16 @@ export interface FileRoutesById {
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
   '/markdown': typeof MarkdownRoute
+  '/number-base': typeof NumberBaseRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
+  '/table-convert': typeof TableConvertRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/xml': typeof XmlRoute
+  '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
 }
 export interface FileRouteTypes {
@@ -243,6 +279,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/cors'
     | '/css'
+    | '/csv-convert'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -253,13 +290,16 @@ export interface FileRouteTypes {
     | '/json'
     | '/jwt'
     | '/markdown'
+    | '/number-base'
     | '/rot13'
     | '/sql'
+    | '/table-convert'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
     | '/xml'
+    | '/xml-json'
     | '/yaml'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -269,6 +309,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/cors'
     | '/css'
+    | '/csv-convert'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -279,13 +320,16 @@ export interface FileRouteTypes {
     | '/json'
     | '/jwt'
     | '/markdown'
+    | '/number-base'
     | '/rot13'
     | '/sql'
+    | '/table-convert'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
     | '/xml'
+    | '/xml-json'
     | '/yaml'
   id:
     | '__root__'
@@ -295,6 +339,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/cors'
     | '/css'
+    | '/csv-convert'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -305,13 +350,16 @@ export interface FileRouteTypes {
     | '/json'
     | '/jwt'
     | '/markdown'
+    | '/number-base'
     | '/rot13'
     | '/sql'
+    | '/table-convert'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
     | '/xml'
+    | '/xml-json'
     | '/yaml'
   fileRoutesById: FileRoutesById
 }
@@ -322,6 +370,7 @@ export interface RootRouteChildren {
   CookieRoute: typeof CookieRoute
   CorsRoute: typeof CorsRoute
   CssRoute: typeof CssRoute
+  CsvConvertRoute: typeof CsvConvertRoute
   HashRoute: typeof HashRoute
   HmacRoute: typeof HmacRoute
   HtmlRoute: typeof HtmlRoute
@@ -332,13 +381,16 @@ export interface RootRouteChildren {
   JsonRoute: typeof JsonRoute
   JwtRoute: typeof JwtRoute
   MarkdownRoute: typeof MarkdownRoute
+  NumberBaseRoute: typeof NumberBaseRoute
   Rot13Route: typeof Rot13Route
   SqlRoute: typeof SqlRoute
+  TableConvertRoute: typeof TableConvertRoute
   UnicodeRoute: typeof UnicodeRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
   XmlRoute: typeof XmlRoute
+  XmlJsonRoute: typeof XmlJsonRoute
   YamlRoute: typeof YamlRoute
 }
 
@@ -349,6 +401,13 @@ declare module '@tanstack/react-router' {
       path: '/yaml'
       fullPath: '/yaml'
       preLoaderRoute: typeof YamlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/xml-json': {
+      id: '/xml-json'
+      path: '/xml-json'
+      fullPath: '/xml-json'
+      preLoaderRoute: typeof XmlJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/xml': {
@@ -386,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnicodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/table-convert': {
+      id: '/table-convert'
+      path: '/table-convert'
+      fullPath: '/table-convert'
+      preLoaderRoute: typeof TableConvertRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sql': {
       id: '/sql'
       path: '/sql'
@@ -398,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/rot13'
       fullPath: '/rot13'
       preLoaderRoute: typeof Rot13RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/number-base': {
+      id: '/number-base'
+      path: '/number-base'
+      fullPath: '/number-base'
+      preLoaderRoute: typeof NumberBaseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/markdown': {
@@ -470,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HashRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/csv-convert': {
+      id: '/csv-convert'
+      path: '/csv-convert'
+      fullPath: '/csv-convert'
+      preLoaderRoute: typeof CsvConvertRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/css': {
       id: '/css'
       path: '/css'
@@ -522,6 +602,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookieRoute: CookieRoute,
   CorsRoute: CorsRoute,
   CssRoute: CssRoute,
+  CsvConvertRoute: CsvConvertRoute,
   HashRoute: HashRoute,
   HmacRoute: HmacRoute,
   HtmlRoute: HtmlRoute,
@@ -532,13 +613,16 @@ const rootRouteChildren: RootRouteChildren = {
   JsonRoute: JsonRoute,
   JwtRoute: JwtRoute,
   MarkdownRoute: MarkdownRoute,
+  NumberBaseRoute: NumberBaseRoute,
   Rot13Route: Rot13Route,
   SqlRoute: SqlRoute,
+  TableConvertRoute: TableConvertRoute,
   UnicodeRoute: UnicodeRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,
   XmlRoute: XmlRoute,
+  XmlJsonRoute: XmlJsonRoute,
   YamlRoute: YamlRoute,
 }
 export const routeTree = rootRouteImport

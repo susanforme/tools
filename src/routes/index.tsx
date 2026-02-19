@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import {
   AlignLeft,
+  ArrowLeftRight,
   Binary,
   Braces,
   Cookie,
@@ -26,6 +27,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   Shuffle,
+  Table,
   Tag,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -304,6 +306,57 @@ const networkTools = [
   },
 ];
 
+const convertTools = [
+  {
+    to: '/csv-convert' as const,
+    icon: <Database className="w-8 h-8 text-cyan-600" />,
+    titleKey: 'home.tools.csvConvert.title',
+    descKey: 'home.tools.csvConvert.desc',
+    tagKeys: [
+      'home.tools.csvConvert.tagCsv',
+      'home.tools.csvConvert.tagTsv',
+      'home.tools.csvConvert.tagSql',
+    ],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/xml-json' as const,
+    icon: <ArrowLeftRight className="w-8 h-8 text-orange-600" />,
+    titleKey: 'home.tools.xmlJson.title',
+    descKey: 'home.tools.xmlJson.desc',
+    tagKeys: ['home.tools.xmlJson.tagXml', 'home.tools.xmlJson.tagJson'],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/table-convert' as const,
+    icon: <Table className="w-8 h-8 text-emerald-600" />,
+    titleKey: 'home.tools.tableConvert.title',
+    descKey: 'home.tools.tableConvert.desc',
+    tagKeys: [
+      'home.tools.tableConvert.tagHtml',
+      'home.tools.tableConvert.tagCsv',
+      'home.tools.tableConvert.tagJson',
+    ],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/number-base' as const,
+    icon: <Binary className="w-8 h-8 text-violet-600" />,
+    titleKey: 'home.tools.numberBase.title',
+    descKey: 'home.tools.numberBase.desc',
+    tagKeys: [
+      'home.tools.numberBase.tagBinary',
+      'home.tools.numberBase.tagDecimal',
+      'home.tools.numberBase.tagHex',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+];
+
 type ToolConfig = {
   to: string;
   icon: React.ReactNode;
@@ -449,6 +502,29 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {networkTools.map((tool) => (
+              <ToolCard key={tool.to} tool={tool} t={t} />
+            ))}
+          </div>
+        </div>
+
+        {/* 数据转换 / 互转 */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-600">
+              <ArrowLeftRight className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold leading-none">
+                {t('home.groupConvert')}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('home.convertSubtitle')}
+              </p>
+            </div>
+            <div className="flex-1 h-px bg-border ml-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {convertTools.map((tool) => (
               <ToolCard key={tool.to} tool={tool} t={t} />
             ))}
           </div>

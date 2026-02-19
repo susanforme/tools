@@ -3,6 +3,7 @@ import { Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import {
   AlignLeft,
+  ArrowLeftRight,
   Binary,
   Braces,
   ChevronDown,
@@ -30,6 +31,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   Shuffle,
+  Table,
   Tag,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -165,6 +167,29 @@ const networkNavItems: NavItem[] = [
   },
 ];
 
+const convertNavItems: NavItem[] = [
+  {
+    to: '/csv-convert',
+    icon: <Database className="w-4 h-4 text-cyan-600" />,
+    labelKey: 'nav.csvConvert',
+  },
+  {
+    to: '/xml-json',
+    icon: <ArrowLeftRight className="w-4 h-4 text-orange-600" />,
+    labelKey: 'nav.xmlJson',
+  },
+  {
+    to: '/table-convert',
+    icon: <Table className="w-4 h-4 text-emerald-600" />,
+    labelKey: 'nav.tableConvert',
+  },
+  {
+    to: '/number-base',
+    icon: <Binary className="w-4 h-4 text-violet-600" />,
+    labelKey: 'nav.numberBase',
+  },
+];
+
 export default function RootDocument() {
   return (
     <div>
@@ -199,6 +224,11 @@ export default function RootDocument() {
                   labelKey="nav.catNetwork"
                   icon={<Network className="w-4 h-4" />}
                   items={networkNavItems}
+                />
+                <CategoryMenu
+                  labelKey="nav.catConvert"
+                  icon={<ArrowLeftRight className="w-4 h-4" />}
+                  items={convertNavItems}
                 />
               </div>
               <div className="ml-auto">

@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 import viteReact from '@vitejs/plugin-react';
 
 const config = defineConfig({
-  logLevel: 'warn',
+  // logLevel: 'warn',
   plugins: [
     devtools(),
     tsconfigPaths({ projects: ['./tsconfig.json'] }),
