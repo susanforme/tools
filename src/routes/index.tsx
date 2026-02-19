@@ -34,6 +34,7 @@ import {
   ShieldCheck,
   ShieldPlus,
   Shuffle,
+  Sparkles,
   Table,
   Tag,
 } from 'lucide-react';
@@ -458,6 +459,19 @@ const frontendTools = [
     ],
     gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
     border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/css-animation' as const,
+    icon: <Sparkles className="w-8 h-8 text-violet-500" />,
+    titleKey: 'home.tools.cssAnimation.title',
+    descKey: 'home.tools.cssAnimation.desc',
+    tagKeys: [
+      'home.tools.cssAnimation.tagTransition',
+      'home.tools.cssAnimation.tagAnimation',
+      'home.tools.cssAnimation.tagKeyframes',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
   },
 ];
 

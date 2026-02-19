@@ -41,6 +41,7 @@ import {
   ShieldCheck,
   ShieldPlus,
   Shuffle,
+  Sparkles,
   Sun,
   Table,
   Tag,
@@ -288,6 +289,11 @@ const frontendNavItems: NavItem[] = [
     to: '/css-layout',
     icon: <Layers className="w-4 h-4 text-indigo-500" />,
     labelKey: 'nav.layout',
+  },
+  {
+    to: '/css-animation',
+    icon: <Sparkles className="w-4 h-4 text-violet-500" />,
+    labelKey: 'nav.cssAnimation',
   },
 ];
 

@@ -37,6 +37,7 @@ import { Route as HashRouteImport } from './routes/hash'
 import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssLayoutRouteImport } from './routes/css-layout'
+import { Route as CssAnimationRouteImport } from './routes/css-animation'
 import { Route as CssRouteImport } from './routes/css'
 import { Route as CorsRouteImport } from './routes/cors'
 import { Route as CookieRouteImport } from './routes/cookie'
@@ -185,6 +186,11 @@ const CssLayoutRoute = CssLayoutRouteImport.update({
   path: '/css-layout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CssAnimationRoute = CssAnimationRouteImport.update({
+  id: '/css-animation',
+  path: '/css-animation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CssRoute = CssRouteImport.update({
   id: '/css',
   path: '/css',
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
+  '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
+  '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
@@ -304,6 +312,7 @@ export interface FileRoutesById {
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
   '/css': typeof CssRoute
+  '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
@@ -343,6 +352,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/cors'
     | '/css'
+    | '/css-animation'
     | '/css-layout'
     | '/csv-convert'
     | '/datetime'
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/cors'
     | '/css'
+    | '/css-animation'
     | '/css-layout'
     | '/csv-convert'
     | '/datetime'
@@ -417,6 +428,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/cors'
     | '/css'
+    | '/css-animation'
     | '/css-layout'
     | '/csv-convert'
     | '/datetime'
@@ -455,6 +467,7 @@ export interface RootRouteChildren {
   CookieRoute: typeof CookieRoute
   CorsRoute: typeof CorsRoute
   CssRoute: typeof CssRoute
+  CssAnimationRoute: typeof CssAnimationRoute
   CssLayoutRoute: typeof CssLayoutRoute
   CsvConvertRoute: typeof CsvConvertRoute
   DatetimeRoute: typeof DatetimeRoute
@@ -683,6 +696,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CssLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/css-animation': {
+      id: '/css-animation'
+      path: '/css-animation'
+      fullPath: '/css-animation'
+      preLoaderRoute: typeof CssAnimationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/css': {
       id: '/css'
       path: '/css'
@@ -743,6 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookieRoute: CookieRoute,
   CorsRoute: CorsRoute,
   CssRoute: CssRoute,
+  CssAnimationRoute: CssAnimationRoute,
   CssLayoutRoute: CssLayoutRoute,
   CsvConvertRoute: CsvConvertRoute,
   DatetimeRoute: DatetimeRoute,
