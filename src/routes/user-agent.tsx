@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   Check,
@@ -30,7 +31,7 @@ type UAParsed = {
   raw: string;
 };
 
-// --- Lightweight UA parser (no external dep) ---
+// ─── UA 解析（轻量，无外部依赖）─────────────────────────────────────────────
 
 function extractVersion(ua: string, pattern: RegExp): string {
   const m = pattern.exec(ua);
@@ -189,6 +190,8 @@ function parseUA(ua: string): UAParsed {
   };
 }
 
+// ─── 设备图标 ─────────────────────────────────────────────────────────────────
+
 function DeviceIcon({ type }: { type: UAParsed['device']['type'] }) {
   if (type === 'mobile')
     return <Smartphone className="w-5 h-5 text-blue-500" />;
@@ -197,220 +200,91 @@ function DeviceIcon({ type }: { type: UAParsed['device']['type'] }) {
   return <Monitor className="w-5 h-5 text-gray-500" />;
 }
 
-// ─── 浏览器 SVG 图标（内联，无外部依赖）────────────────────────────────────
+// ─── 浏览器图标（simple-icons via @iconify/react）────────────────────────────
 
-function IconChrome({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" fill="#fff" />
-      {/* 外环渐变色扇区 */}
-      <path
-        d="M12 2a10 10 0 0 1 8.66 5H12a5 5 0 0 0-5 5H2.05A10 10 0 0 1 12 2z"
-        fill="#EA4335"
-      />
-      <path
-        d="M2.05 12H7a5 5 0 0 0 2.27 4.18L6.4 20.93A10 10 0 0 1 2.05 12z"
-        fill="#34A853"
-      />
-      <path
-        d="M12 22a10 10 0 0 1-5.6-1.07l2.87-4.75A5 5 0 0 0 17 12h4.95A10 10 0 0 1 12 22z"
-        fill="#4285F4"
-      />
-      {/* 中心白圆 */}
-      <circle cx="12" cy="12" r="3.5" fill="#fff" />
-      <circle cx="12" cy="12" r="2.5" fill="#1A73E8" />
-    </svg>
-  );
-}
-
-function IconFirefox({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <path
-        d="M21.94 9.6a9.8 9.8 0 0 0-.76-2.19 10 10 0 0 0-2.24-3.04c.07.52.08 1.04.03 1.56a7.4 7.4 0 0 0-.47-1.1 7.5 7.5 0 0 0-3.26-3.1 9.15 9.15 0 0 1 .44 2.44 6.4 6.4 0 0 0-1.21-1.55C13.28 1.45 11.5.9 9.8 1a9.4 9.4 0 0 0-1.83.26 8.5 8.5 0 0 0-4.25 2.8 10 10 0 0 0-2.24 5.6 10 10 0 0 0 .36 3.5A10 10 0 0 0 12 22a10 10 0 0 0 9.97-10.4 10 10 0 0 0-.03-2z"
-        fill="#FF6611"
-      />
-      <path
-        d="M12 3.5c1.2 0 2.37.27 3.43.78a6 6 0 0 0-1.15-.12c-3.58 0-6.5 2.83-6.5 6.34 0 1.49.54 2.86 1.43 3.93A6.5 6.5 0 0 1 7.3 10.5C7.3 6.65 9.27 3.5 12 3.5z"
-        fill="#FF980A"
-      />
-      <path
-        d="M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"
-        fill="#fff"
-        opacity=".3"
-      />
-    </svg>
-  );
-}
-
-function IconSafari({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" fill="#006CFF" />
-      <circle
-        cx="12"
-        cy="12"
-        r="9"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="0.5"
-      />
-      {/* 指针 */}
-      <polygon points="12,4 13.4,10.6 12,12 10.6,10.6" fill="#FF3B30" />
-      <polygon points="12,20 10.6,13.4 12,12 13.4,13.4" fill="#fff" />
-      {/* 刻度点 */}
-      <circle cx="12" cy="3.2" r="0.5" fill="#fff" />
-      <circle cx="12" cy="20.8" r="0.5" fill="#fff" />
-      <circle cx="3.2" cy="12" r="0.5" fill="#fff" />
-      <circle cx="20.8" cy="12" r="0.5" fill="#fff" />
-    </svg>
-  );
-}
-
-function IconEdge({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <path
-        d="M21.86 17.5c-.32.9-1 1.68-2 2.24a8.18 8.18 0 0 1-3.86.9c-1.08 0-2.08-.17-3-.5a7.35 7.35 0 0 1-3.8-3.14H19c.54 0 .96-.1 1.27-.3.3-.2.5-.52.59-.96v-.02l.01-.05v-.03c.27-1.37.1-2.74-.44-3.91A7.47 7.47 0 0 0 12 8a7.5 7.5 0 0 0-7.5 7.5c0 .58.07 1.14.2 1.68A10 10 0 1 1 21.86 17.5z"
-        fill="#0078D4"
-      />
-      <path
-        d="M14.5 10.5A4.5 4.5 0 0 1 19 15H9.5a4.5 4.5 0 0 1 5-4.5z"
-        fill="#50E6FF"
-        opacity=".8"
-      />
-    </svg>
-  );
-}
-
-function IconOpera({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <ellipse cx="12" cy="12" rx="10" ry="10" fill="#FF1B2D" />
-      <ellipse
-        cx="12"
-        cy="12"
-        rx="4.2"
-        ry="7.2"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="2.5"
-      />
-    </svg>
-  );
-}
-
-function IconIE({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <path
-        d="M21.4 4.6C19.8 3 17.6 2 15 2c-2 0-3.9.6-5.6 1.7C8.1 4.5 7 5.5 6.2 6.6L4.8 5.3A.5.5 0 0 0 4 5.7V18a.5.5 0 0 0 .5.5h12.3a.5.5 0 0 0 .4-.8l-1.3-1.3c1.1-.8 2-1.9 2.7-3.1A9 9 0 0 0 20 9c0-1.6-.4-3.1-1-4.4z"
-        fill="#1EBBEE"
-      />
-      <path
-        d="M12 6.5a5.5 5.5 0 0 0-5.5 5.5c0 1.5.6 2.9 1.6 3.9H6a7 7 0 0 1 6-10.9c1.5 0 2.9.5 4 1.3L14.7 8A5.5 5.5 0 0 0 12 6.5z"
-        fill="#fff"
-        opacity=".9"
-      />
-    </svg>
-  );
-}
-
-function IconSamsung({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <rect width="24" height="24" rx="12" fill="#1428A0" />
-      <text
-        x="12"
-        y="16"
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="9"
-        fontWeight="bold"
-        fontFamily="sans-serif"
-      >
-        S
-      </text>
-    </svg>
-  );
-}
-
-function IconYandex({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" fill="#FC3F1D" />
-      <path
-        d="M13.5 6H11c-1.66 0-3 1.34-3 3 0 1.38.93 2.55 2.2 2.88L7 18h2l3-6.06V18h2V6z"
-        fill="#fff"
-      />
-    </svg>
-  );
-}
-
-function IconUC({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" fill="#FF6600" />
-      <path d="M8 8v5a4 4 0 0 0 8 0V8h-2v5a2 2 0 0 1-4 0V8H8z" fill="#fff" />
-    </svg>
-  );
-}
+// 匹配关键字 → { iconify id, 品牌色 }
+const BROWSER_ICON_MAP: Array<{
+  match: string;
+  icon: string;
+  color: string;
+}> = [
+  { match: 'chrome', icon: 'simple-icons:googlechrome', color: '#4285F4' },
+  { match: 'firefox', icon: 'simple-icons:firefoxbrowser', color: '#FF7139' },
+  { match: 'safari', icon: 'simple-icons:safari', color: '#006CFF' },
+  { match: 'edge', icon: 'simple-icons:microsoftedge', color: '#0078D4' },
+  { match: 'opera', icon: 'simple-icons:opera', color: '#FF1B2D' },
+  {
+    match: 'internet explorer',
+    icon: 'simple-icons:internetexplorer',
+    color: '#0076D6',
+  },
+  { match: 'samsung', icon: 'simple-icons:samsung', color: '#1428A0' },
+  { match: 'yandex', icon: 'simple-icons:yandexcloud', color: '#FC3F1D' },
+];
 
 function BrowserIcon({ name }: { name: string }) {
   const n = name.toLowerCase();
-  if (n.includes('chrome')) return <IconChrome />;
-  if (n.includes('firefox')) return <IconFirefox />;
-  if (n.includes('safari')) return <IconSafari />;
-  if (n.includes('edge')) return <IconEdge />;
-  if (n.includes('opera')) return <IconOpera />;
-  if (n.includes('internet explorer')) return <IconIE />;
-  if (n.includes('samsung')) return <IconSamsung />;
-  if (n.includes('yandex')) return <IconYandex />;
-  if (n.includes('uc browser')) return <IconUC />;
-  // 未知浏览器：字母徽章兜底
+  const entry = BROWSER_ICON_MAP.find(({ match }) => n.includes(match));
+  if (entry) {
+    return (
+      <Icon
+        icon={entry.icon}
+        width={20}
+        height={20}
+        style={{ color: entry.color }}
+        className="shrink-0"
+      />
+    );
+  }
+  // 未识别浏览器兜底
   return (
-    <span className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+    <span className="w-5 h-5 rounded-full bg-muted-foreground/30 flex items-center justify-center text-foreground text-[10px] font-bold shrink-0">
       {name[0]?.toUpperCase() ?? '?'}
     </span>
   );
 }
 
+// ─── 操作系统图标（simple-icons via @iconify/react）──────────────────────────
+
+const OS_ICON_MAP: Array<{ match: string; icon: string; color: string }> = [
+  { match: 'windows', icon: 'simple-icons:windows', color: '#0078D4' },
+  { match: 'macos', icon: 'simple-icons:macos', color: '#555555' },
+  { match: 'mac os', icon: 'simple-icons:macos', color: '#555555' },
+  { match: 'ios', icon: 'simple-icons:apple', color: '#555555' },
+  { match: 'android', icon: 'simple-icons:android', color: '#3DDC84' },
+  { match: 'ubuntu', icon: 'simple-icons:ubuntu', color: '#E95420' },
+  { match: 'fedora', icon: 'simple-icons:fedora', color: '#294172' },
+  { match: 'debian', icon: 'simple-icons:debian', color: '#A81D33' },
+  { match: 'linux', icon: 'simple-icons:linux', color: '#FCC624' },
+  {
+    match: 'chrome os',
+    icon: 'simple-icons:googlechrome',
+    color: '#4285F4',
+  },
+];
+
 function OsIcon({ name }: { name: string }) {
   const n = name.toLowerCase();
-  let color = 'bg-gray-400';
-  let label = name[0]?.toUpperCase() ?? '?';
-  if (n.includes('windows')) {
-    color = 'bg-blue-500';
-    label = 'W';
-  } else if (n.includes('macos') || n.includes('mac os')) {
-    color = 'bg-gray-700';
-    label = '';
-  } else if (n === 'ios') {
-    color = 'bg-gray-500';
-    label = 'i';
-  } else if (n.includes('android')) {
-    color = 'bg-green-500';
-    label = 'A';
-  } else if (
-    n.includes('ubuntu') ||
-    n.includes('debian') ||
-    n.includes('fedora') ||
-    n.includes('linux')
-  ) {
-    color = 'bg-yellow-600';
-    label = 'L';
-  } else if (n.includes('chrome os')) {
-    color = 'bg-blue-400';
-    label = 'C';
+  const entry = OS_ICON_MAP.find(({ match }) => n.includes(match));
+  if (entry) {
+    return (
+      <Icon
+        icon={entry.icon}
+        width={20}
+        height={20}
+        style={{ color: entry.color }}
+        className="shrink-0"
+      />
+    );
   }
   return (
-    <span
-      className={`w-5 h-5 rounded-full ${color} flex items-center justify-center text-white text-[10px] font-bold shrink-0`}
-    >
-      {label}
+    <span className="w-5 h-5 rounded-full bg-muted-foreground/30 flex items-center justify-center text-foreground text-[10px] font-bold shrink-0">
+      {name[0]?.toUpperCase() ?? '?'}
     </span>
   );
 }
+
+// ─── InfoItem ─────────────────────────────────────────────────────────────────
 
 function InfoItem({
   label,
@@ -436,6 +310,8 @@ function InfoItem({
   );
 }
 
+// ─── 示例 UA ──────────────────────────────────────────────────────────────────
+
 const SAMPLE_UAS = [
   {
     label: 'Chrome / macOS',
@@ -458,6 +334,8 @@ const SAMPLE_UAS = [
     ua: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
   },
 ];
+
+// ─── 页面 ─────────────────────────────────────────────────────────────────────
 
 function UserAgentPage() {
   const { t } = useTranslation();
@@ -482,7 +360,7 @@ function UserAgentPage() {
         </p>
       </div>
 
-      {/* UA input */}
+      {/* UA 输入框 */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="text-xs text-muted-foreground">
@@ -519,7 +397,7 @@ function UserAgentPage() {
         />
       </div>
 
-      {/* Sample UAs */}
+      {/* 快速示例 */}
       <div>
         <label className="text-xs text-muted-foreground block mb-1.5">
           {t('userAgent.quickSamples')}
@@ -537,10 +415,10 @@ function UserAgentPage() {
         </div>
       </div>
 
-      {/* Results */}
+      {/* 解析结果 */}
       {ua.trim() && (
         <div className="space-y-4">
-          {/* Device type header */}
+          {/* 设备类型标题栏 */}
           <div className="flex items-center gap-3 p-4 border rounded-lg bg-muted/20">
             <DeviceIcon type={parsed.device.type} />
             <div>
@@ -569,7 +447,7 @@ function UserAgentPage() {
             )}
           </div>
 
-          {/* Info grid */}
+          {/* 信息卡片 */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             <InfoItem
               label={t('userAgent.labelBrowser')}
@@ -608,7 +486,7 @@ function UserAgentPage() {
             />
           </div>
 
-          {/* Raw tokens */}
+          {/* Token 分解 */}
           <div className="border rounded-lg p-3">
             <p className="text-xs text-muted-foreground mb-2">
               {t('userAgent.tokenBreakdown')}

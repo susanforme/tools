@@ -287,6 +287,113 @@ const processAsync = async () => {
 
 ---
 
+## 图标库规范
+
+项目使用两套图标库，适用场景不同：
+
+### 1. lucide-react（UI 功能图标）
+
+用于按钮、操作、状态等通用 UI 图标，颜色跟随 Tailwind 语义 token。
+
+```tsx
+import { Copy, Check, RefreshCw } from 'lucide-react';
+
+<Copy className="w-4 h-4 text-muted-foreground" />
+<Check className="w-4 h-4 text-green-500" />
+```
+
+### 2. @iconify/react + @iconify-json/simple-icons（品牌 / 第三方图标）
+
+用于展示浏览器、操作系统、技术品牌等有专属颜色的图标。
+
+**安装（已完成，无需重复）：**
+
+```bash
+bun add @iconify/react @iconify-json/simple-icons
+```
+
+**基本用法：**
+
+```tsx
+import { Icon } from '@iconify/react';
+
+// icon 格式："{集合}:{slug}"
+<Icon
+  icon="simple-icons:googlechrome"
+  width={20}
+  height={20}
+  style={{ color: '#4285F4' }}
+/>;
+```
+
+**品牌色通过 `style={{ color }}`
+传入**（不用 Tailwind 颜色类，因为是动态品牌色）。
+
+**查表模式（推荐）：**
+
+```tsx
+// 定义映射表
+const BROWSER_ICON_MAP: Array<{ match: string; icon: string; color: string }> =
+  [
+    { match: 'chrome', icon: 'simple-icons:googlechrome', color: '#4285F4' },
+    { match: 'firefox', icon: 'simple-icons:firefoxbrowser', color: '#FF7139' },
+    { match: 'safari', icon: 'simple-icons:safari', color: '#006CFF' },
+    { match: 'edge', icon: 'simple-icons:microsoftedge', color: '#0078D4' },
+  ];
+
+// 组件：匹配 → 渲染，未识别兜底字母徽章
+function BrowserIcon({ name }: { name: string }) {
+  const entry = BROWSER_ICON_MAP.find(({ match }) =>
+    name.toLowerCase().includes(match),
+  );
+  if (entry) {
+    return (
+      <Icon
+        icon={entry.icon}
+        width={20}
+        height={20}
+        style={{ color: entry.color }}
+        className="shrink-0"
+      />
+    );
+  }
+  return (
+    <span className="w-5 h-5 rounded-full bg-muted-foreground/30 flex items-center justify-center text-foreground text-[10px] font-bold shrink-0">
+      {name[0]?.toUpperCase() ?? '?'}
+    </span>
+  );
+}
+```
+
+**已确认可用的 Simple Icons slug：**
+
+| 品牌              | slug               | 品牌色    |
+| ----------------- | ------------------ | --------- |
+| Google Chrome     | `googlechrome`     | `#4285F4` |
+| Firefox           | `firefoxbrowser`   | `#FF7139` |
+| Safari            | `safari`           | `#006CFF` |
+| Microsoft Edge    | `microsoftedge`    | `#0078D4` |
+| Opera             | `opera`            | `#FF1B2D` |
+| Internet Explorer | `internetexplorer` | `#0076D6` |
+| Samsung           | `samsung`          | `#1428A0` |
+| Yandex            | `yandexcloud`      | `#FC3F1D` |
+| Windows           | `windows`          | `#0078D4` |
+| macOS             | `macos`            | `#555555` |
+| Apple (iOS)       | `apple`            | `#555555` |
+| Android           | `android`          | `#3DDC84` |
+| Ubuntu            | `ubuntu`           | `#E95420` |
+| Fedora            | `fedora`           | `#294172` |
+| Debian            | `debian`           | `#A81D33` |
+| Linux             | `linux`            | `#FCC624` |
+
+> 注意：`samsunginternet`、`yandexbrowser`、`ucbrowser`、`chromeos` 等 slug
+> **不存在**，需用替代 slug 或字母徽章兜底。
+
+**尺寸建议：** 行内图标用 `width={16} height={16}`，卡片/列表图标用
+`width={20} height={20}`，大型展示用 `width={32} height={32}`。
+
+---
+
 ## 代码格式（Prettier）
 
 ```json
