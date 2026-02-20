@@ -56,7 +56,11 @@ src/
 ## 组件
 
 如果组件在本地不存在，可以查询 [shadcn/ui](https://ui.shadcn.com/)
-是否有现成组件可用，**必须**使用 shadcn 组件库提供的组件来保持 UI 风格一致。
+是否有现成组件可用，**必须**使用 shadcn 组件库提供的组件来保持 UI 风格一致。使用命令安装新的组件，例如
+
+```bash
+bunx --bun shadcn@latest add sonner
+```
 
 ## 构建 / 开发 / 测试命令
 

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
@@ -381,6 +382,15 @@ export function HistoryPanel({ onRestore, className }: HistoryPanelProps) {
 
   const [collapsed, setCollapsed] = useState(false);
 
+  /** 恢复并弹出提示 */
+  const handleRestore = useCallback(
+    (item: HistoryItem) => {
+      onRestore(item);
+      toast.success(t('history.restoreSuccess'));
+    },
+    [onRestore, t],
+  );
+
   if (loading && history.length === 0) {
     return null;
   }
@@ -439,7 +449,7 @@ export function HistoryPanel({ onRestore, className }: HistoryPanelProps) {
               <HistoryRow
                 key={item.id}
                 item={item}
-                onRestore={onRestore}
+                onRestore={handleRestore}
                 onDelete={remove}
                 onPreviewImage={(url, title) => setPreviewImage({ url, title })}
               />

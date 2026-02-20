@@ -325,6 +325,7 @@ const en = {
   history: {
     title: 'History',
     restore: 'Restore to editor',
+    restoreSuccess: 'Restored to editor',
     delete: 'Delete this record',
     clearAll: 'Clear all',
     clearAllTip: 'Clear all history for this tool',

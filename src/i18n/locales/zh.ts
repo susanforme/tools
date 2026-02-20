@@ -324,6 +324,7 @@ const zh = {
   history: {
     title: '历史记录',
     restore: '恢复到编辑器',
+    restoreSuccess: '已恢复到编辑器',
     delete: '删除此条记录',
     clearAll: '清空',
     clearAllTip: '清空当前工具的全部历史记录',

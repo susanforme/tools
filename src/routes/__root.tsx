@@ -54,6 +54,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { LangSwitcher } from '../components/lang-switcher';
+import { Toaster } from '../components/ui/sonner';
 import { TooltipProvider } from '../components/ui/tooltip';
 
 export const Route = createRootRoute({
@@ -791,6 +792,7 @@ function RootDocument() {
         config={{ position: 'bottom-right' }}
         plugins={[{ name: 'Router', render: <TanStackRouterDevtoolsPanel /> }]}
       />
+      <Toaster />
     </div>
   );
 }
