@@ -27,6 +27,7 @@
     "dexie": "^4.3.0",
     "dexie-react-hooks": "^4.2.0",
     "i18next": "^25.8.11",
+    "jotai": "^2.18.0",
     "js-yaml": "^4.1.1",
     "jsqr": "^1.4.0",
     "lucide-react": "^0.574.0",
