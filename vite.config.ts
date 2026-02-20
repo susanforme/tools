@@ -14,20 +14,40 @@ const config = defineConfig({
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
       },
       registerType: 'autoUpdate',
+      // devOptions: {
+      //   enabled: true,
+      // },
+
       manifest: {
         name: 'tools',
         short_name: 'tools',
         description: 'a simple tools collection for web developers',
         background_color: '#ffffff',
         display: 'standalone',
+        screenshots: [
+          {
+            src: 'screenshot-desktop.png',
+            sizes: '2560x1440',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'desktop application interface',
+          },
+          {
+            src: 'screenshot-mobile.png',
+            sizes: '750x1334',
+            type: 'image/png',
+            form_factor: 'narrow', // 解决第二个警告：指定为移动端窄屏
+            label: 'mobile application interface',
+          },
+        ],
         icons: [
           {
-            src: '/pwa-192x192.png',
+            src: '/pwa-192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/pwa-512.png',
             sizes: '512x512',
             type: 'image/png',
           },
