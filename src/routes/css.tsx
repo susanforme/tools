@@ -120,8 +120,8 @@ function CssPage() {
     scss.setError(null);
     scss.setLoading(true);
     try {
-      const sass = await import('sass');
-      const result = sass.compileString(scss.input, {
+      const { compileStringAsync } = await import('sass');
+      const result = await compileStringAsync(scss.input, {
         style: 'expanded',
       });
       scss.setOutput(result.css);
