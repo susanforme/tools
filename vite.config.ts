@@ -7,9 +7,13 @@ import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config = defineConfig({
-  logLevel: 'warn',
+  // logLevel: 'warn',
   plugins: [
-    VitePWA(),
+    VitePWA({
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
+      },
+    }),
     devtools(),
     tsconfigPaths({ projects: ['./tsconfig.json'] }),
     tailwindcss(),
