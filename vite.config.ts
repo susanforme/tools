@@ -11,7 +11,7 @@ const config = defineConfig({
   plugins: [
     VitePWA({
       workbox: {
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
+        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MiB
       },
       registerType: 'autoUpdate',
       // devOptions: {
