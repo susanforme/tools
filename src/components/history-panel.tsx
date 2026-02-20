@@ -379,8 +379,7 @@ export function HistoryPanel({ onRestore, className }: HistoryPanelProps) {
     title: string;
   } | null>(null);
 
-  // 折叠状态：默认折叠（collapsed = true）
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   if (loading && history.length === 0) {
     return null;

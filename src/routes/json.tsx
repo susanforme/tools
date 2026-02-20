@@ -1,3 +1,5 @@
+import { HistoryPanel } from '@/components/history-panel';
+import { useToolHistory } from '@/hooks/useToolHistory';
 import { useToolPreference } from '@/hooks/useToolPreference';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -23,17 +25,23 @@ const DEFAULT_JSON = `{
   "address": { "city": "Shanghai", "zip": "200000" }
 }`;
 
+type OnSuccessCallback = (input: string, output: string) => void;
+
 function JsonPage() {
   const { t } = useTranslation();
   const [input, setInput] = useState(DEFAULT_JSON);
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const {
-    pref: [{ indent }, setConfig],
+    pref: [preference, setPreference],
     ready,
   } = useToolPreference({
     indent: '2',
   });
+
+  const { indent } = preference;
+
+  const { add } = useToolHistory();
   if (!ready) {
     return null;
   }
@@ -48,24 +56,28 @@ function JsonPage() {
     }
   };
 
-  const format = () => {
+  const format = (callback: OnSuccessCallback) => {
     setError(null);
     const parsed = parse();
     if (parsed === null && input.trim() !== 'null') return;
     try {
       const indentValue = indent === 'tab' ? '\t' : Number(indent);
-      setOutput(JSON.stringify(parsed, null, indentValue));
+      const output = JSON.stringify(parsed, null, indentValue);
+      setOutput(output);
+      callback(input, output);
     } catch (e) {
       setError(t('json.formatError', { msg: (e as Error).message }));
     }
   };
 
-  const minify = () => {
+  const minify = (callback: OnSuccessCallback) => {
     setError(null);
     const parsed = parse();
     if (parsed === null && input.trim() !== 'null') return;
     try {
-      setOutput(JSON.stringify(parsed));
+      const output = JSON.stringify(parsed);
+      setOutput(output);
+      callback(input, output);
     } catch (e) {
       setError(t('json.minifyError', { msg: (e as Error).message }));
     }
@@ -80,6 +92,18 @@ function JsonPage() {
       setError(t('json.validateError', { msg: (e as Error).message }));
       setOutput('');
     }
+  };
+
+  const wrappedFn = (fn: (callback: OnSuccessCallback) => void) => {
+    return () => {
+      fn((input, output) => {
+        add({
+          input,
+          output,
+          preference: preference,
+        });
+      });
+    };
   };
 
   const clear = () => {
@@ -103,7 +127,7 @@ function JsonPage() {
           <Select
             value={indent}
             onValueChange={(v) => {
-              setConfig({ indent: v as any });
+              setPreference({ indent: v as any });
             }}
           >
             <SelectTrigger className="w-28 h-8 text-sm">
@@ -119,10 +143,10 @@ function JsonPage() {
 
         <Separator orientation="vertical" className="h-6" />
 
-        <Button size="sm" onClick={format}>
+        <Button size="sm" onClick={wrappedFn(format)}>
           {t('json.format')}
         </Button>
-        <Button size="sm" variant="secondary" onClick={minify}>
+        <Button size="sm" variant="secondary" onClick={wrappedFn(minify)}>
           {t('json.minify')}
         </Button>
         <Button size="sm" variant="outline" onClick={validate}>
@@ -141,6 +165,15 @@ function JsonPage() {
         error={error}
         language="json"
       />
+      <HistoryPanel
+        onRestore={(item) => {
+          const { inputText, outputText, preference } = item;
+          setInput(inputText || '');
+          setOutput(outputText || '');
+          setPreference(preference);
+          //
+        }}
+      ></HistoryPanel>
     </div>
   );
 }

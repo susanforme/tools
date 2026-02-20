@@ -1,7 +1,8 @@
 import type { HistoryRecord } from '@/lib/db';
 import { blobToText, db, MIME, textToBlob } from '@/lib/db';
 import { useRouterState } from '@tanstack/react-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { useCallback } from 'react';
 
 // ─── 类型 ──────────────────────────────────────────────────────────────────
 
@@ -16,12 +17,17 @@ export interface AddHistoryOptions {
   outputType?: string;
   /** 列表摘要，可选；文本工具建议传输入前 60 字符 */
   label?: string;
+  /**
+   * 工具页面偏好配置快照，JSON由各工具自行定义
+   */
+  preference: Record<string, unknown>;
 }
 
 /** 历史记录条目，附带解析后的文本内容（仅文本类型时有值） */
-export interface HistoryItem extends HistoryRecord {
+export interface HistoryItem extends Omit<HistoryRecord, 'preference'> {
   inputText?: string;
   outputText?: string;
+  preference: Record<string, unknown>;
 }
 
 // ─── 每工具最多保留条数 ────────────────────────────────────────────────────
@@ -74,6 +80,7 @@ export async function addHistory(
     inputType,
     outputType,
     params: JSON.stringify(params),
+    preference: JSON.stringify(opts.preference),
     label: opts.label,
     createdAt: Date.now(),
   };
@@ -147,56 +154,57 @@ export function useToolHistory(limit = 20) {
     select: (s) => s.location.search as Record<string, unknown>,
   });
 
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  // useLiveQuery 订阅 IndexedDB 变更，任何写操作（包括其他 tab）都会自动触发重新查询
+  // 返回 undefined 表示首次查询尚未完成（loading 状态）
+  const history = useLiveQuery(async (): Promise<HistoryItem[]> => {
+    const records = await db.history
+      .where('tool')
+      .equals(tool)
+      .reverse()
+      .sortBy('createdAt');
 
-  const refresh = useCallback(async () => {
-    setLoading(true);
-    try {
-      const records = await getHistory(tool, limit);
-      // 对文本类型异步解析出 inputText / outputText，方便列表直接展示
-      const items = await Promise.all(
-        records.map(async (r) => ({
-          ...r,
-          inputText: isTextMime(r.inputType)
-            ? await blobToText(r.input)
-            : undefined,
-          outputText: isTextMime(r.outputType)
-            ? await blobToText(r.output)
-            : undefined,
-        })),
-      );
-      setHistory(items);
-    } finally {
-      setLoading(false);
-    }
+    const limited = records.slice(0, limit);
+
+    // 对文本类型异步解析出 inputText / outputText，方便列表直接展示
+    return Promise.all(
+      limited.map(async (r) => ({
+        ...r,
+        inputText: isTextMime(r.inputType)
+          ? await blobToText(r.input)
+          : undefined,
+        outputText: isTextMime(r.outputType)
+          ? await blobToText(r.output)
+          : undefined,
+        preference: JSON.parse(r.preference),
+      })),
+    );
   }, [tool, limit]);
 
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
+  const loading = history === undefined;
 
   /** 添加一条历史记录，tool 和 params 自动注入 */
   const add = useCallback(
     async (opts: AddHistoryOptions) => {
       await addHistory(tool, params, opts);
-      await refresh();
+      // 无需手动刷新，useLiveQuery 会自动响应 db 写入
     },
-    [tool, params, refresh],
+    [tool, params],
   );
 
-  const remove = useCallback(
-    async (id: number) => {
-      await deleteHistory(id);
-      await refresh();
-    },
-    [refresh],
-  );
+  const remove = useCallback(async (id: number) => {
+    await deleteHistory(id);
+  }, []);
 
   const clear = useCallback(async () => {
     await clearHistory(tool);
-    await refresh();
-  }, [tool, refresh]);
+  }, [tool]);
 
-  return { history, loading, tool, add, refresh, remove, clear };
+  return {
+    history: history ?? [],
+    loading,
+    tool,
+    add,
+    remove,
+    clear,
+  };
 }

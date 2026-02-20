@@ -27,6 +27,10 @@ export interface HistoryRecord {
   label?: string;
   /** 创建时间戳，Date.now() */
   createdAt: number;
+  /**
+   * 工具页面偏好配置快照，JSON 字符串，由各工具自行定义
+   */
+  preference: string;
 }
 
 /**
