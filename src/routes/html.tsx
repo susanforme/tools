@@ -84,17 +84,8 @@ function HtmlPage() {
     min.setError(null);
     min.setLoading(true);
     try {
-      const { minify } = await import('html-minifier-terser');
-      const result = await minify(min.input, {
-        collapseWhitespace: true,
-        removeComments: true,
-        removeRedundantAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        useShortDoctype: true,
-        minifyCSS: true,
-        minifyJS: true,
-      });
+      const { compressHTML } = await import('@/utils/compress-html');
+      const result = await compressHTML(min.input, {});
       min.setOutput(result);
     } catch (e) {
       min.setError(t('html.minifyError', { msg: (e as Error).message }));
