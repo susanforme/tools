@@ -35,6 +35,8 @@ src/
 │   ├── code-panel.tsx      # 通用输入/输出双栏 Monaco 面板
 │   ├── lang-switcher.tsx   # 语言切换组件
 │   └── ui/                 # shadcn 组件（禁止直接修改结构）
+├── hooks/
+│   └── useQueryParams.ts   # URL query 状态同步 Hook（见下方规范）
 ├── i18n/
 │   ├── index.ts            # i18next 初始化
 │   └── locales/
@@ -101,9 +103,128 @@ bun vitest src/path/to/file.test.ts
 
 ---
 
+## URL 状态管理（useQueryParams）
+
+**核心原则：凡是用户可能想分享或刷新后复现的状态，必须用 `useQueryParam` /
+`useQueryParams` 而非 `useState`。**
+
+### 必须使用 useQueryParam 的场景
+
+| 状态类型           | 示例                      | 理由                       |
+| ------------------ | ------------------------- | -------------------------- |
+| 当前激活的 Tab     | `'format' \| 'minify'`    | 刷新/分享后保持选中 tab    |
+| 模式 / 算法选择    | `'aes' \| 'des' \| 'rc4'` | 用户选择的处理模式可被分享 |
+| 编码方向           | `'encode' \| 'decode'`    | 操作方向应反映在 URL 中    |
+| 数字选项（进制等） | `16 \| 10 \| 2`           | 可序列化为 query param     |
+| 多选过滤项         | `string[]`                | 当前勾选的选项集合         |
+
+**不需要** `useQueryParam`
+的场景：输入框内容、输出结果、loading 状态、临时错误信息——这些属于纯 UI 临时状态，用
+`useState` 即可。
+
+### 导入
+
+```ts
+import {
+  StringParam,
+  NumberParam,
+  ArrayParam,
+  useQueryParam,
+  useQueryParams,
+} from '@/hooks/useQueryParams';
+```
+
+### useQueryParam — 单个参数
+
+```ts
+// 带默认值（返回 T，不含 null/undefined）
+const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'format');
+
+// 无默认值（返回 T | null | undefined）
+const [keyword, setKeyword] = useQueryParam('q', StringParam);
+```
+
+**Tab 切换标准写法**（参考 `src/routes/html.tsx`）：
+
+```tsx
+type TabType = 'format' | 'minify';
+
+const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'format');
+
+<Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
+  <TabsTrigger value="format">格式化</TabsTrigger>
+  <TabsTrigger value="minify">压缩</TabsTrigger>
+</Tabs>;
+```
+
+### useQueryParams — 批量参数
+
+当同一页面有多个可分享状态时，用 `useQueryParams` 批量管理，避免多次调用
+`useQueryParam`：
+
+```ts
+type PageState = { tab: string; algo: string; bits: number };
+
+const [query, setQuery] = useQueryParams<PageState>({
+  tab: StringParam,
+  algo: StringParam,
+  bits: NumberParam,
+});
+
+// 读取
+const { tab, algo, bits } = query;
+
+// 更新单个字段（其他字段保留）
+setQuery({ tab: 'decode' });
+
+// 函数式更新
+setQuery((prev) => ({ ...prev, bits: 256 }));
+```
+
+### 内置 Param 配置
+
+| 配置          | 类型       | 适用场景                         |
+| ------------- | ---------- | -------------------------------- |
+| `StringParam` | `string`   | Tab、模式、算法名、编码方向      |
+| `NumberParam` | `number`   | 数字选项（进制、位数、缩进量等） |
+| `ArrayParam`  | `string[]` | 多选过滤、多值列表               |
+
+### withDefault 高阶函数
+
+当需要给现有配置附加默认值时使用（`useQueryParam`
+第三参数已内置此逻辑，通常无需单独调用）：
+
+```ts
+import { withDefault, StringParam } from '@/hooks/useQueryParams';
+
+const AlgoParam = withDefault(StringParam, 'aes');
+const [algo] = useQueryParam('algo', AlgoParam);
+// algo 的类型是 string，且永远不为 null/undefined
+```
+
+### UpdateType（历史记录策略）
+
+`setValue` 第二参数（默认 `'replaceIn'`）：
+
+| 值          | 行为                                              |
+| ----------- | ------------------------------------------------- |
+| `replaceIn` | 替换当前历史记录，保留其他 query 参数（**默认**） |
+| `pushIn`    | 新增历史记录，保留其他 query 参数                 |
+| `replace`   | 替换当前历史记录，清空其他 query 参数             |
+| `push`      | 新增历史记录，清空其他 query 参数                 |
+
+```ts
+// Tab 切换通常不需要浏览器"后退"，使用默认 replaceIn 即可
+setTab('minify');
+
+// 需要支持后退导航时
+setTab('minify', 'pushIn');
+```
+
 ## 新增工具页面模板
 
 ```tsx
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { CodePanel } from '../components/code-panel';
@@ -111,7 +232,13 @@ import { Button } from '../components/ui/button';
 
 export const Route = createFileRoute('/your-tool')({ component: YourToolPage });
 
+// 有多个 tab 时，用字面量联合类型约束
+type TabType = 'tabA' | 'tabB';
+
 function YourToolPage() {
+  // ✅ 必须：tab 等可分享状态用 useQueryParam，而非 useState
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'tabA');
+
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -120,7 +247,7 @@ function YourToolPage() {
     setError(null);
     try {
       // 处理逻辑
-      setOutput(/* result */);
+      setOutput(/* result */ '');
     } catch (e) {
       setError(`处理失败：${(e as Error).message}`);
     }
