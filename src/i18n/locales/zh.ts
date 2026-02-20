@@ -931,6 +931,7 @@ const zh = {
   },
   layout: {
     title: '布局辅助与计算器',
+    desc: 'Flex Gap 计算器、Grid 列宽计算器、布局模板与可视化沙盒',
     output: '输出',
     copy: '复制',
     copied: '已复制',
