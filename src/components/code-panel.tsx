@@ -1,18 +1,40 @@
-import { useState, useEffect } from 'react'
-import { Copy, Check } from 'lucide-react'
-import { Button } from './ui/button'
-import Editor from '@monaco-editor/react'
-import { useTranslation } from 'react-i18next'
+import Editor, { loader } from '@monaco-editor/react';
+import { Check, Copy } from 'lucide-react';
+import * as monaco from 'monaco-editor';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from './ui/button';
+
+// 配置 Monaco workers 使用本地打包文件，避免从 CDN 加载
+self.MonacoEnvironment = {
+  getWorker(_workerId: string, label: string) {
+    if (label === 'json') return new JsonWorker();
+    if (label === 'css' || label === 'scss' || label === 'less')
+      return new CssWorker();
+    if (label === 'html' || label === 'handlebars' || label === 'razor')
+      return new HtmlWorker();
+    if (label === 'typescript' || label === 'javascript') return new TsWorker();
+    return new EditorWorker();
+  },
+};
+
+// 使用本地 monaco-editor 实例，避免从 CDN 加载
+loader.config({ monaco });
 
 export interface CodePanelProps {
-  input: string
-  output: string
-  onInputChange: (v: string) => void
-  inputPlaceholder?: string
-  error?: string | null
-  language?: string
+  input: string;
+  output: string;
+  onInputChange: (v: string) => void;
+  inputPlaceholder?: string;
+  error?: string | null;
+  language?: string;
   /** 输出面板使用不同语言（如 SCSS→CSS），默认与 language 相同 */
-  outputLanguage?: string
+  outputLanguage?: string;
 }
 
 export function CodePanel({
@@ -24,27 +46,27 @@ export function CodePanel({
   language = 'plaintext',
   outputLanguage,
 }: CodePanelProps) {
-  const { t } = useTranslation()
-  const resolvedOutputLanguage = outputLanguage ?? language
-  const [copied, setCopied] = useState(false)
-  const [isDark, setIsDark] = useState(false)
+  const { t } = useTranslation();
+  const resolvedOutputLanguage = outputLanguage ?? language;
+  const [copied, setCopied] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    setIsDark(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDark(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const handleCopy = async () => {
-    if (!output) return
-    await navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    if (!output) return;
+    await navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  const theme = isDark ? 'vs-dark' : 'light'
+  const theme = isDark ? 'vs-dark' : 'light';
 
   const baseOptions = {
     minimap: { enabled: false },
@@ -55,7 +77,7 @@ export function CodePanel({
     automaticLayout: true,
     tabSize: 2,
     renderLineHighlight: 'all' as const,
-  }
+  };
 
   return (
     <div className="flex flex-col gap-3">
@@ -92,7 +114,11 @@ export function CodePanel({
               disabled={!output}
               className="h-6 px-2 text-xs gap-1"
             >
-              {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+              {copied ? (
+                <Check className="w-3 h-3" />
+              ) : (
+                <Copy className="w-3 h-3" />
+              )}
               {copied ? t('panel.copied') : t('panel.copy')}
             </Button>
           </div>
@@ -108,5 +134,5 @@ export function CodePanel({
         </div>
       </div>
     </div>
-  )
+  );
 }
