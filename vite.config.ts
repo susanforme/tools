@@ -13,6 +13,7 @@ const config = defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
       },
+      registerType: 'autoUpdate',
       manifest: {
         name: 'tools',
         short_name: 'tools',
@@ -21,12 +22,12 @@ const config = defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: '/favicon-192x192.png',
+            src: '/pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/favicon-512x512.png',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
