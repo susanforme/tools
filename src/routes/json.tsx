@@ -1,84 +1,92 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { CodePanel } from '../components/code-panel'
-import { Button } from '../components/ui/button'
+import { useToolPreference } from '@/hooks/useToolPreference';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CodePanel } from '../components/code-panel';
+import { Button } from '../components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../components/ui/select'
-import { Separator } from '../components/ui/separator'
-
+} from '../components/ui/select';
+import { Separator } from '../components/ui/separator';
 export const Route = createFileRoute('/json')({
   component: JsonPage,
-})
+});
 
 const DEFAULT_JSON = `{
   "name": "Alice",
   "age": 30,
   "skills": ["TypeScript", "React"],
   "address": { "city": "Shanghai", "zip": "200000" }
-}`
+}`;
 
 function JsonPage() {
-  const { t } = useTranslation()
-  const [input, setInput] = useState(DEFAULT_JSON)
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [indent, setIndent] = useState('2')
+  const { t } = useTranslation();
+  const [input, setInput] = useState(DEFAULT_JSON);
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const {
+    pref: [{ indent }, setConfig],
+    ready,
+  } = useToolPreference({
+    indent: '2',
+  });
+  if (!ready) {
+    return null;
+  }
 
   const parse = () => {
     try {
-      return JSON.parse(input)
+      return JSON.parse(input);
     } catch (e) {
-      setError(t('json.parseError', { msg: (e as Error).message }))
-      setOutput('')
-      return null
+      setError(t('json.parseError', { msg: (e as Error).message }));
+      setOutput('');
+      return null;
     }
-  }
+  };
 
   const format = () => {
-    setError(null)
-    const parsed = parse()
-    if (parsed === null && input.trim() !== 'null') return
+    setError(null);
+    const parsed = parse();
+    if (parsed === null && input.trim() !== 'null') return;
     try {
-      const indentValue = indent === 'tab' ? '\t' : Number(indent)
-      setOutput(JSON.stringify(parsed, null, indentValue))
+      const indentValue = indent === 'tab' ? '\t' : Number(indent);
+      setOutput(JSON.stringify(parsed, null, indentValue));
     } catch (e) {
-      setError(t('json.formatError', { msg: (e as Error).message }))
+      setError(t('json.formatError', { msg: (e as Error).message }));
     }
-  }
+  };
 
   const minify = () => {
-    setError(null)
-    const parsed = parse()
-    if (parsed === null && input.trim() !== 'null') return
+    setError(null);
+    const parsed = parse();
+    if (parsed === null && input.trim() !== 'null') return;
     try {
-      setOutput(JSON.stringify(parsed))
+      setOutput(JSON.stringify(parsed));
     } catch (e) {
-      setError(t('json.minifyError', { msg: (e as Error).message }))
+      setError(t('json.minifyError', { msg: (e as Error).message }));
     }
-  }
+  };
 
   const validate = () => {
-    setError(null)
+    setError(null);
     try {
-      JSON.parse(input)
-      setOutput(t('json.valid'))
+      JSON.parse(input);
+      setOutput(t('json.valid'));
     } catch (e) {
-      setError(t('json.validateError', { msg: (e as Error).message }))
-      setOutput('')
+      setError(t('json.validateError', { msg: (e as Error).message }));
+      setOutput('');
     }
-  }
+  };
 
   const clear = () => {
-    setInput('')
-    setOutput('')
-    setError(null)
-  }
+    setInput('');
+    setOutput('');
+    setError(null);
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
@@ -89,8 +97,15 @@ function JsonPage() {
 
       <div className="flex items-center gap-2 flex-wrap">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">{t('json.indent')}</span>
-          <Select value={indent} onValueChange={setIndent}>
+          <span className="text-sm text-muted-foreground">
+            {t('json.indent')}
+          </span>
+          <Select
+            value={indent}
+            onValueChange={(v) => {
+              setConfig({ indent: v as any });
+            }}
+          >
             <SelectTrigger className="w-28 h-8 text-sm">
               <SelectValue />
             </SelectTrigger>
@@ -127,5 +142,5 @@ function JsonPage() {
         language="json"
       />
     </div>
-  )
+  );
 }

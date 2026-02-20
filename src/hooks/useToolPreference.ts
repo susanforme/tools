@@ -116,5 +116,9 @@ export function useToolPreference<T extends Record<string, unknown>>(
     await deletePreference(tool);
   }, [tool, defaultValue]);
 
-  return { pref, save, reset, ready };
+  return {
+    pref: [pref, save] as const,
+    reset,
+    ready,
+  };
 }
