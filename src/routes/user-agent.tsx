@@ -1,4 +1,3 @@
-import { Icon } from '@iconify/react';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   Check,
@@ -12,6 +11,22 @@ import {
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import AndroidIcon from '~icons/simple-icons/android';
+import AppleIcon from '~icons/simple-icons/apple';
+import DebianIcon from '~icons/simple-icons/debian';
+import FedoraIcon from '~icons/simple-icons/fedora';
+import FirefoxIcon from '~icons/simple-icons/firefoxbrowser';
+import ChromeIcon from '~icons/simple-icons/googlechrome';
+import IEIcon from '~icons/simple-icons/internetexplorer';
+import LinuxIcon from '~icons/simple-icons/linux';
+import MacosIcon from '~icons/simple-icons/macos';
+import EdgeIcon from '~icons/simple-icons/microsoftedge';
+import OperaIcon from '~icons/simple-icons/opera';
+import SafariIcon from '~icons/simple-icons/safari';
+import SamsungIcon from '~icons/simple-icons/samsung';
+import UbuntuIcon from '~icons/simple-icons/ubuntu';
+import WindowsIcon from '~icons/simple-icons/windows';
+import YandexIcon from '~icons/simple-icons/yandexcloud';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 
@@ -200,26 +215,22 @@ function DeviceIcon({ type }: { type: UAParsed['device']['type'] }) {
   return <Monitor className="w-5 h-5 text-gray-500" />;
 }
 
-// ─── 浏览器图标（simple-icons via @iconify/react）────────────────────────────
-
-// 匹配关键字 → { iconify id, 品牌色 }
-const BROWSER_ICON_MAP: Array<{
+// 匹配关键字 → { 图标组件, 品牌色 }
+type IconEntry = {
   match: string;
-  icon: string;
+  Ic: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   color: string;
-}> = [
-  { match: 'chrome', icon: 'simple-icons:googlechrome', color: '#4285F4' },
-  { match: 'firefox', icon: 'simple-icons:firefoxbrowser', color: '#FF7139' },
-  { match: 'safari', icon: 'simple-icons:safari', color: '#006CFF' },
-  { match: 'edge', icon: 'simple-icons:microsoftedge', color: '#0078D4' },
-  { match: 'opera', icon: 'simple-icons:opera', color: '#FF1B2D' },
-  {
-    match: 'internet explorer',
-    icon: 'simple-icons:internetexplorer',
-    color: '#0076D6',
-  },
-  { match: 'samsung', icon: 'simple-icons:samsung', color: '#1428A0' },
-  { match: 'yandex', icon: 'simple-icons:yandexcloud', color: '#FC3F1D' },
+};
+
+const BROWSER_ICON_MAP: IconEntry[] = [
+  { match: 'chrome', Ic: ChromeIcon, color: '#4285F4' },
+  { match: 'firefox', Ic: FirefoxIcon, color: '#FF7139' },
+  { match: 'safari', Ic: SafariIcon, color: '#006CFF' },
+  { match: 'edge', Ic: EdgeIcon, color: '#0078D4' },
+  { match: 'opera', Ic: OperaIcon, color: '#FF1B2D' },
+  { match: 'internet explorer', Ic: IEIcon, color: '#0076D6' },
+  { match: 'samsung', Ic: SamsungIcon, color: '#1428A0' },
+  { match: 'yandex', Ic: YandexIcon, color: '#FC3F1D' },
 ];
 
 function BrowserIcon({ name }: { name: string }) {
@@ -227,8 +238,7 @@ function BrowserIcon({ name }: { name: string }) {
   const entry = BROWSER_ICON_MAP.find(({ match }) => n.includes(match));
   if (entry) {
     return (
-      <Icon
-        icon={entry.icon}
+      <entry.Ic
         width={20}
         height={20}
         style={{ color: entry.color }}
@@ -244,23 +254,19 @@ function BrowserIcon({ name }: { name: string }) {
   );
 }
 
-// ─── 操作系统图标（simple-icons via @iconify/react）──────────────────────────
+// ─── 操作系统图标（simple-icons via unplugin-icons）──────────────────────────
 
-const OS_ICON_MAP: Array<{ match: string; icon: string; color: string }> = [
-  { match: 'windows', icon: 'simple-icons:windows', color: '#0078D4' },
-  { match: 'macos', icon: 'simple-icons:macos', color: '#555555' },
-  { match: 'mac os', icon: 'simple-icons:macos', color: '#555555' },
-  { match: 'ios', icon: 'simple-icons:apple', color: '#555555' },
-  { match: 'android', icon: 'simple-icons:android', color: '#3DDC84' },
-  { match: 'ubuntu', icon: 'simple-icons:ubuntu', color: '#E95420' },
-  { match: 'fedora', icon: 'simple-icons:fedora', color: '#294172' },
-  { match: 'debian', icon: 'simple-icons:debian', color: '#A81D33' },
-  { match: 'linux', icon: 'simple-icons:linux', color: '#FCC624' },
-  {
-    match: 'chrome os',
-    icon: 'simple-icons:googlechrome',
-    color: '#4285F4',
-  },
+const OS_ICON_MAP: IconEntry[] = [
+  { match: 'windows', Ic: WindowsIcon, color: '#0078D4' },
+  { match: 'macos', Ic: MacosIcon, color: '#555555' },
+  { match: 'mac os', Ic: MacosIcon, color: '#555555' },
+  { match: 'ios', Ic: AppleIcon, color: '#555555' },
+  { match: 'android', Ic: AndroidIcon, color: '#3DDC84' },
+  { match: 'ubuntu', Ic: UbuntuIcon, color: '#E95420' },
+  { match: 'fedora', Ic: FedoraIcon, color: '#294172' },
+  { match: 'debian', Ic: DebianIcon, color: '#A81D33' },
+  { match: 'linux', Ic: LinuxIcon, color: '#FCC624' },
+  { match: 'chrome os', Ic: ChromeIcon, color: '#4285F4' },
 ];
 
 function OsIcon({ name }: { name: string }) {
@@ -268,8 +274,7 @@ function OsIcon({ name }: { name: string }) {
   const entry = OS_ICON_MAP.find(({ match }) => n.includes(match));
   if (entry) {
     return (
-      <Icon
-        icon={entry.icon}
+      <entry.Ic
         width={20}
         height={20}
         style={{ color: entry.color }}
