@@ -30,6 +30,7 @@ import {
   ListOrdered,
   Lock,
   MapPin,
+  Menu,
   MonitorSmartphone,
   Moon,
   Network,
@@ -47,8 +48,10 @@ import {
   Sun,
   Table,
   Tag,
+  X,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { LangSwitcher } from '../components/lang-switcher';
 import { TooltipProvider } from '../components/ui/tooltip';
@@ -56,6 +59,7 @@ import { TooltipProvider } from '../components/ui/tooltip';
 export const Route = createRootRoute({
   component: RootDocument,
 });
+
 // ─── 主题 Hook ────────────────────────────────────────────
 
 function useTheme() {
@@ -425,7 +429,7 @@ function OverflowMenu({ categories }: { categories: CategoryDef[] }) {
 /**
  * 溢出菜单里的单行分类。
  * hover 时子菜单向右弹出（flyout）。
- * 当右侧空间不足时自动切换到左侧弹出（通过 CSS right-full）。
+ * 用真实 DOM 测量子菜单宽度，判断右侧空间是否充足，不足则向左弹出。
  */
 function OverflowCategoryRow({
   cat,
@@ -435,17 +439,21 @@ function OverflowCategoryRow({
   t: (k: string) => string;
 }) {
   const rowRef = useRef<HTMLDivElement>(null);
-  // 检测右侧是否有足够空间展开子菜单
+  const submenuRef = useRef<HTMLDivElement>(null);
   const [flyLeft, setFlyLeft] = useState(false);
 
   useEffect(() => {
-    const el = rowRef.current;
-    if (!el) return;
+    const row = rowRef.current;
+    const submenu = submenuRef.current;
+    if (!row || !submenu) return;
+
     const check = () => {
-      const rect = el.getBoundingClientRect();
-      // 子菜单预计宽度约 200px
-      setFlyLeft(rect.right + 200 > window.innerWidth);
+      const rowRect = row.getBoundingClientRect();
+      // 使用子菜单的真实渲染宽度（即使不可见时也能读到 offsetWidth）
+      const submenuW = submenu.offsetWidth;
+      setFlyLeft(rowRect.right + submenuW > window.innerWidth);
     };
+
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -462,6 +470,7 @@ function OverflowCategoryRow({
 
       {/* 第二级：子菜单（向右或向左弹出） */}
       <div
+        ref={submenuRef}
         className={`
           absolute top-0
           ${flyLeft ? 'right-full mr-1' : 'left-full ml-1'}
@@ -491,30 +500,32 @@ function OverflowCategoryRow({
   );
 }
 
-// ─── 自适应导航容器 ────────────────────────────────────────
+// ─── 自适应导航容器（桌面端） ──────────────────────────────
 
 function AdaptiveNav() {
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
+  const moreBtnRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(ALL_CATEGORIES.length);
 
   useEffect(() => {
     const container = containerRef.current;
     const measure = measureRef.current;
-    if (!container || !measure) return;
-
-    // "更多"按钮宽度预留（px）
-    const MORE_BTN_W = 52;
+    const moreBtn = moreBtnRef.current;
+    if (!container || !measure || !moreBtn) return;
 
     const recalc = () => {
       const available = container.offsetWidth;
       const children = Array.from(measure.children) as HTMLElement[];
+      // 用真实 DOM 测量"更多"按钮的实际渲染宽度
+      const moreBtnW = moreBtn.offsetWidth;
       let used = 0;
       let count = 0;
       for (const child of children) {
         const w = child.offsetWidth;
+        // 如果还剩余分类未放入，需要预留"更多"按钮的空间
         const needMore = count < ALL_CATEGORIES.length - 1;
-        const budget = needMore ? available - MORE_BTN_W : available;
+        const budget = needMore ? available - moreBtnW : available;
         if (used + w > budget) break;
         used += w;
         count++;
@@ -539,7 +550,7 @@ function AdaptiveNav() {
       ref={containerRef}
       className="flex items-center gap-0.5 min-w-0 flex-1"
     >
-      {/* 不可见测量层 */}
+      {/* 不可见测量层（测量所有分类按钮的真实宽度） */}
       <div
         ref={measureRef}
         aria-hidden
@@ -558,6 +569,17 @@ function AdaptiveNav() {
         ))}
       </div>
 
+      {/* 不可见"更多"按钮（用于测量其真实宽度） */}
+      <div
+        ref={moreBtnRef}
+        aria-hidden
+        className="flex items-center gap-1 px-2.5 py-1.5 text-sm whitespace-nowrap absolute opacity-0 pointer-events-none"
+        style={{ visibility: 'hidden' }}
+      >
+        <Ellipsis className="w-4 h-4" />
+        <ChevronDown className="w-3 h-3" />
+      </div>
+
       {/* 可见菜单 */}
       {visible.map((cat) => (
         <CategoryMenu key={cat.labelKey} {...cat} />
@@ -574,6 +596,158 @@ function MeasureLabel({ labelKey }: { labelKey: string }) {
   return <span>{t(labelKey)}</span>;
 }
 
+// ─── 移动端抽屉导航 ────────────────────────────────────────
+
+function MobileNav() {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [expandedCat, setExpandedCat] = useState<string | null>(null);
+
+  // 打开时锁定 html 元素滚动（比锁 body 更可靠，兼容移动端 Safari）
+  useEffect(() => {
+    const html = document.documentElement;
+    if (open) {
+      // 保存当前滚动位置，防止 iOS 弹回
+      const scrollY = window.scrollY;
+      html.style.overflow = 'hidden';
+      html.style.position = 'fixed';
+      html.style.width = '100%';
+      html.style.top = `-${scrollY}px`;
+    } else {
+      const top = html.style.top;
+      html.style.overflow = '';
+      html.style.position = '';
+      html.style.width = '';
+      html.style.top = '';
+      // 恢复滚动位置
+      if (top) {
+        window.scrollTo(0, -parseInt(top, 10));
+      }
+    }
+    return () => {
+      html.style.overflow = '';
+      html.style.position = '';
+      html.style.width = '';
+      html.style.top = '';
+    };
+  }, [open]);
+
+  const toggleCat = (key: string) => {
+    setExpandedCat((prev) => (prev === key ? null : key));
+  };
+
+  const close = () => {
+    setOpen(false);
+    setExpandedCat(null);
+  };
+
+  // 遮罩 + 抽屉用 Portal 渲染到 document.body，
+  // 避免被 header 的 sticky/backdrop-filter 创建的 stacking context 裁剪
+  const drawer = createPortal(
+    <>
+      {/* 遮罩 */}
+      <div
+        className={`
+          fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm
+          transition-opacity duration-300
+          ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+        `}
+        onClick={close}
+      />
+
+      {/* 抽屉 */}
+      <div
+        className={`
+          fixed top-0 left-0 h-full w-72 max-w-[85vw] z-[101]
+          bg-background border-r shadow-xl
+          flex flex-col
+          transition-transform duration-300 ease-out
+          ${open ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        {/* 抽屉头部 */}
+        <div className="flex items-center justify-between px-4 h-14 border-b shrink-0">
+          <Link
+            to="/"
+            onClick={close}
+            className="flex items-center gap-2 font-bold text-lg"
+          >
+            <Code2 className="w-5 h-5 text-primary" />
+            <span>Dev Tools</span>
+          </Link>
+          <button
+            onClick={close}
+            aria-label="关闭导航菜单"
+            className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* 分类列表（可滚动） */}
+        <div className="flex-1 overflow-y-auto overscroll-contain py-2">
+          {ALL_CATEGORIES.map((cat) => {
+            const isExpanded = expandedCat === cat.labelKey;
+            return (
+              <div key={cat.labelKey}>
+                {/* 分类标题行 */}
+                <button
+                  onClick={() => toggleCat(cat.labelKey)}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors select-none"
+                >
+                  {cat.icon}
+                  <span className="flex-1 text-left">{t(cat.labelKey)}</span>
+                  <ChevronRight
+                    className={`w-3.5 h-3.5 opacity-50 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
+                  />
+                </button>
+
+                {/* 子项列表（展开/收起） */}
+                {isExpanded && (
+                  <div className="bg-accent/30">
+                    {cat.items.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={close}
+                        className="flex items-center gap-2.5 pl-10 pr-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                        activeProps={{
+                          className:
+                            'flex items-center gap-2.5 pl-10 pr-4 py-2 text-sm text-foreground bg-accent',
+                        }}
+                      >
+                        {item.icon}
+                        <span>{t(item.labelKey)}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>,
+    document.body,
+  );
+
+  return (
+    <>
+      {/* 汉堡按钮（保留在 header 内正常流） */}
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="打开导航菜单"
+        className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {/* 遮罩 + 抽屉挂载到 body */}
+      {drawer}
+    </>
+  );
+}
+
 // ─── 根文档 ────────────────────────────────────────────────
 
 function RootDocument() {
@@ -583,6 +757,12 @@ function RootDocument() {
         <div className="min-h-screen flex flex-col bg-background text-foreground">
           <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
             <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-4">
+              {/* 移动端：汉堡菜单按钮 */}
+              <div className="md:hidden shrink-0">
+                <MobileNav />
+              </div>
+
+              {/* Logo */}
               <Link
                 to="/"
                 className="flex items-center gap-2 font-bold text-lg shrink-0"
@@ -591,9 +771,12 @@ function RootDocument() {
                 <span className="hidden sm:inline">Dev Tools</span>
               </Link>
 
-              <AdaptiveNav />
+              {/* 桌面端：自适应导航 */}
+              <div className="hidden md:flex min-w-0 flex-1">
+                <AdaptiveNav />
+              </div>
 
-              <div className="shrink-0 flex items-center gap-1">
+              <div className="shrink-0 flex items-center gap-1 ml-auto md:ml-0">
                 <ThemeToggle />
                 <LangSwitcher />
               </div>
