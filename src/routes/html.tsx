@@ -1,13 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { CodePanel } from '../components/code-panel'
-import { Button } from '../components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CodePanel } from '../components/code-panel';
+import { Button } from '../components/ui/button';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../components/ui/tabs';
 
 export const Route = createFileRoute('/html')({
   component: HtmlPage,
-})
+});
 
 const DEFAULT_HTML = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -19,53 +25,66 @@ const DEFAULT_HTML = `<!DOCTYPE html>
   <h1>Hello, World!</h1>
   <p>这是一段示例 HTML。</p>
 </body>
-</html>`
+</html>`;
 
 function useHtmlTool(initialInput = '') {
-  const [input, setInput] = useState(initialInput)
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [input, setInput] = useState(initialInput);
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const clear = () => {
-    setInput('')
-    setOutput('')
-    setError(null)
-  }
+    setInput('');
+    setOutput('');
+    setError(null);
+  };
 
-  return { input, setInput, output, setOutput, error, setError, loading, setLoading, clear }
+  return {
+    input,
+    setInput,
+    output,
+    setOutput,
+    error,
+    setError,
+    loading,
+    setLoading,
+    clear,
+  };
 }
 
+type TabType = 'format' | 'minify';
+
 function HtmlPage() {
-  const { t } = useTranslation()
-  const fmt = useHtmlTool(DEFAULT_HTML)
-  const min = useHtmlTool(DEFAULT_HTML)
+  const { t } = useTranslation();
+  const fmt = useHtmlTool(DEFAULT_HTML);
+  const min = useHtmlTool(DEFAULT_HTML);
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'format');
 
   const formatHtml = async () => {
-    fmt.setError(null)
-    fmt.setLoading(true)
+    fmt.setError(null);
+    fmt.setLoading(true);
     try {
-      const prettier = await import('prettier/standalone')
-      const parserHtml = await import('prettier/plugins/html')
+      const prettier = await import('prettier/standalone');
+      const parserHtml = await import('prettier/plugins/html');
       const result = await prettier.format(fmt.input, {
         parser: 'html',
         plugins: [parserHtml],
         printWidth: 80,
         tabWidth: 2,
-      })
-      fmt.setOutput(result)
+      });
+      fmt.setOutput(result);
     } catch (e) {
-      fmt.setError(t('html.formatError', { msg: (e as Error).message }))
+      fmt.setError(t('html.formatError', { msg: (e as Error).message }));
     } finally {
-      fmt.setLoading(false)
+      fmt.setLoading(false);
     }
-  }
+  };
 
   const minifyHtml = async () => {
-    min.setError(null)
-    min.setLoading(true)
+    min.setError(null);
+    min.setLoading(true);
     try {
-      const { minify } = await import('html-minifier-terser')
+      const { minify } = await import('html-minifier-terser');
       const result = await minify(min.input, {
         collapseWhitespace: true,
         removeComments: true,
@@ -75,14 +94,14 @@ function HtmlPage() {
         useShortDoctype: true,
         minifyCSS: true,
         minifyJS: true,
-      })
-      min.setOutput(result)
+      });
+      min.setOutput(result);
     } catch (e) {
-      min.setError(t('html.minifyError', { msg: (e as Error).message }))
+      min.setError(t('html.minifyError', { msg: (e as Error).message }));
     } finally {
-      min.setLoading(false)
+      min.setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
@@ -91,7 +110,12 @@ function HtmlPage() {
         <p className="text-muted-foreground text-sm mt-1">{t('html.desc')}</p>
       </div>
 
-      <Tabs defaultValue="format">
+      <Tabs
+        value={tab}
+        onValueChange={(v) => {
+          setTab(v as TabType);
+        }}
+      >
         <TabsList>
           <TabsTrigger value="format">{t('html.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('html.tabMinify')}</TabsTrigger>
@@ -99,7 +123,11 @@ function HtmlPage() {
 
         <TabsContent value="format" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={formatHtml} disabled={fmt.loading || !fmt.input.trim()}>
+            <Button
+              size="sm"
+              onClick={formatHtml}
+              disabled={fmt.loading || !fmt.input.trim()}
+            >
               {fmt.loading ? t('html.processing') : t('html.format')}
             </Button>
             <Button size="sm" variant="ghost" onClick={fmt.clear}>
@@ -118,7 +146,11 @@ function HtmlPage() {
 
         <TabsContent value="minify" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={minifyHtml} disabled={min.loading || !min.input.trim()}>
+            <Button
+              size="sm"
+              onClick={minifyHtml}
+              disabled={min.loading || !min.input.trim()}
+            >
               {min.loading ? t('html.processing') : t('html.minify')}
             </Button>
             <Button size="sm" variant="ghost" onClick={min.clear}>
@@ -136,5 +168,5 @@ function HtmlPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
