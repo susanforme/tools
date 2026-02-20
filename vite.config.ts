@@ -13,6 +13,25 @@ const config = defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
       },
+      manifest: {
+        name: 'tools',
+        short_name: 'tools',
+        description: 'a simple tools collection for web developers',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/favicon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/favicon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      },
     }),
     devtools(),
     tsconfigPaths({ projects: ['./tsconfig.json'] }),
