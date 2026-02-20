@@ -1,48 +1,61 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Button } from '../components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '../components/ui/button';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../components/ui/tabs';
 
-export const Route = createFileRoute('/base64')({ component: Base64Page })
+export const Route = createFileRoute('/base64')({ component: Base64Page });
 
 function useTool() {
-  const [input, setInput] = useState('')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const clear = () => { setInput(''); setOutput(''); setError(null) }
-  return { input, setInput, output, setOutput, error, setError, clear }
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const clear = () => {
+    setInput('');
+    setOutput('');
+    setError(null);
+  };
+  return { input, setInput, output, setOutput, error, setError, clear };
 }
 
+type TabType = 'encode' | 'decode';
+
 function Base64Page() {
-  const { t } = useTranslation()
-  const enc = useTool()
-  const dec = useTool()
-  const [copied, setCopied] = useState(false)
+  const { t } = useTranslation();
+  const enc = useTool();
+  const dec = useTool();
+  const [copied, setCopied] = useState(false);
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'encode');
 
   const encode = () => {
-    enc.setError(null)
+    enc.setError(null);
     try {
-      enc.setOutput(btoa(unescape(encodeURIComponent(enc.input))))
+      enc.setOutput(btoa(unescape(encodeURIComponent(enc.input))));
     } catch (e) {
-      enc.setError(t('base64.encodeError', { msg: (e as Error).message }))
+      enc.setError(t('base64.encodeError', { msg: (e as Error).message }));
     }
-  }
+  };
 
   const decode = () => {
-    dec.setError(null)
+    dec.setError(null);
     try {
-      dec.setOutput(decodeURIComponent(escape(atob(dec.input.trim()))))
+      dec.setOutput(decodeURIComponent(escape(atob(dec.input.trim()))));
     } catch (e) {
-      dec.setError(t('base64.decodeError', { msg: (e as Error).message }))
+      dec.setError(t('base64.decodeError', { msg: (e as Error).message }));
     }
-  }
+  };
 
   const copy = async (text: string) => {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500)
-  }
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   const Panel = ({
     state,
@@ -52,17 +65,21 @@ function Base64Page() {
     actionLabel,
     onClear,
   }: {
-    state: ReturnType<typeof useTool>
-    placeholder: string
-    outputPlaceholder: string
-    onAction: () => void
-    actionLabel: string
-    onClear: () => void
+    state: ReturnType<typeof useTool>;
+    placeholder: string;
+    outputPlaceholder: string;
+    onAction: () => void;
+    actionLabel: string;
+    onClear: () => void;
   }) => (
     <div className="space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <Button size="sm" onClick={onAction}>{actionLabel}</Button>
-        <Button size="sm" variant="outline" onClick={onClear}>{t('base64.clear')}</Button>
+        <Button size="sm" onClick={onAction}>
+          {actionLabel}
+        </Button>
+        <Button size="sm" variant="outline" onClick={onClear}>
+          {t('base64.clear')}
+        </Button>
       </div>
       {state.error && (
         <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md">
@@ -71,7 +88,9 @@ function Base64Page() {
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">{t('base64.input')}</div>
+          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
+            {t('base64.input')}
+          </div>
           <textarea
             className="w-full h-48 p-3 font-mono text-sm bg-background resize-none focus:outline-none"
             value={state.input}
@@ -82,7 +101,9 @@ function Base64Page() {
         </div>
         <div className="border rounded-lg overflow-hidden">
           <div className="flex items-center justify-between bg-muted/50 px-3 py-1.5 border-b">
-            <span className="text-xs text-muted-foreground">{t('base64.output')}</span>
+            <span className="text-xs text-muted-foreground">
+              {t('base64.output')}
+            </span>
             {state.output && (
               <button
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
@@ -101,7 +122,7 @@ function Base64Page() {
         </div>
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
@@ -110,7 +131,7 @@ function Base64Page() {
         <p className="text-muted-foreground text-sm mt-1">{t('base64.desc')}</p>
       </div>
 
-      <Tabs defaultValue="encode">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
         <TabsList>
           <TabsTrigger value="encode">{t('base64.tabEncode')}</TabsTrigger>
           <TabsTrigger value="decode">{t('base64.tabDecode')}</TabsTrigger>
@@ -137,5 +158,5 @@ function Base64Page() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

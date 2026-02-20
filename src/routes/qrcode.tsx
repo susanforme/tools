@@ -1,3 +1,4 @@
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import { Check, Copy, Download, QrCode, Upload, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -394,8 +395,15 @@ function DecodeTab() {
 
 // ─── 主组件 ───────────────────────────────────────────────
 
+type QrTabType = 'generate' | 'decode';
+
 function QrCodePage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<QrTabType>(
+    'tab',
+    StringParam,
+    'generate',
+  );
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
@@ -407,7 +415,7 @@ function QrCodePage() {
         <p className="text-muted-foreground text-sm mt-1">{t('qrcode.desc')}</p>
       </div>
 
-      <Tabs defaultValue="generate">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as QrTabType)}>
         <TabsList>
           <TabsTrigger value="generate">{t('qrcode.tabGenerate')}</TabsTrigger>
           <TabsTrigger value="decode">{t('qrcode.tabDecode')}</TabsTrigger>

@@ -1,13 +1,21 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { CodePanel } from '../components/code-panel'
-import { Button } from '../components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CodePanel } from '../components/code-panel';
+import { Button } from '../components/ui/button';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../components/ui/tabs';
+
+type TabType = 'format' | 'minify' | 'scss';
 
 export const Route = createFileRoute('/css')({
   component: CssPage,
-})
+});
 
 /** 简易 CSS 压缩：移除注释与多余空白 */
 function minifyCssString(css: string): string {
@@ -16,7 +24,7 @@ function minifyCssString(css: string): string {
     .replace(/\s+/g, ' ') // 合并空白
     .replace(/\s*([{}:;,>~+])\s*/g, '$1') // 移除特殊符号周围的空白
     .replace(/;}/g, '}') // 移除末尾分号
-    .trim()
+    .trim();
 }
 
 const DEFAULT_CSS = `.container {
@@ -31,7 +39,7 @@ const DEFAULT_CSS = `.container {
   font-size: 24px;
   font-weight: bold;
   color: #333;
-}`
+}`;
 
 const DEFAULT_SCSS = `$primary: #3b82f6;
 $spacing: 8px;
@@ -46,72 +54,83 @@ $spacing: 8px;
     color: $primary;
     &:hover { opacity: 0.8; }
   }
-}`
+}`;
 
 function useTool(initialInput = '') {
-  const [input, setInput] = useState(initialInput)
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [input, setInput] = useState(initialInput);
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const clear = () => {
-    setInput('')
-    setOutput('')
-    setError(null)
-  }
-  return { input, setInput, output, setOutput, error, setError, loading, setLoading, clear }
+    setInput('');
+    setOutput('');
+    setError(null);
+  };
+  return {
+    input,
+    setInput,
+    output,
+    setOutput,
+    error,
+    setError,
+    loading,
+    setLoading,
+    clear,
+  };
 }
 
 function CssPage() {
-  const { t } = useTranslation()
-  const fmt = useTool(DEFAULT_CSS)
-  const min = useTool(DEFAULT_CSS)
-  const scss = useTool(DEFAULT_SCSS)
+  const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'format');
+  const fmt = useTool(DEFAULT_CSS);
+  const min = useTool(DEFAULT_CSS);
+  const scss = useTool(DEFAULT_SCSS);
 
   const formatCss = async () => {
-    fmt.setError(null)
-    fmt.setLoading(true)
+    fmt.setError(null);
+    fmt.setLoading(true);
     try {
-      const prettier = await import('prettier/standalone')
-      const parserPostcss = await import('prettier/plugins/postcss')
+      const prettier = await import('prettier/standalone');
+      const parserPostcss = await import('prettier/plugins/postcss');
       const result = await prettier.format(fmt.input, {
         parser: 'css',
         plugins: [parserPostcss],
         printWidth: 80,
         tabWidth: 2,
-      })
-      fmt.setOutput(result)
+      });
+      fmt.setOutput(result);
     } catch (e) {
-      fmt.setError(t('css.formatError', { msg: (e as Error).message }))
+      fmt.setError(t('css.formatError', { msg: (e as Error).message }));
     } finally {
-      fmt.setLoading(false)
+      fmt.setLoading(false);
     }
-  }
+  };
 
   const minifyCss = () => {
-    min.setError(null)
+    min.setError(null);
     try {
-      if (!min.input.trim()) return
-      min.setOutput(minifyCssString(min.input))
+      if (!min.input.trim()) return;
+      min.setOutput(minifyCssString(min.input));
     } catch (e) {
-      min.setError(t('css.minifyError', { msg: (e as Error).message }))
+      min.setError(t('css.minifyError', { msg: (e as Error).message }));
     }
-  }
+  };
 
   const compileScssToCss = async () => {
-    scss.setError(null)
-    scss.setLoading(true)
+    scss.setError(null);
+    scss.setLoading(true);
     try {
-      const sass = await import('sass')
+      const sass = await import('sass');
       const result = sass.compileString(scss.input, {
         style: 'expanded',
-      })
-      scss.setOutput(result.css)
+      });
+      scss.setOutput(result.css);
     } catch (e) {
-      scss.setError(t('css.scssError', { msg: (e as Error).message }))
+      scss.setError(t('css.scssError', { msg: (e as Error).message }));
     } finally {
-      scss.setLoading(false)
+      scss.setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
@@ -120,7 +139,7 @@ function CssPage() {
         <p className="text-muted-foreground text-sm mt-1">{t('css.desc')}</p>
       </div>
 
-      <Tabs defaultValue="format">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
         <TabsList>
           <TabsTrigger value="format">{t('css.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('css.tabMinify')}</TabsTrigger>
@@ -129,7 +148,11 @@ function CssPage() {
 
         <TabsContent value="format" className="space-y-4 mt-4">
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={formatCss} disabled={fmt.loading || !fmt.input.trim()}>
+            <Button
+              size="sm"
+              onClick={formatCss}
+              disabled={fmt.loading || !fmt.input.trim()}
+            >
               {fmt.loading ? t('css.processing') : t('css.format')}
             </Button>
             <Button size="sm" variant="ghost" onClick={fmt.clear}>
@@ -190,5 +213,5 @@ function CssPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

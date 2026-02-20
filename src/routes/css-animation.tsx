@@ -1,3 +1,4 @@
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import { Check, Copy, Play, RotateCcw, Square } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -1143,8 +1144,15 @@ function AnimationPanel() {
 
 // ─── 主页面 ──────────────────────────────────────────────────
 
+type CssAnimTabType = 'transition' | 'animation';
+
 function CssAnimationPage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<CssAnimTabType>(
+    'tab',
+    StringParam,
+    'transition',
+  );
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-5">
@@ -1155,7 +1163,7 @@ function CssAnimationPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="transition">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as CssAnimTabType)}>
         <TabsList>
           <TabsTrigger value="transition">
             {t('cssAnimation.tabTransition')}

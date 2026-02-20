@@ -1,10 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Button } from '../components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '../components/ui/button';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../components/ui/tabs';
 
-export const Route = createFileRoute('/unicode')({ component: UnicodePage })
+export const Route = createFileRoute('/unicode')({ component: UnicodePage });
 
 // ── 转换函数 ──────────────────────────────────────────────────────────
 
@@ -12,68 +18,74 @@ export const Route = createFileRoute('/unicode')({ component: UnicodePage })
 function textToUnicodeEscape(text: string): string {
   return Array.from(text)
     .map((ch) => {
-      const cp = ch.codePointAt(0)!
+      const cp = ch.codePointAt(0)!;
       return cp > 0xffff
         ? `\\u{${cp.toString(16).toUpperCase()}}`
-        : `\\u${cp.toString(16).toUpperCase().padStart(4, '0')}`
+        : `\\u${cp.toString(16).toUpperCase().padStart(4, '0')}`;
     })
-    .join('')
+    .join('');
 }
 
 /** Unicode 转义 → 文本 */
 function unicodeEscapeToText(escaped: string): string {
   return escaped
     .replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) =>
-      String.fromCodePoint(parseInt(hex, 16))
+      String.fromCodePoint(parseInt(hex, 16)),
     )
     .replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) =>
-      String.fromCharCode(parseInt(hex, 16))
-    )
+      String.fromCharCode(parseInt(hex, 16)),
+    );
 }
 
 /** 文本 → UTF-8 十六进制字节序列 */
 function textToUtf8Hex(text: string): string {
-  const encoder = new TextEncoder()
-  const bytes = encoder.encode(text)
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(text);
   return Array.from(bytes)
     .map((b) => b.toString(16).toUpperCase().padStart(2, '0'))
-    .join(' ')
+    .join(' ');
 }
 
 /** UTF-8 十六进制 → 文本 */
 function utf8HexToText(hex: string): string {
-  const bytes = hex.trim().split(/\s+/).map((h) => parseInt(h, 16))
-  if (bytes.some(isNaN)) throw new Error('包含无效的十六进制值')
-  const decoder = new TextDecoder()
-  return decoder.decode(Uint8Array.from(bytes))
+  const bytes = hex
+    .trim()
+    .split(/\s+/)
+    .map((h) => parseInt(h, 16));
+  if (bytes.some(isNaN)) throw new Error('包含无效的十六进制值');
+  const decoder = new TextDecoder();
+  return decoder.decode(Uint8Array.from(bytes));
 }
 
 /** 文本 → UTF-16 十六进制（大端） */
 function textToUtf16Hex(text: string): string {
-  const result: string[] = []
+  const result: string[] = [];
   for (let i = 0; i < text.length; i++) {
-    const code = text.charCodeAt(i)
-    result.push(code.toString(16).toUpperCase().padStart(4, '0'))
+    const code = text.charCodeAt(i);
+    result.push(code.toString(16).toUpperCase().padStart(4, '0'));
   }
-  return result.join(' ')
+  return result.join(' ');
 }
 
 /** UTF-16 十六进制 → 文本 */
 function utf16HexToText(hex: string): string {
-  const codes = hex.trim().split(/\s+/).map((h) => parseInt(h, 16))
-  if (codes.some(isNaN)) throw new Error('包含无效的十六进制值')
-  return String.fromCharCode(...codes)
+  const codes = hex
+    .trim()
+    .split(/\s+/)
+    .map((h) => parseInt(h, 16));
+  if (codes.some(isNaN)) throw new Error('包含无效的十六进制值');
+  return String.fromCharCode(...codes);
 }
 
 /** 文本 → 码位列表 */
 function textToCodePoints(text: string): string {
   return Array.from(text)
     .map((ch) => {
-      const cp = ch.codePointAt(0)!
-      const hex = cp.toString(16).toUpperCase().padStart(4, '0')
-      return `U+${hex}  (${cp})  ${ch}`
+      const cp = ch.codePointAt(0)!;
+      const hex = cp.toString(16).toUpperCase().padStart(4, '0');
+      return `U+${hex}  (${cp})  ${ch}`;
     })
-    .join('\n')
+    .join('\n');
 }
 
 // ── 组件 ────────────────────────────────────────────────────────────
@@ -91,31 +103,41 @@ function Panel({
   onClear,
   clearLabel,
 }: {
-  label: string
-  input: string
-  onInput: (v: string) => void
-  output: string
-  onEncode: () => void
-  onDecode: () => void
-  encodeLabel: string
-  decodeLabel: string
-  error: string | null
-  onClear: () => void
-  clearLabel: string
+  label: string;
+  input: string;
+  onInput: (v: string) => void;
+  output: string;
+  onEncode: () => void;
+  onDecode: () => void;
+  encodeLabel: string;
+  decodeLabel: string;
+  error: string | null;
+  onClear: () => void;
+  clearLabel: string;
 }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <Button size="sm" onClick={onEncode}>{encodeLabel}</Button>
-        <Button size="sm" variant="outline" onClick={onDecode}>{decodeLabel}</Button>
-        <Button size="sm" variant="ghost" onClick={onClear}>{clearLabel}</Button>
+        <Button size="sm" onClick={onEncode}>
+          {encodeLabel}
+        </Button>
+        <Button size="sm" variant="outline" onClick={onDecode}>
+          {decodeLabel}
+        </Button>
+        <Button size="sm" variant="ghost" onClick={onClear}>
+          {clearLabel}
+        </Button>
       </div>
       {error && (
-        <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md">{error}</div>
+        <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md">
+          {error}
+        </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">{label}</div>
+          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
+            {label}
+          </div>
           <textarea
             className="w-full h-48 p-3 font-mono text-sm bg-background resize-none focus:outline-none"
             value={input}
@@ -124,7 +146,9 @@ function Panel({
           />
         </div>
         <div className="border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">{label} →</div>
+          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
+            {label} →
+          </div>
           <textarea
             readOnly
             className="w-full h-48 p-3 font-mono text-sm bg-muted/20 resize-none focus:outline-none"
@@ -133,45 +157,57 @@ function Panel({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
+type TabType = 'escape' | 'utf8' | 'utf16' | 'codepoints';
+
 function UnicodePage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const [esc, setEsc] = useState('你好，世界！Hello World 🌍')
-  const [escOut, setEscOut] = useState('')
-  const [escErr, setEscErr] = useState<string | null>(null)
+  const [esc, setEsc] = useState('你好，世界！Hello World 🌍');
+  const [escOut, setEscOut] = useState('');
+  const [escErr, setEscErr] = useState<string | null>(null);
 
-  const [u8, setU8] = useState('你好')
-  const [u8Out, setU8Out] = useState('')
-  const [u8Err, setU8Err] = useState<string | null>(null)
+  const [u8, setU8] = useState('你好');
+  const [u8Out, setU8Out] = useState('');
+  const [u8Err, setU8Err] = useState<string | null>(null);
 
-  const [u16, setU16] = useState('Hello')
-  const [u16Out, setU16Out] = useState('')
-  const [u16Err, setU16Err] = useState<string | null>(null)
+  const [u16, setU16] = useState('Hello');
+  const [u16Out, setU16Out] = useState('');
+  const [u16Err, setU16Err] = useState<string | null>(null);
 
-  const [cp, setCp] = useState('Hello 你好 🚀')
-  const [cpOut, setCpOut] = useState('')
+  const [cp, setCp] = useState('Hello 你好 🚀');
+  const [cpOut, setCpOut] = useState('');
+
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'escape');
 
   const wrap = (fn: () => void, setErr: (e: string | null) => void) => {
-    setErr(null)
-    try { fn() } catch (e) { setErr((e as Error).message) }
-  }
+    setErr(null);
+    try {
+      fn();
+    } catch (e) {
+      setErr((e as Error).message);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">{t('unicode.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('unicode.desc')}</p>
+        <p className="text-muted-foreground text-sm mt-1">
+          {t('unicode.desc')}
+        </p>
       </div>
 
-      <Tabs defaultValue="escape">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
         <TabsList>
           <TabsTrigger value="escape">{t('unicode.tabEscape')}</TabsTrigger>
           <TabsTrigger value="utf8">{t('unicode.tabUtf8')}</TabsTrigger>
           <TabsTrigger value="utf16">{t('unicode.tabUtf16')}</TabsTrigger>
-          <TabsTrigger value="codepoints">{t('unicode.tabCodepoints')}</TabsTrigger>
+          <TabsTrigger value="codepoints">
+            {t('unicode.tabCodepoints')}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="escape" className="mt-4">
@@ -180,12 +216,20 @@ function UnicodePage() {
             input={esc}
             onInput={setEsc}
             output={escOut}
-            onEncode={() => wrap(() => setEscOut(textToUnicodeEscape(esc)), setEscErr)}
-            onDecode={() => wrap(() => setEscOut(unicodeEscapeToText(esc)), setEscErr)}
+            onEncode={() =>
+              wrap(() => setEscOut(textToUnicodeEscape(esc)), setEscErr)
+            }
+            onDecode={() =>
+              wrap(() => setEscOut(unicodeEscapeToText(esc)), setEscErr)
+            }
             encodeLabel={t('unicode.toEscape')}
             decodeLabel={t('unicode.fromEscape')}
             error={escErr}
-            onClear={() => { setEsc(''); setEscOut(''); setEscErr(null) }}
+            onClear={() => {
+              setEsc('');
+              setEscOut('');
+              setEscErr(null);
+            }}
             clearLabel={t('unicode.clear')}
           />
         </TabsContent>
@@ -201,7 +245,11 @@ function UnicodePage() {
             encodeLabel={t('unicode.toHex')}
             decodeLabel={t('unicode.fromHex')}
             error={u8Err}
-            onClear={() => { setU8(''); setU8Out(''); setU8Err(null) }}
+            onClear={() => {
+              setU8('');
+              setU8Out('');
+              setU8Err(null);
+            }}
             clearLabel={t('unicode.clear')}
           />
         </TabsContent>
@@ -212,12 +260,20 @@ function UnicodePage() {
             input={u16}
             onInput={setU16}
             output={u16Out}
-            onEncode={() => wrap(() => setU16Out(textToUtf16Hex(u16)), setU16Err)}
-            onDecode={() => wrap(() => setU16Out(utf16HexToText(u16)), setU16Err)}
+            onEncode={() =>
+              wrap(() => setU16Out(textToUtf16Hex(u16)), setU16Err)
+            }
+            onDecode={() =>
+              wrap(() => setU16Out(utf16HexToText(u16)), setU16Err)
+            }
             encodeLabel={t('unicode.toHex')}
             decodeLabel={t('unicode.fromHex')}
             error={u16Err}
-            onClear={() => { setU16(''); setU16Out(''); setU16Err(null) }}
+            onClear={() => {
+              setU16('');
+              setU16Out('');
+              setU16Err(null);
+            }}
             clearLabel={t('unicode.clear')}
           />
         </TabsContent>
@@ -228,13 +284,22 @@ function UnicodePage() {
               <Button size="sm" onClick={() => setCpOut(textToCodePoints(cp))}>
                 {t('unicode.inspect')}
               </Button>
-              <Button size="sm" variant="outline" onClick={() => { setCp(''); setCpOut('') }}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setCp('');
+                  setCpOut('');
+                }}
+              >
                 {t('unicode.clear')}
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="border rounded-lg overflow-hidden">
-                <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">{t('unicode.text')}</div>
+                <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
+                  {t('unicode.text')}
+                </div>
                 <textarea
                   className="w-full h-48 p-3 font-mono text-sm bg-background resize-none focus:outline-none"
                   value={cp}
@@ -243,7 +308,9 @@ function UnicodePage() {
                 />
               </div>
               <div className="border rounded-lg overflow-hidden">
-                <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">{t('unicode.codepoints')}</div>
+                <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
+                  {t('unicode.codepoints')}
+                </div>
                 <textarea
                   readOnly
                   className="w-full h-48 p-3 font-mono text-sm bg-muted/20 resize-none focus:outline-none"
@@ -255,5 +322,5 @@ function UnicodePage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

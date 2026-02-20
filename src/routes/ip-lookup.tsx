@@ -1,3 +1,4 @@
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   Building2,
@@ -75,6 +76,7 @@ function InfoRow({
     </div>
   );
 }
+type TabType = 'lookup' | 'myip' | 'extract';
 
 function IpCard({ info }: { info: IpInfo }) {
   if (info.status === 'fail') {
@@ -150,6 +152,7 @@ function IpLookupPage() {
   const [lookupResult, setLookupResult] = useState<IpInfo | null>(null);
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupError, setLookupError] = useState<string | null>(null);
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'lookup');
 
   const [extractText, setExtractText] = useState('');
   const [extractedIps, setExtractedIps] = useState<string[]>([]);
@@ -207,7 +210,7 @@ function IpLookupPage() {
         <p className="text-xs text-muted-foreground">{t('ipLookup.note')}</p>
       </div>
 
-      <Tabs defaultValue="lookup">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
         <TabsList>
           <TabsTrigger value="lookup">IP 查询</TabsTrigger>
           <TabsTrigger value="myip">本机 IP</TabsTrigger>
