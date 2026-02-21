@@ -10,12 +10,13 @@ import { registerSW } from 'virtual:pwa-register';
 
 registerSW({
   onNeedRefresh() {
-    console.log('有新内容更新，请刷新');
+    console.log('update app');
     // 这里可以触发一个 UI Toast 提示用户刷新页面
   },
   onOfflineReady() {
-    console.log('应用已完全缓存，可以离线使用了！');
+    console.log('offline ready');
   },
+  immediate: true,
 });
 
 const router = getRouter();
