@@ -8,6 +8,7 @@ import { getRouter } from './router';
 
 import { registerSW } from 'virtual:pwa-register';
 
+// 怎么做到点击才离线安装？
 registerSW({
   onNeedRefresh() {
     console.log('update app');
