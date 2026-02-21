@@ -18,9 +18,9 @@ const config = defineConfig({
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MiB
       },
       registerType: 'autoUpdate',
-      // devOptions: {
-      //   enabled: true,
-      // },
+      devOptions: {
+        enabled: true,
+      },
 
       manifest: {
         name: 'tools',

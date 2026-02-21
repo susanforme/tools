@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "portless proxy stop && PORTLESS_HTTPS=1 portless proxy start --https && PORTLESS_HTTPS=1 portless tools vite dev --host",
+    "dev": "portless proxy stop && PORTLESS_HTTPS=1 portless proxy start --https && PORTLESS_HTTPS=1 portless tools.app vite dev --host",
     "preview": "vite preview",
     "test": "vitest run"
   },

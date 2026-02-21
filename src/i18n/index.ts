@@ -20,6 +20,8 @@ function detectLanguage(): Locale {
 const initialLang = detectLanguage();
 
 i18n.use(initReactI18next).init({
+  debug: false,
+  showSupportNotice: false,
   resources: {
     zh: { translation: zh },
     en: { translation: en },
