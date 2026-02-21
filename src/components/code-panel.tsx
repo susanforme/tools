@@ -88,9 +88,13 @@ export function CodePanel({
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-            {t('panel.input')}
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              {t('panel.input')}
+            </label>
+            {/* 占位，与输出面板的复制按钮行等高，保持左右对称 */}
+            <span className="h-6" />
+          </div>
           <div className="rounded-md overflow-hidden border border-input">
             <Editor
               height="480px"

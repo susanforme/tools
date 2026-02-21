@@ -507,7 +507,8 @@ function AdaptiveNav() {
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const moreBtnRef = useRef<HTMLDivElement>(null);
-  const [visibleCount, setVisibleCount] = useState(ALL_CATEGORIES.length);
+  // 初始为 null，表示尚未完成首次测量，此时隐藏导航避免闪动
+  const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -543,13 +544,16 @@ function AdaptiveNav() {
     };
   }, []);
 
-  const visible = ALL_CATEGORIES.slice(0, visibleCount);
-  const overflow = ALL_CATEGORIES.slice(visibleCount);
+  // visibleCount 为 null 表示首次测量尚未完成，用 ?? 兜底避免 TS 报错
+  const resolvedCount = visibleCount ?? 0;
+  const visible = ALL_CATEGORIES.slice(0, resolvedCount);
+  const overflow = ALL_CATEGORIES.slice(resolvedCount);
 
   return (
     <div
       ref={containerRef}
-      className="flex items-center gap-0.5 min-w-0 flex-1"
+      // 首次测量完成前保持不可见，防止全部展开再收缩的闪动
+      className={`flex items-center gap-0.5 min-w-0 flex-1 ${visibleCount === null ? 'invisible' : ''}`}
     >
       {/* 不可见测量层（测量所有分类按钮的真实宽度） */}
       <div
