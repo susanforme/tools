@@ -16,6 +16,7 @@ const config = defineConfig({
     VitePWA({
       workbox: {
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MiB
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm,json}'],
       },
       registerType: 'autoUpdate',
       devOptions: {
