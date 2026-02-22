@@ -625,71 +625,78 @@ function SortableToolCard({
     zIndex: isDragging ? 10 : undefined,
   };
 
-  // 记录是否发生了实际拖拽（pointer 移动超过阈值），防止拖拽结束后触发 Link 跳转
+  // 记录本次 pointer 按下的起始坐标，用于判断是否发生了实际拖拽
+  const pointerStart = React.useRef<{ x: number; y: number } | null>(null);
+  // 是否超过 5px 移动阈值（与 dnd-kit PointerSensor 保持一致）
   const didDrag = React.useRef(false);
 
   return (
-    <div ref={setNodeRef} style={style} className="h-full">
-      <div className="relative group h-full">
-        {/* 拖拽手柄层：覆盖整张卡片，但不渲染任何 DOM 内容 */}
-        <div
-          className="absolute inset-0 z-0 cursor-grab active:cursor-grabbing rounded-lg"
-          {...attributes}
-          {...listeners}
-          onPointerDown={(e) => {
-            didDrag.current = false;
-            listeners?.onPointerDown?.(e);
-          }}
-          onPointerMove={() => {
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="h-full relative group cursor-grab active:cursor-grabbing"
+      {...attributes}
+      {...listeners}
+      onPointerDown={(e) => {
+        didDrag.current = false;
+        pointerStart.current = { x: e.clientX, y: e.clientY };
+        listeners?.onPointerDown?.(e);
+      }}
+      onPointerMove={(e) => {
+        if (pointerStart.current) {
+          const dx = e.clientX - pointerStart.current.x;
+          const dy = e.clientY - pointerStart.current.y;
+          if (Math.hypot(dx, dy) > 5) {
             didDrag.current = true;
-          }}
-        />
-        {/* 卡片主体：点击跳转，拖拽时阻止跳转 */}
-        <Link
-          to={tool.to}
-          className="block h-full"
-          onClick={(e) => {
-            if (didDrag.current) {
-              e.preventDefault();
-              didDrag.current = false;
-            }
-          }}
-        >
-          <Card
-            className={`h-full transition-all duration-200 ${tool.gradient} ${tool.border}`}
-          >
-            <CardHeader>
-              <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
-                {tool.icon}
-              </div>
-              <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
-              <CardDescription className="text-sm leading-relaxed">
-                {t(tool.descKey)}
-              </CardDescription>
-              <div className="flex gap-1.5 flex-wrap mt-1">
-                {tool.tagKeys.map((key) => (
-                  <Badge key={key} variant="secondary" className="text-xs">
-                    {t(key)}
-                  </Badge>
-                ))}
-              </div>
-            </CardHeader>
-          </Card>
-        </Link>
-        {/* 星标取消收藏按钮 — 阻止拖拽手柄的 pointer 事件 */}
-        <button
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={(e) => {
+          }
+        }
+      }}
+    >
+      {/* 卡片主体：点击跳转，拖拽时阻止跳转 */}
+      <Link
+        to={tool.to}
+        className="block h-full"
+        onClick={(e) => {
+          if (didDrag.current) {
             e.preventDefault();
-            e.stopPropagation();
-            onToggleFavorite(tool.to);
-          }}
-          className="absolute top-2 right-2 p-1 rounded-md transition-all duration-150 z-10 cursor-pointer text-yellow-400 hover:text-yellow-500 hover:bg-background/80"
-          aria-label={t('home.unfavorite')}
+            didDrag.current = false;
+          }
+        }}
+      >
+        <Card
+          className={`h-full transition-all duration-200 ${tool.gradient} ${tool.border}`}
         >
-          <Star className="w-4 h-4" fill="currentColor" />
-        </button>
-      </div>
+          <CardHeader>
+            <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
+              {tool.icon}
+            </div>
+            <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
+            <CardDescription className="text-sm leading-relaxed">
+              {t(tool.descKey)}
+            </CardDescription>
+            <div className="flex gap-1.5 flex-wrap mt-1">
+              {tool.tagKeys.map((key) => (
+                <Badge key={key} variant="secondary" className="text-xs">
+                  {t(key)}
+                </Badge>
+              ))}
+            </div>
+          </CardHeader>
+        </Card>
+      </Link>
+      {/* 星标取消收藏按钮 — 阻止触发拖拽的 pointer 事件 */}
+      <button
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onToggleFavorite(tool.to);
+        }}
+        className="absolute top-2 right-2 p-1 rounded-md transition-all duration-150 z-10 cursor-pointer text-yellow-400 hover:text-yellow-500 hover:bg-background/80"
+        aria-label={t('home.unfavorite')}
+      >
+        <Star className="w-4 h-4" fill="currentColor" />
+      </button>
     </div>
   );
 }
