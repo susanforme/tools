@@ -1,3 +1,4 @@
+import { useFavorites } from '@/hooks/useFavorites';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import {
   AlignLeft,
@@ -37,6 +38,7 @@ import {
   ShieldPlus,
   Shuffle,
   Sparkles,
+  Star,
   Table,
   Tag,
 } from 'lucide-react';
@@ -517,38 +519,84 @@ type ToolConfig = {
 function ToolCard({
   tool,
   t,
+  isFavorite,
+  onToggleFavorite,
 }: {
   tool: ToolConfig;
   t: (key: string) => string;
+  isFavorite?: boolean;
+  onToggleFavorite?: (path: string) => void;
 }) {
   return (
-    <Link key={tool.to} to={tool.to} className="group">
-      <Card
-        className={`h-full cursor-pointer transition-all duration-200 ${tool.gradient} ${tool.border}`}
-      >
-        <CardHeader>
-          <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
-            {tool.icon}
-          </div>
-          <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
-          <CardDescription className="text-sm leading-relaxed">
-            {t(tool.descKey)}
-          </CardDescription>
-          <div className="flex gap-1.5 flex-wrap mt-1">
-            {tool.tagKeys.map((key) => (
-              <Badge key={key} variant="secondary" className="text-xs">
-                {t(key)}
-              </Badge>
-            ))}
-          </div>
-        </CardHeader>
-      </Card>
-    </Link>
+    <div className="relative group">
+      <Link to={tool.to}>
+        <Card
+          className={`h-full cursor-pointer transition-all duration-200 ${tool.gradient} ${tool.border}`}
+        >
+          <CardHeader>
+            <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
+              {tool.icon}
+            </div>
+            <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
+            <CardDescription className="text-sm leading-relaxed">
+              {t(tool.descKey)}
+            </CardDescription>
+            <div className="flex gap-1.5 flex-wrap mt-1">
+              {tool.tagKeys.map((key) => (
+                <Badge key={key} variant="secondary" className="text-xs">
+                  {t(key)}
+                </Badge>
+              ))}
+            </div>
+          </CardHeader>
+        </Card>
+      </Link>
+      {/* 收藏星标按钮 */}
+      {onToggleFavorite && (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggleFavorite(tool.to);
+          }}
+          className={`absolute top-2 right-2 p-1 rounded-md transition-all duration-150 z-10
+            ${
+              isFavorite
+                ? 'opacity-100 text-yellow-400 hover:text-yellow-500'
+                : 'opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-yellow-400'
+            }
+            hover:bg-background/80`}
+          aria-label={isFavorite ? t('home.unfavorite') : t('home.favorite')}
+        >
+          <Star
+            className="w-4 h-4"
+            fill={isFavorite ? 'currentColor' : 'none'}
+          />
+        </button>
+      )}
+    </div>
   );
 }
 
+// ─── 所有工具的扁平列表，用于在收藏区查找完整配置 ───────────────────────────
+const ALL_TOOLS = [
+  ...formatterTools,
+  ...encodeTools,
+  ...cryptoTools,
+  ...networkTools,
+  ...convertTools,
+  ...textTools,
+  ...frontendTools,
+];
+
 function HomePage() {
   const { t } = useTranslation();
+  const { favoritePaths, isFavorite, toggleFavorite } = useFavorites();
+
+  // 按收藏顺序（favoritePaths 已按 addedAt 降序）查找对应工具配置
+  const favoriteTools = favoritePaths
+    .map((path) => ALL_TOOLS.find((tool) => tool.to === path))
+    .filter((tool): tool is (typeof ALL_TOOLS)[number] => tool !== undefined);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16">
@@ -562,6 +610,37 @@ function HomePage() {
       </div>
 
       <div className="space-y-10">
+        {/* 我的收藏（无收藏时完全隐藏） */}
+        {favoriteTools.length > 0 && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-400/10 text-yellow-500">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupFavorites')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.favoritesSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {favoriteTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={true}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 格式化工具 */}
         <div>
           <div className="flex items-center gap-3 mb-5">
@@ -580,7 +659,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {formatterTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>
@@ -603,7 +688,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {encodeTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>
@@ -626,7 +717,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {cryptoTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>
@@ -649,7 +746,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {networkTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>
@@ -672,7 +775,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {convertTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>
@@ -695,7 +804,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {textTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>
@@ -718,7 +833,13 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {frontendTools.map((tool) => (
-              <ToolCard key={tool.to} tool={tool} t={t} />
+              <ToolCard
+                key={tool.to}
+                tool={tool}
+                t={t}
+                isFavorite={isFavorite(tool.to)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
         </div>

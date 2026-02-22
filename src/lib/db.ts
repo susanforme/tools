@@ -45,11 +45,24 @@ export interface Preference {
   updatedAt: number;
 }
 
+/**
+ * 用户收藏的工具
+ * toolPath 为唯一索引，对应路由路径（如 '/json'）
+ */
+export interface Favorite {
+  id?: number;
+  /** 工具路由路径，唯一，如 '/json'、'/hash' */
+  toolPath: string;
+  /** 收藏时间戳，Date.now()，用于排序 */
+  addedAt: number;
+}
+
 // ─── 数据库 ────────────────────────────────────────────────────────────────
 
 class AppDB extends Dexie {
   history!: Table<HistoryRecord>;
   preferences!: Table<Preference>;
+  favorites!: Table<Favorite>;
 
   constructor() {
     super('tools-app');
@@ -58,6 +71,12 @@ class AppDB extends Dexie {
       history: '++id, tool, createdAt',
       // preferences: tool 即主键，天然 upsert 语义
       preferences: 'tool',
+    });
+    this.version(2).stores({
+      history: '++id, tool, createdAt',
+      preferences: 'tool',
+      // favorites: 自增主键，toolPath 唯一索引，addedAt 用于排序
+      favorites: '++id, &toolPath, addedAt',
     });
   }
 }
