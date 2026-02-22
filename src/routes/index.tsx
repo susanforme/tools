@@ -841,7 +841,7 @@ function HomePageContent({
                   尺寸由 dnd-kit 自动 match 原节点，无需手动设置 */}
               <DragOverlay>
                 {activeTool ? (
-                  <div className="shadow-2xl cursor-grabbing w-full h-full">
+                  <div className="shadow-2xl cursor-grabbing w-full h-full rounded-xl overflow-hidden bg-transparent">
                     <Card
                       className={`h-full transition-none ${activeTool.gradient} ${activeTool.border}`}
                     >
