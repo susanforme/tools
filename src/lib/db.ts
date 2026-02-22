@@ -53,8 +53,14 @@ export interface Favorite {
   id?: number;
   /** 工具路由路径，唯一，如 '/json'、'/hash' */
   toolPath: string;
-  /** 收藏时间戳，Date.now()，用于排序 */
+  /** 收藏时间戳，Date.now() */
   addedAt: number;
+  /**
+   * 用户拖拽后的自定义排序值，数值越小越靠前。
+   * 新收藏时设为当前最小值 - 1，保证最新收藏排在最前。
+   * 拖拽重排后批量更新为整数序列（0, 1, 2, ...）。
+   */
+  sortOrder: number;
 }
 
 // ─── 数据库 ────────────────────────────────────────────────────────────────
@@ -78,6 +84,22 @@ class AppDB extends Dexie {
       // favorites: 自增主键，toolPath 唯一索引，addedAt 用于排序
       favorites: '++id, &toolPath, addedAt',
     });
+    this.version(3)
+      .stores({
+        history: '++id, tool, createdAt',
+        preferences: 'tool',
+        // 新增 sortOrder 索引，用于拖拽自定义排序
+        favorites: '++id, &toolPath, addedAt, sortOrder',
+      })
+      .upgrade(async (tx) => {
+        // 迁移：为已有收藏记录补充 sortOrder，按 addedAt 升序依次赋值
+        const all = await tx.table('favorites').orderBy('addedAt').toArray();
+        await Promise.all(
+          all.map((row: Favorite, idx: number) =>
+            tx.table('favorites').update(row.id!, { sortOrder: idx }),
+          ),
+        );
+      });
   }
 }
 

@@ -1,5 +1,22 @@
 import { useFavorites } from '@/hooks/useFavorites';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Link, createFileRoute } from '@tanstack/react-router';
 import {
   AlignLeft,
   ArrowLeftRight,
@@ -42,6 +59,8 @@ import {
   Table,
   Tag,
 } from 'lucide-react';
+import React from 'react';
+import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '../components/ui/badge';
 import {
@@ -551,7 +570,7 @@ function ToolCard({
           </CardHeader>
         </Card>
       </Link>
-      {/* 收藏星标按钮 */}
+      {/* 收藏星标按钮：始终可见 */}
       {onToggleFavorite && (
         <button
           onClick={(e) => {
@@ -559,11 +578,11 @@ function ToolCard({
             e.stopPropagation();
             onToggleFavorite(tool.to);
           }}
-          className={`absolute top-2 right-2 p-1 rounded-md transition-all duration-150 z-10
+          className={`absolute top-2 right-2 p-1 rounded-md transition-all duration-150 z-10 cursor-pointer
             ${
               isFavorite
-                ? 'opacity-100 text-yellow-400 hover:text-yellow-500'
-                : 'opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-yellow-400'
+                ? 'text-yellow-400 hover:text-yellow-500'
+                : 'text-muted-foreground/40 hover:text-yellow-400'
             }
             hover:bg-background/80`}
           aria-label={isFavorite ? t('home.unfavorite') : t('home.favorite')}
@@ -574,6 +593,103 @@ function ToolCard({
           />
         </button>
       )}
+    </div>
+  );
+}
+
+// ─── 可拖拽排序的收藏卡片包装 ──────────────────────────────────────────────
+
+function SortableToolCard({
+  tool,
+  t,
+  onToggleFavorite,
+}: {
+  tool: ToolConfig;
+  t: (key: string) => string;
+  onToggleFavorite: (path: string) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: tool.to });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    // 拖拽中提升层级，避免被相邻卡片遮挡
+    zIndex: isDragging ? 10 : undefined,
+  };
+
+  // 记录是否发生了实际拖拽（pointer 移动超过阈值），防止拖拽结束后触发 Link 跳转
+  const didDrag = React.useRef(false);
+
+  return (
+    <div ref={setNodeRef} style={style} className="h-full">
+      <div className="relative group h-full">
+        {/* 拖拽手柄层：覆盖整张卡片，但不渲染任何 DOM 内容 */}
+        <div
+          className="absolute inset-0 z-0 cursor-grab active:cursor-grabbing rounded-lg"
+          {...attributes}
+          {...listeners}
+          onPointerDown={(e) => {
+            didDrag.current = false;
+            listeners?.onPointerDown?.(e);
+          }}
+          onPointerMove={() => {
+            didDrag.current = true;
+          }}
+        />
+        {/* 卡片主体：点击跳转，拖拽时阻止跳转 */}
+        <Link
+          to={tool.to}
+          className="block h-full"
+          onClick={(e) => {
+            if (didDrag.current) {
+              e.preventDefault();
+              didDrag.current = false;
+            }
+          }}
+        >
+          <Card
+            className={`h-full transition-all duration-200 ${tool.gradient} ${tool.border}`}
+          >
+            <CardHeader>
+              <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
+                {tool.icon}
+              </div>
+              <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
+              <CardDescription className="text-sm leading-relaxed">
+                {t(tool.descKey)}
+              </CardDescription>
+              <div className="flex gap-1.5 flex-wrap mt-1">
+                {tool.tagKeys.map((key) => (
+                  <Badge key={key} variant="secondary" className="text-xs">
+                    {t(key)}
+                  </Badge>
+                ))}
+              </div>
+            </CardHeader>
+          </Card>
+        </Link>
+        {/* 星标取消收藏按钮 — 阻止拖拽手柄的 pointer 事件 */}
+        <button
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggleFavorite(tool.to);
+          }}
+          className="absolute top-2 right-2 p-1 rounded-md transition-all duration-150 z-10 cursor-pointer text-yellow-400 hover:text-yellow-500 hover:bg-background/80"
+          aria-label={t('home.unfavorite')}
+        >
+          <Star className="w-4 h-4" fill="currentColor" />
+        </button>
+      </div>
     </div>
   );
 }
@@ -591,12 +707,85 @@ const ALL_TOOLS = [
 
 function HomePage() {
   const { t } = useTranslation();
-  const { favoritePaths, isFavorite, toggleFavorite } = useFavorites();
+  const { ready, favoritePaths, isFavorite, toggleFavorite, reorderFavorites } =
+    useFavorites();
 
-  // 按收藏顺序（favoritePaths 已按 addedAt 降序）查找对应工具配置
-  const favoriteTools = favoritePaths
+  // DB 首次查询未完成时，整个页面不渲染，避免收藏区抖动
+  if (!ready) return null;
+
+  return (
+    <HomePageContent
+      t={t}
+      favoritePaths={favoritePaths}
+      isFavorite={isFavorite}
+      toggleFavorite={toggleFavorite}
+      reorderFavorites={reorderFavorites}
+    />
+  );
+}
+
+function HomePageContent({
+  t,
+  favoritePaths,
+  isFavorite,
+  toggleFavorite,
+  reorderFavorites,
+}: {
+  t: (key: string) => string;
+  favoritePaths: string[];
+  isFavorite: (path: string) => boolean;
+  toggleFavorite: (path: string) => Promise<void>;
+  reorderFavorites: (orderedPaths: string[]) => Promise<void>;
+}) {
+  // 本地乐观顺序：拖拽时立即更新，避免等 DB 回写再渲染产生闪动
+  const [localOrder, setLocalOrder] = React.useState<string[]>(favoritePaths);
+  // 当前正在拖拽的工具路径（用于 DragOverlay）
+  const [activeId, setActiveId] = React.useState<string | null>(null);
+
+  // 当 DB 数据变化时，同步到本地顺序（拖拽过程中不覆盖）
+  React.useEffect(() => {
+    if (activeId === null) {
+      setLocalOrder(favoritePaths);
+    }
+  }, [favoritePaths, activeId]);
+
+  // 用本地顺序驱动渲染，避免 DB 写入延迟导致的闪动
+  const displayOrder = localOrder;
+
+  // 按 sortOrder 顺序查找对应工具配置
+  const favoriteTools = displayOrder
     .map((path) => ALL_TOOLS.find((tool) => tool.to === path))
     .filter((tool): tool is (typeof ALL_TOOLS)[number] => tool !== undefined);
+
+  // 当前拖拽卡片的配置（给 DragOverlay 用）
+  const activeTool = activeId ? ALL_TOOLS.find((t) => t.to === activeId) : null;
+
+  // dnd-kit sensor：需拖动至少 5px 才触发，避免与点击冲突
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(event.active.id as string);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = localOrder.indexOf(active.id as string);
+      const newIndex = localOrder.indexOf(over.id as string);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newOrder = arrayMove(localOrder, oldIndex, newIndex);
+        // flushSync：先同步把新顺序写入 DOM，再清除 activeId
+        // 这样 DragOverlay 消失时，下方卡片已在正确位置，不会先闪回原位
+        flushSync(() => setLocalOrder(newOrder));
+        reorderFavorites(newOrder);
+      }
+    }
+
+    setActiveId(null);
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16">
@@ -610,7 +799,7 @@ function HomePage() {
       </div>
 
       <div className="space-y-10">
-        {/* 我的收藏（无收藏时完全隐藏） */}
+        {/* 我的收藏（有收藏时才显示；ready 守卫已在 HomePage 完成） */}
         {favoriteTools.length > 0 && (
           <div>
             <div className="flex items-center gap-3 mb-5">
@@ -627,17 +816,60 @@ function HomePage() {
               </div>
               <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {favoriteTools.map((tool) => (
-                <ToolCard
-                  key={tool.to}
-                  tool={tool}
-                  t={t}
-                  isFavorite={true}
-                  onToggleFavorite={toggleFavorite}
-                />
-              ))}
-            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={displayOrder}
+                strategy={rectSortingStrategy}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {favoriteTools.map((tool) => (
+                    <SortableToolCard
+                      key={tool.to}
+                      tool={tool}
+                      t={t}
+                      onToggleFavorite={toggleFavorite}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+              {/* DragOverlay：拖拽时渲染一张跟随鼠标的"幽灵卡片"，
+                  尺寸由 dnd-kit 自动 match 原节点，无需手动设置 */}
+              <DragOverlay>
+                {activeTool ? (
+                  <div className="shadow-2xl cursor-grabbing w-full h-full">
+                    <Card
+                      className={`h-full transition-none ${activeTool.gradient} ${activeTool.border}`}
+                    >
+                      <CardHeader>
+                        <div className="mb-2 w-fit">{activeTool.icon}</div>
+                        <CardTitle className="text-lg">
+                          {t(activeTool.titleKey)}
+                        </CardTitle>
+                        <CardDescription className="text-sm leading-relaxed">
+                          {t(activeTool.descKey)}
+                        </CardDescription>
+                        <div className="flex gap-1.5 flex-wrap mt-1">
+                          {activeTool.tagKeys.map((key) => (
+                            <Badge
+                              key={key}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {t(key)}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
           </div>
         )}
 
