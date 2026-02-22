@@ -44,6 +44,7 @@ const en = {
     cssAnimation: 'CSS Animation Maker',
     imageTool: 'Image Tools',
     catOther: 'Other',
+    catFavorites: 'My Favorites',
   },
   home: {
     title: 'Developer Toolbox',

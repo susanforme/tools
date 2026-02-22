@@ -1,3 +1,4 @@
+import { useFavorites } from '@/hooks/useFavorites';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
@@ -45,6 +46,7 @@ import {
   ShieldPlus,
   Shuffle,
   Sparkles,
+  Star,
   Sun,
   Table,
   Tag,
@@ -355,6 +357,39 @@ const ALL_CATEGORIES: CategoryDef[] = [
   },
 ];
 
+// ─── 所有导航项的扁平查找表（路径 → NavItem） ──────────────
+
+const ALL_NAV_ITEMS_MAP: Record<string, NavItem> = Object.fromEntries(
+  [
+    ...formatterNavItems,
+    ...encodeNavItems,
+    ...cryptoNavItems,
+    ...networkNavItems,
+    ...convertNavItems,
+    ...frontendNavItems,
+    ...textNavItems,
+  ].map((item) => [item.to, item]),
+);
+
+// ─── 收藏分类 Hook ─────────────────────────────────────────
+
+function useFavoriteCategory(): CategoryDef | null {
+  const { favoritePaths, ready } = useFavorites();
+  if (!ready || favoritePaths.length === 0) return null;
+
+  const items: NavItem[] = favoritePaths
+    .map((path) => ALL_NAV_ITEMS_MAP[path])
+    .filter((item): item is NavItem => item !== undefined);
+
+  if (items.length === 0) return null;
+
+  return {
+    labelKey: 'nav.catFavorites',
+    icon: <Star className="w-4 h-4 text-yellow-400" />,
+    items,
+  };
+}
+
 // ─── 普通分类下拉菜单 ──────────────────────────────────────
 
 function CategoryMenu({ labelKey, icon, items }: CategoryDef) {
@@ -510,6 +545,12 @@ function AdaptiveNav() {
   // 初始为 null，表示尚未完成首次测量，此时隐藏导航避免闪动
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
+  // 收藏分类（有收藏时排在最前面）
+  const favoriteCategory = useFavoriteCategory();
+  const categories = favoriteCategory
+    ? [favoriteCategory, ...ALL_CATEGORIES]
+    : ALL_CATEGORIES;
+
   useEffect(() => {
     const container = containerRef.current;
     const measure = measureRef.current;
@@ -526,7 +567,7 @@ function AdaptiveNav() {
       for (const child of children) {
         const w = child.offsetWidth;
         // 如果还剩余分类未放入，需要预留"更多"按钮的空间
-        const needMore = count < ALL_CATEGORIES.length - 1;
+        const needMore = count < categories.length - 1;
         const budget = needMore ? available - moreBtnW : available;
         if (used + w > budget) break;
         used += w;
@@ -542,12 +583,12 @@ function AdaptiveNav() {
       ro.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [categories.length]);
 
   // visibleCount 为 null 表示首次测量尚未完成，用 ?? 兜底避免 TS 报错
   const resolvedCount = visibleCount ?? 0;
-  const visible = ALL_CATEGORIES.slice(0, resolvedCount);
-  const overflow = ALL_CATEGORIES.slice(resolvedCount);
+  const visible = categories.slice(0, resolvedCount);
+  const overflow = categories.slice(resolvedCount);
 
   return (
     <div
@@ -562,7 +603,7 @@ function AdaptiveNav() {
         className="flex items-center gap-0.5 absolute opacity-0 pointer-events-none"
         style={{ visibility: 'hidden' }}
       >
-        {ALL_CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <div
             key={cat.labelKey}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm whitespace-nowrap"
@@ -607,6 +648,12 @@ function MobileNav() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [expandedCat, setExpandedCat] = useState<string | null>(null);
+
+  // 收藏分类（有收藏时排在最前面）
+  const favoriteCategory = useFavoriteCategory();
+  const categories = favoriteCategory
+    ? [favoriteCategory, ...ALL_CATEGORIES]
+    : ALL_CATEGORIES;
 
   // 打开时锁定 html 元素滚动（比锁 body 更可靠，兼容移动端 Safari）
   useEffect(() => {
@@ -691,7 +738,7 @@ function MobileNav() {
 
         {/* 分类列表（可滚动） */}
         <div className="flex-1 overflow-y-auto overscroll-contain py-2">
-          {ALL_CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isExpanded = expandedCat === cat.labelKey;
             return (
               <div key={cat.labelKey}>

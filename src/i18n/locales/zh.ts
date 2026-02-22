@@ -44,6 +44,7 @@ const zh = {
     cssAnimation: 'CSS 动画生成器',
     imageTool: '图片处理',
     catOther: '其他',
+    catFavorites: '我的收藏',
   },
   home: {
     title: '开发工具集',
