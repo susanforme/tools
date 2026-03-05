@@ -612,6 +612,7 @@ const en = {
     placeholder: 'Paste JWT token (eyJ...)',
     decode: 'Decode',
     encode: 'Encode & Build',
+    encoding: 'Building...',
     clear: 'Clear',
     header: 'Header',
     payload: 'Payload',
@@ -627,8 +628,16 @@ const en = {
       'This tool only decodes the token and does not verify the signature.',
     encodeNote:
       'The signature part is a placeholder. Real signatures must be generated server-side with a secret key.',
+    encodeNoteHmac:
+      'Real HMAC signature generated using the provided secret key.',
     decodeError: 'Decode failed: {{msg}}',
     encodeError: 'Encode failed: {{msg}}',
+    outputEmpty: 'Result will appear here...',
+    secret: 'Secret',
+    secretLabel: 'Signing Secret',
+    secretPlaceholder: 'Enter HMAC signing secret...',
+    secretEmpty:
+      'No secret provided — a placeholder signature will be used (not verifiable)',
   },
   uuid: {
     title: 'UUID Generator',

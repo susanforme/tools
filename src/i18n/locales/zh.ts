@@ -611,6 +611,7 @@ const zh = {
     placeholder: '粘贴 JWT Token（eyJ...）',
     decode: '解码',
     encode: '编码生成',
+    encoding: '生成中...',
     clear: '清空',
     header: 'Header',
     payload: 'Payload',
@@ -625,8 +626,14 @@ const zh = {
     noVerify: '此工具仅解码 Token，不验证签名有效性。',
     encodeNote:
       '生成的 Token 签名部分为占位符，不可直接用于验证。实际签名需在服务端使用密钥生成。',
+    encodeNoteHmac: '已使用输入的 Secret 通过 HMAC 算法生成真实签名。',
     decodeError: '解码失败：{{msg}}',
     encodeError: '编码失败：{{msg}}',
+    outputEmpty: '结果将在此显示...',
+    secret: 'Secret',
+    secretLabel: '签名密钥（Secret）',
+    secretPlaceholder: '输入 HMAC 签名密钥...',
+    secretEmpty: '未填写密钥，将使用占位符签名（不可验证）',
   },
   uuid: {
     title: 'UUID 生成器',
