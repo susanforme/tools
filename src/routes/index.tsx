@@ -104,6 +104,7 @@ const formatterTools = [
       'home.tools.css.tagFormat',
       'home.tools.css.tagMinify',
       'home.tools.css.tagScss',
+      'home.tools.css.tagConvert',
     ],
     gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
     border: 'hover:border-violet-300 dark:hover:border-violet-700',
