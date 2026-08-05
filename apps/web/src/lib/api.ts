@@ -6,7 +6,3 @@ export const API_URL = (
 ).replace(/\/$/, '');
 
 export const api = createApiClient(API_URL);
-
-export function getApiUrl(path: string): string {
-  return `${API_URL}${path.startsWith('/') ? path : `/${path}`}`;
-}

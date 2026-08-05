@@ -1,5 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
-import { api, getApiUrl } from '@/lib/api';
+import { api } from '@/lib/api';
 import { createFileRoute } from '@tanstack/react-router';
 import { Github, LoaderCircle, LogIn, UserPlus } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
@@ -180,7 +180,7 @@ function LoginPage() {
             type="button"
             variant="outline"
             className="w-full"
-            onClick={() => window.location.assign(getApiUrl('/auth/github'))}
+            onClick={() => window.location.assign(api.auth.github.$path())}
           >
             <Github />
             {t('auth.githubButton')}
