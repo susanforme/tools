@@ -196,6 +196,11 @@ const cryptoNavItems: NavItem[] = [
     labelKey: 'nav.hmac',
   },
   {
+    to: '/totp',
+    icon: <ShieldCheck className="w-4 h-4 text-cyan-500" />,
+    labelKey: 'nav.totp',
+  },
+  {
     to: '/jwt',
     icon: <Fingerprint className="w-4 h-4 text-purple-500" />,
     labelKey: 'nav.jwt',

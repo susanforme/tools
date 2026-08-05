@@ -259,6 +259,15 @@ const cryptoTools = [
     border: 'hover:border-orange-300 dark:hover:border-orange-700',
   },
   {
+    to: '/totp' as const,
+    icon: <ShieldCheck className="w-8 h-8 text-cyan-500" />,
+    titleKey: 'home.tools.totp.title',
+    descKey: 'home.tools.totp.desc',
+    tagKeys: ['home.tools.totp.tag2fa', 'home.tools.totp.tagShare'],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
     to: '/jwt' as const,
     icon: <Fingerprint className="w-8 h-8 text-purple-500" />,
     titleKey: 'home.tools.jwt.title',

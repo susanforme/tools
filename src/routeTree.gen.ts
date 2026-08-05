@@ -16,6 +16,7 @@ import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnicodeRouteImport } from './routes/unicode'
+import { Route as TotpRouteImport } from './routes/totp'
 import { Route as TextRouteImport } from './routes/text'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlRouteImport } from './routes/sql'
@@ -81,6 +82,11 @@ const UrlEncodeRoute = UrlEncodeRouteImport.update({
 const UnicodeRoute = UnicodeRouteImport.update({
   id: '/unicode',
   path: '/unicode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TotpRoute = TotpRouteImport.update({
+  id: '/totp',
+  path: '/totp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TextRoute = TextRouteImport.update({
@@ -271,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
   '/text': typeof TextRoute
+  '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -311,6 +318,7 @@ export interface FileRoutesByTo {
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
   '/text': typeof TextRoute
+  '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -352,6 +360,7 @@ export interface FileRoutesById {
   '/sql': typeof SqlRoute
   '/table-convert': typeof TableConvertRoute
   '/text': typeof TextRoute
+  '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/table-convert'
     | '/text'
+    | '/totp'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/table-convert'
     | '/text'
+    | '/totp'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/table-convert'
     | '/text'
+    | '/totp'
     | '/unicode'
     | '/url-encode'
     | '/user-agent'
@@ -515,6 +527,7 @@ export interface RootRouteChildren {
   SqlRoute: typeof SqlRoute
   TableConvertRoute: typeof TableConvertRoute
   TextRoute: typeof TextRoute
+  TotpRoute: typeof TotpRoute
   UnicodeRoute: typeof UnicodeRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
@@ -573,6 +586,13 @@ declare module '@tanstack/react-router' {
       path: '/unicode'
       fullPath: '/unicode'
       preLoaderRoute: typeof UnicodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/totp': {
+      id: '/totp'
+      path: '/totp'
+      fullPath: '/totp'
+      preLoaderRoute: typeof TotpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/text': {
@@ -827,6 +847,7 @@ const rootRouteChildren: RootRouteChildren = {
   SqlRoute: SqlRoute,
   TableConvertRoute: TableConvertRoute,
   TextRoute: TextRoute,
+  TotpRoute: TotpRoute,
   UnicodeRoute: UnicodeRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,
