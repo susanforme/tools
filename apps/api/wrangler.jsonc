@@ -7,7 +7,7 @@
     {
       "binding": "DB",
       "database_name": "tools-db",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "3a5db87f-2b18-4ca0-820c-769d587e45c7",
       "migrations_dir": "migrations",
     },
   ],
