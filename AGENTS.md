@@ -11,7 +11,6 @@
 | ---------- | -------------------------------------------- |
 | 语言       | TypeScript 5.7（严格模式）                   |
 | UI 框架    | React 19                                     |
-| 全栈框架   | TanStack Start（`@tanstack/react-start`）    |
 | 路由       | TanStack Router v1.132（文件系统路由）       |
 | 样式       | Tailwind CSS v4 + shadcn/ui（New York 风格） |
 | 代码编辑器 | Monaco Editor（`@monaco-editor/react`）      |
@@ -26,7 +25,7 @@
 ## 目录结构
 
 ```
-src/
+apps/web/src/
 ├── router.tsx              # createRouter 配置
 ├── routeTree.gen.ts        # 自动生成，禁止手动编辑
 ├── start.ts                # TanStack Start 入口
@@ -75,13 +74,13 @@ bun test       # 运行所有测试（vitest run）
 
 ```bash
 # 运行单个测试文件
-bun vitest run src/path/to/file.test.ts
+bun vitest run apps/web/src/path/to/file.test.ts
 
 # 按测试名称过滤（支持正则）
 bun vitest run -t "测试名称关键词"
 
 # 监听模式运行单个文件
-bun vitest src/path/to/file.test.ts
+bun vitest apps/web/src/path/to/file.test.ts
 ```
 
 > 注意：项目当前尚无测试文件，但 Vitest / @testing-library/react /
@@ -96,14 +95,15 @@ bun vitest src/path/to/file.test.ts
 
 ## 路由规范
 
-- 每个工具页面放在 `src/routes/` 下，**文件名即 URL 路径段**（`json.tsx` →
-  `/json`）
+- 每个工具页面放在 `apps/web/src/routes/`
+  下，**文件名即 URL 路径段**（`json.tsx` → `/json`）
 - 每个路由文件必须以 `createFileRoute` 导出 `Route`：
   ```tsx
   export const Route = createFileRoute('/your-path')({ component: YourPage });
   ```
-- **禁止手动修改** `src/routeTree.gen.ts`，由 `@tanstack/router-plugin` 自动生成
-- 导航链接统一在 `src/routes/-client.tsx` 的 `<nav>` 中添加
+- **禁止手动修改** `apps/web/src/routeTree.gen.ts`，由 `@tanstack/router-plugin`
+  自动生成
+- 导航链接统一在 `apps/web/src/routes/-client.tsx` 的 `<nav>` 中添加
 
 ---
 
@@ -148,7 +148,7 @@ const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'format');
 const [keyword, setKeyword] = useQueryParam('q', StringParam);
 ```
 
-**Tab 切换标准写法**（参考 `src/routes/html.tsx`）：
+**Tab 切换标准写法**（参考 `apps/web/src/routes/html.tsx`）：
 
 ```tsx
 type TabType = 'format' | 'minify';
@@ -419,7 +419,7 @@ const processAsync = async () => {
 - 颜色使用语义化 token：`text-foreground`、`text-muted-foreground`、`bg-background`、`text-destructive`
 - 响应式布局优先使用 `md:` 前缀
 - 图标使用 `lucide-react`，尺寸统一：`w-4 h-4` / `w-5 h-5` / `w-8 h-8`
-- 禁止修改 `src/components/ui/` 下 shadcn 组件的源码结构
+- 禁止修改 `apps/web/src/components/ui/` 下 shadcn 组件的源码结构
 
 ---
 
@@ -577,5 +577,5 @@ function BrowserIcon({ name }: { name: string }) {
 
 - 所有用户可见文案使用**简体中文**
 - 错误/提示信息格式：`操作描述失败：${(e as Error).message}`
-- 新工具的翻译 key 需同时添加到 `src/i18n/locales/zh.ts` 和
-  `src/i18n/locales/en.ts`
+- 新工具的翻译 key 需同时添加到 `apps/web/src/i18n/locales/zh.ts` 和
+  `apps/web/src/i18n/locales/en.ts`
