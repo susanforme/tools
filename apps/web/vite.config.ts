@@ -17,6 +17,7 @@ const config = defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MiB
         globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm,json,ttf}'],
+        navigateFallbackDenylist: [/^\/api\//],
       },
       registerType: 'autoUpdate',
       // devOptions: {
