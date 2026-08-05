@@ -9,7 +9,7 @@
 
 | 层面       | 技术                                         |
 | ---------- | -------------------------------------------- |
-| 语言       | TypeScript 5.7（严格模式）                   |
+| 语言       | TypeScript 7（严格模式）                     |
 | UI 框架    | React 19                                     |
 | 路由       | TanStack Router v1.132（文件系统路由）       |
 | 样式       | Tailwind CSS v4 + shadcn/ui（New York 风格） |
@@ -65,7 +65,7 @@ bunx --bun shadcn@latest add sonner
 
 ```bash
 bun dev        # 启动开发服务器（portless HTTPS 代理 + Vite HMR）
-bun build      # 生产构建（输出到 dist/）
+bun run build  # 生产构建（输出到 dist/）
 bun preview    # 预览生产构建
 bun test       # 运行所有测试（vitest run）
 ```

@@ -1,12 +1,18 @@
 {
   "name": "tools",
   "private": true,
-  "packageManager": "bun@1.3.14",
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
     "build": "bun run --filter @tools/web build",
+    "db:migrate:local": "bun run --filter @tools/api db:migrate:local",
+    "db:migrate:remote": "bun run --filter @tools/api db:migrate:remote",
     "dev": "bun run --filter @tools/web dev",
+    "dev:api": "bun run --filter @tools/api dev",
     "preview": "bun run --filter @tools/web preview",
-    "test": "bun run --filter @tools/web test"
-  }
+    "test": "bun run --filter '*' test",
+    "typecheck": "bun run --filter '*' typecheck"
+  },
+  "packageManager": "bun@1.3.14"
 }

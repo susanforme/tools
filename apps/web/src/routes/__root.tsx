@@ -1,4 +1,6 @@
 import { useFavorites } from '@/hooks/useFavorites';
+import { api } from '@/lib/api';
+import type { AuthUser } from '@tools/api/client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
@@ -10,6 +12,7 @@ import {
   CaseSensitive,
   ChevronDown,
   ChevronRight,
+  CircleUserRound,
   Clock,
   Code2,
   Contrast,
@@ -30,6 +33,8 @@ import {
   Link as LinkIcon,
   ListOrdered,
   Lock,
+  LogIn,
+  LogOut,
   MapPin,
   Menu,
   MonitorSmartphone,
@@ -56,6 +61,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { LangSwitcher } from '../components/lang-switcher';
+import { Button } from '../components/ui/button';
 import { Toaster } from '../components/ui/sonner';
 import { TooltipProvider } from '../components/ui/tooltip';
 
@@ -807,6 +813,84 @@ function MobileNav() {
 
 // ─── 根文档 ────────────────────────────────────────────────
 
+function AuthNav() {
+  const { t } = useTranslation();
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    void api.auth.me
+      .$get()
+      .then(async (response) => {
+        if (!active || !response.ok) return;
+        const body = await response.json();
+        if (active) setUser(body.user);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (active) setLoaded(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!loaded) return <div className="w-8 h-8" aria-hidden="true" />;
+
+  if (!user) {
+    return (
+      <Button asChild size="sm" variant="ghost">
+        <Link to="/login">
+          <LogIn />
+          <span className="hidden sm:inline">{t('auth.navLogin')}</span>
+        </Link>
+      </Button>
+    );
+  }
+
+  const logout = async () => {
+    setLoggingOut(true);
+    try {
+      const response = await api.auth.logout.$post();
+      if (response.ok) setUser(null);
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1">
+      {user.avatar_url ? (
+        <img
+          src={user.avatar_url}
+          alt={user.name}
+          className="w-7 h-7 rounded-full"
+        />
+      ) : (
+        <CircleUserRound className="w-5 h-5 text-muted-foreground" />
+      )}
+      <span className="hidden lg:inline max-w-28 truncate text-sm">
+        {user.name}
+      </span>
+      <Button
+        type="button"
+        size="icon-sm"
+        variant="ghost"
+        disabled={loggingOut}
+        onClick={logout}
+        aria-label={t('auth.logout')}
+        title={t('auth.logout')}
+      >
+        <LogOut />
+      </Button>
+    </div>
+  );
+}
+
 function RootDocument() {
   return (
     <div>
@@ -834,6 +918,7 @@ function RootDocument() {
               </div>
 
               <div className="shrink-0 flex items-center gap-1 ml-auto md:ml-0">
+                <AuthNav />
                 <ThemeToggle />
                 <LangSwitcher />
               </div>

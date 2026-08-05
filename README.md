@@ -6,7 +6,16 @@ To run this application:
 
 ```bash
 bun install
+cp apps/web/.env.example apps/web/.env
+cp apps/api/.dev.vars.example apps/api/.dev.vars
+bun db:migrate:local
+```
+
+分别启动前端和 API：
+
+```bash
 bun dev
+bun dev:api
 ```
 
 # Building For Production
@@ -14,7 +23,7 @@ bun dev
 To build this application for production:
 
 ```bash
-bun build
+bun run build
 ```
 
 ## Testing

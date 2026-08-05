@@ -26,6 +26,7 @@ import { Route as QrcodeRouteImport } from './routes/qrcode'
 import { Route as PasswordRouteImport } from './routes/password'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MarkdownRouteImport } from './routes/markdown'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
@@ -132,6 +133,11 @@ const NumberBaseRoute = NumberBaseRouteImport.update({
 const MarkdownRoute = MarkdownRouteImport.update({
   id: '/markdown',
   path: '/markdown',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JwtRoute = JwtRouteImport.update({
@@ -268,6 +274,7 @@ export interface FileRoutesByFullPath {
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
+  '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
   '/password': typeof PasswordRoute
@@ -309,6 +316,7 @@ export interface FileRoutesByTo {
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
+  '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
   '/password': typeof PasswordRoute
@@ -351,6 +359,7 @@ export interface FileRoutesById {
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
+  '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
   '/number-base': typeof NumberBaseRoute
   '/password': typeof PasswordRoute
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
     | '/js'
     | '/json'
     | '/jwt'
+    | '/login'
     | '/markdown'
     | '/number-base'
     | '/password'
@@ -435,6 +445,7 @@ export interface FileRouteTypes {
     | '/js'
     | '/json'
     | '/jwt'
+    | '/login'
     | '/markdown'
     | '/number-base'
     | '/password'
@@ -476,6 +487,7 @@ export interface FileRouteTypes {
     | '/js'
     | '/json'
     | '/jwt'
+    | '/login'
     | '/markdown'
     | '/number-base'
     | '/password'
@@ -518,6 +530,7 @@ export interface RootRouteChildren {
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
   JwtRoute: typeof JwtRoute
+  LoginRoute: typeof LoginRoute
   MarkdownRoute: typeof MarkdownRoute
   NumberBaseRoute: typeof NumberBaseRoute
   PasswordRoute: typeof PasswordRoute
@@ -656,6 +669,13 @@ declare module '@tanstack/react-router' {
       path: '/markdown'
       fullPath: '/markdown'
       preLoaderRoute: typeof MarkdownRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jwt': {
@@ -838,6 +858,7 @@ const rootRouteChildren: RootRouteChildren = {
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
   JwtRoute: JwtRoute,
+  LoginRoute: LoginRoute,
   MarkdownRoute: MarkdownRoute,
   NumberBaseRoute: NumberBaseRoute,
   PasswordRoute: PasswordRoute,

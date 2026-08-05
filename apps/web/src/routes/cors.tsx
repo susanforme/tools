@@ -39,7 +39,7 @@ function CorsPage() {
   const [url, setUrl] = useState('https://httpbin.org/get');
   const [method, setMethod] = useState('GET');
   const [customHeaders, setCustomHeaders] = useState('');
-  const [origin, setOrigin] = useState(
+  const [origin] = useState(
     typeof window !== 'undefined' ? window.location.origin : '',
   );
   const [loading, setLoading] = useState(false);

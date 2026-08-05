@@ -1,0 +1,24 @@
+{
+  "name": "@tools/api",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./types": "./src/index.ts"
+  },
+  "scripts": {
+    "db:migrate:local": "wrangler d1 migrations apply tools-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply tools-db --remote",
+    "dev": "wrangler dev",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.13.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260804.1",
+    "typescript": "7.0.2",
+    "wrangler": "^4.118.0"
+  }
+}
