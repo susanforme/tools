@@ -14,16 +14,7 @@ const config = defineConfig({
     Icons({ compiler: 'jsx', jsx: 'react' }),
 
     VitePWA({
-      workbox: {
-        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MiB
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm,json,ttf}'],
-        navigateFallbackDenylist: [/^\/api\//],
-      },
-      registerType: 'autoUpdate',
-      // devOptions: {
-      //   enabled: true,
-      // },
-
+      selfDestroying: true,
       manifest: {
         name: 'tools',
         short_name: 'tools',

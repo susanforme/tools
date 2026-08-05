@@ -8,17 +8,7 @@ import { getRouter } from './router';
 
 import { registerSW } from 'virtual:pwa-register';
 
-// 怎么做到点击才离线安装？
-registerSW({
-  onNeedRefresh() {
-    console.log('update app');
-    // 这里可以触发一个 UI Toast 提示用户刷新页面
-  },
-  onOfflineReady() {
-    console.log('offline ready');
-  },
-  immediate: true,
-});
+registerSW({ immediate: true });
 
 const router = getRouter();
 

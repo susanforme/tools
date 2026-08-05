@@ -1,74 +1,159 @@
+import { api } from '@/lib/api';
 import { db } from '@/lib/db';
-import { useLiveQuery } from 'dexie-react-hooks';
+import { atom, getDefaultStore, useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
-// ─── useFavorites Hook ────────────────────────────────────────────────────
+type FavoritesMode = 'error' | 'loading' | 'local' | 'remote';
 
-/**
- * 管理用户收藏的工具列表。
- * 基于 Dexie useLiveQuery 实现实时响应，收藏/取消/拖拽重排后首页自动更新。
- *
- * @returns
- *   - ready: DB 查询已完成，可以安全渲染收藏区域
- *   - favoritePaths: 已收藏的工具路径数组，按 sortOrder 升序（ready 前为 []）
- *   - isFavorite: 判断指定路径是否已收藏
- *   - toggleFavorite: 收藏/取消收藏
- *   - reorderFavorites: 拖拽后批量重写 sortOrder
- */
+type FavoritesState = {
+  mode: FavoritesMode;
+  paths: string[];
+};
+
+const favoritesAtom = atom<FavoritesState>({ mode: 'loading', paths: [] });
+const favoritesStore = getDefaultStore();
+let loading = false;
+let loadId = 0;
+
+async function readLocalFavorites(): Promise<string[]> {
+  const rows = await db.favorites.orderBy('sortOrder').toArray();
+  return rows.map((row) => row.toolPath);
+}
+
+async function toggleLocalFavorite(path: string): Promise<string[]> {
+  const existing = await db.favorites.where('toolPath').equals(path).first();
+  if (existing) {
+    await db.favorites.delete(existing.id!);
+  } else {
+    const last = await db.favorites.orderBy('sortOrder').last();
+    await db.favorites.add({
+      addedAt: Date.now(),
+      sortOrder: (last?.sortOrder ?? -1) + 1,
+      toolPath: path,
+    });
+  }
+  return readLocalFavorites();
+}
+
+async function reorderLocalFavorites(paths: string[]): Promise<void> {
+  await db.transaction('rw', db.favorites, async () => {
+    await Promise.all(
+      paths.map((path, sortOrder) =>
+        db.favorites.where('toolPath').equals(path).modify({ sortOrder }),
+      ),
+    );
+  });
+}
+
+export function resetFavorites(): void {
+  loadId += 1;
+  loading = false;
+  favoritesStore.set(favoritesAtom, { mode: 'loading', paths: [] });
+}
+
 export function useFavorites() {
-  // 实时订阅 favorites 表，按 sortOrder 升序
-  // useLiveQuery 在查询完成前返回 undefined
-  const rawPaths = useLiveQuery(async () => {
-    const rows = await db.favorites.orderBy('sortOrder').toArray();
-    return rows.map((r) => r.toolPath);
-  }, []);
+  const { t } = useTranslation();
+  const [favorites, setFavorites] = useAtom(favoritesAtom);
 
-  // undefined 表示首次查询尚未完成
-  const ready = rawPaths !== undefined;
-  const favoritePaths = rawPaths ?? [];
+  useEffect(() => {
+    if (favorites.mode !== 'loading' || loading) return;
+    loading = true;
+    const currentLoadId = ++loadId;
+
+    void api.favorites
+      .$get()
+      .then(async (response) => {
+        if (response.status === 200) {
+          const body = await response.json();
+          return { mode: 'remote', paths: body.favorites } as const;
+        }
+        if (response.status === 401) {
+          return { mode: 'local', paths: await readLocalFavorites() } as const;
+        }
+        throw new Error('favorite request failed');
+      })
+      .then((next) => {
+        if (currentLoadId === loadId) setFavorites(next);
+      })
+      .catch(() => {
+        if (currentLoadId === loadId) {
+          setFavorites({ mode: 'error', paths: [] });
+          toast.error(t('home.favoriteError'));
+        }
+      })
+      .finally(() => {
+        if (currentLoadId === loadId) loading = false;
+      });
+  }, [favorites.mode, setFavorites, t]);
 
   function isFavorite(path: string): boolean {
-    return favoritePaths.includes(path);
+    return favorites.paths.includes(path);
   }
 
   async function toggleFavorite(path: string): Promise<void> {
-    const existing = await db.favorites.where('toolPath').equals(path).first();
-    if (existing) {
-      await db.favorites.delete(existing.id!);
-    } else {
-      // 新收藏插入到列表末尾：找当前最大 sortOrder + 1
-      const all = await db.favorites.orderBy('sortOrder').toArray();
-      const maxOrder =
-        all.length > 0 ? (all[all.length - 1].sortOrder ?? 0) : -1;
-      await db.favorites.add({
-        toolPath: path,
-        addedAt: Date.now(),
-        sortOrder: maxOrder + 1,
+    const current = favoritesStore.get(favoritesAtom);
+
+    try {
+      if (current.mode === 'local') {
+        setFavorites({ mode: 'local', paths: await toggleLocalFavorite(path) });
+        return;
+      }
+      if (current.mode !== 'remote') throw new Error('favorites unavailable');
+
+      const favorite = !current.paths.includes(path);
+      const response = await api.favorites.$post({
+        json: { favorite, path },
       });
+      if (response.status === 401) {
+        setFavorites({
+          mode: 'local',
+          paths: await toggleLocalFavorite(path),
+        });
+        return;
+      }
+      if (!response.ok) throw new Error('favorite request failed');
+
+      setFavorites((state) => ({
+        mode: 'remote',
+        paths: favorite
+          ? state.paths.includes(path)
+            ? state.paths
+            : [...state.paths, path]
+          : state.paths.filter((item) => item !== path),
+      }));
+    } catch {
+      toast.error(t('home.favoriteError'));
     }
   }
 
-  /**
-   * 拖拽完成后，传入新顺序的路径数组，批量重写 sortOrder（0, 1, 2, ...）。
-   * 在事务中执行，保证原子性。
-   */
-  async function reorderFavorites(orderedPaths: string[]): Promise<void> {
-    await db.transaction('rw', db.favorites, async () => {
-      await Promise.all(
-        orderedPaths.map((path, idx) =>
-          db.favorites
-            .where('toolPath')
-            .equals(path)
-            .modify({ sortOrder: idx }),
-        ),
-      );
-    });
+  async function reorderFavorites(paths: string[]): Promise<void> {
+    const current = favoritesStore.get(favoritesAtom);
+
+    try {
+      if (current.mode === 'local') {
+        await reorderLocalFavorites(paths);
+        setFavorites({ mode: 'local', paths });
+        return;
+      }
+      if (current.mode !== 'remote') throw new Error('favorites unavailable');
+
+      const response = await api.favorites.order.$put({ json: { paths } });
+      if (response.status === 401) {
+        setFavorites({ mode: 'local', paths: await readLocalFavorites() });
+        return;
+      }
+      if (!response.ok) throw new Error('favorite reorder failed');
+      setFavorites({ mode: 'remote', paths });
+    } catch {
+      toast.error(t('home.favoriteError'));
+    }
   }
 
   return {
-    /** DB 查询已完成，可安全渲染收藏区域 */
-    ready,
-    /** 已收藏的工具路径，按 sortOrder 升序 */
-    favoritePaths,
+    ready: favorites.mode !== 'loading',
+    favoritePaths: favorites.paths,
     isFavorite,
     toggleFavorite,
     reorderFavorites,

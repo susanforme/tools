@@ -1,4 +1,4 @@
-import { useFavorites } from '@/hooks/useFavorites';
+import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
 import { api } from '@/lib/api';
 import type { AuthUser } from '@tools/api/client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
@@ -856,7 +856,10 @@ function AuthNav() {
     setLoggingOut(true);
     try {
       const response = await api.auth.logout.$post();
-      if (response.ok) setUser(null);
+      if (response.ok) {
+        resetFavorites();
+        setUser(null);
+      }
     } finally {
       setLoggingOut(false);
     }

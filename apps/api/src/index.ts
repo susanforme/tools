@@ -59,6 +59,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+export function isToolPath(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    value.length <= 100 &&
+    /^\/[a-z0-9-]+$/.test(value)
+  );
+}
+
 function toPublicUser(user: UserRow): PublicUser {
   return {
     avatar_url: user.avatar_url,
@@ -136,6 +144,33 @@ const loginInput = validator('json', (value, c) => {
     return c.json({ error: '邮箱或密码错误' }, 401);
   }
   return { email, password };
+});
+
+const favoriteInput = validator('json', (value, c) => {
+  if (
+    !isRecord(value) ||
+    !isToolPath(value.path) ||
+    typeof value.favorite !== 'boolean'
+  ) {
+    return c.json({ error: '收藏参数错误' }, 400);
+  }
+  return { favorite: value.favorite, path: value.path };
+});
+
+const favoriteOrderInput = validator('json', (value, c) => {
+  if (!isRecord(value) || !Array.isArray(value.paths)) {
+    return c.json({ error: '收藏排序参数错误' }, 400);
+  }
+
+  const paths = value.paths;
+  if (
+    paths.length > 100 ||
+    paths.some((path) => !isToolPath(path)) ||
+    new Set(paths).size !== paths.length
+  ) {
+    return c.json({ error: '收藏排序参数错误' }, 400);
+  }
+  return { paths };
 });
 
 const routes = app
@@ -228,6 +263,62 @@ const routes = app
     const user = await currentUser(c);
     if (!user) return c.json({ error: '未登录' }, 401);
     return c.json({ user: toPublicUser(user) });
+  })
+  .get('/favorites', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return c.json({ error: '未登录' }, 401);
+
+    const rows = await c.env.DB.prepare(
+      `SELECT tool_path
+         FROM favorites
+        WHERE user_id = ?
+        ORDER BY sort_order, created_at`,
+    )
+      .bind(user.id)
+      .all<{ tool_path: string }>();
+    return c.json({ favorites: rows.results.map((row) => row.tool_path) });
+  })
+  .post('/favorites', favoriteInput, async (c) => {
+    const user = await currentUser(c);
+    if (!user) return c.json({ error: '未登录' }, 401);
+
+    const input = c.req.valid('json');
+    if (input.favorite) {
+      await c.env.DB.prepare(
+        `INSERT INTO favorites (user_id, tool_path, sort_order, created_at)
+         SELECT ?, ?, COALESCE(MAX(sort_order), -1) + 1, ?
+           FROM favorites
+          WHERE user_id = ?
+         ON CONFLICT(user_id, tool_path) DO NOTHING`,
+      )
+        .bind(user.id, input.path, Date.now(), user.id)
+        .run();
+    } else {
+      await c.env.DB.prepare(
+        'DELETE FROM favorites WHERE user_id = ? AND tool_path = ?',
+      )
+        .bind(user.id, input.path)
+        .run();
+    }
+    return c.json({ favorite: input.favorite });
+  })
+  .put('/favorites/order', favoriteOrderInput, async (c) => {
+    const user = await currentUser(c);
+    if (!user) return c.json({ error: '未登录' }, 401);
+
+    const { paths } = c.req.valid('json');
+    if (paths.length > 0) {
+      await c.env.DB.batch(
+        paths.map((path, sortOrder) =>
+          c.env.DB.prepare(
+            `UPDATE favorites
+                SET sort_order = ?
+              WHERE user_id = ? AND tool_path = ?`,
+          ).bind(sortOrder, user.id, path),
+        ),
+      );
+    }
+    return c.json({ ok: true });
   })
   .get('/auth/github', (c) => {
     if (!c.env.GITHUB_CLIENT_ID || !c.env.GITHUB_CALLBACK_URL) {
