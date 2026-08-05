@@ -70,6 +70,7 @@ const en = {
     accountDetails: 'Account details',
     userId: 'User ID',
     logout: 'Sign out',
+    logoutError: 'Could not sign out. Please try again.',
   },
   search: {
     placeholder: 'Search tools…',

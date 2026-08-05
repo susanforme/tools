@@ -70,6 +70,7 @@ const zh = {
     accountDetails: '账户详情',
     userId: '用户 ID',
     logout: '退出登录',
+    logoutError: '退出登录失败，请稍后重试',
   },
   search: {
     placeholder: '搜索工具…',

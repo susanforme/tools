@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { setAuthAuthenticated } from '@/hooks/useAuthSession';
 import { api } from '@/lib/api';
 import { createFileRoute } from '@tanstack/react-router';
 import { Github, LoaderCircle, LogIn, UserPlus } from 'lucide-react';
@@ -65,6 +66,8 @@ function LoginPage() {
         return;
       }
 
+      const body = await response.json();
+      setAuthAuthenticated(body.user);
       window.location.assign(safeRedirect);
     } catch {
       setError(t('auth.errorDefault'));

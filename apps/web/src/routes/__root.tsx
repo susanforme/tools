@@ -1,7 +1,11 @@
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
+import { setAuthGuest, useAuthSession } from '@/hooks/useAuthSession';
+import { useOptionalAuthMutation } from '@/hooks/useOptionalAuth';
 import { api } from '@/lib/api';
-import type { AuthUser } from '@tools/api/client';
+import { assertSessionActive } from '@/lib/optional-auth';
+import { queryClient } from '@/lib/query-client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import Fuse from 'fuse.js';
@@ -63,6 +67,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { LangSwitcher } from '../components/lang-switcher';
 import { Button } from '../components/ui/button';
 import {
@@ -659,6 +664,7 @@ function OverflowCategoryRow({
 // ─── 自适应导航容器（桌面端） ──────────────────────────────
 
 function AdaptiveNav() {
+  const { i18n } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const moreBtnRef = useRef<HTMLDivElement>(null);
@@ -682,15 +688,18 @@ function AdaptiveNav() {
       const children = Array.from(measure.children) as HTMLElement[];
       // 用真实 DOM 测量"更多"按钮的实际渲染宽度
       const moreBtnW = moreBtn.offsetWidth;
+      const gap = Number.parseFloat(getComputedStyle(measure).columnGap) || 0;
       let used = 0;
       let count = 0;
       for (const child of children) {
         const w = child.offsetWidth;
+        const itemGap = count === 0 ? 0 : gap;
         // 如果还剩余分类未放入，需要预留"更多"按钮的空间
         const needMore = count < categories.length - 1;
-        const budget = needMore ? available - moreBtnW : available;
-        if (used + w > budget) break;
-        used += w;
+        const moreGap = needMore && count > 0 ? gap : 0;
+        const budget = needMore ? available - moreBtnW - moreGap : available;
+        if (used + itemGap + w > budget) break;
+        used += itemGap + w;
         count++;
       }
       setVisibleCount(count);
@@ -703,7 +712,7 @@ function AdaptiveNav() {
       ro.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [categories.length]);
+  }, [categories.length, i18n.resolvedLanguage]);
 
   // visibleCount 为 null 表示首次测量尚未完成，用 ?? 兜底避免 TS 报错
   const resolvedCount = visibleCount ?? 0;
@@ -720,8 +729,7 @@ function AdaptiveNav() {
       <div
         ref={measureRef}
         aria-hidden
-        className="flex items-center gap-0.5 absolute opacity-0 pointer-events-none"
-        style={{ visibility: 'hidden' }}
+        className="fixed -left-[10000px] top-0 flex items-center gap-0.5 invisible pointer-events-none"
       >
         {categories.map((cat) => (
           <div
@@ -739,8 +747,7 @@ function AdaptiveNav() {
       <div
         ref={moreBtnRef}
         aria-hidden
-        className="flex items-center gap-1 px-2.5 py-1.5 text-sm whitespace-nowrap absolute opacity-0 pointer-events-none"
-        style={{ visibility: 'hidden' }}
+        className="fixed -left-[10000px] top-0 flex items-center gap-1 px-2.5 py-1.5 text-sm whitespace-nowrap invisible pointer-events-none"
       >
         <Ellipsis className="w-4 h-4" />
         <ChevronDown className="w-3 h-3" />
@@ -924,33 +931,24 @@ function MobileNav() {
 
 function AuthNav() {
   const { t } = useTranslation();
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loaded, setLoaded] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
+  const session = useAuthSession();
+  const logoutMutation = useOptionalAuthMutation<void, void>({
+    operation: () => ({
+      local: async () => undefined,
+      remote: async () => {
+        const response = await api.auth.logout.$post();
+        assertSessionActive(response);
+        if (!response.ok) throw new Error('logout failed');
+      },
+    }),
+    onReportError: () => toast.error(t('auth.logoutError')),
+  });
 
-  useEffect(() => {
-    let active = true;
+  if (session.status === 'loading') {
+    return <div className="w-8 h-8" aria-hidden="true" />;
+  }
 
-    void api.auth.me
-      .$get()
-      .then(async (response) => {
-        if (!active || !response.ok) return;
-        const body = await response.json();
-        if (active) setUser(body.user);
-      })
-      .catch(() => undefined)
-      .finally(() => {
-        if (active) setLoaded(true);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  if (!loaded) return <div className="w-8 h-8" aria-hidden="true" />;
-
-  if (!user) {
+  if (session.status === 'guest') {
     return (
       <Button asChild size="sm" variant="ghost">
         <Link to="/login">
@@ -961,16 +959,13 @@ function AuthNav() {
     );
   }
 
+  const user = session.user;
+
   const logout = async () => {
-    setLoggingOut(true);
-    try {
-      const response = await api.auth.logout.$post();
-      if (response.ok) {
-        resetFavorites();
-        setUser(null);
-      }
-    } finally {
-      setLoggingOut(false);
+    const result = await logoutMutation.execute(undefined);
+    if (result) {
+      setAuthGuest();
+      resetFavorites();
     }
   };
 
@@ -1016,7 +1011,7 @@ function AuthNav() {
           size="sm"
           variant="outline"
           className="w-full"
-          disabled={loggingOut}
+          disabled={logoutMutation.isPending}
           onClick={logout}
         >
           <LogOut />
@@ -1029,49 +1024,53 @@ function AuthNav() {
 
 function RootDocument() {
   return (
-    <div>
-      <TooltipProvider>
-        <div className="min-h-screen flex flex-col bg-background text-foreground">
-          <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
-            <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-2 md:gap-4">
-              {/* 移动端：汉堡菜单按钮 */}
-              <div className="md:hidden shrink-0">
-                <MobileNav />
-              </div>
+    <QueryClientProvider client={queryClient}>
+      <div>
+        <TooltipProvider>
+          <div className="min-h-screen flex flex-col bg-background text-foreground">
+            <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
+              <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-2 md:gap-4">
+                {/* 移动端：汉堡菜单按钮 */}
+                <div className="md:hidden shrink-0">
+                  <MobileNav />
+                </div>
 
-              {/* Logo */}
-              <Link
-                to="/"
-                className="flex items-center gap-2 font-bold text-lg shrink-0"
-              >
-                <Code2 className="w-5 h-5 text-primary" />
-                <span className="hidden sm:inline">Dev Tools</span>
-              </Link>
+                {/* Logo */}
+                <Link
+                  to="/"
+                  className="flex items-center gap-2 font-bold text-lg shrink-0"
+                >
+                  <Code2 className="w-5 h-5 text-primary" />
+                  <span className="hidden sm:inline">Dev Tools</span>
+                </Link>
 
-              {/* 桌面端：自适应导航 */}
-              <div className="hidden md:flex min-w-0 flex-1">
-                <AdaptiveNav />
-              </div>
+                {/* 桌面端：自适应导航 */}
+                <div className="hidden md:flex min-w-0 flex-1">
+                  <AdaptiveNav />
+                </div>
 
-              <ToolSearch />
+                <ToolSearch />
 
-              <div className="shrink-0 flex items-center gap-1 ml-auto md:ml-0">
-                <AuthNav />
-                <ThemeToggle />
-                <LangSwitcher />
-              </div>
-            </nav>
-          </header>
-          <main className="flex-1">
-            <Outlet />
-          </main>
-        </div>
-      </TooltipProvider>
-      <TanStackDevtools
-        config={{ position: 'bottom-right' }}
-        plugins={[{ name: 'Router', render: <TanStackRouterDevtoolsPanel /> }]}
-      />
-      <Toaster />
-    </div>
+                <div className="shrink-0 flex items-center gap-1 ml-auto md:ml-0">
+                  <AuthNav />
+                  <ThemeToggle />
+                  <LangSwitcher />
+                </div>
+              </nav>
+            </header>
+            <main className="flex-1">
+              <Outlet />
+            </main>
+          </div>
+        </TooltipProvider>
+        <TanStackDevtools
+          config={{ position: 'bottom-right' }}
+          plugins={[
+            { name: 'Router', render: <TanStackRouterDevtoolsPanel /> },
+          ]}
+        />
+        <Toaster />
+      </div>
+    </QueryClientProvider>
   );
 }
