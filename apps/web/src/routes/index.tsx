@@ -49,6 +49,7 @@ import {
   QrCode,
   Regex as RegexIcon,
   RotateCw,
+  Ruler,
   Send,
   ShieldAlert,
   ShieldCheck,
@@ -104,7 +105,6 @@ const formatterTools = [
       'home.tools.css.tagFormat',
       'home.tools.css.tagMinify',
       'home.tools.css.tagScss',
-      'home.tools.css.tagConvert',
     ],
     gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
     border: 'hover:border-violet-300 dark:hover:border-violet-700',
@@ -468,6 +468,15 @@ const textTools = [
 
 const frontendTools = [
   {
+    to: '/css-unit' as const,
+    icon: <Ruler className="w-8 h-8 text-violet-500" />,
+    titleKey: 'css.convertTitle',
+    descKey: 'css.convertHint',
+    tagKeys: ['css.px', 'css.rem', 'css.vw'],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
     to: '/color-converter' as const,
     icon: <Palette className="w-8 h-8 text-pink-500" />,
     titleKey: 'home.tools.colorConverter.title',
@@ -806,13 +815,8 @@ function HomePageContent({
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16">
-      <div className="mb-12 text-center space-y-3">
+      <div className="mb-12 text-center">
         <h1 className="text-4xl font-bold tracking-tight">{t('home.title')}</h1>
-        <p className="text-muted-foreground text-lg">{t('home.subtitle')}</p>
-        <div className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
-          <ShieldCheck className="w-4 h-4 text-green-500" />
-          <span>{t('home.localProcess')}</span>
-        </div>
       </div>
 
       <div className="space-y-10">

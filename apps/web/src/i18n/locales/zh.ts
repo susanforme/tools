@@ -40,6 +40,7 @@ const zh = {
     password: '密码生成',
     qrcode: 'QR 二维码',
     colorConverter: '色彩转换器',
+    cssUnit: 'CSS 单位转换',
     contrast: '对比度检查',
     layout: '布局辅助',
     cssAnimation: 'CSS 动画生成器',
@@ -66,12 +67,16 @@ const zh = {
     invalidInput: '请检查输入内容',
     errorDefault: '登录服务暂时不可用，请稍后重试',
     navLogin: '登录',
+    accountDetails: '账户详情',
+    userId: '用户 ID',
     logout: '退出登录',
+  },
+  search: {
+    placeholder: '搜索工具…',
+    noResults: '未找到工具',
   },
   home: {
     title: '开发工具集',
-    subtitle: '工具内容均在本地处理',
-    localProcess: '工具内容不会上传',
     groupFavorites: '我的收藏',
     favoritesSubtitle: '快速访问常用工具',
     favorite: '收藏',
@@ -90,7 +95,7 @@ const zh = {
     otherSubtitle: '文本处理及其他实用工具',
     groupFrontend: '前端工具',
     frontendSubtitle:
-      '色彩转换 · 对比度检查 · CSS 辅助 · CSS 动画生成器 · 图片处理',
+      'CSS 单位转换 · 色彩转换 · 对比度检查 · CSS 辅助 · 动画生成 · 图片处理',
     tools: {
       json: {
         title: 'JSON 工具',
@@ -107,11 +112,10 @@ const zh = {
       },
       css: {
         title: 'CSS / SCSS 工具',
-        desc: 'CSS 格式化、压缩、单位转换，SCSS 编译为 CSS',
+        desc: 'CSS 格式化、压缩，SCSS 编译为 CSS',
         tagFormat: '格式化',
         tagMinify: '压缩',
         tagScss: 'SCSS→CSS',
-        tagConvert: '单位转换',
       },
       js: {
         title: 'JavaScript 工具',
@@ -449,11 +453,10 @@ const zh = {
   },
   css: {
     title: 'CSS / SCSS 工具',
-    desc: 'CSS 格式化、压缩、单位转换，SCSS 编译为 CSS',
+    desc: 'CSS 格式化、压缩，SCSS 编译为 CSS',
     tabFormat: '格式化',
     tabMinify: '压缩',
     tabScss: 'SCSS → CSS',
-    tabConvert: '单位转换',
     convertTitle: 'px / vw / rem 转换',
     convertHint: '修改任一单位会实时同步，vw 基于视口宽度，rem 基于根字体大小',
     viewportWidth: 'vw 基准（视口宽度）',

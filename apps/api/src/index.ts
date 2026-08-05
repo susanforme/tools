@@ -26,7 +26,7 @@ type UserRow = {
   password_salt: string | null;
 };
 
-type PublicUser = Pick<UserRow, 'avatar_url' | 'email' | 'id' | 'name'>;
+type PublicUser = Pick<UserRow, 'avatar_url' | 'id' | 'name'>;
 
 type GitHubEmail = {
   email: string;
@@ -67,10 +67,9 @@ export function isToolPath(value: unknown): value is string {
   );
 }
 
-function toPublicUser(user: UserRow): PublicUser {
+export function toPublicUser(user: UserRow): PublicUser {
   return {
     avatar_url: user.avatar_url,
-    email: user.email,
     id: user.id,
     name: user.name,
   };
@@ -216,7 +215,6 @@ const routes = app
       {
         user: {
           avatar_url: null,
-          email: input.email,
           id,
           name: input.name,
         },

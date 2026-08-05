@@ -4,6 +4,7 @@ import type { AuthUser } from '@tools/api/client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import Fuse from 'fuse.js';
 import {
   AlignLeft,
   ArrowLeftRight,
@@ -45,6 +46,8 @@ import {
   QrCode,
   Regex as RegexIcon,
   RotateCw,
+  Ruler,
+  Search,
   Send,
   ShieldAlert,
   ShieldCheck,
@@ -62,6 +65,12 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { LangSwitcher } from '../components/lang-switcher';
 import { Button } from '../components/ui/button';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../components/ui/hover-card';
+import { Input } from '../components/ui/input';
 import { Toaster } from '../components/ui/sonner';
 import { TooltipProvider } from '../components/ui/tooltip';
 
@@ -109,7 +118,12 @@ function ThemeToggle() {
 
 // ─── 类型 ──────────────────────────────────────────────────
 
-type NavItem = { to: string; icon: React.ReactNode; labelKey: string };
+type NavItem = {
+  to: string;
+  icon: React.ReactNode;
+  labelKey: string;
+  keywords?: string;
+};
 
 type CategoryDef = {
   labelKey: string;
@@ -304,6 +318,12 @@ const textNavItems: NavItem[] = [
 
 const frontendNavItems: NavItem[] = [
   {
+    to: '/css-unit',
+    icon: <Ruler className="w-4 h-4 text-violet-500" />,
+    labelKey: 'nav.cssUnit',
+    keywords: 'px rem vw css',
+  },
+  {
     to: '/color-converter',
     icon: <Palette className="w-4 h-4 text-pink-500" />,
     labelKey: 'nav.colorConverter',
@@ -367,6 +387,95 @@ const ALL_CATEGORIES: CategoryDef[] = [
     items: textNavItems,
   },
 ];
+
+function ToolSearch() {
+  const { t, i18n } = useTranslation();
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const tools = React.useMemo(
+    () =>
+      ALL_CATEGORIES.flatMap((category) =>
+        category.items.map((item) => ({
+          ...item,
+          category: t(category.labelKey),
+          label: t(item.labelKey),
+        })),
+      ),
+    [i18n.resolvedLanguage, t],
+  );
+  const fuse = React.useMemo(
+    () =>
+      new Fuse(tools, {
+        ignoreLocation: true,
+        keys: [
+          { name: 'label', weight: 3 },
+          { name: 'category', weight: 1 },
+          { name: 'keywords', weight: 2 },
+          { name: 'to', weight: 1 },
+        ],
+        threshold: 0.35,
+      }),
+    [tools],
+  );
+  const results = query.trim()
+    ? fuse.search(query.trim(), { limit: 8 }).map((result) => result.item)
+    : [];
+
+  return (
+    <div
+      className="relative w-28 sm:w-44 lg:w-56 shrink-0"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}
+    >
+      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+      <Input
+        type="search"
+        value={query}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => setOpen(true)}
+        placeholder={t('search.placeholder')}
+        aria-label={t('search.placeholder')}
+        aria-expanded={open && Boolean(query.trim())}
+        aria-controls="tool-search-results"
+        className="h-8 pl-8 text-sm"
+      />
+      {open && query.trim() && (
+        <div
+          id="tool-search-results"
+          className="absolute right-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-md border bg-popover p-1 text-popover-foreground shadow-md z-50"
+        >
+          {results.length ? (
+            results.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => {
+                  setOpen(false);
+                  setQuery('');
+                }}
+                className="flex items-center gap-2 rounded-sm px-2 py-2 text-sm hover:bg-accent"
+              >
+                {item.icon}
+                <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                <span className="text-xs text-muted-foreground">
+                  {item.category}
+                </span>
+              </Link>
+            ))
+          ) : (
+            <p className="px-2 py-3 text-sm text-muted-foreground">
+              {t('search.noResults')}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─── 所有导航项的扁平查找表（路径 → NavItem） ──────────────
 
@@ -866,31 +975,55 @@ function AuthNav() {
   };
 
   return (
-    <div className="flex items-center gap-1">
-      {user.avatar_url ? (
-        <img
-          src={user.avatar_url}
-          alt={user.name}
-          className="w-7 h-7 rounded-full"
-        />
-      ) : (
-        <CircleUserRound className="w-5 h-5 text-muted-foreground" />
-      )}
-      <span className="hidden lg:inline max-w-28 truncate text-sm">
-        {user.name}
-      </span>
-      <Button
-        type="button"
-        size="icon-sm"
-        variant="ghost"
-        disabled={loggingOut}
-        onClick={logout}
-        aria-label={t('auth.logout')}
-        title={t('auth.logout')}
-      >
-        <LogOut />
-      </Button>
-    </div>
+    <HoverCard openDelay={200} closeDelay={150}>
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          aria-label={t('auth.accountDetails')}
+          className="rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {user.avatar_url ? (
+            <img
+              src={user.avatar_url}
+              alt={user.name}
+              className="w-8 h-8 rounded-full"
+            />
+          ) : (
+            <CircleUserRound className="w-8 h-8 text-muted-foreground" />
+          )}
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent align="end" className="space-y-3">
+        <div className="flex items-center gap-3">
+          {user.avatar_url ? (
+            <img
+              src={user.avatar_url}
+              alt=""
+              className="w-10 h-10 rounded-full"
+            />
+          ) : (
+            <CircleUserRound className="w-10 h-10 text-muted-foreground" />
+          )}
+          <div className="min-w-0">
+            <p className="font-medium truncate">{user.name}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {t('auth.userId')}: {user.id}
+            </p>
+          </div>
+        </div>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="w-full"
+          disabled={loggingOut}
+          onClick={logout}
+        >
+          <LogOut />
+          {t('auth.logout')}
+        </Button>
+      </HoverCardContent>
+    </HoverCard>
   );
 }
 
@@ -900,7 +1033,7 @@ function RootDocument() {
       <TooltipProvider>
         <div className="min-h-screen flex flex-col bg-background text-foreground">
           <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
-            <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-4">
+            <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-2 md:gap-4">
               {/* 移动端：汉堡菜单按钮 */}
               <div className="md:hidden shrink-0">
                 <MobileNav />
@@ -919,6 +1052,8 @@ function RootDocument() {
               <div className="hidden md:flex min-w-0 flex-1">
                 <AdaptiveNav />
               </div>
+
+              <ToolSearch />
 
               <div className="shrink-0 flex items-center gap-1 ml-auto md:ml-0">
                 <AuthNav />

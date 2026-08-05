@@ -39,6 +39,7 @@ import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HashRouteImport } from './routes/hash'
 import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as CsvConvertRouteImport } from './routes/csv-convert'
+import { Route as CssUnitRouteImport } from './routes/css-unit'
 import { Route as CssLayoutRouteImport } from './routes/css-layout'
 import { Route as CssAnimationRouteImport } from './routes/css-animation'
 import { Route as CssRouteImport } from './routes/css'
@@ -200,6 +201,11 @@ const CsvConvertRoute = CsvConvertRouteImport.update({
   path: '/csv-convert',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CssUnitRoute = CssUnitRouteImport.update({
+  id: '/css-unit',
+  path: '/css-unit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CssLayoutRoute = CssLayoutRouteImport.update({
   id: '/css-layout',
   path: '/css-layout',
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
+  '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
   '/hash': typeof HashRoute
@@ -304,6 +311,7 @@ export interface FileRoutesByTo {
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
+  '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
   '/hash': typeof HashRoute
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
+  '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
   '/hash': typeof HashRoute
@@ -391,6 +400,7 @@ export interface FileRouteTypes {
     | '/css'
     | '/css-animation'
     | '/css-layout'
+    | '/css-unit'
     | '/csv-convert'
     | '/datetime'
     | '/hash'
@@ -433,6 +443,7 @@ export interface FileRouteTypes {
     | '/css'
     | '/css-animation'
     | '/css-layout'
+    | '/css-unit'
     | '/csv-convert'
     | '/datetime'
     | '/hash'
@@ -475,6 +486,7 @@ export interface FileRouteTypes {
     | '/css'
     | '/css-animation'
     | '/css-layout'
+    | '/css-unit'
     | '/csv-convert'
     | '/datetime'
     | '/hash'
@@ -518,6 +530,7 @@ export interface RootRouteChildren {
   CssRoute: typeof CssRoute
   CssAnimationRoute: typeof CssAnimationRoute
   CssLayoutRoute: typeof CssLayoutRoute
+  CssUnitRoute: typeof CssUnitRoute
   CsvConvertRoute: typeof CsvConvertRoute
   DatetimeRoute: typeof DatetimeRoute
   HashRoute: typeof HashRoute
@@ -762,6 +775,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CsvConvertRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/css-unit': {
+      id: '/css-unit'
+      path: '/css-unit'
+      fullPath: '/css-unit'
+      preLoaderRoute: typeof CssUnitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/css-layout': {
       id: '/css-layout'
       path: '/css-layout'
@@ -846,6 +866,7 @@ const rootRouteChildren: RootRouteChildren = {
   CssRoute: CssRoute,
   CssAnimationRoute: CssAnimationRoute,
   CssLayoutRoute: CssLayoutRoute,
+  CssUnitRoute: CssUnitRoute,
   CsvConvertRoute: CsvConvertRoute,
   DatetimeRoute: DatetimeRoute,
   HashRoute: HashRoute,

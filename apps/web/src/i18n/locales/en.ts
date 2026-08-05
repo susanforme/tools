@@ -40,6 +40,7 @@ const en = {
     password: 'Password Generator',
     qrcode: 'QR Code',
     colorConverter: 'Color Converter',
+    cssUnit: 'CSS Unit Converter',
     contrast: 'Contrast Checker',
     layout: 'Layout Helpers',
     cssAnimation: 'CSS Animation Maker',
@@ -66,12 +67,16 @@ const en = {
     invalidInput: 'Please check your input',
     errorDefault: 'Sign-in is temporarily unavailable. Please try again.',
     navLogin: 'Sign in',
+    accountDetails: 'Account details',
+    userId: 'User ID',
     logout: 'Sign out',
+  },
+  search: {
+    placeholder: 'Search tools…',
+    noResults: 'No tools found',
   },
   home: {
     title: 'Developer Toolbox',
-    subtitle: 'Tool content is processed locally',
-    localProcess: 'Tool content is never uploaded',
     groupFavorites: 'My Favorites',
     favoritesSubtitle: 'Quick access to frequently used tools',
     favorite: 'Add to favorites',
@@ -91,7 +96,7 @@ const en = {
     otherSubtitle: 'Text processing and other utilities',
     groupFrontend: 'Frontend Tools',
     frontendSubtitle:
-      'Color Converter · Contrast Checker · CSS Helpers · CSS Animation Maker · Image Tools',
+      'CSS Units · Color Converter · Contrast Checker · CSS Helpers · Animations · Image Tools',
     tools: {
       json: {
         title: 'JSON Tools',
@@ -108,11 +113,10 @@ const en = {
       },
       css: {
         title: 'CSS / SCSS Tools',
-        desc: 'Format, minify, convert CSS units and compile SCSS to CSS',
+        desc: 'Format and minify CSS, and compile SCSS to CSS',
         tagFormat: 'Format',
         tagMinify: 'Minify',
         tagScss: 'SCSS→CSS',
-        tagConvert: 'Units',
       },
       js: {
         title: 'JavaScript Tools',
@@ -450,11 +454,10 @@ const en = {
   },
   css: {
     title: 'CSS / SCSS Tools',
-    desc: 'Format, minify, convert CSS units and compile SCSS to CSS',
+    desc: 'Format and minify CSS, and compile SCSS to CSS',
     tabFormat: 'Format',
     tabMinify: 'Minify',
     tabScss: 'SCSS → CSS',
-    tabConvert: 'Units',
     convertTitle: 'px / vw / rem Converter',
     convertHint:
       'Edit any unit to sync the other two instantly. vw uses viewport width and rem uses root font size.',
