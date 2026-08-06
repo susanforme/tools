@@ -1,8 +1,5 @@
 # AGENTS.md — Dev Tools 项目索引
 
-供 AI 编码 Agent 使用的项目规范文档。本文件综合自
-`.github/copilot-instructions.md` 及代码库实际分析。
-
 ---
 
 ## 技术栈
