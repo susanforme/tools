@@ -59,6 +59,7 @@ import {
   Star,
   Table,
   Tag,
+  Type,
 } from 'lucide-react';
 import React from 'react';
 import { flushSync } from 'react-dom';
@@ -155,6 +156,19 @@ const formatterTools = [
     tagKeys: ['home.tools.sql.tagFormat', 'home.tools.sql.tagMinify'],
     gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
     border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/sql-playground' as const,
+    icon: <Database className="w-8 h-8 text-emerald-500" />,
+    titleKey: 'home.tools.sqlPlayground.title',
+    descKey: 'home.tools.sqlPlayground.desc',
+    tagKeys: [
+      'home.tools.sqlPlayground.tagSqlite',
+      'home.tools.sqlPlayground.tagWasm',
+      'home.tools.sqlPlayground.tagOpfs',
+    ],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
   },
   {
     to: '/yaml' as const,
@@ -413,6 +427,19 @@ const convertTools = [
 
 const textTools = [
   {
+    to: '/diff' as const,
+    icon: <ArrowLeftRight className="w-8 h-8 text-orange-500" />,
+    titleKey: 'home.tools.diff.title',
+    descKey: 'home.tools.diff.desc',
+    tagKeys: [
+      'home.tools.diff.tagText',
+      'home.tools.diff.tagJson',
+      'home.tools.diff.tagCode',
+    ],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
     to: '/text' as const,
     icon: <CaseSensitive className="w-8 h-8 text-lime-600" />,
     titleKey: 'home.tools.text.title',
@@ -420,7 +447,7 @@ const textTools = [
     tagKeys: [
       'home.tools.text.tagDedupe',
       'home.tools.text.tagSort',
-      'home.tools.text.tagDiff',
+      'home.tools.text.tagStats',
     ],
     gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
     border: 'hover:border-lime-300 dark:hover:border-lime-700',
@@ -467,6 +494,19 @@ const textTools = [
 ];
 
 const frontendTools = [
+  {
+    to: '/font' as const,
+    icon: <Type className="w-8 h-8 text-emerald-500" />,
+    titleKey: 'home.tools.fontTool.title',
+    descKey: 'home.tools.fontTool.desc',
+    tagKeys: [
+      'home.tools.fontTool.tagGlyphs',
+      'home.tools.fontTool.tagPreview',
+      'home.tools.fontTool.tagWorker',
+    ],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
   {
     to: '/css-unit' as const,
     icon: <Ruler className="w-8 h-8 text-violet-500" />,

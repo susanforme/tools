@@ -68,54 +68,6 @@ function sortLines(
   return [...lines].sort(compare).join('\n');
 }
 
-// ─── Diff 实现 ─────────────────────────────────────────────
-
-type DiffLine =
-  | { type: 'equal'; line: string }
-  | { type: 'add'; line: string }
-  | { type: 'remove'; line: string };
-
-/** 简单 LCS 行级 diff */
-function computeDiff(leftText: string, rightText: string): DiffLine[] {
-  const leftLines = leftText.split('\n');
-  const rightLines = rightText.split('\n');
-  const m = leftLines.length;
-  const n = rightLines.length;
-
-  // 构建 LCS dp 表
-  const dp: number[][] = Array.from({ length: m + 1 }, () =>
-    new Array(n + 1).fill(0),
-  );
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (leftLines[i - 1] === rightLines[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-      }
-    }
-  }
-
-  // 回溯
-  const result: DiffLine[] = [];
-  let i = m;
-  let j = n;
-  while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && leftLines[i - 1] === rightLines[j - 1]) {
-      result.unshift({ type: 'equal', line: leftLines[i - 1] });
-      i--;
-      j--;
-    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
-      result.unshift({ type: 'add', line: rightLines[j - 1] });
-      j--;
-    } else {
-      result.unshift({ type: 'remove', line: leftLines[i - 1] });
-      i--;
-    }
-  }
-  return result;
-}
-
 // ─── 行统计 / 词频 ─────────────────────────────────────────
 
 type WordFreqEntry = { word: string; count: number };
@@ -459,122 +411,6 @@ function SortTab() {
   );
 }
 
-// ─── Tab: 文本差异比较 Diff ────────────────────────────────
-
-function DiffTab() {
-  const [left, setLeft] = useState('');
-  const [right, setRight] = useState('');
-  const [diffResult, setDiffResult] = useState<DiffLine[] | null>(null);
-
-  const run = () => {
-    setDiffResult(computeDiff(left, right));
-  };
-  const clear = () => {
-    setLeft('');
-    setRight('');
-    setDiffResult(null);
-  };
-
-  const addCount = diffResult?.filter((d) => d.type === 'add').length ?? 0;
-  const removeCount =
-    diffResult?.filter((d) => d.type === 'remove').length ?? 0;
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2 flex-wrap">
-        <Button size="sm" onClick={run}>
-          比较差异
-        </Button>
-        <Button size="sm" variant="outline" onClick={clear}>
-          清空
-        </Button>
-        {diffResult && (
-          <span className="text-sm text-muted-foreground">
-            <span className="text-green-600 font-medium">+{addCount}</span> 新增
-            · <span className="text-red-600 font-medium">-{removeCount}</span>{' '}
-            删除
-          </span>
-        )}
-      </div>
-
-      {/* 输入双栏 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
-            原始文本（左）
-          </div>
-          <textarea
-            className="w-full p-3 font-mono text-sm bg-background resize-none focus:outline-none"
-            rows={10}
-            value={left}
-            onChange={(e) => setLeft(e.target.value)}
-            placeholder="粘贴原始文本..."
-            spellCheck={false}
-          />
-        </div>
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
-            修改后文本（右）
-          </div>
-          <textarea
-            className="w-full p-3 font-mono text-sm bg-background resize-none focus:outline-none"
-            rows={10}
-            value={right}
-            onChange={(e) => setRight(e.target.value)}
-            placeholder="粘贴修改后文本..."
-            spellCheck={false}
-          />
-        </div>
-      </div>
-
-      {/* Diff 结果 */}
-      {diffResult && (
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
-            差异结果
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full font-mono text-sm border-collapse">
-              <tbody>
-                {diffResult.map((d, idx) => {
-                  const bg =
-                    d.type === 'add'
-                      ? 'bg-green-50 dark:bg-green-950/30'
-                      : d.type === 'remove'
-                        ? 'bg-red-50 dark:bg-red-950/30'
-                        : '';
-                  const prefix =
-                    d.type === 'add' ? '+' : d.type === 'remove' ? '-' : ' ';
-                  const textColor =
-                    d.type === 'add'
-                      ? 'text-green-700 dark:text-green-400'
-                      : d.type === 'remove'
-                        ? 'text-red-700 dark:text-red-400'
-                        : 'text-muted-foreground';
-                  return (
-                    <tr key={idx} className={bg}>
-                      <td
-                        className={`w-6 px-2 py-0.5 text-center select-none ${textColor} border-r border-border/50 text-xs`}
-                      >
-                        {prefix}
-                      </td>
-                      <td
-                        className={`px-3 py-0.5 whitespace-pre-wrap break-all ${textColor}`}
-                      >
-                        {d.line || '\u00A0'}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ─── Tab: 行统计 / 词频 ────────────────────────────────────
 
 function StatsTab() {
@@ -771,7 +607,7 @@ function TextPage() {
       <div>
         <h1 className="text-2xl font-bold">文本处理工具</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          文本清洗与转换：去重复行、去空行、行排序、差异比较、行/词统计、大小写转换
+          文本清洗与转换：去重复行、去空行、行排序、行/词统计、大小写转换
         </p>
       </div>
 
@@ -780,7 +616,6 @@ function TextPage() {
           <TabsTrigger value="dedupe">去重复行</TabsTrigger>
           <TabsTrigger value="empty">去空行</TabsTrigger>
           <TabsTrigger value="sort">行排序</TabsTrigger>
-          <TabsTrigger value="diff">文本 Diff</TabsTrigger>
           <TabsTrigger value="stats">行/词统计</TabsTrigger>
           <TabsTrigger value="case">大小写转换</TabsTrigger>
         </TabsList>
@@ -793,9 +628,6 @@ function TextPage() {
         </TabsContent>
         <TabsContent value="sort" className="mt-4">
           <SortTab />
-        </TabsContent>
-        <TabsContent value="diff" className="mt-4">
-          <DiffTab />
         </TabsContent>
         <TabsContent value="stats" className="mt-4">
           <StatsTab />

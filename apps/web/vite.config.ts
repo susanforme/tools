@@ -10,6 +10,9 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config = defineConfig({
   // logLevel: 'warn',
+  optimizeDeps: {
+    exclude: ['@sqlite.org/sqlite-wasm'],
+  },
   plugins: [
     Icons({ compiler: 'jsx', jsx: 'react' }),
 

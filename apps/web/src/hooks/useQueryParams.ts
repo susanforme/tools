@@ -162,6 +162,7 @@ export function useQueryParam<T>(
           return newSearch;
         },
         replace: updateType.startsWith('replace'),
+        resetScroll: false,
       });
     },
     [navigate, name, paramConfig, defaultValue],
@@ -238,6 +239,7 @@ export function useQueryParams<
           return newSearch;
         },
         replace: updateType.startsWith('replace'),
+        resetScroll: false,
       });
     },
     [navigate, paramMap],

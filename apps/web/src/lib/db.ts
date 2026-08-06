@@ -63,12 +63,21 @@ export interface Favorite {
   sortOrder: number;
 }
 
+export interface CachedFont {
+  id: 'latest';
+  name: string;
+  type: string;
+  lastModified: number;
+  data: Blob;
+}
+
 // ─── 数据库 ────────────────────────────────────────────────────────────────
 
 class AppDB extends Dexie {
   history!: Table<HistoryRecord>;
   preferences!: Table<Preference>;
   favorites!: Table<Favorite>;
+  fontCache!: Table<CachedFont>;
 
   constructor() {
     super('tools-app');
@@ -100,6 +109,12 @@ class AppDB extends Dexie {
           ),
         );
       });
+    this.version(4).stores({
+      history: '++id, tool, createdAt',
+      preferences: 'tool',
+      favorites: '++id, &toolPath, addedAt, sortOrder',
+      fontCache: 'id',
+    });
   }
 }
 

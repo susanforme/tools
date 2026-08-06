@@ -1,31 +1,10 @@
 import { useTheme } from '@/hooks/use-theme';
-import Editor, { loader } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 import { Check, Copy } from 'lucide-react';
-import * as monaco from 'monaco-editor';
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
-import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
-import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import '../lib/monaco';
 import { Button } from './ui/button';
-
-// 配置 Monaco workers 使用本地打包文件，避免从 CDN 加载
-self.MonacoEnvironment = {
-  getWorker(_workerId: string, label: string) {
-    if (label === 'json') return new JsonWorker();
-    if (label === 'css' || label === 'scss' || label === 'less')
-      return new CssWorker();
-    if (label === 'html' || label === 'handlebars' || label === 'razor')
-      return new HtmlWorker();
-    if (label === 'typescript' || label === 'javascript') return new TsWorker();
-    return new EditorWorker();
-  },
-};
-
-// 使用本地 monaco-editor 实例，避免从 CDN 加载
-loader.config({ monaco });
 
 export interface CodePanelProps {
   input: string;

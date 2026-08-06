@@ -19,6 +19,7 @@ import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as TotpRouteImport } from './routes/totp'
 import { Route as TextRouteImport } from './routes/text'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
+import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as Rot13RouteImport } from './routes/rot13'
 import { Route as RegexRouteImport } from './routes/regex'
@@ -37,6 +38,8 @@ import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
 import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HashRouteImport } from './routes/hash'
+import { Route as FontRouteImport } from './routes/font'
+import { Route as DiffRouteImport } from './routes/diff'
 import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssUnitRouteImport } from './routes/css-unit'
@@ -99,6 +102,11 @@ const TextRoute = TextRouteImport.update({
 const TableConvertRoute = TableConvertRouteImport.update({
   id: '/table-convert',
   path: '/table-convert',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SqlPlaygroundRoute = SqlPlaygroundRouteImport.update({
+  id: '/sql-playground',
+  path: '/sql-playground',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SqlRoute = SqlRouteImport.update({
@@ -191,6 +199,16 @@ const HashRoute = HashRouteImport.update({
   path: '/hash',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FontRoute = FontRouteImport.update({
+  id: '/font',
+  path: '/font',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiffRoute = DiffRouteImport.update({
+  id: '/diff',
+  path: '/diff',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DatetimeRoute = DatetimeRouteImport.update({
   id: '/datetime',
   path: '/datetime',
@@ -271,6 +289,8 @@ export interface FileRoutesByFullPath {
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
+  '/diff': typeof DiffRoute
+  '/font': typeof FontRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -289,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
+  '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
@@ -314,6 +335,8 @@ export interface FileRoutesByTo {
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
+  '/diff': typeof DiffRoute
+  '/font': typeof FontRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -332,6 +355,7 @@ export interface FileRoutesByTo {
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
+  '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
@@ -358,6 +382,8 @@ export interface FileRoutesById {
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
   '/datetime': typeof DatetimeRoute
+  '/diff': typeof DiffRoute
+  '/font': typeof FontRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -376,6 +402,7 @@ export interface FileRoutesById {
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
   '/sql': typeof SqlRoute
+  '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
@@ -403,6 +430,8 @@ export interface FileRouteTypes {
     | '/css-unit'
     | '/csv-convert'
     | '/datetime'
+    | '/diff'
+    | '/font'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -421,6 +450,7 @@ export interface FileRouteTypes {
     | '/regex'
     | '/rot13'
     | '/sql'
+    | '/sql-playground'
     | '/table-convert'
     | '/text'
     | '/totp'
@@ -446,6 +476,8 @@ export interface FileRouteTypes {
     | '/css-unit'
     | '/csv-convert'
     | '/datetime'
+    | '/diff'
+    | '/font'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -464,6 +496,7 @@ export interface FileRouteTypes {
     | '/regex'
     | '/rot13'
     | '/sql'
+    | '/sql-playground'
     | '/table-convert'
     | '/text'
     | '/totp'
@@ -489,6 +522,8 @@ export interface FileRouteTypes {
     | '/css-unit'
     | '/csv-convert'
     | '/datetime'
+    | '/diff'
+    | '/font'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -507,6 +542,7 @@ export interface FileRouteTypes {
     | '/regex'
     | '/rot13'
     | '/sql'
+    | '/sql-playground'
     | '/table-convert'
     | '/text'
     | '/totp'
@@ -533,6 +569,8 @@ export interface RootRouteChildren {
   CssUnitRoute: typeof CssUnitRoute
   CsvConvertRoute: typeof CsvConvertRoute
   DatetimeRoute: typeof DatetimeRoute
+  DiffRoute: typeof DiffRoute
+  FontRoute: typeof FontRoute
   HashRoute: typeof HashRoute
   HmacRoute: typeof HmacRoute
   HtmlRoute: typeof HtmlRoute
@@ -551,6 +589,7 @@ export interface RootRouteChildren {
   RegexRoute: typeof RegexRoute
   Rot13Route: typeof Rot13Route
   SqlRoute: typeof SqlRoute
+  SqlPlaygroundRoute: typeof SqlPlaygroundRoute
   TableConvertRoute: typeof TableConvertRoute
   TextRoute: typeof TextRoute
   TotpRoute: typeof TotpRoute
@@ -633,6 +672,13 @@ declare module '@tanstack/react-router' {
       path: '/table-convert'
       fullPath: '/table-convert'
       preLoaderRoute: typeof TableConvertRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sql-playground': {
+      id: '/sql-playground'
+      path: '/sql-playground'
+      fullPath: '/sql-playground'
+      preLoaderRoute: typeof SqlPlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sql': {
@@ -761,6 +807,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HashRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/font': {
+      id: '/font'
+      path: '/font'
+      fullPath: '/font'
+      preLoaderRoute: typeof FontRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diff': {
+      id: '/diff'
+      path: '/diff'
+      fullPath: '/diff'
+      preLoaderRoute: typeof DiffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/datetime': {
       id: '/datetime'
       path: '/datetime'
@@ -869,6 +929,8 @@ const rootRouteChildren: RootRouteChildren = {
   CssUnitRoute: CssUnitRoute,
   CsvConvertRoute: CsvConvertRoute,
   DatetimeRoute: DatetimeRoute,
+  DiffRoute: DiffRoute,
+  FontRoute: FontRoute,
   HashRoute: HashRoute,
   HmacRoute: HmacRoute,
   HtmlRoute: HtmlRoute,
@@ -887,6 +949,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegexRoute: RegexRoute,
   Rot13Route: Rot13Route,
   SqlRoute: SqlRoute,
+  SqlPlaygroundRoute: SqlPlaygroundRoute,
   TableConvertRoute: TableConvertRoute,
   TextRoute: TextRoute,
   TotpRoute: TotpRoute,

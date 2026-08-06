@@ -63,6 +63,7 @@ import {
   Sun,
   Table,
   Tag,
+  Type,
   X,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -152,6 +153,12 @@ const formatterNavItems: NavItem[] = [
     to: '/sql',
     icon: <Database className="w-4 h-4 text-cyan-500" />,
     labelKey: 'nav.sql',
+  },
+  {
+    to: '/sql-playground',
+    icon: <Database className="w-4 h-4 text-emerald-500" />,
+    labelKey: 'nav.sqlPlayground',
+    keywords: 'sqlite sql playground practice query database wasm opfs',
   },
   {
     to: '/yaml',
@@ -279,6 +286,12 @@ const convertNavItems: NavItem[] = [
 
 const textNavItems: NavItem[] = [
   {
+    to: '/diff',
+    icon: <ArrowLeftRight className="w-4 h-4 text-orange-500" />,
+    labelKey: 'nav.diff',
+    keywords: 'diff compare text json code difference comparison',
+  },
+  {
     to: '/text',
     icon: <CaseSensitive className="w-4 h-4 text-lime-600" />,
     labelKey: 'nav.text',
@@ -301,6 +314,12 @@ const textNavItems: NavItem[] = [
 ];
 
 const frontendNavItems: NavItem[] = [
+  {
+    to: '/font',
+    icon: <Type className="w-4 h-4 text-emerald-500" />,
+    labelKey: 'nav.font',
+    keywords: 'font glyph ttf otf woff woff2 typeface typography',
+  },
   {
     to: '/css-unit',
     icon: <Ruler className="w-4 h-4 text-violet-500" />,

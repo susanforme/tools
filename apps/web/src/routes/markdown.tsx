@@ -1,83 +1,79 @@
+import { useTheme } from '@/hooks/use-theme';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { renderMarkdown } from '@/lib/markdown';
+import Editor from '@monaco-editor/react';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { Eraser, WandSparkles } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CodePanel } from '../components/code-panel';
 import { Button } from '../components/ui/button';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
+import '../lib/monaco';
 
 export const Route = createFileRoute('/markdown')({ component: MarkdownPage });
 
-const SAMPLE_MD = `# Hello, Markdown!
+const SAMPLE_MD = `# Markdown 实时预览
 
-A lightweight markup language for **formatting** text.
+使用 **Marked** 在浏览器中渲染 GitHub Flavored Markdown。
 
-## Features
+## 常用语法
 
-- Easy to write
-- Easy to read
-- Converts to HTML
+- [x] 实时预览
+- [x] 表格与任务列表
+- [ ] 写下你的内容
 
-## Code Example
+| 工具 | 用途 |
+| --- | --- |
+| Monaco | Markdown 编辑 |
+| Marked | Markdown 渲染 |
 
-\`\`\`javascript
-const greet = (name) => \`Hello, \${name}!\`
-console.log(greet('World'))
-\`\`\`
+~~~typescript
+const greeting: string = 'Hello, Markdown!';
+console.log(greeting);
+~~~
 
-> "Markdown is a text-to-HTML conversion tool." — John Gruber
+> 内容只在本地浏览器中处理。`;
 
-[Learn more](https://daringfireball.net/projects/markdown/)`;
-
-type MarkdownTabType = 'edit' | 'preview';
+type MarkdownView = 'split' | 'edit' | 'preview';
 
 function MarkdownPage() {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [input, setInput] = useState(SAMPLE_MD);
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [html, setHtml] = useState('');
-  const [tab, setTab] = useQueryParam<MarkdownTabType>(
-    'tab',
+  const [beautifyError, setBeautifyError] = useState<string | null>(null);
+  const [view, setView] = useQueryParam<MarkdownView>(
+    'view',
     StringParam,
-    'edit',
+    'split',
   );
 
+  const preview = useMemo(() => {
+    try {
+      return { html: renderMarkdown(input), error: null };
+    } catch (cause) {
+      return { html: '', error: (cause as Error).message };
+    }
+  }, [input]);
+
   const beautify = async () => {
-    setError(null);
+    setBeautifyError(null);
     setLoading(true);
     try {
       const prettier = await import('prettier/standalone');
       const parserMarkdown = await import('prettier/plugins/markdown');
-      const result = await prettier.format(input, {
-        parser: 'markdown',
-        plugins: [parserMarkdown],
-        proseWrap: 'always',
-        printWidth: 80,
-      });
-      setOutput(result);
-    } catch (e) {
-      setError(t('markdown.beautifyError', { msg: (e as Error).message }));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const preview = async () => {
-    setError(null);
-    setLoading(true);
-    try {
-      const { marked } = await import('marked');
-      const result = await marked(input, { async: false });
-      setHtml(result as string);
-    } catch (e) {
-      setError(t('markdown.previewError', { msg: (e as Error).message }));
+      setInput(
+        await prettier.format(input, {
+          parser: 'markdown',
+          plugins: [parserMarkdown],
+          proseWrap: 'always',
+          printWidth: 80,
+        }),
+      );
+    } catch (cause) {
+      setBeautifyError(
+        t('markdown.beautifyError', { msg: (cause as Error).message }),
+      );
     } finally {
       setLoading(false);
     }
@@ -85,89 +81,98 @@ function MarkdownPage() {
 
   const clear = () => {
     setInput('');
-    setOutput('');
-    setHtml('');
-    setError(null);
+    setBeautifyError(null);
   };
 
+  const activeView: MarkdownView =
+    view === 'edit' || view === 'preview' ? view : 'split';
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
+    <div className="mx-auto max-w-7xl space-y-4 px-4 py-6">
       <div>
         <h1 className="text-2xl font-bold">{t('markdown.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           {t('markdown.desc')}
         </p>
       </div>
 
-      <Tabs
-        value={tab}
-        onValueChange={(v) => {
-          const next = v as MarkdownTabType;
-          setTab(next);
-          if (next === 'preview') void preview();
-        }}
+      <div className="flex flex-wrap items-center gap-2">
+        <Tabs
+          value={activeView}
+          onValueChange={(value) => setView(value as MarkdownView)}
+        >
+          <TabsList>
+            <TabsTrigger value="split">{t('markdown.tabSplit')}</TabsTrigger>
+            <TabsTrigger value="edit">{t('markdown.tabEdit')}</TabsTrigger>
+            <TabsTrigger value="preview">
+              {t('markdown.tabPreview')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => void beautify()}
+          disabled={loading || !input}
+        >
+          <WandSparkles />
+          {loading ? t('markdown.processing') : t('markdown.beautify')}
+        </Button>
+        <Button size="sm" variant="outline" onClick={clear} disabled={!input}>
+          <Eraser />
+          {t('markdown.clear')}
+        </Button>
+      </div>
+
+      {(beautifyError || preview.error) && (
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {beautifyError ??
+            t('markdown.previewError', { msg: preview.error ?? '' })}
+        </div>
+      )}
+
+      <div
+        className={
+          activeView === 'split'
+            ? 'grid min-w-0 gap-4 md:grid-cols-2'
+            : 'grid min-w-0 grid-cols-1'
+        }
       >
-        <TabsList>
-          <TabsTrigger value="edit">{t('markdown.tabEdit')}</TabsTrigger>
-          <TabsTrigger value="preview">{t('markdown.tabPreview')}</TabsTrigger>
-        </TabsList>
+        {activeView !== 'preview' && (
+          <section className="min-w-0 overflow-hidden rounded-lg border bg-card">
+            <div className="border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">
+              {t('markdown.source')}
+            </div>
+            <Editor
+              height="620px"
+              language="markdown"
+              value={input}
+              onChange={(value) => setInput(value ?? '')}
+              theme={theme === 'dark' ? 'vs-dark' : 'light'}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbersMinChars: 3,
+                scrollBeyondLastLine: false,
+                wordWrap: 'on',
+                padding: { top: 14, bottom: 14 },
+              }}
+            />
+          </section>
+        )}
 
-        <TabsContent value="edit" className="space-y-3 mt-4">
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button size="sm" onClick={beautify} disabled={loading}>
-              {loading ? t('markdown.processing') : t('markdown.beautify')}
-            </Button>
-            <Button size="sm" variant="outline" onClick={clear}>
-              {t('markdown.clear')}
-            </Button>
-          </div>
-          <CodePanel
-            input={input}
-            output={output}
-            onInputChange={setInput}
-            error={error}
-            language="markdown"
-          />
-        </TabsContent>
-
-        <TabsContent value="preview" className="mt-4">
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <Button size="sm" onClick={preview} disabled={loading}>
-              {loading ? t('markdown.processing') : t('markdown.refresh')}
-            </Button>
-            <Button size="sm" variant="outline" onClick={clear}>
-              {t('markdown.clear')}
-            </Button>
-          </div>
-          {error && (
-            <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md mb-3">
-              {error}
+        {activeView !== 'edit' && (
+          <section className="min-w-0 overflow-hidden rounded-lg border bg-card">
+            <div className="border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">
+              {t('markdown.preview')}
             </div>
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="border rounded-lg overflow-hidden">
-              <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
-                {t('markdown.source')}
-              </div>
-              <textarea
-                className="w-full h-[500px] p-3 font-mono text-sm bg-background resize-none focus:outline-none"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                spellCheck={false}
-              />
-            </div>
-            <div className="border rounded-lg overflow-hidden">
-              <div className="bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground border-b">
-                {t('markdown.preview')}
-              </div>
-              <div
-                className="p-4 h-[500px] overflow-auto prose prose-sm dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: html }}
-              />
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+            <article
+              className="h-[620px] overflow-auto p-6 break-words text-foreground [&_a]:text-primary [&_a]:underline [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground [&_code]:rounded [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_h1]:mb-4 [&_h1]:border-b [&_h1]:pb-2 [&_h1]:text-3xl [&_h1]:font-bold [&_h2]:mb-3 [&_h2]:mt-7 [&_h2]:border-b [&_h2]:pb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_hr]:my-6 [&_hr]:border-border [&_img]:max-w-full [&_li]:my-1 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:my-4 [&_pre]:my-4 [&_pre]:overflow-auto [&_pre]:rounded-lg [&_pre]:bg-muted [&_pre]:p-4 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_table]:my-4 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_th]:border [&_th]:border-border [&_th]:bg-muted [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6"
+              dangerouslySetInnerHTML={{ __html: preview.html }}
+            />
+          </section>
+        )}
+      </div>
     </div>
   );
 }
