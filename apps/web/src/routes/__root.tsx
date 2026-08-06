@@ -16,7 +16,6 @@ import {
   Binary,
   Braces,
   CaseSensitive,
-  ChevronDown,
   ChevronRight,
   CircleUserRound,
   Clock,
@@ -25,7 +24,6 @@ import {
   Cookie,
   Database,
   Dices,
-  Ellipsis,
   FileCode,
   FileCode2,
   FileStack,
@@ -33,6 +31,8 @@ import {
   Fingerprint,
   Globe,
   Hash,
+  Heart,
+  Home,
   ImageIcon,
   KeyRound,
   Layers,
@@ -54,6 +54,7 @@ import {
   Ruler,
   Search,
   Send,
+  Settings,
   ShieldAlert,
   ShieldCheck,
   ShieldPlus,
@@ -63,10 +64,11 @@ import {
   Sun,
   Table,
   Tag,
+  Trash2,
   Type,
   X,
 } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -432,7 +434,7 @@ function ToolSearch() {
 
   return (
     <div
-      className="relative w-28 sm:w-44 lg:w-56 shrink-0"
+      className="relative min-w-0 flex-1 max-w-2xl"
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
       }}
@@ -450,7 +452,7 @@ function ToolSearch() {
         aria-label={t('search.placeholder')}
         aria-expanded={open && Boolean(query.trim())}
         aria-controls="tool-search-results"
-        className="h-8 pl-8 text-sm"
+        className="h-10 rounded-xl pl-9 text-sm bg-muted/25 shadow-none"
       />
       {open && query.trim() && (
         <div
@@ -517,260 +519,6 @@ function useFavoriteCategory(): CategoryDef | null {
     icon: <Star className="w-4 h-4 text-yellow-400" />,
     items,
   };
-}
-
-// ─── 普通分类下拉菜单 ──────────────────────────────────────
-
-function CategoryMenu({ labelKey, icon, items }: CategoryDef) {
-  const { t } = useTranslation();
-  return (
-    <div className="relative group">
-      <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer select-none whitespace-nowrap">
-        {icon}
-        <span>{t(labelKey)}</span>
-        <ChevronDown className="w-3 h-3 opacity-60 transition-transform duration-200 group-hover:rotate-180" />
-      </button>
-      <div
-        className="
-        absolute top-[calc(100%+4px)] left-0
-        min-w-[180px] rounded-xl border bg-background/95 backdrop-blur-md shadow-lg
-        py-1.5 z-50
-        opacity-0 invisible translate-y-1
-        group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
-        transition-all duration-150 ease-out
-      "
-      >
-        {items.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className="flex items-center gap-2.5 px-3.5 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors mx-1 rounded-lg"
-            activeProps={{
-              className:
-                'flex items-center gap-2.5 px-3.5 py-2 text-sm text-foreground bg-accent mx-1 rounded-lg',
-            }}
-          >
-            {item.icon}
-            <span>{t(item.labelKey)}</span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── 溢出"更多"菜单（纵向分类列表 + 向右展开子菜单） ──────
-
-function OverflowMenu({ categories }: { categories: CategoryDef[] }) {
-  const { t } = useTranslation();
-
-  return (
-    <div className="relative group/more">
-      {/* 触发按钮 */}
-      <button className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer select-none">
-        <Ellipsis className="w-4 h-4" />
-        <ChevronDown className="w-3 h-3 opacity-60 transition-transform duration-200 group-hover/more:rotate-180" />
-      </button>
-
-      {/* 第一级：纵向分类列表 */}
-      <div
-        className="
-        absolute top-[calc(100%+4px)] right-0
-        min-w-[180px] rounded-xl border bg-background/95 backdrop-blur-md shadow-lg
-        py-1.5 z-50
-        opacity-0 invisible translate-y-1
-        group-hover/more:opacity-100 group-hover/more:visible group-hover/more:translate-y-0
-        transition-all duration-150 ease-out
-      "
-      >
-        {categories.map((cat) => (
-          <OverflowCategoryRow key={cat.labelKey} cat={cat} t={t} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/**
- * 溢出菜单里的单行分类。
- * hover 时子菜单向右弹出（flyout）。
- * 用真实 DOM 测量子菜单宽度，判断右侧空间是否充足，不足则向左弹出。
- */
-function OverflowCategoryRow({
-  cat,
-  t,
-}: {
-  cat: CategoryDef;
-  t: (k: string) => string;
-}) {
-  const rowRef = useRef<HTMLDivElement>(null);
-  const submenuRef = useRef<HTMLDivElement>(null);
-  const [flyLeft, setFlyLeft] = useState(false);
-
-  useEffect(() => {
-    const row = rowRef.current;
-    const submenu = submenuRef.current;
-    if (!row || !submenu) return;
-
-    const check = () => {
-      const rowRect = row.getBoundingClientRect();
-      // 使用子菜单的真实渲染宽度（即使不可见时也能读到 offsetWidth）
-      const submenuW = submenu.offsetWidth;
-      setFlyLeft(rowRect.right + submenuW > window.innerWidth);
-    };
-
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
-  return (
-    <div ref={rowRef} className="relative group/row mx-1">
-      {/* 分类行 */}
-      <div className="flex items-center gap-2.5 px-3.5 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg cursor-default select-none transition-colors">
-        {cat.icon}
-        <span className="flex-1">{t(cat.labelKey)}</span>
-        <ChevronRight className="w-3.5 h-3.5 opacity-50" />
-      </div>
-
-      {/* 第二级：子菜单（向右或向左弹出） */}
-      <div
-        ref={submenuRef}
-        className={`
-          absolute top-0
-          ${flyLeft ? 'right-full mr-1' : 'left-full ml-1'}
-          min-w-[180px] rounded-xl border bg-background/95 backdrop-blur-md shadow-lg
-          py-1.5 z-50
-          opacity-0 invisible translate-x-1
-          group-hover/row:opacity-100 group-hover/row:visible group-hover/row:translate-x-0
-          transition-all duration-150 ease-out
-        `}
-      >
-        {cat.items.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className="flex items-center gap-2.5 px-3.5 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors mx-1 rounded-lg"
-            activeProps={{
-              className:
-                'flex items-center gap-2.5 px-3.5 py-2 text-sm text-foreground bg-accent mx-1 rounded-lg',
-            }}
-          >
-            {item.icon}
-            <span>{t(item.labelKey)}</span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── 自适应导航容器（桌面端） ──────────────────────────────
-
-function AdaptiveNav() {
-  const { i18n } = useTranslation();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const measureRef = useRef<HTMLDivElement>(null);
-  const moreBtnRef = useRef<HTMLDivElement>(null);
-  // 初始为 null，表示尚未完成首次测量，此时隐藏导航避免闪动
-  const [visibleCount, setVisibleCount] = useState<number | null>(null);
-
-  // 收藏分类（有收藏时排在最前面）
-  const favoriteCategory = useFavoriteCategory();
-  const categories = favoriteCategory
-    ? [favoriteCategory, ...ALL_CATEGORIES]
-    : ALL_CATEGORIES;
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const measure = measureRef.current;
-    const moreBtn = moreBtnRef.current;
-    if (!container || !measure || !moreBtn) return;
-
-    const recalc = () => {
-      const available = container.offsetWidth;
-      const children = Array.from(measure.children) as HTMLElement[];
-      // 用真实 DOM 测量"更多"按钮的实际渲染宽度
-      const moreBtnW = moreBtn.offsetWidth;
-      const gap = Number.parseFloat(getComputedStyle(measure).columnGap) || 0;
-      let used = 0;
-      let count = 0;
-      for (const child of children) {
-        const w = child.offsetWidth;
-        const itemGap = count === 0 ? 0 : gap;
-        // 如果还剩余分类未放入，需要预留"更多"按钮的空间
-        const needMore = count < categories.length - 1;
-        const moreGap = needMore && count > 0 ? gap : 0;
-        const budget = needMore ? available - moreBtnW - moreGap : available;
-        if (used + itemGap + w > budget) break;
-        used += itemGap + w;
-        count++;
-      }
-      setVisibleCount(count);
-    };
-
-    const ro = new ResizeObserver(recalc);
-    ro.observe(container);
-    const raf = requestAnimationFrame(recalc);
-    return () => {
-      ro.disconnect();
-      cancelAnimationFrame(raf);
-    };
-  }, [categories.length, i18n.resolvedLanguage]);
-
-  // visibleCount 为 null 表示首次测量尚未完成，用 ?? 兜底避免 TS 报错
-  const resolvedCount = visibleCount ?? 0;
-  const visible = categories.slice(0, resolvedCount);
-  const overflow = categories.slice(resolvedCount);
-
-  return (
-    <div
-      ref={containerRef}
-      // 首次测量完成前保持不可见，防止全部展开再收缩的闪动
-      className={`flex items-center gap-0.5 min-w-0 flex-1 ${visibleCount === null ? 'invisible' : ''}`}
-    >
-      {/* 不可见测量层（测量所有分类按钮的真实宽度） */}
-      <div
-        ref={measureRef}
-        aria-hidden
-        className="fixed -left-[10000px] top-0 flex items-center gap-0.5 invisible pointer-events-none"
-      >
-        {categories.map((cat) => (
-          <div
-            key={cat.labelKey}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm whitespace-nowrap"
-          >
-            {cat.icon}
-            <MeasureLabel labelKey={cat.labelKey} />
-            <ChevronDown className="w-3 h-3" />
-          </div>
-        ))}
-      </div>
-
-      {/* 不可见"更多"按钮（用于测量其真实宽度） */}
-      <div
-        ref={moreBtnRef}
-        aria-hidden
-        className="fixed -left-[10000px] top-0 flex items-center gap-1 px-2.5 py-1.5 text-sm whitespace-nowrap invisible pointer-events-none"
-      >
-        <Ellipsis className="w-4 h-4" />
-        <ChevronDown className="w-3 h-3" />
-      </div>
-
-      {/* 可见菜单 */}
-      {visible.map((cat) => (
-        <CategoryMenu key={cat.labelKey} {...cat} />
-      ))}
-
-      {/* 溢出菜单 */}
-      {overflow.length > 0 && <OverflowMenu categories={overflow} />}
-    </div>
-  );
-}
-
-function MeasureLabel({ labelKey }: { labelKey: string }) {
-  const { t } = useTranslation();
-  return <span>{t(labelKey)}</span>;
 }
 
 // ─── 移动端抽屉导航 ────────────────────────────────────────
@@ -856,7 +604,7 @@ function MobileNav() {
             className="flex items-center gap-2 font-bold text-lg"
           >
             <Code2 className="w-5 h-5 text-primary" />
-            <span>Dev Tools</span>
+            <span>Breeze Tools</span>
           </Link>
           <button
             onClick={close}
@@ -927,6 +675,199 @@ function MobileNav() {
 
       {/* 遮罩 + 抽屉挂载到 body */}
       {drawer}
+    </>
+  );
+}
+
+const SIDEBAR_ITEMS = [
+  { category: 'all', labelKey: 'shell.allTools', icon: Layers },
+  { category: 'format', labelKey: 'nav.catFormatter', icon: AlignLeft },
+  { category: 'encode', labelKey: 'nav.catEncode', icon: Shuffle },
+  { category: 'text', labelKey: 'shell.textTools', icon: Type },
+  { category: 'network', labelKey: 'nav.catNetwork', icon: Network },
+  { category: 'crypto', labelKey: 'nav.catCrypto', icon: ShieldCheck },
+  { category: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
+  { category: 'frontend', labelKey: 'nav.catFrontend', icon: Palette },
+] as const;
+
+function DesktopSidebar() {
+  const { t } = useTranslation();
+
+  return (
+    <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r bg-background lg:flex">
+      <Link to="/" className="flex h-[68px] items-center gap-3 border-b px-6">
+        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm shadow-blue-500/25">
+          <Code2 className="h-5 w-5" />
+        </span>
+        <span className="text-xl font-bold tracking-tight">Breeze Tools</span>
+      </Link>
+
+      <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+        <Link
+          to="/"
+          search={{}}
+          className="flex items-center gap-3 rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-600 transition-colors dark:bg-blue-950/35 dark:text-blue-400"
+          activeProps={{
+            className:
+              'flex items-center gap-3 rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-600 dark:bg-blue-950/35 dark:text-blue-400',
+          }}
+        >
+          <Home className="h-5 w-5" />
+          {t('shell.home')}
+        </Link>
+        {SIDEBAR_ITEMS.map(({ category, labelKey, icon: Icon }) => (
+          <Link
+            key={category}
+            to="/"
+            search={{ category }}
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            activeProps={{
+              className:
+                'flex items-center gap-3 rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-600 dark:bg-blue-950/35 dark:text-blue-400',
+            }}
+          >
+            <Icon className="h-5 w-5" />
+            {t(labelKey)}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="space-y-1 border-t px-4 py-5">
+        <Link
+          to="/"
+          search={{ category: 'favorites' }}
+          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        >
+          <Heart className="h-5 w-5" />
+          {t('shell.favorites')}
+        </Link>
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground"
+        >
+          <Settings className="h-5 w-5" />
+          {t('shell.settings')}
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+const HISTORY_ITEMS = [
+  {
+    titleKey: 'home.tools.json.title',
+    descKey: 'home.tools.json.desc',
+    timeKey: 'shell.twoMinutesAgo',
+    icon: <Braces className="h-5 w-5 text-amber-500" />,
+    tone: 'bg-amber-500/10',
+  },
+  {
+    titleKey: 'home.tools.urlEncode.title',
+    descKey: 'home.tools.urlEncode.desc',
+    timeKey: 'shell.fifteenMinutesAgo',
+    icon: <LinkIcon className="h-5 w-5 text-emerald-500" />,
+    tone: 'bg-emerald-500/10',
+  },
+  {
+    titleKey: 'home.tools.markdown.title',
+    descKey: 'home.tools.markdown.desc',
+    timeKey: 'shell.thirtyTwoMinutesAgo',
+    icon: <FileText className="h-5 w-5 text-blue-500" />,
+    tone: 'bg-blue-500/10',
+  },
+  {
+    titleKey: 'home.tools.uuid.title',
+    descKey: 'home.tools.uuid.desc',
+    timeKey: 'shell.oneHourAgo',
+    icon: <Dices className="h-5 w-5 text-violet-500" />,
+    tone: 'bg-violet-500/10',
+  },
+  {
+    titleKey: 'home.tools.imageTool.title',
+    descKey: 'home.tools.imageTool.desc',
+    timeKey: 'shell.twoHoursAgo',
+    icon: <ImageIcon className="h-5 w-5 text-teal-500" />,
+    tone: 'bg-teal-500/10',
+  },
+] as const;
+
+function HistoryPanel({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      {open && (
+        <button
+          type="button"
+          aria-label={t('shell.closeHistory')}
+          onClick={onClose}
+          className="fixed inset-0 z-[60] bg-black/10 lg:hidden"
+        />
+      )}
+      <aside
+        aria-hidden={!open}
+        className={`fixed bottom-4 right-4 top-20 z-[70] flex w-[min(390px,calc(100vw-2rem))] flex-col rounded-2xl border bg-background shadow-2xl transition-all duration-200 ${open ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-6 opacity-0'}`}
+      >
+        <div className="flex items-center justify-between px-6 pb-3 pt-5">
+          <h2 className="text-xl font-bold">{t('shell.historyTitle')}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t('shell.closeHistory')}
+            className="rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="grid grid-cols-3 border-b px-4 text-sm">
+          <div className="border-b-2 border-blue-600 px-2 py-3 text-center font-medium text-blue-600">
+            {t('shell.recentlyUsed')}
+          </div>
+          <div className="px-2 py-3 text-center text-muted-foreground">
+            {t('shell.recentlyProcessed')}
+          </div>
+          <div className="px-2 py-3 text-center text-muted-foreground">
+            {t('shell.drafts')}
+          </div>
+        </div>
+        <div className="flex-1 space-y-3 overflow-y-auto p-4">
+          {HISTORY_ITEMS.map((item) => (
+            <div
+              key={item.titleKey}
+              className="flex items-center gap-3 rounded-xl border p-3 shadow-sm"
+            >
+              <span
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${item.tone}`}
+              >
+                {item.icon}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">
+                  {t(item.titleKey)}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {t(item.descKey)}
+                </p>
+              </div>
+              <span className="shrink-0 self-start pt-1 text-xs text-muted-foreground">
+                {t(item.timeKey)}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="border-t p-4">
+          <div className="flex items-center justify-center gap-2 py-2 text-sm text-destructive">
+            <Trash2 className="h-4 w-4" />
+            {t('shell.clearHistory')}
+          </div>
+        </div>
+      </aside>
     </>
   );
 }
@@ -1035,44 +976,58 @@ function RootDocument() {
 }
 
 function RootContent() {
+  const { t } = useTranslation();
+  const [historyOpen, setHistoryOpen] = useState(false);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div>
         <TooltipProvider>
-          <div className="min-h-screen flex flex-col bg-background text-foreground">
-            <header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
-              <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-2 md:gap-4">
-                {/* 移动端：汉堡菜单按钮 */}
-                <div className="md:hidden shrink-0">
+          <div className="min-h-screen bg-background text-foreground">
+            <DesktopSidebar />
+            <header className="fixed left-0 right-0 top-0 z-50 h-[68px] border-b bg-background/90 backdrop-blur-xl lg:left-64">
+              <nav className="flex h-full items-center gap-2 px-4 sm:gap-4 lg:px-8">
+                <div className="shrink-0 lg:hidden">
                   <MobileNav />
                 </div>
-
-                {/* Logo */}
                 <Link
                   to="/"
-                  className="flex items-center gap-2 font-bold text-lg shrink-0"
+                  className="flex shrink-0 items-center gap-2 font-bold lg:hidden"
                 >
-                  <Code2 className="w-5 h-5 text-primary" />
-                  <span className="hidden sm:inline">Dev Tools</span>
+                  <Code2 className="h-5 w-5 text-blue-600" />
+                  <span className="hidden sm:inline">Breeze Tools</span>
                 </Link>
-
-                {/* 桌面端：自适应导航 */}
-                <div className="hidden md:flex min-w-0 flex-1">
-                  <AdaptiveNav />
-                </div>
-
                 <ToolSearch />
-
-                <div className="shrink-0 flex items-center gap-1 ml-auto md:ml-0">
-                  <AuthNav />
+                <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setHistoryOpen(true)}
+                    className={`hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors sm:flex ${historyOpen ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/35 dark:text-blue-400' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}`}
+                  >
+                    <Clock className="h-4 w-4" />
+                    {t('shell.history')}
+                  </button>
+                  <Link
+                    to="/"
+                    search={{ category: 'favorites' }}
+                    className="hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:flex"
+                  >
+                    <Star className="h-4 w-4" />
+                    {t('shell.favorites')}
+                  </Link>
                   <ThemeToggle />
                   <LangSwitcher />
+                  <AuthNav />
                 </div>
               </nav>
             </header>
-            <main className="flex-1">
+            <main className="min-h-screen pt-[68px] lg:pl-64">
               <Outlet />
             </main>
+            <HistoryPanel
+              open={historyOpen}
+              onClose={() => setHistoryOpen(false)}
+            />
           </div>
         </TooltipProvider>
         <TanStackDevtools

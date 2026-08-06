@@ -1,4 +1,5 @@
 import { useFavorites } from '@/hooks/useFavorites';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
   DndContext,
   DragOverlay,
@@ -19,11 +20,13 @@ import { CSS } from '@dnd-kit/utilities';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import {
   AlignLeft,
+  ArrowRight,
   ArrowLeftRight,
   Binary,
   Braces,
   CaseSensitive,
   Clock,
+  Code2,
   Contrast,
   Cookie,
   Database,
@@ -60,11 +63,13 @@ import {
   Table,
   Tag,
   Type,
+  Upload,
 } from 'lucide-react';
 import React from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
 import {
   Card,
   CardDescription,
@@ -622,19 +627,23 @@ function ToolCard({
     <div className="relative group">
       <Link to={tool.to}>
         <Card
-          className={`h-full cursor-pointer transition-all duration-200 ${tool.gradient} ${tool.border}`}
+          className={`h-full cursor-pointer rounded-2xl py-0 shadow-none transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${tool.gradient} ${tool.border}`}
         >
-          <CardHeader>
-            <div className="mb-2 transition-transform duration-200 group-hover:scale-110 w-fit">
+          <CardHeader className="gap-2 p-5">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted/70 transition-transform duration-200 group-hover:scale-105">
               {tool.icon}
             </div>
-            <CardTitle className="text-lg">{t(tool.titleKey)}</CardTitle>
-            <CardDescription className="text-sm leading-relaxed">
+            <CardTitle className="mt-1 text-base">{t(tool.titleKey)}</CardTitle>
+            <CardDescription className="line-clamp-1 text-xs leading-relaxed">
               {t(tool.descKey)}
             </CardDescription>
-            <div className="flex gap-1.5 flex-wrap mt-1">
+            <div className="flex flex-wrap gap-1.5 pt-1">
               {tool.tagKeys.map((key) => (
-                <Badge key={key} variant="secondary" className="text-xs">
+                <Badge
+                  key={key}
+                  variant="secondary"
+                  className="rounded-full px-2 text-[11px] font-normal"
+                >
                   {t(key)}
                 </Badge>
               ))}
@@ -784,6 +793,33 @@ const ALL_TOOLS = [
   ...frontendTools,
 ];
 
+const HOME_CATEGORIES = [
+  { value: 'recommended', labelKey: 'home.recommended', icon: Star },
+  { value: 'format', labelKey: 'home.groupFormat', icon: AlignLeft },
+  { value: 'encode', labelKey: 'home.groupEncode', icon: Shuffle },
+  { value: 'text', labelKey: 'home.textTools', icon: Type },
+  { value: 'network', labelKey: 'home.groupNetwork', icon: Network },
+  { value: 'crypto', labelKey: 'home.groupCrypto', icon: ShieldCheck },
+  { value: 'image', labelKey: 'home.imageTools', icon: ImageIcon },
+  { value: 'all', labelKey: 'home.allTools', icon: Layers },
+] as const;
+
+type HomeCategory =
+  | (typeof HOME_CATEGORIES)[number]['value']
+  | 'favorites'
+  | 'frontend';
+
+const RECOMMENDED_TOOLS: ToolConfig[] = [
+  formatterTools[0]!,
+  formatterTools[1]!,
+  formatterTools[2]!,
+  formatterTools[3]!,
+  encodeTools[0]!,
+  encodeTools[1]!,
+  textTools[0]!,
+  frontendTools.at(-2)!,
+];
+
 function HomePage() {
   const { t } = useTranslation();
   const { ready, favoritePaths, isFavorite, toggleFavorite, reorderFavorites } =
@@ -816,6 +852,11 @@ function HomePageContent({
   toggleFavorite: (path: string) => Promise<void>;
   reorderFavorites: (orderedPaths: string[]) => Promise<void>;
 }) {
+  const [category, setCategory] = useQueryParam<HomeCategory>(
+    'category',
+    StringParam,
+    'recommended',
+  );
   // 本地乐观顺序：拖拽时立即更新，避免等 DB 回写再渲染产生闪动
   const [localOrder, setLocalOrder] = React.useState<string[]>(favoritePaths);
   // 当前正在拖拽的工具路径（用于 DragOverlay）
@@ -867,288 +908,380 @@ function HomePageContent({
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-16">
-      <div className="mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">{t('home.title')}</h1>
+    <div className="mx-auto max-w-[1480px] space-y-6 px-4 py-5 sm:px-6 lg:px-8">
+      <section className="relative min-h-[250px] overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 via-sky-50/80 to-indigo-50 px-7 py-10 dark:border-blue-950 dark:from-blue-950/35 dark:via-sky-950/20 dark:to-indigo-950/25 sm:px-12">
+        <div className="relative z-10 max-w-2xl">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+            {t('home.title')}
+          </h1>
+          <p className="mt-4 text-base text-slate-600 dark:text-slate-300 sm:text-lg">
+            {t('home.heroSubtitle')}
+          </p>
+          <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 text-sm text-slate-700 dark:text-slate-300">
+            {[
+              ['home.browserOnly', Globe],
+              ['home.noInstall', Upload],
+              ['home.localProcessing', ShieldCheck],
+              ['home.privacySafe', Fingerprint],
+            ].map(([labelKey, Icon]) => (
+              <span
+                key={labelKey as string}
+                className="flex items-center gap-2"
+              >
+                <Icon className="h-4 w-4 text-blue-600" />
+                {t(labelKey as string)}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="absolute -right-8 top-1/2 hidden h-48 w-80 -translate-y-1/2 rotate-3 items-center justify-center rounded-[2.5rem] border border-white/80 bg-gradient-to-br from-blue-400/90 to-blue-600/90 shadow-2xl shadow-blue-500/25 lg:flex">
+          <Code2 className="h-24 w-24 -rotate-3 text-white drop-shadow-lg" />
+          <div className="absolute -left-10 bottom-5 h-20 w-16 rounded-2xl border border-white/80 bg-white/75 shadow-lg backdrop-blur">
+            <FileCode2 className="m-auto mt-5 h-9 w-9 text-blue-500" />
+          </div>
+        </div>
+      </section>
+
+      <div className="flex flex-wrap gap-2">
+        {HOME_CATEGORIES.map(({ value, labelKey, icon: Icon }) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setCategory(value)}
+            className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${category === value ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25' : 'bg-muted/70 text-muted-foreground hover:text-foreground'}`}
+          >
+            <Icon className="h-4 w-4" />
+            {t(labelKey)}
+          </button>
+        ))}
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-8">
+        {category === 'recommended' && (
+          <section>
+            <h2 className="mb-4 text-xl font-bold">{t('home.recommended')}</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {RECOMMENDED_TOOLS.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+            <div className="mt-6 flex justify-center">
+              <Button
+                variant="secondary"
+                className="rounded-xl px-8 text-blue-600"
+                onClick={() => setCategory('all')}
+              >
+                {t('home.viewMore')}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </section>
+        )}
+
         {/* 我的收藏（有收藏时才显示；ready 守卫已在 HomePage 完成） */}
-        {favoriteTools.length > 0 && (
+        {(category === 'favorites' || category === 'all') &&
+          favoriteTools.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-400/10 text-yellow-500">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                </div>
+                <div>
+                  <h2 className="text-base font-semibold leading-none">
+                    {t('home.groupFavorites')}
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('home.favoritesSubtitle')}
+                  </p>
+                </div>
+                <div className="flex-1 h-px bg-border ml-2" />
+              </div>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={displayOrder}
+                  strategy={rectSortingStrategy}
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {favoriteTools.map((tool) => (
+                      <SortableToolCard
+                        key={tool.to}
+                        tool={tool}
+                        t={t}
+                        onToggleFavorite={toggleFavorite}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+                {/* DragOverlay：拖拽时渲染一张跟随鼠标的"幽灵卡片"，
+                  尺寸由 dnd-kit 自动 match 原节点，无需手动设置 */}
+                <DragOverlay>
+                  {activeTool ? (
+                    <div className="shadow-2xl cursor-grabbing w-full h-full rounded-xl overflow-hidden bg-transparent">
+                      <Card
+                        className={`h-full transition-none ${activeTool.gradient} ${activeTool.border}`}
+                      >
+                        <CardHeader>
+                          <div className="mb-2 w-fit">{activeTool.icon}</div>
+                          <CardTitle className="text-lg">
+                            {t(activeTool.titleKey)}
+                          </CardTitle>
+                          <CardDescription className="text-sm leading-relaxed">
+                            {t(activeTool.descKey)}
+                          </CardDescription>
+                          <div className="flex gap-1.5 flex-wrap mt-1">
+                            {activeTool.tagKeys.map((key) => (
+                              <Badge
+                                key={key}
+                                variant="secondary"
+                                className="text-xs"
+                              >
+                                {t(key)}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardHeader>
+                      </Card>
+                    </div>
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
+            </div>
+          )}
+
+        {/* 格式化工具 */}
+        {(category === 'format' || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-400/10 text-yellow-500">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
+                <AlignLeft className="w-4 h-4" />
               </div>
               <div>
                 <h2 className="text-base font-semibold leading-none">
-                  {t('home.groupFavorites')}
+                  {t('home.groupFormat')}
                 </h2>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('home.favoritesSubtitle')}
+                  JSON · HTML · CSS · JS · XML · Markdown · SQL · YAML
                 </p>
               </div>
               <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={displayOrder}
-                strategy={rectSortingStrategy}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {favoriteTools.map((tool) => (
-                    <SortableToolCard
-                      key={tool.to}
-                      tool={tool}
-                      t={t}
-                      onToggleFavorite={toggleFavorite}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-              {/* DragOverlay：拖拽时渲染一张跟随鼠标的"幽灵卡片"，
-                  尺寸由 dnd-kit 自动 match 原节点，无需手动设置 */}
-              <DragOverlay>
-                {activeTool ? (
-                  <div className="shadow-2xl cursor-grabbing w-full h-full rounded-xl overflow-hidden bg-transparent">
-                    <Card
-                      className={`h-full transition-none ${activeTool.gradient} ${activeTool.border}`}
-                    >
-                      <CardHeader>
-                        <div className="mb-2 w-fit">{activeTool.icon}</div>
-                        <CardTitle className="text-lg">
-                          {t(activeTool.titleKey)}
-                        </CardTitle>
-                        <CardDescription className="text-sm leading-relaxed">
-                          {t(activeTool.descKey)}
-                        </CardDescription>
-                        <div className="flex gap-1.5 flex-wrap mt-1">
-                          {activeTool.tagKeys.map((key) => (
-                            <Badge
-                              key={key}
-                              variant="secondary"
-                              className="text-xs"
-                            >
-                              {t(key)}
-                            </Badge>
-                          ))}
-                        </div>
-                      </CardHeader>
-                    </Card>
-                  </div>
-                ) : null}
-              </DragOverlay>
-            </DndContext>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {formatterTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
           </div>
         )}
 
-        {/* 格式化工具 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
-              <AlignLeft className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupFormat')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                JSON · HTML · CSS · JS · XML · Markdown · SQL · YAML
-              </p>
-            </div>
-            <div className="flex-1 h-px bg-border ml-2" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {formatterTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
-
         {/* 编码 / 转换 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500">
-              <Shuffle className="w-4 h-4" />
+        {(category === 'encode' || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500">
+                <Shuffle className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupEncode')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Base64 · URL Encode · Unicode
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupEncode')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                Base64 · URL Encode · Unicode
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {encodeTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
             </div>
-            <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {encodeTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* 加密 / 安全 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500">
-              <ShieldCheck className="w-4 h-4" />
+        {(category === 'crypto' || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupCrypto')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.cryptoSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupCrypto')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('home.cryptoSubtitle')}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {cryptoTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
             </div>
-            <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {cryptoTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* 网络 / 请求 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
-              <Network className="w-4 h-4" />
+        {(category === 'network' || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
+                <Network className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupNetwork')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.networkSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupNetwork')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('home.networkSubtitle')}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {networkTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
             </div>
-            <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {networkTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* 数据转换 / 互转 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-600">
-              <ArrowLeftRight className="w-4 h-4" />
+        {(category === 'encode' || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-600">
+                <ArrowLeftRight className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupConvert')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.convertSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupConvert')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('home.convertSubtitle')}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {convertTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
             </div>
-            <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {convertTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* 其他 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-500/10 text-slate-500">
-              <Layers className="w-4 h-4" />
+        {(category === 'text' || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-500/10 text-slate-500">
+                <Layers className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupOther')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.otherSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupOther')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('home.otherSubtitle')}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {textTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
             </div>
-            <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {textTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* 前端工具 */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-pink-500/10 text-pink-500">
-              <Palette className="w-4 h-4" />
+        {(category === 'image' ||
+          category === 'frontend' ||
+          category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-pink-500/10 text-pink-500">
+                <Palette className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupFrontend')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.frontendSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold leading-none">
-                {t('home.groupFrontend')}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('home.frontendSubtitle')}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {(category === 'image'
+                ? frontendTools.filter(
+                    (tool) => tool.to === '/image' || tool.to === '/webp-gif',
+                  )
+                : frontendTools
+              ).map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
             </div>
-            <div className="flex-1 h-px bg-border ml-2" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {frontendTools.map((tool) => (
-              <ToolCard
-                key={tool.to}
-                tool={tool}
-                t={t}
-                isFavorite={isFavorite(tool.to)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
