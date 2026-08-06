@@ -16,8 +16,10 @@ body {
 html {
   scrollbar-gutter: stable;
 }
-html :where(*) {
-  scrollbar-gutter: stable;
+
+/* scrollbar-gutter 已保留视口滚动槽，避免 Radix 弹层再次补偿宽度。 */
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
 }
 
 code {
