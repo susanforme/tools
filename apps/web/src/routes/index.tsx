@@ -34,6 +34,7 @@ import {
   Dices,
   FileCode,
   FileCode2,
+  FileArchive,
   FileStack,
   FileText,
   Fingerprint,
@@ -57,6 +58,7 @@ import {
   Regex as RegexIcon,
   RotateCw,
   Ruler,
+  Scissors,
   Send,
   ShieldAlert,
   ShieldCheck,
@@ -594,6 +596,19 @@ const frontendTools = [
     border: 'hover:border-sky-300 dark:hover:border-sky-700',
   },
   {
+    to: '/image-privacy' as const,
+    icon: <ShieldCheck className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'home.tools.imagePrivacy.title',
+    descKey: 'home.tools.imagePrivacy.desc',
+    tagKeys: [
+      'home.tools.imagePrivacy.tagExif',
+      'home.tools.imagePrivacy.tagGps',
+      'home.tools.imagePrivacy.tagClean',
+    ],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
     to: '/webp-gif' as const,
     icon: <ArrowLeftRight className="w-8 h-8 text-lime-500" />,
     titleKey: 'home.tools.webpGif.title',
@@ -621,6 +636,19 @@ const videoTools = [
     ],
     gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
     border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+  {
+    to: '/video-trimmer' as const,
+    icon: <Scissors className="h-8 w-8 text-rose-500" />,
+    titleKey: 'home.tools.videoTrimmer.title',
+    descKey: 'home.tools.videoTrimmer.desc',
+    tagKeys: [
+      'home.tools.videoTrimmer.tagTrim',
+      'home.tools.videoTrimmer.tagMediabunny',
+      'home.tools.videoTrimmer.tagWorker',
+    ],
+    gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
+    border: 'hover:border-rose-300 dark:hover:border-rose-700',
   },
 ];
 
@@ -696,6 +724,32 @@ const lifeTools = [
     ],
     gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
     border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/unit-converter' as const,
+    icon: <Ruler className="h-8 w-8 text-teal-500" />,
+    titleKey: 'home.tools.unitConverter.title',
+    descKey: 'home.tools.unitConverter.desc',
+    tagKeys: [
+      'home.tools.unitConverter.tagUnits',
+      'home.tools.unitConverter.tagData',
+      'home.tools.unitConverter.tagLocal',
+    ],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
+    to: '/archive' as const,
+    icon: <FileArchive className="h-8 w-8 text-amber-500" />,
+    titleKey: 'home.tools.archive.title',
+    descKey: 'home.tools.archive.desc',
+    tagKeys: [
+      'home.tools.archive.tagZip',
+      'home.tools.archive.tagSevenZip',
+      'home.tools.archive.tagLocal',
+    ],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
   },
 ];
 
@@ -1389,7 +1443,10 @@ function HomePageContent({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {frontendTools
                 .filter(
-                  (tool) => tool.to !== '/image' && tool.to !== '/webp-gif',
+                  (tool) =>
+                    tool.to !== '/image' &&
+                    tool.to !== '/image-privacy' &&
+                    tool.to !== '/webp-gif',
                 )
                 .map((tool) => (
                   <ToolCard
@@ -1424,7 +1481,10 @@ function HomePageContent({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {frontendTools
                 .filter(
-                  (tool) => tool.to === '/image' || tool.to === '/webp-gif',
+                  (tool) =>
+                    tool.to === '/image' ||
+                    tool.to === '/image-privacy' ||
+                    tool.to === '/webp-gif',
                 )
                 .map((tool) => (
                   <ToolCard

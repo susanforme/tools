@@ -14,9 +14,11 @@ import { Route as XmlJsonRouteImport } from './routes/xml-json'
 import { Route as XmlRouteImport } from './routes/xml'
 import { Route as WorldClockRouteImport } from './routes/world-clock'
 import { Route as WebpGifRouteImport } from './routes/webp-gif'
+import { Route as VideoTrimmerRouteImport } from './routes/video-trimmer'
 import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
+import { Route as UnitConverterRouteImport } from './routes/unit-converter'
 import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as TotpRouteImport } from './routes/totp'
 import { Route as TextRouteImport } from './routes/text'
@@ -39,6 +41,7 @@ import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
 import { Route as IpLookupRouteImport } from './routes/ip-lookup'
+import { Route as ImagePrivacyRouteImport } from './routes/image-privacy'
 import { Route as ImageRouteImport } from './routes/image'
 import { Route as HttpStatusRouteImport } from './routes/http-status'
 import { Route as HttpRequestRouteImport } from './routes/http-request'
@@ -61,6 +64,7 @@ import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
 import { Route as BmiRouteImport } from './routes/bmi'
 import { Route as Base64RouteImport } from './routes/base64'
+import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 
 const YamlRoute = YamlRouteImport.update({
@@ -88,6 +92,11 @@ const WebpGifRoute = WebpGifRouteImport.update({
   path: '/webp-gif',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VideoTrimmerRoute = VideoTrimmerRouteImport.update({
+  id: '/video-trimmer',
+  path: '/video-trimmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UuidRoute = UuidRouteImport.update({
   id: '/uuid',
   path: '/uuid',
@@ -101,6 +110,11 @@ const UserAgentRoute = UserAgentRouteImport.update({
 const UrlEncodeRoute = UrlEncodeRouteImport.update({
   id: '/url-encode',
   path: '/url-encode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnitConverterRoute = UnitConverterRouteImport.update({
+  id: '/unit-converter',
+  path: '/unit-converter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnicodeRoute = UnicodeRouteImport.update({
@@ -213,6 +227,11 @@ const IpLookupRoute = IpLookupRouteImport.update({
   path: '/ip-lookup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImagePrivacyRoute = ImagePrivacyRouteImport.update({
+  id: '/image-privacy',
+  path: '/image-privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ImageRoute = ImageRouteImport.update({
   id: '/image',
   path: '/image',
@@ -323,6 +342,11 @@ const Base64Route = Base64RouteImport.update({
   path: '/base64',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArchiveRoute = ArchiveRouteImport.update({
+  id: '/archive',
+  path: '/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -331,6 +355,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/archive': typeof ArchiveRoute
   '/base64': typeof Base64Route
   '/bmi': typeof BmiRoute
   '/cipher': typeof CipherRoute
@@ -353,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
   '/image': typeof ImageRoute
+  '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
@@ -375,9 +401,11 @@ export interface FileRoutesByFullPath {
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
+  '/unit-converter': typeof UnitConverterRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/video-trimmer': typeof VideoTrimmerRoute
   '/webp-gif': typeof WebpGifRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
@@ -386,6 +414,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/archive': typeof ArchiveRoute
   '/base64': typeof Base64Route
   '/bmi': typeof BmiRoute
   '/cipher': typeof CipherRoute
@@ -408,6 +437,7 @@ export interface FileRoutesByTo {
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
   '/image': typeof ImageRoute
+  '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
@@ -430,9 +460,11 @@ export interface FileRoutesByTo {
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
+  '/unit-converter': typeof UnitConverterRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/video-trimmer': typeof VideoTrimmerRoute
   '/webp-gif': typeof WebpGifRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
@@ -442,6 +474,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/archive': typeof ArchiveRoute
   '/base64': typeof Base64Route
   '/bmi': typeof BmiRoute
   '/cipher': typeof CipherRoute
@@ -464,6 +497,7 @@ export interface FileRoutesById {
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
   '/image': typeof ImageRoute
+  '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
@@ -486,9 +520,11 @@ export interface FileRoutesById {
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
+  '/unit-converter': typeof UnitConverterRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/video-trimmer': typeof VideoTrimmerRoute
   '/webp-gif': typeof WebpGifRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
@@ -499,6 +535,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/archive'
     | '/base64'
     | '/bmi'
     | '/cipher'
@@ -521,6 +558,7 @@ export interface FileRouteTypes {
     | '/http-request'
     | '/http-status'
     | '/image'
+    | '/image-privacy'
     | '/ip-lookup'
     | '/js'
     | '/json'
@@ -543,9 +581,11 @@ export interface FileRouteTypes {
     | '/text'
     | '/totp'
     | '/unicode'
+    | '/unit-converter'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/video-trimmer'
     | '/webp-gif'
     | '/world-clock'
     | '/xml'
@@ -554,6 +594,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/archive'
     | '/base64'
     | '/bmi'
     | '/cipher'
@@ -576,6 +617,7 @@ export interface FileRouteTypes {
     | '/http-request'
     | '/http-status'
     | '/image'
+    | '/image-privacy'
     | '/ip-lookup'
     | '/js'
     | '/json'
@@ -598,9 +640,11 @@ export interface FileRouteTypes {
     | '/text'
     | '/totp'
     | '/unicode'
+    | '/unit-converter'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/video-trimmer'
     | '/webp-gif'
     | '/world-clock'
     | '/xml'
@@ -609,6 +653,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/archive'
     | '/base64'
     | '/bmi'
     | '/cipher'
@@ -631,6 +676,7 @@ export interface FileRouteTypes {
     | '/http-request'
     | '/http-status'
     | '/image'
+    | '/image-privacy'
     | '/ip-lookup'
     | '/js'
     | '/json'
@@ -653,9 +699,11 @@ export interface FileRouteTypes {
     | '/text'
     | '/totp'
     | '/unicode'
+    | '/unit-converter'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/video-trimmer'
     | '/webp-gif'
     | '/world-clock'
     | '/xml'
@@ -665,6 +713,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArchiveRoute: typeof ArchiveRoute
   Base64Route: typeof Base64Route
   BmiRoute: typeof BmiRoute
   CipherRoute: typeof CipherRoute
@@ -687,6 +736,7 @@ export interface RootRouteChildren {
   HttpRequestRoute: typeof HttpRequestRoute
   HttpStatusRoute: typeof HttpStatusRoute
   ImageRoute: typeof ImageRoute
+  ImagePrivacyRoute: typeof ImagePrivacyRoute
   IpLookupRoute: typeof IpLookupRoute
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
@@ -709,9 +759,11 @@ export interface RootRouteChildren {
   TextRoute: typeof TextRoute
   TotpRoute: typeof TotpRoute
   UnicodeRoute: typeof UnicodeRoute
+  UnitConverterRoute: typeof UnitConverterRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
+  VideoTrimmerRoute: typeof VideoTrimmerRoute
   WebpGifRoute: typeof WebpGifRoute
   WorldClockRoute: typeof WorldClockRoute
   XmlRoute: typeof XmlRoute
@@ -756,6 +808,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WebpGifRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/video-trimmer': {
+      id: '/video-trimmer'
+      path: '/video-trimmer'
+      fullPath: '/video-trimmer'
+      preLoaderRoute: typeof VideoTrimmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/uuid': {
       id: '/uuid'
       path: '/uuid'
@@ -775,6 +834,13 @@ declare module '@tanstack/react-router' {
       path: '/url-encode'
       fullPath: '/url-encode'
       preLoaderRoute: typeof UrlEncodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unit-converter': {
+      id: '/unit-converter'
+      path: '/unit-converter'
+      fullPath: '/unit-converter'
+      preLoaderRoute: typeof UnitConverterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/unicode': {
@@ -931,6 +997,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IpLookupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/image-privacy': {
+      id: '/image-privacy'
+      path: '/image-privacy'
+      fullPath: '/image-privacy'
+      preLoaderRoute: typeof ImagePrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/image': {
       id: '/image'
       path: '/image'
@@ -1085,6 +1158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Base64RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/archive': {
+      id: '/archive'
+      path: '/archive'
+      fullPath: '/archive'
+      preLoaderRoute: typeof ArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -1097,6 +1177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArchiveRoute: ArchiveRoute,
   Base64Route: Base64Route,
   BmiRoute: BmiRoute,
   CipherRoute: CipherRoute,
@@ -1119,6 +1200,7 @@ const rootRouteChildren: RootRouteChildren = {
   HttpRequestRoute: HttpRequestRoute,
   HttpStatusRoute: HttpStatusRoute,
   ImageRoute: ImageRoute,
+  ImagePrivacyRoute: ImagePrivacyRoute,
   IpLookupRoute: IpLookupRoute,
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
@@ -1141,9 +1223,11 @@ const rootRouteChildren: RootRouteChildren = {
   TextRoute: TextRoute,
   TotpRoute: TotpRoute,
   UnicodeRoute: UnicodeRoute,
+  UnitConverterRoute: UnitConverterRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,
+  VideoTrimmerRoute: VideoTrimmerRoute,
   WebpGifRoute: WebpGifRoute,
   WorldClockRoute: WorldClockRoute,
   XmlRoute: XmlRoute,

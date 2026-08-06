@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {
   CircleStop,
+  Download,
   LoaderCircle,
   Mic,
   MonitorUp,
@@ -372,6 +373,23 @@ function ScreenRecorderPage() {
     }
   }
 
+  async function downloadRecording(recording: ScreenRecording) {
+    setError(null);
+    try {
+      const storageWorker = storageWorkerRef.current;
+      if (!storageWorker) throw new Error('Recording worker is not ready');
+      const file = await storageWorker.read(recording.fileName);
+      const url = URL.createObjectURL(file);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = recording.fileName;
+      anchor.click();
+      window.setTimeout(() => URL.revokeObjectURL(url));
+    } catch (cause) {
+      setError(t('screenRecorder.downloadError', { msg: String(cause) }));
+    }
+  }
+
   if (supported === false) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -545,6 +563,14 @@ function ScreenRecorderPage() {
                 >
                   <Play className="h-4 w-4" />
                   {t('screenRecorder.play')}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void downloadRecording(item)}
+                >
+                  <Download className="h-4 w-4" />
+                  {t('screenRecorder.download')}
                 </Button>
                 <Button
                   size="icon-sm"

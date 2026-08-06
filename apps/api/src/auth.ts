@@ -1,5 +1,7 @@
-const PASSWORD_ITERATIONS = 600_000;
+const PASSWORD_ITERATIONS = 100_000;
+const LEGACY_PASSWORD_ITERATIONS = 600_000;
 const PASSWORD_KEY_BYTES = 32;
+const PASSWORD_SCHEME = 'pbkdf2-sha256';
 
 const encoder = new TextEncoder();
 
@@ -23,7 +25,11 @@ export function randomToken(bytes = 32): string {
   return bytesToHex(crypto.getRandomValues(new Uint8Array(bytes)));
 }
 
-async function derivePassword(password: string, salt: Uint8Array<ArrayBuffer>) {
+async function derivePassword(
+  password: string,
+  salt: Uint8Array<ArrayBuffer>,
+  iterations: number,
+) {
   const key = await crypto.subtle.importKey(
     'raw',
     encoder.encode(password),
@@ -36,7 +42,7 @@ async function derivePassword(password: string, salt: Uint8Array<ArrayBuffer>) {
       name: 'PBKDF2',
       hash: 'SHA-256',
       salt,
-      iterations: PASSWORD_ITERATIONS,
+      iterations,
     },
     key,
     PASSWORD_KEY_BYTES * 8,
@@ -46,8 +52,29 @@ async function derivePassword(password: string, salt: Uint8Array<ArrayBuffer>) {
 
 export async function hashPassword(password: string) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const hash = await derivePassword(password, salt);
-  return { hash: bytesToHex(hash), salt: bytesToHex(salt) };
+  const hash = await derivePassword(password, salt, PASSWORD_ITERATIONS);
+  return {
+    hash: bytesToHex(hash),
+    salt: `${PASSWORD_SCHEME}$${PASSWORD_ITERATIONS}$${bytesToHex(salt)}`,
+  };
+}
+
+function passwordParameters(storedSalt: string): {
+  iterations: number;
+  salt: Uint8Array<ArrayBuffer>;
+} {
+  const [scheme, iterations, encodedSalt] = storedSalt.split('$');
+  if (scheme === PASSWORD_SCHEME && iterations && encodedSalt) {
+    const parsedIterations = Number(iterations);
+    if (parsedIterations !== PASSWORD_ITERATIONS) {
+      throw new Error('Unsupported password parameters');
+    }
+    return { iterations: parsedIterations, salt: hexToBytes(encodedSalt) };
+  }
+  return {
+    iterations: LEGACY_PASSWORD_ITERATIONS,
+    salt: hexToBytes(storedSalt),
+  };
 }
 
 export async function verifyPassword(
@@ -55,7 +82,12 @@ export async function verifyPassword(
   expectedHash: string,
   salt: string,
 ): Promise<boolean> {
-  const actual = await derivePassword(password, hexToBytes(salt));
+  const parameters = passwordParameters(salt);
+  const actual = await derivePassword(
+    password,
+    parameters.salt,
+    parameters.iterations,
+  );
   const expected = hexToBytes(expectedHash);
 
   if (actual.length !== expected.length) return false;

@@ -576,3 +576,4 @@ function BrowserIcon({ name }: { name: string }) {
 - 错误/提示信息格式：`操作描述失败：${(e as Error).message}`
 - 新工具的翻译 key 需同时添加到 `apps/web/src/i18n/locales/zh.ts` 和
   `apps/web/src/i18n/locales/en.ts`
+- 禁止添加解释实现细节、重复标题含义或自证安全性的冗余副文案，例如“支持某库可读取的格式”与“邮箱不会返回完整地址”。只保留完成操作所必需的标签、限制、状态和错误信息。

@@ -31,6 +31,7 @@ import {
   Dices,
   FileCode,
   FileCode2,
+  FileArchive,
   FileStack,
   FileText,
   Fingerprint,
@@ -65,6 +66,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldPlus,
+  Scissors,
   Sparkles,
   Star,
   Sun,
@@ -361,6 +363,12 @@ const frontendNavItems: NavItem[] = [
     labelKey: 'nav.imageTool',
   },
   {
+    to: '/image-privacy',
+    icon: <ShieldCheck className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'nav.imagePrivacy',
+    keywords: '图片 隐私 exif gps metadata image privacy',
+  },
+  {
     to: '/webp-gif',
     icon: <ArrowLeftRight className="w-4 h-4 text-lime-500" />,
     labelKey: 'nav.webpGif',
@@ -369,10 +377,16 @@ const frontendNavItems: NavItem[] = [
 ];
 
 const imageNavItems = frontendNavItems.filter(
-  (item) => item.to === '/image' || item.to === '/webp-gif',
+  (item) =>
+    item.to === '/image' ||
+    item.to === '/image-privacy' ||
+    item.to === '/webp-gif',
 );
 const designNavItems = frontendNavItems.filter(
-  (item) => item.to !== '/image' && item.to !== '/webp-gif',
+  (item) =>
+    item.to !== '/image' &&
+    item.to !== '/image-privacy' &&
+    item.to !== '/webp-gif',
 );
 const developerNavItems = [
   ...formatterNavItems,
@@ -391,6 +405,12 @@ const videoNavItems: NavItem[] = [
     icon: <Video className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.screenRecorder',
     keywords: 'screen recorder capture video recording 录屏',
+  },
+  {
+    to: '/video-trimmer',
+    icon: <Scissors className="h-4 w-4 text-rose-500" />,
+    labelKey: 'nav.videoTrimmer',
+    keywords: '视频 剪辑 裁剪 trim clip mediabunny video',
   },
 ];
 const lifeNavItems: NavItem[] = [
@@ -429,6 +449,18 @@ const lifeNavItems: NavItem[] = [
     icon: <Thermometer className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.temperature',
     keywords: '温度 摄氏 华氏 开尔文 celsius fahrenheit kelvin',
+  },
+  {
+    to: '/unit-converter',
+    icon: <Ruler className="h-4 w-4 text-teal-500" />,
+    labelKey: 'nav.unitConverter',
+    keywords: '单位 转换 长度 面积 重量 容量 速度 数据 unit converter',
+  },
+  {
+    to: '/archive',
+    icon: <FileArchive className="h-4 w-4 text-amber-500" />,
+    labelKey: 'nav.archive',
+    keywords: '压缩 解压 zip gzip deflate 7z archive',
   },
 ];
 

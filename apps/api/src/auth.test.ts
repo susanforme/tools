@@ -9,9 +9,20 @@ describe('auth crypto', () => {
     const token = randomToken();
 
     expect(stored.hash).not.toBe(password);
+    expect(stored.salt).toMatch(/^pbkdf2-sha256\$100000\$/);
     expect(await verifyPassword(password, stored.hash, stored.salt)).toBe(true);
     expect(await verifyPassword('wrong', stored.hash, stored.salt)).toBe(false);
     expect(await hashToken(token)).not.toBe(token);
+  });
+
+  test('existing 600000-iteration password hashes remain valid', async () => {
+    expect(
+      await verifyPassword(
+        'legacy-password',
+        'bcd6fa91715d3d26984173277109cb9e49d5a66ad8620b0c813122a8b103ae47',
+        '000102030405060708090a0b0c0d0e0f',
+      ),
+    ).toBe(true);
   });
 
   test('public auth responses do not expose email addresses', () => {

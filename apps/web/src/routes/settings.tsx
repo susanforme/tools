@@ -140,9 +140,6 @@ function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t('settingsPage.accountTitle')}</CardTitle>
-            <CardDescription>
-              {t('settingsPage.accountDescription')}
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="flex items-center gap-3 rounded-xl border p-4">
