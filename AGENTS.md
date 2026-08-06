@@ -121,7 +121,8 @@ bun vitest apps/web/src/path/to/file.test.ts
 
 **不需要** `useQueryParam`
 的场景：输入框内容、输出结果、loading 状态、临时错误信息——这些属于纯 UI 临时状态，用
-`useState` 即可。
+`useState`
+即可。 依赖于不持久化的文件，例如上传字体然后分页返回，page就不需要放到query
 
 ### 导入
 
