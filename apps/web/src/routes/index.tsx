@@ -64,6 +64,7 @@ import {
   Tag,
   Type,
   Upload,
+  Video,
 } from 'lucide-react';
 import React from 'react';
 import { flushSync } from 'react-dom';
@@ -602,6 +603,22 @@ const frontendTools = [
   },
 ];
 
+const videoTools = [
+  {
+    to: '/screen-recorder' as const,
+    icon: <Video className="h-8 w-8 text-red-500" />,
+    titleKey: 'home.tools.screenRecorder.title',
+    descKey: 'home.tools.screenRecorder.desc',
+    tagKeys: [
+      'home.tools.screenRecorder.tagCapture',
+      'home.tools.screenRecorder.tagOpfs',
+      'home.tools.screenRecorder.tagLocal',
+    ],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+];
+
 type ToolConfig = {
   to: string;
   icon: React.ReactNode;
@@ -791,23 +808,33 @@ const ALL_TOOLS = [
   ...convertTools,
   ...textTools,
   ...frontendTools,
+  ...videoTools,
 ];
 
 const HOME_CATEGORIES = [
   { value: 'recommended', labelKey: 'home.recommended', icon: Star },
-  { value: 'format', labelKey: 'home.groupFormat', icon: AlignLeft },
-  { value: 'encode', labelKey: 'home.groupEncode', icon: Shuffle },
-  { value: 'text', labelKey: 'home.textTools', icon: Type },
-  { value: 'network', labelKey: 'home.groupNetwork', icon: Network },
-  { value: 'crypto', labelKey: 'home.groupCrypto', icon: ShieldCheck },
-  { value: 'image', labelKey: 'home.imageTools', icon: ImageIcon },
+  {
+    value: 'developer',
+    labelKey: 'shell.developerTools',
+    icon: Code2,
+  },
+  {
+    value: 'conversion',
+    labelKey: 'shell.textAndConversion',
+    icon: ArrowLeftRight,
+  },
+  {
+    value: 'network',
+    labelKey: 'shell.networkAndSecurity',
+    icon: ShieldCheck,
+  },
+  { value: 'design', labelKey: 'shell.designTools', icon: Palette },
+  { value: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
+  { value: 'video', labelKey: 'shell.videoTools', icon: Video },
   { value: 'all', labelKey: 'home.allTools', icon: Layers },
 ] as const;
 
-type HomeCategory =
-  | (typeof HOME_CATEGORIES)[number]['value']
-  | 'favorites'
-  | 'frontend';
+type HomeCategory = (typeof HOME_CATEGORIES)[number]['value'] | 'favorites';
 
 const RECOMMENDED_TOOLS: ToolConfig[] = [
   formatterTools[0]!,
@@ -857,6 +884,20 @@ function HomePageContent({
     StringParam,
     'recommended',
   );
+  const isDeveloperCategory = category === 'developer';
+  const isConversionCategory = category === 'conversion';
+  const isNetworkCategory = category === 'network';
+  const isDesignCategory = category === 'design';
+  const isImageCategory = category === 'image';
+  const isVideoCategory = category === 'video';
+  const visibleConvertTools =
+    category === 'all'
+      ? convertTools
+      : convertTools.filter((tool) =>
+          isDeveloperCategory
+            ? tool.to !== '/number-base'
+            : tool.to === '/number-base',
+        );
   // 本地乐观顺序：拖拽时立即更新，避免等 DB 回写再渲染产生闪动
   const [localOrder, setLocalOrder] = React.useState<string[]>(favoritePaths);
   // 当前正在拖拽的工具路径（用于 DragOverlay）
@@ -909,52 +950,56 @@ function HomePageContent({
 
   return (
     <div className="mx-auto max-w-[1480px] space-y-6 px-4 py-5 sm:px-6 lg:px-8">
-      <section className="relative min-h-[250px] overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 via-sky-50/80 to-indigo-50 px-7 py-10 dark:border-blue-950 dark:from-blue-950/35 dark:via-sky-950/20 dark:to-indigo-950/25 sm:px-12">
-        <div className="relative z-10 max-w-2xl">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
-            {t('home.title')}
-          </h1>
-          <p className="mt-4 text-base text-slate-600 dark:text-slate-300 sm:text-lg">
-            {t('home.heroSubtitle')}
-          </p>
-          <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 text-sm text-slate-700 dark:text-slate-300">
-            {[
-              ['home.browserOnly', Globe],
-              ['home.noInstall', Upload],
-              ['home.localProcessing', ShieldCheck],
-              ['home.privacySafe', Fingerprint],
-            ].map(([labelKey, Icon]) => (
-              <span
-                key={labelKey as string}
-                className="flex items-center gap-2"
-              >
-                <Icon className="h-4 w-4 text-blue-600" />
-                {t(labelKey as string)}
-              </span>
-            ))}
+      {category === 'recommended' && (
+        <section className="relative min-h-[250px] overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 via-sky-50/80 to-indigo-50 px-7 py-10 dark:border-blue-950 dark:from-blue-950/35 dark:via-sky-950/20 dark:to-indigo-950/25 sm:px-12">
+          <div className="relative z-10 max-w-2xl">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+              {t('home.title')}
+            </h1>
+            <p className="mt-4 text-base text-slate-600 dark:text-slate-300 sm:text-lg">
+              {t('home.heroSubtitle')}
+            </p>
+            <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 text-sm text-slate-700 dark:text-slate-300">
+              {[
+                ['home.browserOnly', Globe],
+                ['home.noInstall', Upload],
+                ['home.localProcessing', ShieldCheck],
+                ['home.privacySafe', Fingerprint],
+              ].map(([labelKey, Icon]) => (
+                <span
+                  key={labelKey as string}
+                  className="flex items-center gap-2"
+                >
+                  <Icon className="h-4 w-4 text-blue-600" />
+                  {t(labelKey as string)}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="absolute -right-8 top-1/2 hidden h-48 w-80 -translate-y-1/2 rotate-3 items-center justify-center rounded-[2.5rem] border border-white/80 bg-gradient-to-br from-blue-400/90 to-blue-600/90 shadow-2xl shadow-blue-500/25 lg:flex">
-          <Code2 className="h-24 w-24 -rotate-3 text-white drop-shadow-lg" />
-          <div className="absolute -left-10 bottom-5 h-20 w-16 rounded-2xl border border-white/80 bg-white/75 shadow-lg backdrop-blur">
-            <FileCode2 className="m-auto mt-5 h-9 w-9 text-blue-500" />
+          <div className="absolute -right-8 top-1/2 hidden h-48 w-80 -translate-y-1/2 rotate-3 items-center justify-center rounded-[2.5rem] border border-white/80 bg-gradient-to-br from-blue-400/90 to-blue-600/90 shadow-2xl shadow-blue-500/25 lg:flex">
+            <Code2 className="h-24 w-24 -rotate-3 text-white drop-shadow-lg" />
+            <div className="absolute -left-10 bottom-5 h-20 w-16 rounded-2xl border border-white/80 bg-white/75 shadow-lg backdrop-blur">
+              <FileCode2 className="m-auto mt-5 h-9 w-9 text-blue-500" />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <div className="flex flex-wrap gap-2">
-        {HOME_CATEGORIES.map(({ value, labelKey, icon: Icon }) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => setCategory(value)}
-            className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${category === value ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25' : 'bg-muted/70 text-muted-foreground hover:text-foreground'}`}
-          >
-            <Icon className="h-4 w-4" />
-            {t(labelKey)}
-          </button>
-        ))}
-      </div>
+      {category === 'recommended' && (
+        <div className="flex flex-wrap gap-2">
+          {HOME_CATEGORIES.map(({ value, labelKey, icon: Icon }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setCategory(value)}
+              className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${category === value ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25' : 'bg-muted/70 text-muted-foreground hover:text-foreground'}`}
+            >
+              <Icon className="h-4 w-4" />
+              {t(labelKey)}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="space-y-8">
         {category === 'recommended' && (
@@ -1060,7 +1105,7 @@ function HomePageContent({
           )}
 
         {/* 格式化工具 */}
-        {(category === 'format' || category === 'all') && (
+        {(isDeveloperCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
@@ -1091,7 +1136,7 @@ function HomePageContent({
         )}
 
         {/* 编码 / 转换 */}
-        {(category === 'encode' || category === 'all') && (
+        {(isDeveloperCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500">
@@ -1122,7 +1167,7 @@ function HomePageContent({
         )}
 
         {/* 加密 / 安全 */}
-        {(category === 'crypto' || category === 'all') && (
+        {(isNetworkCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500">
@@ -1153,7 +1198,7 @@ function HomePageContent({
         )}
 
         {/* 网络 / 请求 */}
-        {(category === 'network' || category === 'all') && (
+        {(isNetworkCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">
@@ -1184,7 +1229,9 @@ function HomePageContent({
         )}
 
         {/* 数据转换 / 互转 */}
-        {(category === 'encode' || category === 'all') && (
+        {(isDeveloperCategory ||
+          isConversionCategory ||
+          category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-600">
@@ -1201,7 +1248,7 @@ function HomePageContent({
               <div className="flex-1 h-px bg-border ml-2" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {convertTools.map((tool) => (
+              {visibleConvertTools.map((tool) => (
                 <ToolCard
                   key={tool.to}
                   tool={tool}
@@ -1215,7 +1262,7 @@ function HomePageContent({
         )}
 
         {/* 其他 */}
-        {(category === 'text' || category === 'all') && (
+        {(isConversionCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-500/10 text-slate-500">
@@ -1245,10 +1292,8 @@ function HomePageContent({
           </div>
         )}
 
-        {/* 前端工具 */}
-        {(category === 'image' ||
-          category === 'frontend' ||
-          category === 'all') && (
+        {/* 设计工具 */}
+        {(isDesignCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-pink-500/10 text-pink-500">
@@ -1265,12 +1310,77 @@ function HomePageContent({
               <div className="flex-1 h-px bg-border ml-2" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {(category === 'image'
-                ? frontendTools.filter(
-                    (tool) => tool.to === '/image' || tool.to === '/webp-gif',
-                  )
-                : frontendTools
-              ).map((tool) => (
+              {frontendTools
+                .filter(
+                  (tool) => tool.to !== '/image' && tool.to !== '/webp-gif',
+                )
+                .map((tool) => (
+                  <ToolCard
+                    key={tool.to}
+                    tool={tool}
+                    t={t}
+                    isFavorite={isFavorite(tool.to)}
+                    onToggleFavorite={toggleFavorite}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* 图片工具 */}
+        {(isImageCategory || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-sky-500/10 text-sky-500">
+                <ImageIcon className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupImage')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.imageSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {frontendTools
+                .filter(
+                  (tool) => tool.to === '/image' || tool.to === '/webp-gif',
+                )
+                .map((tool) => (
+                  <ToolCard
+                    key={tool.to}
+                    tool={tool}
+                    t={t}
+                    isFavorite={isFavorite(tool.to)}
+                    onToggleFavorite={toggleFavorite}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* 视频工具 */}
+        {(isVideoCategory || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/10 text-red-500">
+                <Video className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupVideo')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.videoSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {videoTools.map((tool) => (
                 <ToolCard
                   key={tool.to}
                   tool={tool}

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { hashPassword, hashToken, randomToken, verifyPassword } from './auth';
-import { toPublicUser } from './index';
+import { maskEmail, toPublicUser } from './index';
 
 describe('auth crypto', () => {
   test('password and session token are not stored as plaintext', async () => {
@@ -26,5 +26,9 @@ describe('auth crypto', () => {
         password_salt: null,
       }),
     ).toEqual({ avatar_url: null, id: 'user-id', name: 'User' });
+  });
+
+  test('settings mask does not expose the email local part', () => {
+    expect(maskEmail('abcdefg@q.com')).toBe('a*******@q.com');
   });
 });

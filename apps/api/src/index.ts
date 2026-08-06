@@ -75,6 +75,12 @@ export function toPublicUser(user: UserRow): PublicUser {
   };
 }
 
+export function maskEmail(email: string): string {
+  const at = email.lastIndexOf('@');
+  if (at <= 0) return '*******';
+  return `${email[0]}*******${email.slice(at)}`;
+}
+
 function cookieOptions(c: Context<WorkerEnv>, maxAge: number) {
   return {
     httpOnly: true,
@@ -143,6 +149,24 @@ const loginInput = validator('json', (value, c) => {
     return c.json({ error: '邮箱或密码错误' }, 401);
   }
   return { email, password };
+});
+
+const passwordInput = validator('json', (value, c) => {
+  if (!isRecord(value)) return c.json({ error: '请求格式错误' }, 400);
+
+  const currentPassword =
+    typeof value.currentPassword === 'string' ? value.currentPassword : '';
+  const newPassword =
+    typeof value.newPassword === 'string' ? value.newPassword : '';
+
+  if (
+    currentPassword.length > 128 ||
+    newPassword.length < 8 ||
+    newPassword.length > 128
+  ) {
+    return c.json({ error: '密码格式错误' }, 400);
+  }
+  return { currentPassword, newPassword };
 });
 
 const favoriteInput = validator('json', (value, c) => {
@@ -261,6 +285,53 @@ const routes = app
     const user = await currentUser(c);
     if (!user) return c.json({ error: '未登录' }, 401);
     return c.json({ user: toPublicUser(user) });
+  })
+  .get('/auth/settings', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return c.json({ error: '未登录' }, 401);
+    return c.json({
+      account: {
+        connections: { github: Boolean(user.github_id) },
+        has_password: Boolean(user.password_hash && user.password_salt),
+        masked_email: maskEmail(user.email),
+      },
+    });
+  })
+  .post('/auth/password', passwordInput, async (c) => {
+    const user = await currentUser(c);
+    if (!user) return c.json({ error: '未登录' }, 401);
+
+    const input = c.req.valid('json');
+    if (
+      user.password_hash &&
+      user.password_salt &&
+      !(await verifyPassword(
+        input.currentPassword,
+        user.password_hash,
+        user.password_salt,
+      ))
+    ) {
+      return c.json({ error: '当前密码错误' }, 403);
+    }
+
+    const password = await hashPassword(input.newPassword);
+    await c.env.DB.prepare(
+      `UPDATE users
+          SET password_hash = ?, password_salt = ?, updated_at = ?
+        WHERE id = ?`,
+    )
+      .bind(password.hash, password.salt, Date.now(), user.id)
+      .run();
+
+    const token = getCookie(c, SESSION_COOKIE);
+    if (token) {
+      await c.env.DB.prepare(
+        'DELETE FROM sessions WHERE user_id = ? AND token_hash <> ?',
+      )
+        .bind(user.id, await hashToken(token))
+        .run();
+    }
+    return c.json({ ok: true });
   })
   .get('/favorites', async (c) => {
     const user = await currentUser(c);

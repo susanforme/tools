@@ -7,11 +7,15 @@ import { assertSessionActive } from '@/lib/optional-auth';
 import { queryClient } from '@/lib/query-client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
+import {
+  createRootRoute,
+  Link,
+  Outlet,
+  useRouterState,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import Fuse from 'fuse.js';
 import {
-  AlignLeft,
   ArrowLeftRight,
   Binary,
   Braces,
@@ -45,7 +49,6 @@ import {
   Menu,
   MonitorSmartphone,
   Moon,
-  Network,
   Paintbrush,
   Palette,
   QrCode,
@@ -58,14 +61,13 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldPlus,
-  Shuffle,
   Sparkles,
   Star,
   Sun,
   Table,
   Tag,
-  Trash2,
   Type,
+  Video,
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -361,41 +363,60 @@ const frontendNavItems: NavItem[] = [
   },
 ];
 
+const imageNavItems = frontendNavItems.filter(
+  (item) => item.to === '/image' || item.to === '/webp-gif',
+);
+const designNavItems = frontendNavItems.filter(
+  (item) => item.to !== '/image' && item.to !== '/webp-gif',
+);
+const developerNavItems = [
+  ...formatterNavItems,
+  ...encodeNavItems,
+  ...convertNavItems.filter((item) => item.to !== '/number-base'),
+];
+const conversionNavItems = [
+  ...convertNavItems.filter((item) => item.to === '/number-base'),
+  ...textNavItems,
+];
+const videoNavItems: NavItem[] = [
+  {
+    to: '/screen-recorder',
+    icon: <Video className="h-4 w-4 text-red-500" />,
+    labelKey: 'nav.screenRecorder',
+    keywords: 'screen recorder capture video recording 录屏',
+  },
+];
+
 const ALL_CATEGORIES: CategoryDef[] = [
   {
-    labelKey: 'nav.catFormatter',
-    icon: <AlignLeft className="w-4 h-4" />,
-    items: formatterNavItems,
+    labelKey: 'shell.developerTools',
+    icon: <Code2 className="w-4 h-4" />,
+    items: developerNavItems,
   },
   {
-    labelKey: 'nav.catEncode',
-    icon: <Shuffle className="w-4 h-4" />,
-    items: encodeNavItems,
-  },
-  {
-    labelKey: 'nav.catCrypto',
-    icon: <ShieldCheck className="w-4 h-4" />,
-    items: cryptoNavItems,
-  },
-  {
-    labelKey: 'nav.catNetwork',
-    icon: <Network className="w-4 h-4" />,
-    items: networkNavItems,
-  },
-  {
-    labelKey: 'nav.catConvert',
+    labelKey: 'shell.textAndConversion',
     icon: <ArrowLeftRight className="w-4 h-4" />,
-    items: convertNavItems,
+    items: conversionNavItems,
   },
   {
-    labelKey: 'nav.catFrontend',
+    labelKey: 'shell.networkAndSecurity',
+    icon: <ShieldCheck className="w-4 h-4" />,
+    items: [...networkNavItems, ...cryptoNavItems],
+  },
+  {
+    labelKey: 'shell.designTools',
     icon: <Palette className="w-4 h-4" />,
-    items: frontendNavItems,
+    items: designNavItems,
   },
   {
-    labelKey: 'nav.catOther',
-    icon: <Layers className="w-4 h-4" />,
-    items: textNavItems,
+    labelKey: 'shell.imageTools',
+    icon: <ImageIcon className="w-4 h-4" />,
+    items: imageNavItems,
+  },
+  {
+    labelKey: 'shell.videoTools',
+    icon: <Video className="w-4 h-4" />,
+    items: videoNavItems,
   },
 ];
 
@@ -657,6 +678,16 @@ function MobileNav() {
             );
           })}
         </div>
+        <div className="border-t p-3">
+          <Link
+            to="/settings"
+            onClick={close}
+            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+          >
+            <Settings className="h-4 w-4" />
+            {t('shell.settings')}
+          </Link>
+        </div>
       </div>
     </>,
     document.body,
@@ -681,17 +712,34 @@ function MobileNav() {
 
 const SIDEBAR_ITEMS = [
   { category: 'all', labelKey: 'shell.allTools', icon: Layers },
-  { category: 'format', labelKey: 'nav.catFormatter', icon: AlignLeft },
-  { category: 'encode', labelKey: 'nav.catEncode', icon: Shuffle },
-  { category: 'text', labelKey: 'shell.textTools', icon: Type },
-  { category: 'network', labelKey: 'nav.catNetwork', icon: Network },
-  { category: 'crypto', labelKey: 'nav.catCrypto', icon: ShieldCheck },
+  { category: 'developer', labelKey: 'shell.developerTools', icon: Code2 },
+  {
+    category: 'conversion',
+    labelKey: 'shell.textAndConversion',
+    icon: ArrowLeftRight,
+  },
+  {
+    category: 'network',
+    labelKey: 'shell.networkAndSecurity',
+    icon: ShieldCheck,
+  },
+  { category: 'design', labelKey: 'shell.designTools', icon: Palette },
   { category: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
-  { category: 'frontend', labelKey: 'nav.catFrontend', icon: Palette },
+  { category: 'video', labelKey: 'shell.videoTools', icon: Video },
 ] as const;
 
 function DesktopSidebar() {
   const { t } = useTranslation();
+  const location = useRouterState({
+    select: (state) => ({
+      category: (state.location.search as Record<string, unknown>).category,
+      pathname: state.location.pathname,
+    }),
+  });
+  const navClass = (active: boolean) =>
+    `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${active ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/35 dark:text-blue-400' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}`;
+  const isHome = location.pathname === '/' && location.category == null;
+  const activeCategory = location.category;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r bg-background lg:flex">
@@ -703,15 +751,7 @@ function DesktopSidebar() {
       </Link>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-5">
-        <Link
-          to="/"
-          search={{}}
-          className="flex items-center gap-3 rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-600 transition-colors dark:bg-blue-950/35 dark:text-blue-400"
-          activeProps={{
-            className:
-              'flex items-center gap-3 rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-600 dark:bg-blue-950/35 dark:text-blue-400',
-          }}
-        >
+        <Link to="/" search={{}} className={navClass(isHome)}>
           <Home className="h-5 w-5" />
           {t('shell.home')}
         </Link>
@@ -720,11 +760,9 @@ function DesktopSidebar() {
             key={category}
             to="/"
             search={{ category }}
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            activeProps={{
-              className:
-                'flex items-center gap-3 rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-600 dark:bg-blue-950/35 dark:text-blue-400',
-            }}
+            className={navClass(
+              location.pathname === '/' && activeCategory === category,
+            )}
           >
             <Icon className="h-5 w-5" />
             {t(labelKey)}
@@ -736,139 +774,22 @@ function DesktopSidebar() {
         <Link
           to="/"
           search={{ category: 'favorites' }}
-          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className={navClass(
+            location.pathname === '/' && location.category === 'favorites',
+          )}
         >
           <Heart className="h-5 w-5" />
           {t('shell.favorites')}
         </Link>
-        <button
-          type="button"
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground"
+        <Link
+          to="/settings"
+          className={navClass(location.pathname === '/settings')}
         >
           <Settings className="h-5 w-5" />
           {t('shell.settings')}
-        </button>
+        </Link>
       </div>
     </aside>
-  );
-}
-
-const HISTORY_ITEMS = [
-  {
-    titleKey: 'home.tools.json.title',
-    descKey: 'home.tools.json.desc',
-    timeKey: 'shell.twoMinutesAgo',
-    icon: <Braces className="h-5 w-5 text-amber-500" />,
-    tone: 'bg-amber-500/10',
-  },
-  {
-    titleKey: 'home.tools.urlEncode.title',
-    descKey: 'home.tools.urlEncode.desc',
-    timeKey: 'shell.fifteenMinutesAgo',
-    icon: <LinkIcon className="h-5 w-5 text-emerald-500" />,
-    tone: 'bg-emerald-500/10',
-  },
-  {
-    titleKey: 'home.tools.markdown.title',
-    descKey: 'home.tools.markdown.desc',
-    timeKey: 'shell.thirtyTwoMinutesAgo',
-    icon: <FileText className="h-5 w-5 text-blue-500" />,
-    tone: 'bg-blue-500/10',
-  },
-  {
-    titleKey: 'home.tools.uuid.title',
-    descKey: 'home.tools.uuid.desc',
-    timeKey: 'shell.oneHourAgo',
-    icon: <Dices className="h-5 w-5 text-violet-500" />,
-    tone: 'bg-violet-500/10',
-  },
-  {
-    titleKey: 'home.tools.imageTool.title',
-    descKey: 'home.tools.imageTool.desc',
-    timeKey: 'shell.twoHoursAgo',
-    icon: <ImageIcon className="h-5 w-5 text-teal-500" />,
-    tone: 'bg-teal-500/10',
-  },
-] as const;
-
-function HistoryPanel({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <>
-      {open && (
-        <button
-          type="button"
-          aria-label={t('shell.closeHistory')}
-          onClick={onClose}
-          className="fixed inset-0 z-[60] bg-black/10 lg:hidden"
-        />
-      )}
-      <aside
-        aria-hidden={!open}
-        className={`fixed bottom-4 right-4 top-20 z-[70] flex w-[min(390px,calc(100vw-2rem))] flex-col rounded-2xl border bg-background shadow-2xl transition-all duration-200 ${open ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-6 opacity-0'}`}
-      >
-        <div className="flex items-center justify-between px-6 pb-3 pt-5">
-          <h2 className="text-xl font-bold">{t('shell.historyTitle')}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t('shell.closeHistory')}
-            className="rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="grid grid-cols-3 border-b px-4 text-sm">
-          <div className="border-b-2 border-blue-600 px-2 py-3 text-center font-medium text-blue-600">
-            {t('shell.recentlyUsed')}
-          </div>
-          <div className="px-2 py-3 text-center text-muted-foreground">
-            {t('shell.recentlyProcessed')}
-          </div>
-          <div className="px-2 py-3 text-center text-muted-foreground">
-            {t('shell.drafts')}
-          </div>
-        </div>
-        <div className="flex-1 space-y-3 overflow-y-auto p-4">
-          {HISTORY_ITEMS.map((item) => (
-            <div
-              key={item.titleKey}
-              className="flex items-center gap-3 rounded-xl border p-3 shadow-sm"
-            >
-              <span
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${item.tone}`}
-              >
-                {item.icon}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">
-                  {t(item.titleKey)}
-                </p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {t(item.descKey)}
-                </p>
-              </div>
-              <span className="shrink-0 self-start pt-1 text-xs text-muted-foreground">
-                {t(item.timeKey)}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="border-t p-4">
-          <div className="flex items-center justify-center gap-2 py-2 text-sm text-destructive">
-            <Trash2 className="h-4 w-4" />
-            {t('shell.clearHistory')}
-          </div>
-        </div>
-      </aside>
-    </>
   );
 }
 
@@ -952,6 +873,18 @@ function AuthNav() {
           </div>
         </div>
         <Button
+          asChild
+          type="button"
+          size="sm"
+          variant="outline"
+          className="w-full"
+        >
+          <Link to="/settings">
+            <Settings />
+            {t('settingsPage.title')}
+          </Link>
+        </Button>
+        <Button
           type="button"
           size="sm"
           variant="outline"
@@ -977,7 +910,6 @@ function RootDocument() {
 
 function RootContent() {
   const { t } = useTranslation();
-  const [historyOpen, setHistoryOpen] = useState(false);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -999,14 +931,6 @@ function RootContent() {
                 </Link>
                 <ToolSearch />
                 <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setHistoryOpen(true)}
-                    className={`hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors sm:flex ${historyOpen ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/35 dark:text-blue-400' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}`}
-                  >
-                    <Clock className="h-4 w-4" />
-                    {t('shell.history')}
-                  </button>
                   <Link
                     to="/"
                     search={{ category: 'favorites' }}
@@ -1024,10 +948,6 @@ function RootContent() {
             <main className="min-h-screen pt-[68px] lg:pl-64">
               <Outlet />
             </main>
-            <HistoryPanel
-              open={historyOpen}
-              onClose={() => setHistoryOpen(false)}
-            />
           </div>
         </TooltipProvider>
         <TanStackDevtools

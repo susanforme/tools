@@ -71,6 +71,15 @@ export interface CachedFont {
   data: Blob;
 }
 
+export interface ScreenRecording {
+  id: string;
+  fileName: string;
+  mimeType: string;
+  createdAt: number;
+  durationMs: number;
+  size: number;
+}
+
 // ─── 数据库 ────────────────────────────────────────────────────────────────
 
 class AppDB extends Dexie {
@@ -78,6 +87,7 @@ class AppDB extends Dexie {
   preferences!: Table<Preference>;
   favorites!: Table<Favorite>;
   fontCache!: Table<CachedFont>;
+  screenRecordings!: Table<ScreenRecording>;
 
   constructor() {
     super('tools-app');
@@ -114,6 +124,13 @@ class AppDB extends Dexie {
       preferences: 'tool',
       favorites: '++id, &toolPath, addedAt, sortOrder',
       fontCache: 'id',
+    });
+    this.version(5).stores({
+      history: '++id, tool, createdAt',
+      preferences: 'tool',
+      favorites: '++id, &toolPath, addedAt, sortOrder',
+      fontCache: 'id',
+      screenRecordings: 'id, createdAt',
     });
   }
 }

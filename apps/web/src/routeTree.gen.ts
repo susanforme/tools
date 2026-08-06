@@ -22,6 +22,8 @@ import { Route as TextRouteImport } from './routes/text'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
 import { Route as SqlRouteImport } from './routes/sql'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScreenRecorderRouteImport } from './routes/screen-recorder'
 import { Route as Rot13RouteImport } from './routes/rot13'
 import { Route as RegexRouteImport } from './routes/regex'
 import { Route as QrcodeRouteImport } from './routes/qrcode'
@@ -118,6 +120,16 @@ const SqlPlaygroundRoute = SqlPlaygroundRouteImport.update({
 const SqlRoute = SqlRouteImport.update({
   id: '/sql',
   path: '/sql',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScreenRecorderRoute = ScreenRecorderRouteImport.update({
+  id: '/screen-recorder',
+  path: '/screen-recorder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Rot13Route = Rot13RouteImport.update({
@@ -314,6 +326,8 @@ export interface FileRoutesByFullPath {
   '/qrcode': typeof QrcodeRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
+  '/screen-recorder': typeof ScreenRecorderRoute
+  '/settings': typeof SettingsRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
@@ -361,6 +375,8 @@ export interface FileRoutesByTo {
   '/qrcode': typeof QrcodeRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
+  '/screen-recorder': typeof ScreenRecorderRoute
+  '/settings': typeof SettingsRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
@@ -409,6 +425,8 @@ export interface FileRoutesById {
   '/qrcode': typeof QrcodeRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
+  '/screen-recorder': typeof ScreenRecorderRoute
+  '/settings': typeof SettingsRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
@@ -458,6 +476,8 @@ export interface FileRouteTypes {
     | '/qrcode'
     | '/regex'
     | '/rot13'
+    | '/screen-recorder'
+    | '/settings'
     | '/sql'
     | '/sql-playground'
     | '/table-convert'
@@ -505,6 +525,8 @@ export interface FileRouteTypes {
     | '/qrcode'
     | '/regex'
     | '/rot13'
+    | '/screen-recorder'
+    | '/settings'
     | '/sql'
     | '/sql-playground'
     | '/table-convert'
@@ -552,6 +574,8 @@ export interface FileRouteTypes {
     | '/qrcode'
     | '/regex'
     | '/rot13'
+    | '/screen-recorder'
+    | '/settings'
     | '/sql'
     | '/sql-playground'
     | '/table-convert'
@@ -600,6 +624,8 @@ export interface RootRouteChildren {
   QrcodeRoute: typeof QrcodeRoute
   RegexRoute: typeof RegexRoute
   Rot13Route: typeof Rot13Route
+  ScreenRecorderRoute: typeof ScreenRecorderRoute
+  SettingsRoute: typeof SettingsRoute
   SqlRoute: typeof SqlRoute
   SqlPlaygroundRoute: typeof SqlPlaygroundRoute
   TableConvertRoute: typeof TableConvertRoute
@@ -706,6 +732,20 @@ declare module '@tanstack/react-router' {
       path: '/sql'
       fullPath: '/sql'
       preLoaderRoute: typeof SqlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/screen-recorder': {
+      id: '/screen-recorder'
+      path: '/screen-recorder'
+      fullPath: '/screen-recorder'
+      preLoaderRoute: typeof ScreenRecorderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rot13': {
@@ -968,6 +1008,8 @@ const rootRouteChildren: RootRouteChildren = {
   QrcodeRoute: QrcodeRoute,
   RegexRoute: RegexRoute,
   Rot13Route: Rot13Route,
+  ScreenRecorderRoute: ScreenRecorderRoute,
+  SettingsRoute: SettingsRoute,
   SqlRoute: SqlRoute,
   SqlPlaygroundRoute: SqlPlaygroundRoute,
   TableConvertRoute: TableConvertRoute,
