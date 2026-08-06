@@ -1,3 +1,4 @@
+import { useTheme } from '@/hooks/use-theme';
 import Editor, { loader } from '@monaco-editor/react';
 import { Check, Copy } from 'lucide-react';
 import * as monaco from 'monaco-editor';
@@ -6,7 +7,7 @@ import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
 import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from './ui/button';
 
@@ -49,15 +50,7 @@ export function CodePanel({
   const { t } = useTranslation();
   const resolvedOutputLanguage = outputLanguage ?? language;
   const [copied, setCopied] = useState(false);
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  const { theme: pageTheme } = useTheme();
 
   const handleCopy = async () => {
     if (!output) return;
@@ -66,7 +59,7 @@ export function CodePanel({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const theme = isDark ? 'vs-dark' : 'light';
+  const theme = pageTheme === 'dark' ? 'vs-dark' : 'light';
 
   const baseOptions = {
     minimap: { enabled: false },

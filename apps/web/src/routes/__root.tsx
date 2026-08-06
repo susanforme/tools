@@ -1,6 +1,7 @@
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
 import { setAuthGuest, useAuthSession } from '@/hooks/useAuthSession';
 import { useOptionalAuthMutation } from '@/hooks/useOptionalAuth';
+import { ThemeProvider, useTheme } from '@/hooks/use-theme';
 import { api } from '@/lib/api';
 import { assertSessionActive } from '@/lib/optional-auth';
 import { queryClient } from '@/lib/query-client';
@@ -83,36 +84,14 @@ export const Route = createRootRoute({
   component: RootDocument,
 });
 
-// ─── 主题 Hook ────────────────────────────────────────────
-
-function useTheme() {
-  const [dark, setDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    const stored = localStorage.getItem('theme');
-    if (stored) return stored === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (dark) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('theme', dark ? 'dark' : 'light');
-  }, [dark]);
-
-  return { dark, toggle: () => setDark((d) => !d) };
-}
-
 // ─── 主题切换按钮 ──────────────────────────────────────────
 
 function ThemeToggle() {
-  const { dark, toggle } = useTheme();
+  const { theme, toggleTheme } = useTheme();
+  const dark = theme === 'dark';
   return (
     <button
-      onClick={toggle}
+      onClick={toggleTheme}
       aria-label={dark ? '切换为浅色模式' : '切换为深色模式'}
       className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
     >
@@ -1023,6 +1002,14 @@ function AuthNav() {
 }
 
 function RootDocument() {
+  return (
+    <ThemeProvider>
+      <RootContent />
+    </ThemeProvider>
+  );
+}
+
+function RootContent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div>

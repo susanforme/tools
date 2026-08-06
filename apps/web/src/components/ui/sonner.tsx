@@ -1,3 +1,4 @@
+import { useTheme } from '@/hooks/use-theme';
 import {
   CircleCheckIcon,
   InfoIcon,
@@ -5,31 +6,10 @@ import {
   OctagonXIcon,
   TriangleAlertIcon,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 
-/** 读取 <html> 上的 .dark class 来跟随项目自有主题方案 */
-function useHtmlTheme(): 'dark' | 'light' {
-  const [dark, setDark] = useState(() =>
-    document.documentElement.classList.contains('dark'),
-  );
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setDark(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  return dark ? 'dark' : 'light';
-}
-
 const Toaster = ({ ...props }: ToasterProps) => {
-  const theme = useHtmlTheme();
+  const { theme } = useTheme();
 
   return (
     <Sonner
