@@ -6,10 +6,12 @@ import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import wasm from 'vite-plugin-wasm';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config = defineConfig({
   // logLevel: 'warn',
+  resolve: {
+    tsconfigPaths: true,
+  },
   optimizeDeps: {
     exclude: ['@sqlite.org/sqlite-wasm'],
   },
@@ -55,7 +57,6 @@ const config = defineConfig({
       },
     }),
     devtools(),
-    tsconfigPaths({ projects: ['./tsconfig.json'] }),
     tailwindcss(),
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     viteReact(),
