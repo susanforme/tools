@@ -28,14 +28,21 @@ const CITIES = [
 
 async function fetchUtcTime() {
   const requestStartedAt = Date.now();
-  const response = await api.time.$get();
-  if (!response.ok) throw new Error('UTC time request failed');
-  const { utc } = await response.json();
-  const receivedAt = Date.now();
-  return {
-    receivedAt,
-    utcMs: Date.parse(utc) + (receivedAt - requestStartedAt) / 2,
-  };
+  try {
+    const response = await api.time.$get();
+    if (!response.ok) throw new Error('UTC time request failed');
+    const { utc } = await response.json();
+    const receivedAt = Date.now();
+    const utcMs = Date.parse(utc);
+    if (Number.isNaN(utcMs)) throw new Error('Invalid UTC time');
+    return {
+      receivedAt,
+      utcMs: utcMs + (receivedAt - requestStartedAt) / 2,
+    };
+  } catch {
+    const now = Date.now();
+    return { receivedAt: now, utcMs: now };
+  }
 }
 
 function WorldClockPage() {
@@ -46,7 +53,6 @@ function WorldClockPage() {
     queryKey: ['utc-time'],
     queryFn: fetchUtcTime,
     refetchInterval: 5 * 60 * 1000,
-    retry: 1,
   });
 
   useEffect(() => {
@@ -83,12 +89,6 @@ function WorldClockPage() {
           {t('worldClock.sync')}
         </Button>
       </div>
-
-      {clock.isError && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {t('worldClock.syncError')}
-        </div>
-      )}
 
       <Card className="border-sky-200 bg-sky-50/50 dark:border-sky-900 dark:bg-sky-950/20">
         <CardContent className="flex flex-wrap items-center justify-between gap-4 py-5">
