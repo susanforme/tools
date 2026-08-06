@@ -200,9 +200,6 @@ function PasswordPage() {
           <Shield className="w-6 h-6 text-emerald-500" />
           {t('password.title')}
         </h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('password.desc')}
-        </p>
       </div>
 
       {/* 选项卡 */}

@@ -88,9 +88,6 @@ function UnitConverterPage() {
           <Ruler className="h-6 w-6 text-teal-500" />
           {t('unitConverter.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('unitConverter.description')}
-        </p>
       </div>
 
       <Tabs value={category} onValueChange={changeCategory}>

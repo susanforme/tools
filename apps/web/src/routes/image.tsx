@@ -275,9 +275,6 @@ function ConvertTab() {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        {t('imageTool.convert.desc')}
-      </p>
       <ImageUploader
         image={image}
         onChange={setImage}
@@ -458,9 +455,6 @@ function Base64Tab() {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        {t('imageTool.base64.desc')}
-      </p>
       <div className="flex gap-2">
         <Button
           size="sm"
@@ -674,9 +668,6 @@ function CropTab() {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        {t('imageTool.crop.desc')}
-      </p>
       <ImageUploader
         image={image}
         onChange={setImage}
@@ -881,9 +872,6 @@ function RetinaTab() {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        {t('imageTool.retina.desc')}
-      </p>
       <ImageUploader
         image={image}
         onChange={(img) => {
@@ -1121,9 +1109,6 @@ function SkeletonTab() {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        {t('imageTool.skeleton.desc')}
-      </p>
 
       <ImageUploader
         image={image}
@@ -1272,9 +1257,6 @@ function ImageToolPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold">{t('imageTool.title')}</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
-            {t('imageTool.desc')}
-          </p>
         </div>
       </div>
 

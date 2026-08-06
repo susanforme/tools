@@ -112,7 +112,6 @@ function DiffPage() {
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">{t('diff.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('diff.desc')}</p>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">

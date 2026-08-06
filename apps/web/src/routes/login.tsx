@@ -9,7 +9,6 @@ import { Button } from '../components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '../components/ui/card';
@@ -81,7 +80,6 @@ function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">{t('auth.title')}</CardTitle>
-          <CardDescription>{t('auth.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs

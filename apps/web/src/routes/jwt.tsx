@@ -349,7 +349,6 @@ function JwtPage() {
       {/* 标题 */}
       <div>
         <h1 className="text-2xl font-bold">{t('jwt.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('jwt.desc')}</p>
       </div>
 
       {/* 主布局：左侧 Token + 中间操作栏 + 右侧结构化表单 */}

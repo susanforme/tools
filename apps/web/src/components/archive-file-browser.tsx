@@ -42,6 +42,7 @@ type ArchiveFileBrowserProps = {
   editable?: boolean;
   nodes: ArchiveTreeNodes;
   onDownloadAll?: () => void;
+  onDownloadFile?: (node: ArchiveTreeNode) => void;
   onFiles?: (files: DroppedFile[]) => void;
   setNodes?: Dispatch<SetStateAction<ArchiveTreeNodes>>;
 };
@@ -57,6 +58,7 @@ export function ArchiveFileBrowser({
   editable = false,
   nodes,
   onDownloadAll,
+  onDownloadFile,
   onFiles,
   setNodes,
 }: ArchiveFileBrowserProps) {
@@ -192,7 +194,7 @@ export function ArchiveFileBrowser({
               {tree.getItems().map((item) => {
                 const node = item.getItemData();
                 return (
-                  <TreeItem key={item.getId()} item={item}>
+                  <TreeItem key={item.getId()} item={item} render={<div />}>
                     <TreeItemLabel item={item} className="min-w-0">
                       {node.kind === 'folder' ? (
                         <Folder className="size-4 fill-amber-400/30 text-amber-500" />
@@ -206,6 +208,22 @@ export function ArchiveFileBrowser({
                         <span className="text-xs text-muted-foreground">
                           {formatBytes(node.size)}
                         </span>
+                      )}
+                      {node.kind === 'file' && onDownloadFile && (
+                        <Button
+                          type="button"
+                          size="icon-sm"
+                          variant="ghost"
+                          aria-label={t('archive.downloadFile', {
+                            name: node.name,
+                          })}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onDownloadFile(node);
+                          }}
+                        >
+                          <Download className="size-4" />
+                        </Button>
                       )}
                     </TreeItemLabel>
                   </TreeItem>

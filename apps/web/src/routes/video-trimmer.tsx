@@ -222,9 +222,6 @@ function VideoTrimmerPage() {
           <Scissors className="h-6 w-6 text-red-500" />
           {t('videoTrimmer.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('videoTrimmer.description')}
-        </p>
       </div>
 
       {error && (

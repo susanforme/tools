@@ -65,7 +65,6 @@ const en = {
   },
   auth: {
     title: 'Sign in to Breeze Tools',
-    description: 'Use your account across devices',
     loginTab: 'Sign in',
     registerTab: 'Create account',
     email: 'Email',
@@ -105,7 +104,6 @@ const en = {
   },
   settingsPage: {
     title: 'Account settings',
-    description: 'Manage sign-in methods and account security',
     loginRequired: 'Sign in to view account settings',
     accountTitle: 'Account information',
     email: 'Sign-in email',
@@ -130,7 +128,6 @@ const en = {
   screenRecorder: {
     title: 'Screen recorder',
     captureTitle: 'Screen capture',
-    localOnly: 'Recordings stay in this browser and are never uploaded',
     systemAudio: 'System audio',
     systemAudioDescription:
       'Capture audio provided by the selected tab or display',
@@ -160,7 +157,6 @@ const en = {
   },
   gushiNamer: {
     title: 'Poetry name generator',
-    description: 'Discover a name while browsing the Chinese classics.',
     source: 'Choose from the classics',
     book: 'Source collection',
     familyName: 'Family name',
@@ -169,7 +165,6 @@ const en = {
     refresh: 'Another six',
     reading: 'Browsing the classics',
     resultCount: '{{count}} candidate names',
-    resultDescription: 'Every name keeps its source and original sentence.',
     filtered: 'Common unsuitable characters excluded',
     loadError: 'Could not load the poetry collection: {{msg}}',
     reference: 'Naming logic and poetry data reference',
@@ -177,8 +172,6 @@ const en = {
   },
   worldClock: {
     title: 'World clock',
-    description:
-      'Sync UTC time from the server and calculate local time for common cities in your browser.',
     sync: 'Sync time',
     syncError: 'Time sync failed. Check your connection and try again.',
     serverUtc: 'Server UTC time',
@@ -199,8 +192,6 @@ const en = {
   },
   socialInsurance: {
     title: 'Social insurance calculator',
-    description:
-      'Estimate employee and employer contributions using city presets.',
     city: 'City preset',
     salary: 'Monthly salary (CNY)',
     socialBase: 'Social insurance base (CNY)',
@@ -234,8 +225,6 @@ const en = {
   },
   mortgage: {
     title: 'Mortgage calculator',
-    description:
-      'Calculate payments and interest for equal-payment or equal-principal loans.',
     amount: 'Loan amount (10,000 CNY)',
     years: 'Loan term (years)',
     rate: 'Annual rate (%)',
@@ -251,8 +240,6 @@ const en = {
   },
   bmi: {
     title: 'BMI / WHtR calculator',
-    description:
-      'Use height, weight and waist circumference to estimate weight status and central adiposity risk.',
     height: 'Height (cm)',
     weight: 'Weight (kg)',
     waist: 'Waist circumference (cm)',
@@ -277,7 +264,6 @@ const en = {
   },
   temperature: {
     title: 'Temperature converter',
-    description: 'Convert Celsius, Fahrenheit and Kelvin instantly.',
     invalid: 'Temperature cannot be below absolute zero.',
     units: {
       celsius: 'Celsius',
@@ -287,7 +273,6 @@ const en = {
   },
   unitConverter: {
     title: 'Unit converter',
-    description: 'Convert length, area, mass, volume, speed and data size.',
     from: 'From',
     to: 'Result',
     swap: 'Swap units',
@@ -303,8 +288,6 @@ const en = {
   },
   imagePrivacy: {
     title: 'Image privacy inspector',
-    description:
-      'Inspect EXIF metadata and export a copy with metadata removed.',
     select: 'Choose an image to inspect',
     supported: 'JPEG, PNG or WebP up to 40 MB',
     unsupported: 'Only JPEG, PNG and WebP images are supported.',
@@ -324,7 +307,6 @@ const en = {
   },
   videoTrimmer: {
     title: 'Video trimmer',
-    description: 'Trim a time range locally without uploading the video.',
     select: 'Choose a video to trim',
     tooLarge: 'The video must be no larger than 1 GB.',
     unsupported: 'This video or codec cannot be read by the current browser.',
@@ -339,7 +321,6 @@ const en = {
   },
   archive: {
     title: 'Archive tool',
-    description: 'Create and extract ZIP, GZIP, Deflate and 7z files locally.',
     compress: 'Compress',
     decompress: 'Extract',
     selectArchive: 'Choose an archive',
@@ -352,6 +333,7 @@ const en = {
     newFolder: 'New folder',
     remove: 'Remove',
     downloadAll: 'Download all',
+    downloadFile: 'Download {{name}}',
     downloadFailed: 'Download failed. Try again.',
     emptyTree: 'Drop files or folders here',
     fileBrowser: 'File browser',
@@ -714,7 +696,7 @@ const en = {
       },
       webpGif: {
         title: 'WebP / GIF Converter',
-        desc: 'Convert animated WebP and GIF images locally in your browser',
+        desc: 'Convert animated WebP and GIF images',
         tagWebp: 'WebP',
         tagGif: 'GIF',
         tagLocal: 'Local',
@@ -786,7 +768,6 @@ const en = {
   },
   diff: {
     title: 'Diff Checker',
-    desc: 'Compare plain text, JSON or code locally with side-by-side and inline views',
     language: 'Language',
     swap: 'Swap sides',
     clear: 'Clear',
@@ -814,7 +795,6 @@ const en = {
   },
   password: {
     title: 'Password Generator',
-    desc: 'Cryptographically secure passwords using browser randomness — fully local',
     length: 'Password Length',
     batchCount: 'Batch Count',
     upperCase: 'Uppercase',
@@ -834,7 +814,6 @@ const en = {
   },
   qrcode: {
     title: 'QR Code Tools',
-    desc: 'Generate custom QR codes or decode QR codes from uploaded images',
     tabGenerate: 'Generate QR',
     tabDecode: 'Decode QR',
     inputLabel: 'Input',
@@ -862,7 +841,6 @@ const en = {
   },
   json: {
     title: 'JSON Tools',
-    desc: 'Format, minify and validate JSON',
     indent: 'Indent:',
     spaces: '{{n}} spaces',
     tab: 'Tab',
@@ -878,7 +856,6 @@ const en = {
   },
   html: {
     title: 'HTML Tools',
-    desc: 'Format and minify HTML code',
     tabFormat: 'Format',
     tabMinify: 'Minify',
     format: 'Format',
@@ -890,13 +867,11 @@ const en = {
   },
   css: {
     title: 'CSS / SCSS Tools',
-    desc: 'Format and minify CSS, and compile SCSS to CSS',
     tabFormat: 'Format',
     tabMinify: 'Minify',
     tabScss: 'SCSS → CSS',
     convertTitle: 'px / vw / rem Converter',
-    convertHint:
-      'Edit any unit to sync the other two instantly. vw uses viewport width and rem uses root font size.',
+    convertHint: 'Convert between px, rem and vw',
     viewportWidth: 'vw Base (Viewport Width)',
     rootFontSize: 'rem Base (Root Font Size)',
     commonResolutions: 'Common resolutions',
@@ -922,7 +897,6 @@ const en = {
   },
   js: {
     title: 'JavaScript Tools',
-    desc: 'Format, minify and obfuscate JavaScript code',
     tabFormat: 'Format',
     tabMinify: 'Minify',
     tabObfuscate: 'Obfuscate',
@@ -937,7 +911,6 @@ const en = {
   },
   xml: {
     title: 'XML Tools',
-    desc: 'Format, validate and minify XML',
     format: 'Format',
     validate: 'Validate',
     minify: 'Minify',
@@ -949,7 +922,6 @@ const en = {
   },
   markdown: {
     title: 'Markdown Tools',
-    desc: 'Edit and preview Markdown locally in your browser with Marked',
     tabSplit: 'Split',
     tabEdit: 'Edit',
     tabPreview: 'Preview',
@@ -963,7 +935,6 @@ const en = {
   },
   sql: {
     title: 'SQL Tools',
-    desc: 'Format and beautify SQL with multi-dialect support',
     dialect: 'Dialect:',
     format: 'Format',
     minify: 'Minify',
@@ -974,7 +945,6 @@ const en = {
   },
   yaml: {
     title: 'YAML Tools',
-    desc: 'Format, validate, minify and convert YAML',
     format: 'Format',
     validate: 'Validate',
     minify: 'Minify',
@@ -988,7 +958,6 @@ const en = {
   },
   base64: {
     title: 'Base64 Codec',
-    desc: 'Encode and decode text to/from Base64',
     tabEncode: 'Encode',
     tabDecode: 'Decode',
     encode: 'Encode',
@@ -1007,7 +976,6 @@ const en = {
   },
   urlEncode: {
     title: 'URL Encode / Decode',
-    desc: 'URL encoding, decoding and URL structure parsing',
     tabEncode: 'Encode',
     tabDecode: 'Decode',
     tabParse: 'Parse URL',
@@ -1029,7 +997,6 @@ const en = {
   },
   unicode: {
     title: 'Unicode Converter',
-    desc: 'Unicode escape, UTF-8/UTF-16 hex conversion and codepoint inspector',
     tabEscape: 'Unicode Escape',
     tabUtf8: 'UTF-8 Hex',
     tabUtf16: 'UTF-16 Hex',
@@ -1045,7 +1012,6 @@ const en = {
   },
   hash: {
     title: 'Hash Calculator',
-    desc: 'Compute MD5, SHA-1, SHA-256 and SHA-512 hash values',
     placeholder: 'Enter text to hash...',
     compute: 'Compute',
     computing: 'Computing...',
@@ -1055,7 +1021,6 @@ const en = {
   },
   cipher: {
     title: 'AES / DES Cipher',
-    desc: 'Symmetric encryption with AES, DES, 3DES — CBC / ECB / CTR modes',
     tabEncrypt: 'Encrypt',
     tabDecrypt: 'Decrypt',
     algorithm: 'Algorithm',
@@ -1077,7 +1042,6 @@ const en = {
   },
   hmac: {
     title: 'HMAC Signature',
-    desc: 'Keyed-hash MAC with SHA-1 / SHA-256 / SHA-384 / SHA-512',
     message: 'Message',
     messagePlaceholder: 'Enter message to sign...',
     secret: 'Secret Key',
@@ -1092,7 +1056,6 @@ const en = {
   },
   totp: {
     title: 'TOTP Two-Factor Authentication',
-    desc: 'Generate a six-digit time-based code in your browser using device time',
     secret: 'Base32 Secret',
     secretPlaceholder: 'Example: JBSWY3DPEHPK3PXP',
     secretHint:
@@ -1111,11 +1074,10 @@ const en = {
     shareError: 'Could not create share link: {{msg}}',
     invalidShare: 'The share link is invalid or damaged.',
     securityNote:
-      'All calculations stay in your browser. Share links use a random salt and AES-GCM so the secret is not plaintext in the URL; because links open without a password, this is not end-to-end encryption.',
+      'Share links use a random salt and AES-GCM so the secret is not plaintext in the URL; because links open without a password, this is not end-to-end encryption.',
   },
   jwt: {
     title: 'JWT Codec',
-    desc: 'Build JWT Tokens or decode existing ones to inspect Header, Payload and expiry',
     tabDecode: 'Decode',
     tabEncode: 'Encode',
     placeholder: 'Paste JWT token (eyJ...)',
@@ -1150,7 +1112,6 @@ const en = {
   },
   uuid: {
     title: 'UUID Generator',
-    desc: 'Generate UUID v4 (via crypto.randomUUID) in bulk',
     count: 'Count',
     uppercase: 'Uppercase',
     hyphens: 'Keep hyphens',
@@ -1162,7 +1123,6 @@ const en = {
   },
   httpRequest: {
     title: 'HTTP Request Builder',
-    desc: 'Build and send HTTP requests with custom Headers, Params and Body',
     send: 'Send',
     add: 'Add',
     paramName: 'Param name',
@@ -1180,14 +1140,12 @@ const en = {
   },
   cors: {
     title: 'CORS Test Tool',
-    desc: 'Test cross-origin CORS requests and inspect preflight and response headers',
     customHeaders: 'Custom Request Headers',
     test: 'Test CORS',
     note: 'This tool sends fetch requests directly from the browser. If the target server does not set CORS headers, the request will be blocked by the browser — this is expected behavior. Test against known CORS-enabled APIs (e.g. httpbin.org).',
   },
   cookie: {
     title: 'Cookie Inspector',
-    desc: 'Paste a Cookie / Set-Cookie string to parse attributes like HttpOnly, Secure, SameSite and more',
     pasteLabel:
       'Paste Cookie string (Cookie request header or Set-Cookie response header format)',
     parse: 'Parse',
@@ -1196,12 +1154,10 @@ const en = {
   },
   ipLookup: {
     title: 'IP Address Lookup',
-    desc: 'Query IP geolocation, extract IPs from text and lookup your current IP',
     note: 'Geolocation lookup uses the ip-api.com free API and requires internet access. Results are for reference only and may not be precise.',
   },
   httpStatus: {
     title: 'HTTP Status Codes',
-    desc: 'Complete HTTP status code reference with descriptions, search and category filter',
     searchPlaceholder: 'Search status code or description...',
     all: 'All',
     noMatch: 'No matching status codes',
@@ -1277,7 +1233,6 @@ const en = {
   },
   userAgent: {
     title: 'User-Agent Parser',
-    desc: 'Parse UA strings to identify browser, rendering engine, OS and device info',
     useCurrentUA: 'Use Current UA',
     uaLabel: 'User-Agent String',
     quickSamples: 'Quick Samples',
@@ -1295,13 +1250,10 @@ const en = {
   },
   rot13: {
     title: 'ROT13 / HTML Entity',
-    desc: 'ROT13 rotation cipher (symmetric) and HTML entity encode/decode',
     tabRot13: 'ROT13',
     tabEntity: 'HTML Entity',
     input: 'Input',
     output: 'Output',
-    rot13Note:
-      'ROT13 is symmetric — applying it twice restores the original text.',
     applyRot13: 'Apply ROT13',
     rot13Placeholder: 'Enter text to shift letters by 13 positions...',
     encodeEntity: 'Encode Entities (& < >)',
@@ -1310,7 +1262,6 @@ const en = {
   },
   csvConvert: {
     title: 'CSV / TSV / JSON / SQL Converter',
-    desc: 'Convert between CSV, TSV, JSON arrays and SQL INSERT statements',
     inputFmt: 'Input:',
     outputFmt: 'Output:',
     tableName: 'Table:',
@@ -1322,7 +1273,6 @@ const en = {
   },
   xmlJson: {
     title: 'XML ↔ JSON Converter',
-    desc: 'Bidirectional XML and JSON conversion with attribute, nesting and array support',
     direction: 'Direction:',
     convert: 'Convert',
     clear: 'Clear',
@@ -1332,7 +1282,6 @@ const en = {
   },
   tableConvert: {
     title: 'HTML Table ↔ CSV / JSON',
-    desc: 'Convert between HTML tables, CSV and JSON arrays',
     mode: 'Mode:',
     convert: 'Convert',
     clear: 'Clear',
@@ -1342,7 +1291,6 @@ const en = {
   },
   numberBase: {
     title: 'Number Base Converter',
-    desc: 'Convert numbers between binary, octal, decimal and hexadecimal',
     inputBase: 'Input base:',
     binary: 'Binary',
     octal: 'Octal',
@@ -1362,7 +1310,6 @@ const en = {
   },
   datetime: {
     title: 'Date / Time Tools',
-    desc: 'Unix timestamp conversion, timezone converter, date diff and ISO 8601 validator',
     tabUnix: 'Unix Timestamp',
     tabTimezone: 'Timezone',
     tabDiff: 'Date Diff',
@@ -1411,7 +1358,6 @@ const en = {
   },
   regex: {
     title: 'Regex Tester',
-    desc: 'Test regex expressions in real time with match highlighting, a built-in pattern library and replace preview',
     patternPlaceholder: 'Enter regex pattern...',
     testText: 'Test Text',
     testTextPlaceholder: 'Type or paste test text here...',
@@ -1462,7 +1408,6 @@ const en = {
   },
   colorConverter: {
     title: 'Color Converter',
-    desc: 'Real-time conversion between HEX, RGB(A) and HSL(A) with color picker and channel sliders',
     inputLabel: 'Enter color',
     eyeDropper: 'Pick',
     parseError:
@@ -1476,7 +1421,6 @@ const en = {
   },
   layout: {
     title: 'Layout Helpers & Calculators',
-    desc: 'Flex Gap calculator, Grid column calculator, layout templates and visual sandboxes',
     output: 'Output',
     copy: 'Copy',
     copied: 'Copied',
@@ -1544,7 +1488,6 @@ const en = {
   },
   cssAnimation: {
     title: 'CSS Animation & Transition Maker',
-    desc: 'Visual cubic-bezier editor, @keyframes builder, animation properties panel and live preview',
     tabTransition: 'Transition',
     tabAnimation: 'Animation',
     property: 'CSS Property',
@@ -1557,8 +1500,6 @@ const en = {
     p2: 'P2 (drag pink dot)',
     preview: 'Preview',
     hoverHint: 'Hover to trigger',
-    previewNote:
-      'On hover the box changes: translate, scale, rotate, opacity, color, border-radius, size. Select different transition-property values to see which ones are animated.',
     generatedCss: 'Generated CSS',
     copy: 'Copy',
     copied: 'Copied',
@@ -1577,7 +1518,6 @@ const en = {
   },
   fontTool: {
     title: 'Font Inspector',
-    desc: 'Drop a font to inspect every glyph and preview it locally',
     upload: 'Drop a font here, or click to choose',
     formats: 'TTF, OTF, WOFF and WOFF2 up to 64 MB',
     parsing: 'Parsing font…',
@@ -1607,7 +1547,6 @@ const en = {
   },
   sqlPlayground: {
     title: 'SQL Playground',
-    desc: 'Practice SQL with SQLite in your browser. Nothing is uploaded.',
     run: 'Run',
     running: 'Running',
     reset: 'Reset database',
@@ -1636,7 +1575,6 @@ const en = {
   },
   imageTool: {
     title: 'Image Tools',
-    desc: 'Client-side only — format conversion · Base64 · crop · Retina · skeleton screens',
     tabConvert: 'Convert',
     tabBase64: 'Base64',
     tabCrop: 'Crop',
@@ -1653,7 +1591,6 @@ const en = {
     noImage: 'Please upload an image first',
     convert: {
       title: 'Format Conversion & Compression',
-      desc: 'Convert images to highly-compressed WebP or AVIF — fully local',
       outputFormat: 'Output format',
       quality: 'Quality',
       qualityHint: 'Lower value = smaller file, lower quality',
@@ -1668,7 +1605,6 @@ const en = {
     },
     base64: {
       title: 'Base64 Conversion',
-      desc: 'Bidirectional conversion between images and Base64',
       tabImgToB64: 'Image → Base64',
       tabB64ToImg: 'Base64 → Image',
       encode: 'Encode to Base64',
@@ -1682,7 +1618,6 @@ const en = {
     },
     crop: {
       title: 'Resize & Crop',
-      desc: 'Crop images using preset UI aspect ratios or custom dimensions',
       ratio: 'Aspect ratio',
       ratioFree: 'Free',
       customWidth: 'Width (px)',
@@ -1694,7 +1629,6 @@ const en = {
     },
     retina: {
       title: 'Retina Asset Generator',
-      desc: 'Upload one large image and generate 1x, 2x and 3x resolution variants',
       baseSize: '1x base size',
       width: 'Width',
       height: 'Height',
@@ -1709,7 +1643,6 @@ const en = {
     },
     skeleton: {
       title: 'Skeleton Screen Generator',
-      desc: 'Generate CSS skeleton screen code or SVG placeholder based on image dimensions',
       outputType: 'Output type',
       outputCss: 'CSS Skeleton',
       outputSvg: 'SVG Placeholder',
@@ -1726,7 +1659,6 @@ const en = {
   },
   webpGif: {
     title: 'WebP / GIF Converter',
-    desc: 'A Web Worker preserves animation frames and timing locally; files are never uploaded',
     upload: 'Click or drop a {{format}} image',
     uploadHint: 'Up to 64 MB and 40 million pixels',
     quality: 'WebP quality',
@@ -1737,7 +1669,6 @@ const en = {
     clear: 'Remove image',
     sourceAlt: 'Image to convert',
     resultAlt: 'Conversion result preview',
-    animationNote: 'Animations preserve frame count and frame timing',
     frames: '{{count}} frames',
     errorTooLarge: 'Files must be 64 MB or smaller',
     errorFormat: 'Choose a valid {{format}} file',
@@ -1750,7 +1681,6 @@ const en = {
   },
   contrast: {
     title: 'Contrast Checker',
-    desc: 'Enter foreground and background colors to calculate the contrast ratio and check WCAG AA / AAA compliance',
     fgColor: 'Foreground color (text)',
     bgColor: 'Background color',
     swap: 'Swap colors',

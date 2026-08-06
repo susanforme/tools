@@ -90,7 +90,6 @@ function HmacPage() {
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
       <div>
         <h1 className="text-2xl font-bold">{t('hmac.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('hmac.desc')}</p>
       </div>
 
       <div className="space-y-3">

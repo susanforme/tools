@@ -360,9 +360,6 @@ function UserAgentPage() {
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
       <div>
         <h1 className="text-2xl font-bold">{t('userAgent.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('userAgent.desc')}
-        </p>
       </div>
 
       {/* UA 输入框 */}

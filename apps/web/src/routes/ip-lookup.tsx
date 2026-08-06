@@ -200,9 +200,6 @@ function IpLookupPage() {
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
       <div>
         <h1 className="text-2xl font-bold">{t('ipLookup.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('ipLookup.desc')}
-        </p>
       </div>
 
       <div className="flex gap-2 items-start rounded-md border bg-blue-500/5 border-blue-500/20 px-4 py-3">

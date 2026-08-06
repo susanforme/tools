@@ -133,7 +133,6 @@ function Base64Page() {
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">{t('base64.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('base64.desc')}</p>
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>

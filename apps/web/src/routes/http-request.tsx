@@ -252,9 +252,6 @@ function HttpRequestPage() {
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">{t('httpRequest.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('httpRequest.desc')}
-        </p>
       </div>
 
       {/* URL bar */}

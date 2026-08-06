@@ -47,9 +47,6 @@ function MortgagePage() {
           <House className="h-6 w-6 text-blue-500" />
           {t('mortgage.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('mortgage.description')}
-        </p>
       </div>
 
       <Card>

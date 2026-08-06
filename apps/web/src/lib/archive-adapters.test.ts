@@ -28,3 +28,20 @@ describe.each(['zip', '7z'] as const)('%s archive adapter', (format) => {
     );
   });
 });
+
+it('decodes legacy GBK ZIP file names', async () => {
+  const adapter = getArchiveAdapter('zip');
+  const compressed = await adapter.compress([
+    { data: new Uint8Array([1]), directory: false, name: 'aa.txt' },
+  ]);
+  const view = new DataView(compressed.buffer);
+  for (let offset = 0; offset + 4 <= compressed.length; offset += 1) {
+    const signature = view.getUint32(offset, true);
+    if (signature === 0x04034b50) compressed.set([0xd6, 0xd0], offset + 30);
+    if (signature === 0x02014b50) compressed.set([0xd6, 0xd0], offset + 46);
+  }
+
+  const files = await adapter.decompress(compressed, 'legacy.zip');
+
+  expect(files[0]?.name).toBe('中.txt');
+});

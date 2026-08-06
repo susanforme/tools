@@ -131,9 +131,6 @@ function SettingsPage() {
         <h1 className="text-3xl font-bold tracking-tight">
           {t('settingsPage.title')}
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          {t('settingsPage.description')}
-        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

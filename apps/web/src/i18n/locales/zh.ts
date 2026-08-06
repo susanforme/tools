@@ -65,7 +65,6 @@ const zh = {
   },
   auth: {
     title: '登录 Breeze Tools',
-    description: '登录后可在不同设备间使用你的账号',
     loginTab: '登录',
     registerTab: '注册',
     email: '邮箱',
@@ -105,7 +104,6 @@ const zh = {
   },
   settingsPage: {
     title: '账户设置',
-    description: '管理登录方式与账户安全',
     loginRequired: '登录后才能查看账户设置',
     accountTitle: '账户信息',
     email: '登录邮箱',
@@ -130,7 +128,6 @@ const zh = {
   screenRecorder: {
     title: '在线录屏',
     captureTitle: '屏幕录制',
-    localOnly: '录制内容只保存在当前浏览器，不会上传',
     systemAudio: '系统声音',
     systemAudioDescription: '录制所选标签页或桌面提供的声音',
     microphone: '麦克风',
@@ -157,7 +154,6 @@ const zh = {
   },
   gushiNamer: {
     title: '古诗取名',
-    description: '翻阅经典，与一个好名字不期而遇。',
     source: '从经典中取字',
     book: '选择典籍',
     familyName: '输入姓氏',
@@ -166,7 +162,6 @@ const zh = {
     refresh: '换一组',
     reading: '正在翻阅典籍',
     resultCount: '{{count}} 个候选名字',
-    resultDescription: '每个名字保留出处和一句原文。',
     filtered: '已避开常见忌字',
     loadError: '加载诗文失败：{{msg}}',
     reference: '命名逻辑与诗文数据参考',
@@ -174,7 +169,6 @@ const zh = {
   },
   worldClock: {
     title: '世界时间',
-    description: '从服务端同步 UTC 时间，在浏览器中换算常见城市的当地时间。',
     sync: '同步时间',
     syncError: '时间同步失败，请检查网络后重试。',
     serverUtc: '服务端 UTC 时间',
@@ -195,7 +189,6 @@ const zh = {
   },
   socialInsurance: {
     title: '五险一金计算',
-    description: '按城市预设估算个人缴费、单位缴费与工资扣除金额。',
     city: '城市预设',
     salary: '税前月薪（元）',
     socialBase: '社保缴费基数（元）',
@@ -229,7 +222,6 @@ const zh = {
   },
   mortgage: {
     title: '房贷计算',
-    description: '计算等额本息或等额本金的月供与总利息。',
     amount: '贷款金额（万元）',
     years: '贷款期限（年）',
     rate: '年利率（%）',
@@ -245,7 +237,6 @@ const zh = {
   },
   bmi: {
     title: 'BMI / WHtR 计算',
-    description: '通过身高、体重和腰围估算体重状态与中心性肥胖风险。',
     height: '身高（厘米）',
     weight: '体重（千克）',
     waist: '腰围（厘米）',
@@ -269,7 +260,6 @@ const zh = {
   },
   temperature: {
     title: '温度转换',
-    description: '摄氏度、华氏度和开尔文即时互转。',
     invalid: '温度不能低于绝对零度。',
     units: {
       celsius: '摄氏度',
@@ -279,7 +269,6 @@ const zh = {
   },
   unitConverter: {
     title: '通用单位转换',
-    description: '长度、面积、重量、容量、速度与数据大小即时互转。',
     from: '原始数值',
     to: '转换结果',
     swap: '交换单位',
@@ -295,7 +284,6 @@ const zh = {
   },
   imagePrivacy: {
     title: '图片隐私检查',
-    description: '查看图片中的 EXIF 信息，并导出移除元数据后的副本。',
     select: '选择图片进行检查',
     supported: '支持 JPEG、PNG、WebP，单个文件不超过 40 MB',
     unsupported: '仅支持 JPEG、PNG 和 WebP 图片。',
@@ -314,7 +302,6 @@ const zh = {
   },
   videoTrimmer: {
     title: '视频剪辑',
-    description: '在浏览器中裁出需要的时间片段，处理过程不会上传文件。',
     select: '选择需要剪辑的视频',
     tooLarge: '视频不能超过 1 GB。',
     unsupported: '无法读取该视频，或当前浏览器不支持其编码格式。',
@@ -329,7 +316,6 @@ const zh = {
   },
   archive: {
     title: '压缩包工具',
-    description: '在浏览器本地创建和解压 ZIP、GZIP、Deflate 与 7z 文件。',
     compress: '压缩',
     decompress: '解压',
     selectArchive: '选择压缩包',
@@ -342,6 +328,7 @@ const zh = {
     newFolder: '新建文件夹',
     remove: '删除',
     downloadAll: '全部下载',
+    downloadFile: '下载 {{name}}',
     downloadFailed: '下载失败，请稍后重试。',
     emptyTree: '拖拽文件或文件夹到这里',
     fileBrowser: '文件浏览器',
@@ -743,7 +730,7 @@ const zh = {
       },
       webpGif: {
         title: 'WebP / GIF 互转',
-        desc: '在浏览器本地完成 WebP 与 GIF 动画互转',
+        desc: 'WebP 与 GIF 动画互转',
         tagWebp: 'WebP',
         tagGif: 'GIF',
         tagLocal: '本地处理',
@@ -773,7 +760,6 @@ const zh = {
   },
   diff: {
     title: 'Diff 比较工具',
-    desc: '在本地实时比较纯文本、JSON 或代码差异，支持并排和行内视图',
     language: '语言',
     swap: '交换两侧',
     clear: '清空',
@@ -801,7 +787,6 @@ const zh = {
   },
   password: {
     title: '随机密码生成器',
-    desc: '使用浏览器安全随机数生成密码，全程本地处理',
     length: '密码长度',
     batchCount: '批量数量',
     upperCase: '大写字母',
@@ -821,7 +806,6 @@ const zh = {
   },
   qrcode: {
     title: 'QR 二维码工具',
-    desc: '生成自定义二维码，或上传图片识别二维码内容',
     tabGenerate: '生成二维码',
     tabDecode: '识别二维码',
     inputLabel: '输入内容',
@@ -849,7 +833,6 @@ const zh = {
   },
   json: {
     title: 'JSON 工具',
-    desc: 'JSON 格式化、压缩与语法验证',
     indent: '缩进：',
     spaces: '{{n}} 空格',
     tab: 'Tab',
@@ -865,7 +848,6 @@ const zh = {
   },
   html: {
     title: 'HTML 工具',
-    desc: 'HTML 代码格式化与压缩',
     tabFormat: '格式化',
     tabMinify: '压缩',
     format: '格式化',
@@ -877,12 +859,11 @@ const zh = {
   },
   css: {
     title: 'CSS / SCSS 工具',
-    desc: 'CSS 格式化、压缩，SCSS 编译为 CSS',
     tabFormat: '格式化',
     tabMinify: '压缩',
     tabScss: 'SCSS → CSS',
     convertTitle: 'px / vw / rem 转换',
-    convertHint: '修改任一单位会实时同步，vw 基于视口宽度，rem 基于根字体大小',
+    convertHint: 'px、rem、vw 单位互转',
     viewportWidth: 'vw 基准（视口宽度）',
     rootFontSize: 'rem 基准（根字体大小）',
     commonResolutions: '常用分辨率',
@@ -907,7 +888,6 @@ const zh = {
   },
   js: {
     title: 'JavaScript 工具',
-    desc: 'JS 代码格式化、压缩与混淆',
     tabFormat: '格式化',
     tabMinify: '压缩',
     tabObfuscate: '混淆',
@@ -922,7 +902,6 @@ const zh = {
   },
   xml: {
     title: 'XML 工具',
-    desc: 'XML 格式化、验证与压缩',
     format: '格式化',
     validate: '验证',
     minify: '压缩',
@@ -934,7 +913,6 @@ const zh = {
   },
   markdown: {
     title: 'Markdown 工具',
-    desc: '使用 Marked 在浏览器本地编辑并实时预览 Markdown',
     tabSplit: '分栏',
     tabEdit: '编辑',
     tabPreview: '预览',
@@ -948,7 +926,6 @@ const zh = {
   },
   sql: {
     title: 'SQL 工具',
-    desc: 'SQL 语句格式化与美化，支持多种方言',
     dialect: '方言：',
     format: '格式化',
     minify: '压缩',
@@ -959,7 +936,6 @@ const zh = {
   },
   yaml: {
     title: 'YAML 工具',
-    desc: 'YAML 格式化、验证、压缩与转换',
     format: '格式化',
     validate: '验证',
     minify: '压缩',
@@ -973,7 +949,6 @@ const zh = {
   },
   base64: {
     title: 'Base64 编解码',
-    desc: '文本与 Base64 字符串互转',
     tabEncode: '编码',
     tabDecode: '解码',
     encode: '编码',
@@ -992,7 +967,6 @@ const zh = {
   },
   urlEncode: {
     title: 'URL 编解码',
-    desc: 'URL 编码/解码，URL 结构解析',
     tabEncode: '编码',
     tabDecode: '解码',
     tabParse: '解析 URL',
@@ -1014,7 +988,6 @@ const zh = {
   },
   unicode: {
     title: 'Unicode 转换',
-    desc: 'Unicode 转义、UTF-8/UTF-16 十六进制互转及码位查看',
     tabEscape: 'Unicode 转义',
     tabUtf8: 'UTF-8 Hex',
     tabUtf16: 'UTF-16 Hex',
@@ -1030,7 +1003,6 @@ const zh = {
   },
   hash: {
     title: 'Hash 计算',
-    desc: '一键计算 MD5、SHA-1、SHA-256、SHA-512 哈希值',
     placeholder: '输入要计算哈希的文本...',
     compute: '计算',
     computing: '计算中...',
@@ -1040,7 +1012,6 @@ const zh = {
   },
   cipher: {
     title: 'AES / DES 加密解密',
-    desc: '支持 AES、DES、3DES 对称加密，CBC / ECB / CTR 模式',
     tabEncrypt: '加密',
     tabDecrypt: '解密',
     algorithm: '算法',
@@ -1062,7 +1033,6 @@ const zh = {
   },
   hmac: {
     title: 'HMAC 签名生成',
-    desc: '基于密钥的消息认证码，支持 SHA-1 / SHA-256 / SHA-384 / SHA-512',
     message: '消息',
     messagePlaceholder: '输入要签名的消息...',
     secret: '密钥 (Secret)',
@@ -1077,7 +1047,6 @@ const zh = {
   },
   totp: {
     title: 'TOTP 二步验证',
-    desc: '在浏览器中根据本机时间生成 6 位动态验证码',
     secret: 'Base32 秘钥',
     secretPlaceholder: '例如：JBSWY3DPEHPK3PXP',
     secretHint: '支持空格和连接符，验证码每 30 秒更新一次。',
@@ -1095,11 +1064,10 @@ const zh = {
     shareError: '生成分享链接失败：{{msg}}',
     invalidShare: '分享链接无效或已损坏。',
     securityNote:
-      '所有计算均在浏览器本地完成。分享链接使用随机盐和 AES-GCM 加密，避免秘钥以明文出现在 URL 中；由于链接需免密码打开，请勿将其视为端到端加密。',
+      '分享链接使用随机盐和 AES-GCM 加密，避免秘钥以明文出现在 URL 中；由于链接需免密码打开，请勿将其视为端到端加密。',
   },
   jwt: {
     title: 'JWT 编解码',
-    desc: '编码构建 JWT Token，或解码查看 Header / Payload 和过期时间',
     tabDecode: '解码',
     tabEncode: '编码',
     placeholder: '粘贴 JWT Token（eyJ...）',
@@ -1131,7 +1099,6 @@ const zh = {
   },
   uuid: {
     title: 'UUID 生成器',
-    desc: '批量生成 UUID v4（基于 crypto.randomUUID）',
     count: '数量',
     uppercase: '大写',
     hyphens: '保留连字符',
@@ -1143,7 +1110,6 @@ const zh = {
   },
   httpRequest: {
     title: 'HTTP 请求模拟器',
-    desc: '构造并发送 HTTP 请求，自定义 Headers、Params 和 Body',
     send: '发送',
     add: '添加',
     paramName: '参数名',
@@ -1161,14 +1127,12 @@ const zh = {
   },
   cors: {
     title: 'CORS 测试工具',
-    desc: '测试跨域 CORS 请求，检查预检请求和 CORS 响应头',
     customHeaders: '自定义请求头',
     test: '测试 CORS',
     note: '此工具直接从浏览器发起 fetch 请求。若目标服务器未设置 CORS 头，请求将被浏览器阻止，这是预期行为。建议测试已知支持 CORS 的接口（如 httpbin.org）。',
   },
   cookie: {
     title: 'Cookie 检查器',
-    desc: '粘贴 Cookie / Set-Cookie 字符串，解析属性（HttpOnly、Secure、SameSite 等）',
     pasteLabel: '粘贴 Cookie 字符串（Cookie 请求头 或 Set-Cookie 响应头格式）',
     parse: '解析',
     noResult: '暂无 Cookie',
@@ -1176,12 +1140,10 @@ const zh = {
   },
   ipLookup: {
     title: 'IP 地址查询',
-    desc: 'IP 归属地查询，提取文本中的 IP 地址，查询本机 IP',
     note: '归属地查询使用 ip-api.com 免费接口，需联网。查询结果仅供参考，不代表精确地理位置。',
   },
   httpStatus: {
     title: 'HTTP 状态码',
-    desc: '完整 HTTP 状态码列表及说明，支持搜索与分类筛选',
     searchPlaceholder: '搜索状态码或描述...',
     all: '全部',
     noMatch: '未找到匹配的状态码',
@@ -1257,7 +1219,6 @@ const zh = {
   },
   userAgent: {
     title: 'User-Agent 解析',
-    desc: '解析 UA 字符串，识别浏览器、渲染引擎、操作系统和设备信息',
     useCurrentUA: '使用当前 UA',
     uaLabel: 'User-Agent 字符串',
     quickSamples: '快速示例',
@@ -1275,12 +1236,10 @@ const zh = {
   },
   rot13: {
     title: 'ROT13 / HTML 实体',
-    desc: 'ROT13 字母偏移加密（可逆），HTML 实体编码与解码',
     tabRot13: 'ROT13',
     tabEntity: 'HTML 实体',
     input: '输入',
     output: '输出',
-    rot13Note: 'ROT13 是对称操作，将相同输入再次应用即可还原。',
     applyRot13: 'ROT13 转换',
     rot13Placeholder: '输入文本，字母将偏移 13 位...',
     encodeEntity: '编码实体（& < >）',
@@ -1289,7 +1248,6 @@ const zh = {
   },
   csvConvert: {
     title: 'CSV / TSV / JSON / SQL 互转',
-    desc: 'CSV、TSV、JSON 数组与 SQL INSERT 语句之间的相互转换',
     inputFmt: '输入格式：',
     outputFmt: '输出格式：',
     tableName: '表名：',
@@ -1301,7 +1259,6 @@ const zh = {
   },
   xmlJson: {
     title: 'XML ↔ JSON 互转',
-    desc: 'XML 与 JSON 格式双向转换，支持属性、嵌套和数组',
     direction: '转换方向：',
     convert: '转换',
     clear: '清空',
@@ -1311,7 +1268,6 @@ const zh = {
   },
   tableConvert: {
     title: 'HTML Table ↔ CSV / JSON',
-    desc: 'HTML 表格、CSV 和 JSON 数组三种格式相互转换',
     mode: '转换模式：',
     convert: '转换',
     clear: '清空',
@@ -1321,7 +1277,6 @@ const zh = {
   },
   numberBase: {
     title: '进制转换',
-    desc: '二进制、八进制、十进制、十六进制之间的数值互转',
     inputBase: '输入进制：',
     binary: '二进制',
     octal: '八进制',
@@ -1341,7 +1296,6 @@ const zh = {
   },
   datetime: {
     title: '时间 / 日期工具',
-    desc: 'Unix 时间戳互转、时区转换、日期差计算、ISO 8601 格式校验',
     tabUnix: 'Unix 时间戳',
     tabTimezone: '时区转换',
     tabDiff: '日期差',
@@ -1389,7 +1343,6 @@ const zh = {
   },
   regex: {
     title: '正则表达式工具',
-    desc: '实时测试正则，匹配结果高亮显示；内置常用模式库，支持替换预览',
     patternPlaceholder: '输入正则表达式...',
     testText: '测试文本',
     testTextPlaceholder: '在此输入或粘贴测试文本...',
@@ -1439,7 +1392,6 @@ const zh = {
   },
   colorConverter: {
     title: '色彩转换器',
-    desc: 'HEX、RGB(A)、HSL(A) 格式实时互转，支持取色器与分量调节',
     inputLabel: '输入颜色',
     eyeDropper: '取色',
     parseError: '无法识别的颜色格式，请输入有效的 HEX、RGB(A) 或 HSL(A) 值',
@@ -1452,7 +1404,6 @@ const zh = {
   },
   layout: {
     title: '布局辅助与计算器',
-    desc: 'Flex Gap 计算器、Grid 列宽计算器、布局模板与可视化沙盒',
     output: '输出',
     copy: '复制',
     copied: '已复制',
@@ -1520,7 +1471,6 @@ const zh = {
   },
   cssAnimation: {
     title: 'CSS 动画与过渡生成器',
-    desc: '可视化 cubic-bezier 编辑器、@keyframes 关键帧配置、动画属性面板与实时预览',
     tabTransition: 'Transition 过渡',
     tabAnimation: 'Animation 动画',
     property: '过渡属性',
@@ -1533,8 +1483,6 @@ const zh = {
     p2: 'P2 控制点（拖拽粉点）',
     preview: '预览',
     hoverHint: '鼠标悬停触发',
-    previewNote:
-      '悬停时方块会同时改变：位移、缩放、旋转、透明度、颜色、圆角、尺寸。选择不同的 transition-property 可观察哪些属性会被过渡。',
     generatedCss: '生成的 CSS',
     copy: '复制',
     copied: '已复制',
@@ -1553,7 +1501,6 @@ const zh = {
   },
   fontTool: {
     title: '字体查看器',
-    desc: '拖入字体文件，在浏览器本地查看全部字形和字体效果',
     upload: '拖入字体文件，或点击选择',
     formats: '支持 TTF、OTF、WOFF、WOFF2，最大 64 MB',
     parsing: '正在解析字体…',
@@ -1583,7 +1530,6 @@ const zh = {
   },
   sqlPlayground: {
     title: 'SQL 练习场',
-    desc: '使用 SQLite 在浏览器中练习 SQL，数据不会上传',
     run: '运行',
     running: '运行中',
     reset: '重置数据库',
@@ -1612,7 +1558,6 @@ const zh = {
   },
   imageTool: {
     title: '图片处理工具',
-    desc: '纯前端处理，格式转换 · Base64 互转 · 尺寸裁剪 · Retina 生成 · 骨架屏',
     tabConvert: '格式转换',
     tabBase64: 'Base64',
     tabCrop: '尺寸裁剪',
@@ -1629,7 +1574,6 @@ const zh = {
     noImage: '请先上传图片',
     convert: {
       title: '格式转换与压缩',
-      desc: '将图片转换为高压缩比的 WebP 或 AVIF 格式，全程本地处理',
       outputFormat: '输出格式',
       quality: '压缩质量',
       qualityHint: '数值越小文件越小，画质越低',
@@ -1644,7 +1588,6 @@ const zh = {
     },
     base64: {
       title: 'Base64 转换',
-      desc: '图片与 Base64 编码双向转换',
       tabImgToB64: '图片 → Base64',
       tabB64ToImg: 'Base64 → 图片',
       encode: '转为 Base64',
@@ -1658,7 +1601,6 @@ const zh = {
     },
     crop: {
       title: '尺寸与比例裁剪',
-      desc: '按预设 UI 比例或自定义尺寸裁剪图片',
       ratio: '裁剪比例',
       ratioFree: '自由比例',
       customWidth: '宽度 (px)',
@@ -1670,7 +1612,6 @@ const zh = {
     },
     retina: {
       title: 'Retina 适配生成',
-      desc: '上传一张大图，一键生成 1x、2x、3x 分辨率版本',
       baseSize: '1x 基准尺寸',
       width: '宽度',
       height: '高度',
@@ -1685,7 +1626,6 @@ const zh = {
     },
     skeleton: {
       title: '骨架屏占位图生成',
-      desc: '基于图片轮廓或尺寸，生成对应的 CSS 骨架屏代码或 SVG 占位图',
       outputType: '输出类型',
       outputCss: 'CSS 骨架屏',
       outputSvg: 'SVG 占位图',
@@ -1702,7 +1642,6 @@ const zh = {
   },
   webpGif: {
     title: 'WebP / GIF 互转',
-    desc: '使用 Web Worker 在本地保留动画帧与每帧时长，不会上传到服务器',
     upload: '点击或拖入 {{format}} 图片',
     uploadHint: '最大 64 MB，最多 4000 万像素',
     quality: 'WebP 质量',
@@ -1713,7 +1652,6 @@ const zh = {
     clear: '移除图片',
     sourceAlt: '待转换图片',
     resultAlt: '转换结果预览',
-    animationNote: '支持动画，保留帧数与每帧时长',
     frames: '{{count}} 帧',
     errorTooLarge: '文件不能超过 64 MB',
     errorFormat: '请选择有效的 {{format}} 文件',
@@ -1724,7 +1662,6 @@ const zh = {
   },
   contrast: {
     title: 'WCAG 对比度检查',
-    desc: '输入前景色与背景色，实时计算对比度，检测是否符合 WCAG AA / AAA 无障碍标准',
     fgColor: '前景色（文字）',
     bgColor: '背景色',
     swap: '互换颜色',

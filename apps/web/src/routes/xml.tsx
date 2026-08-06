@@ -140,7 +140,6 @@ function XmlPage() {
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">{t('xml.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('xml.desc')}</p>
       </div>
       <div className="flex items-center gap-2 flex-wrap">
         <Button size="sm" onClick={format}>{t('xml.format')}</Button>

@@ -131,9 +131,6 @@ function SocialInsurancePage() {
           <Landmark className="h-6 w-6 text-violet-500" />
           {t('socialInsurance.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('socialInsurance.description')}
-        </p>
       </div>
 
       <Card>

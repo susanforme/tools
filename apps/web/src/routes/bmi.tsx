@@ -39,9 +39,6 @@ function BmiPage() {
           <Activity className="h-6 w-6 text-emerald-500" />
           {t('bmi.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('bmi.description')}
-        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

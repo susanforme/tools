@@ -258,9 +258,6 @@ export function CssUnitConverter() {
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold">{t('css.convertTitle')}</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {t('css.convertHint')}
-          </p>
         </div>
         <Button
           size="sm"

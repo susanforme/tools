@@ -420,15 +420,10 @@ function ScreenRecorderPage() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-4">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <MonitorUp className="h-5 w-5 text-blue-500" />
-              {t('screenRecorder.captureTitle')}
-            </CardTitle>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t('screenRecorder.localOnly')}
-            </p>
-          </div>
+          <CardTitle className="flex items-center gap-2">
+            <MonitorUp className="h-5 w-5 text-blue-500" />
+            {t('screenRecorder.captureTitle')}
+          </CardTitle>
           <span className="font-mono text-lg tabular-nums">
             {formatDuration(elapsedMs)}
           </span>

@@ -351,9 +351,6 @@ function ColorConverterPage() {
       {/* 标题 */}
       <div>
         <h1 className="text-2xl font-bold">{t('colorConverter.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('colorConverter.desc')}
-        </p>
       </div>
 
       {/* 输入区 */}

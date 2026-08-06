@@ -236,12 +236,7 @@ function WebpGifPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t('webpGif.title')}</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t('webpGif.desc')}
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold">{t('webpGif.title')}</h1>
 
       <Tabs value={direction} onValueChange={changeDirection}>
         <TabsList className="grid w-full max-w-md grid-cols-2">
@@ -351,9 +346,6 @@ function WebpGifPage() {
             )}
             {processing ? t('webpGif.processing') : t('webpGif.convert')}
           </Button>
-          <span className="text-xs text-muted-foreground">
-            {t('webpGif.animationNote')}
-          </span>
         </div>
 
         {error && (

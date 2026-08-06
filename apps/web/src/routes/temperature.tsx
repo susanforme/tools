@@ -49,9 +49,6 @@ function TemperaturePage() {
           <Thermometer className="h-6 w-6 text-orange-500" />
           {t('temperature.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('temperature.description')}
-        </p>
       </div>
 
       <Card>

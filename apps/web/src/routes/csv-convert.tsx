@@ -217,9 +217,6 @@ function CsvConvertPage() {
       {/* 标题 */}
       <div>
         <h1 className="text-2xl font-bold">{t('csvConvert.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('csvConvert.desc')}
-        </p>
       </div>
 
       {/* 工具栏 */}

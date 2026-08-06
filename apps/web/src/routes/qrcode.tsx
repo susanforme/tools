@@ -412,7 +412,6 @@ function QrCodePage() {
           <QrCode className="w-6 h-6 text-blue-500" />
           {t('qrcode.title')}
         </h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('qrcode.desc')}</p>
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as QrTabType)}>

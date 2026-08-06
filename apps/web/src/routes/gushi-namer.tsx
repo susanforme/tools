@@ -63,9 +63,6 @@ function GushiNamerPage() {
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6">
       <div>
         <h1 className="text-2xl font-bold">{t('gushiNamer.title')}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('gushiNamer.description')}
-        </p>
       </div>
 
       {error && (
@@ -131,16 +128,11 @@ function GushiNamerPage() {
 
         <section className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-semibold">
-                {loading
-                  ? t('gushiNamer.reading')
-                  : t('gushiNamer.resultCount', { count: names.length })}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {t('gushiNamer.resultDescription')}
-              </p>
-            </div>
+            <h2 className="text-lg font-semibold">
+              {loading
+                ? t('gushiNamer.reading')
+                : t('gushiNamer.resultCount', { count: names.length })}
+            </h2>
             <Badge variant="secondary" className="gap-1">
               <Sparkles className="h-3.5 w-3.5" />
               {t('gushiNamer.filtered')}

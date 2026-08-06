@@ -175,7 +175,6 @@ function Rot13Page() {
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-5">
       <div>
         <h1 className="text-2xl font-bold">{t('rot13.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('rot13.desc')}</p>
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
@@ -186,9 +185,6 @@ function Rot13Page() {
 
         <TabsContent value="rot13" className="mt-4">
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {t('rot13.rot13Note')}
-            </p>
             <PanelLayout
               state={rot}
               onAction={applyRot13}

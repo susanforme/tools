@@ -836,9 +836,6 @@ function DatetimePage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold">{t('datetime.title')}</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            {t('datetime.desc')}
-          </p>
         </div>
         <LiveClock />
       </div>

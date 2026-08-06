@@ -220,9 +220,6 @@ function ImagePrivacyPage() {
           <ShieldCheck className="h-6 w-6 text-emerald-500" />
           {t('imagePrivacy.title')}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('imagePrivacy.description')}
-        </p>
       </div>
 
       {error && (

@@ -51,7 +51,33 @@ function removeSuffix(name: string, suffixes: readonly string[]): string {
   return suffix ? name.slice(0, -suffix.length) || 'file' : `${name}.out`;
 }
 
-function assertZipOutputLimit(source: Uint8Array): void {
+type ZipEntryMetadata = { directory: boolean; name: string };
+
+function decodeZipName(
+  name: Uint8Array,
+  extra: Uint8Array,
+  utf8: boolean,
+): string {
+  const extraView = new DataView(
+    extra.buffer,
+    extra.byteOffset,
+    extra.byteLength,
+  );
+  for (let offset = 0; offset + 4 <= extra.byteLength; ) {
+    const id = extraView.getUint16(offset, true);
+    const size = extraView.getUint16(offset + 2, true);
+    if (offset + 4 + size > extra.byteLength) break;
+    if (id === 0x7075 && size > 5) {
+      return new TextDecoder().decode(
+        extra.subarray(offset + 9, offset + 4 + size),
+      );
+    }
+    offset += 4 + size;
+  }
+  return new TextDecoder(utf8 ? 'utf-8' : 'gbk').decode(name);
+}
+
+function inspectZip(source: Uint8Array): ZipEntryMetadata[] {
   const view = new DataView(
     source.buffer,
     source.byteOffset,
@@ -75,6 +101,7 @@ function assertZipOutputLimit(source: Uint8Array): void {
 
   let offset = centralOffset;
   let total = 0;
+  const entries: ZipEntryMetadata[] = [];
   for (let index = 0; index < count; index += 1) {
     if (
       offset + 46 > source.byteLength ||
@@ -86,12 +113,25 @@ function assertZipOutputLimit(source: Uint8Array): void {
     if (size === 0xffffffff) throw new Error('ARCHIVE_TOO_LARGE');
     total += size;
     if (total > MAX_EXTRACTED_BYTES) throw new Error('ARCHIVE_TOO_LARGE');
-    offset +=
-      46 +
-      view.getUint16(offset + 28, true) +
-      view.getUint16(offset + 30, true) +
-      view.getUint16(offset + 32, true);
+    const nameLength = view.getUint16(offset + 28, true);
+    const extraLength = view.getUint16(offset + 30, true);
+    const entryLength =
+      46 + nameLength + extraLength + view.getUint16(offset + 32, true);
+    if (offset + entryLength > source.byteLength) {
+      throw new Error('INVALID_ARCHIVE');
+    }
+    const name = decodeZipName(
+      source.subarray(offset + 46, offset + 46 + nameLength),
+      source.subarray(
+        offset + 46 + nameLength,
+        offset + 46 + nameLength + extraLength,
+      ),
+      Boolean(view.getUint16(offset + 8, true) & 0x800),
+    );
+    entries.push({ directory: name.endsWith('/'), name: safePath(name) });
+    offset += entryLength;
   }
+  return entries;
 }
 
 class ZipArchiveAdapter implements ArchiveAdapter {
@@ -111,13 +151,11 @@ class ZipArchiveAdapter implements ArchiveAdapter {
   }
 
   async decompress(source: Uint8Array): Promise<AdapterFile[]> {
-    assertZipOutputLimit(source);
+    const metadata = inspectZip(source);
     const { unzipSync } = await import('fflate');
-    return Object.entries(unzipSync(source)).map(([name, data]) => ({
-      data,
-      directory: name.endsWith('/'),
-      name: safePath(name),
-    }));
+    const data = Object.values(unzipSync(source));
+    if (data.length !== metadata.length) throw new Error('INVALID_ARCHIVE');
+    return metadata.map((entry, index) => ({ ...entry, data: data[index]! }));
   }
 }
 

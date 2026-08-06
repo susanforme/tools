@@ -114,9 +114,6 @@ function NumberBasePage() {
       {/* 标题 */}
       <div>
         <h1 className="text-2xl font-bold">{t('numberBase.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          {t('numberBase.desc')}
-        </p>
       </div>
 
       {/* 输入区 */}

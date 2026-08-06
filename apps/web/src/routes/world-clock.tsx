@@ -72,9 +72,6 @@ function WorldClockPage() {
             <Globe2 className="h-6 w-6 text-sky-500" />
             {t('worldClock.title')}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t('worldClock.description')}
-          </p>
         </div>
         <Button
           variant="outline"

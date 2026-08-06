@@ -401,6 +401,9 @@ function ArchivePage() {
               nodes={extractedTree}
               busy={downloading}
               onDownloadAll={() => void downloadAll()}
+              onDownloadFile={(node) => {
+                if (node.data) downloadBytes(node.data.slice(0), node.name);
+              }}
             />
           )}
         </>

@@ -256,7 +256,6 @@ function RegexPage() {
       {/* 标题 */}
       <div>
         <h1 className="text-2xl font-bold">{t('regex.title')}</h1>
-        <p className="text-muted-foreground text-sm mt-1">{t('regex.desc')}</p>
       </div>
 
       {/* 正则输入区 */}

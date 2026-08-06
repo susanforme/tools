@@ -606,9 +606,6 @@ function TextPage() {
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">文本处理工具</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          文本清洗与转换：去重复行、去空行、行排序、行/词统计、大小写转换
-        </p>
       </div>
 
       <Tabs defaultValue="dedupe">
