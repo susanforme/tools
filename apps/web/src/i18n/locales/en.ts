@@ -48,6 +48,7 @@ const en = {
     layout: 'Layout Helpers',
     cssAnimation: 'CSS Animation Maker',
     imageTool: 'Image Tools',
+    webpGif: 'WebP ↔ GIF',
     catOther: 'Other',
     catFavorites: 'My Favorites',
   },
@@ -100,7 +101,7 @@ const en = {
     otherSubtitle: 'Text processing and other utilities',
     groupFrontend: 'Frontend Tools',
     frontendSubtitle:
-      'Font Inspector · CSS Units · Color Converter · Contrast Checker · CSS Helpers · Animations · Image Tools',
+      'Font Inspector · CSS Units · Color Converter · Contrast Checker · CSS Helpers · Animations · Image Tools · WebP/GIF',
     tools: {
       json: {
         title: 'JSON Tools',
@@ -335,6 +336,13 @@ const en = {
         tagBase64: 'Base64',
         tagRetina: 'Retina',
         tagSkeleton: 'Skeleton',
+      },
+      webpGif: {
+        title: 'WebP / GIF Converter',
+        desc: 'Convert animated WebP and GIF images locally in your browser',
+        tagWebp: 'WebP',
+        tagGif: 'GIF',
+        tagLocal: 'Local',
       },
       regex: {
         title: 'Regex Tester',
@@ -1340,6 +1348,30 @@ const en = {
       preview: 'Preview',
       generateError: 'Generation failed: {{msg}}',
     },
+  },
+  webpGif: {
+    title: 'WebP / GIF Converter',
+    desc: 'A Web Worker preserves animation frames and timing locally; files are never uploaded',
+    upload: 'Click or drop a {{format}} image',
+    uploadHint: 'Up to 64 MB and 40 million pixels',
+    quality: 'WebP quality',
+    convert: 'Convert',
+    processing: 'Converting…',
+    result: 'Result',
+    download: 'Download',
+    clear: 'Remove image',
+    sourceAlt: 'Image to convert',
+    resultAlt: 'Conversion result preview',
+    animationNote: 'Animations preserve frame count and frame timing',
+    frames: '{{count}} frames',
+    errorTooLarge: 'Files must be 64 MB or smaller',
+    errorFormat: 'Choose a valid {{format}} file',
+    errorDimensions:
+      'Image is too large: maximum 40 million pixels and 16384 px per side',
+    errorInvalid: 'Could not read the image. The file may be damaged.',
+    errorAnimationTooLarge:
+      'The decoded animation is too large. Reduce its dimensions or frame count.',
+    errorConvert: 'Conversion failed. Try another image.',
   },
   contrast: {
     title: 'Contrast Checker',

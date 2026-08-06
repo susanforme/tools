@@ -582,6 +582,19 @@ const frontendTools = [
     gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
     border: 'hover:border-sky-300 dark:hover:border-sky-700',
   },
+  {
+    to: '/webp-gif' as const,
+    icon: <ArrowLeftRight className="w-8 h-8 text-lime-500" />,
+    titleKey: 'home.tools.webpGif.title',
+    descKey: 'home.tools.webpGif.desc',
+    tagKeys: [
+      'home.tools.webpGif.tagWebp',
+      'home.tools.webpGif.tagGif',
+      'home.tools.webpGif.tagLocal',
+    ],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
 ];
 
 type ToolConfig = {

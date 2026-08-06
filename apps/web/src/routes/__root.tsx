@@ -351,6 +351,12 @@ const frontendNavItems: NavItem[] = [
     icon: <ImageIcon className="w-4 h-4 text-sky-500" />,
     labelKey: 'nav.imageTool',
   },
+  {
+    to: '/webp-gif',
+    icon: <ArrowLeftRight className="w-4 h-4 text-lime-500" />,
+    labelKey: 'nav.webpGif',
+    keywords: 'webp gif image convert converter',
+  },
 ];
 
 const ALL_CATEGORIES: CategoryDef[] = [

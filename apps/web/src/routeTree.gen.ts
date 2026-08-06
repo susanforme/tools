@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as YamlRouteImport } from './routes/yaml'
 import { Route as XmlJsonRouteImport } from './routes/xml-json'
 import { Route as XmlRouteImport } from './routes/xml'
+import { Route as WebpGifRouteImport } from './routes/webp-gif'
 import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
@@ -67,6 +68,11 @@ const XmlJsonRoute = XmlJsonRouteImport.update({
 const XmlRoute = XmlRouteImport.update({
   id: '/xml',
   path: '/xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WebpGifRoute = WebpGifRouteImport.update({
+  id: '/webp-gif',
+  path: '/webp-gif',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UuidRoute = UuidRouteImport.update({
@@ -317,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/webp-gif': typeof WebpGifRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
@@ -363,6 +370,7 @@ export interface FileRoutesByTo {
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/webp-gif': typeof WebpGifRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
@@ -410,6 +418,7 @@ export interface FileRoutesById {
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/webp-gif': typeof WebpGifRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
@@ -458,6 +467,7 @@ export interface FileRouteTypes {
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/webp-gif'
     | '/xml'
     | '/xml-json'
     | '/yaml'
@@ -504,6 +514,7 @@ export interface FileRouteTypes {
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/webp-gif'
     | '/xml'
     | '/xml-json'
     | '/yaml'
@@ -550,6 +561,7 @@ export interface FileRouteTypes {
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/webp-gif'
     | '/xml'
     | '/xml-json'
     | '/yaml'
@@ -597,6 +609,7 @@ export interface RootRouteChildren {
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
+  WebpGifRoute: typeof WebpGifRoute
   XmlRoute: typeof XmlRoute
   XmlJsonRoute: typeof XmlJsonRoute
   YamlRoute: typeof YamlRoute
@@ -623,6 +636,13 @@ declare module '@tanstack/react-router' {
       path: '/xml'
       fullPath: '/xml'
       preLoaderRoute: typeof XmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/webp-gif': {
+      id: '/webp-gif'
+      path: '/webp-gif'
+      fullPath: '/webp-gif'
+      preLoaderRoute: typeof WebpGifRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/uuid': {
@@ -957,6 +977,7 @@ const rootRouteChildren: RootRouteChildren = {
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,
+  WebpGifRoute: WebpGifRoute,
   XmlRoute: XmlRoute,
   XmlJsonRoute: XmlJsonRoute,
   YamlRoute: YamlRoute,
