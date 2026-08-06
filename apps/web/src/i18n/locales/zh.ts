@@ -87,7 +87,6 @@ const zh = {
     allTools: '所有工具',
     developerTools: '开发工具',
     textAndConversion: '文本与转换',
-    networkAndSecurity: '网络与安全',
     designTools: '设计工具',
     imageTools: '图片工具',
     videoTools: '视频工具',

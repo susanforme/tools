@@ -841,11 +841,6 @@ const HOME_CATEGORIES = [
     labelKey: 'shell.textAndConversion',
     icon: ArrowLeftRight,
   },
-  {
-    value: 'network',
-    labelKey: 'shell.networkAndSecurity',
-    icon: ShieldCheck,
-  },
   { value: 'design', labelKey: 'shell.designTools', icon: Palette },
   { value: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
   { value: 'video', labelKey: 'shell.videoTools', icon: Video },
@@ -905,7 +900,6 @@ function HomePageContent({
   );
   const isDeveloperCategory = category === 'developer';
   const isConversionCategory = category === 'conversion';
-  const isNetworkCategory = category === 'network';
   const isDesignCategory = category === 'design';
   const isImageCategory = category === 'image';
   const isVideoCategory = category === 'video';
@@ -1187,7 +1181,7 @@ function HomePageContent({
         )}
 
         {/* 加密 / 安全 */}
-        {(isNetworkCategory || category === 'all') && (
+        {(isDeveloperCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500">
@@ -1218,7 +1212,7 @@ function HomePageContent({
         )}
 
         {/* 网络 / 请求 */}
-        {(isNetworkCategory || category === 'all') && (
+        {(isDeveloperCategory || category === 'all') && (
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500">

@@ -87,7 +87,6 @@ const en = {
     allTools: 'All tools',
     developerTools: 'Developer tools',
     textAndConversion: 'Text & conversion',
-    networkAndSecurity: 'Network & security',
     designTools: 'Design tools',
     imageTools: 'Image tools',
     videoTools: 'Video tools',

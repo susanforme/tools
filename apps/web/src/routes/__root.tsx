@@ -374,6 +374,8 @@ const developerNavItems = [
   ...formatterNavItems,
   ...encodeNavItems,
   ...convertNavItems.filter((item) => item.to !== '/number-base'),
+  ...networkNavItems,
+  ...cryptoNavItems,
 ];
 const conversionNavItems = [
   ...convertNavItems.filter((item) => item.to === '/number-base'),
@@ -406,11 +408,6 @@ const ALL_CATEGORIES: CategoryDef[] = [
     labelKey: 'shell.textAndConversion',
     icon: <ArrowLeftRight className="w-4 h-4" />,
     items: conversionNavItems,
-  },
-  {
-    labelKey: 'shell.networkAndSecurity',
-    icon: <ShieldCheck className="w-4 h-4" />,
-    items: [...networkNavItems, ...cryptoNavItems],
   },
   {
     labelKey: 'shell.designTools',
@@ -492,7 +489,7 @@ function ToolSearch() {
       {open && query.trim() && (
         <div
           id="tool-search-results"
-          className="absolute right-0 top-full mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-md border bg-popover p-1 text-popover-foreground shadow-md z-50"
+          className="absolute inset-x-0 top-full z-50 mt-2 rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
         >
           {results.length ? (
             results.map((item) => (
@@ -731,11 +728,6 @@ const SIDEBAR_ITEMS = [
     category: 'conversion',
     labelKey: 'shell.textAndConversion',
     icon: ArrowLeftRight,
-  },
-  {
-    category: 'network',
-    labelKey: 'shell.networkAndSecurity',
-    icon: ShieldCheck,
   },
   { category: 'design', labelKey: 'shell.designTools', icon: Palette },
   { category: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
