@@ -19,6 +19,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import {
+  Activity,
   AlignLeft,
   ArrowRight,
   ArrowLeftRight,
@@ -39,8 +40,10 @@ import {
   Flower2,
   Globe,
   Hash,
+  House,
   ImageIcon,
   KeyRound,
+  Landmark,
   Layers,
   Link as LinkIcon,
   ListOrdered,
@@ -63,6 +66,7 @@ import {
   Star,
   Table,
   Tag,
+  Thermometer,
   Type,
   Upload,
   Video,
@@ -622,6 +626,19 @@ const videoTools = [
 
 const lifeTools = [
   {
+    to: '/world-clock' as const,
+    icon: <Clock className="h-8 w-8 text-sky-500" />,
+    titleKey: 'home.tools.worldClock.title',
+    descKey: 'home.tools.worldClock.desc',
+    tagKeys: [
+      'home.tools.worldClock.tagUtc',
+      'home.tools.worldClock.tagCities',
+      'home.tools.worldClock.tagDst',
+    ],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
+  },
+  {
     to: '/gushi-namer' as const,
     icon: <Flower2 className="h-8 w-8 text-rose-500" />,
     titleKey: 'home.tools.gushiNamer.title',
@@ -633,6 +650,52 @@ const lifeTools = [
     ],
     gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
     border: 'hover:border-rose-300 dark:hover:border-rose-700',
+  },
+  {
+    to: '/social-insurance' as const,
+    icon: <Landmark className="h-8 w-8 text-violet-500" />,
+    titleKey: 'home.tools.socialInsurance.title',
+    descKey: 'home.tools.socialInsurance.desc',
+    tagKeys: [
+      'home.tools.socialInsurance.tagCities',
+      'home.tools.socialInsurance.tagRates',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/mortgage' as const,
+    icon: <House className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.mortgage.title',
+    descKey: 'home.tools.mortgage.desc',
+    tagKeys: [
+      'home.tools.mortgage.tagPayment',
+      'home.tools.mortgage.tagPrincipal',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
+    to: '/bmi' as const,
+    icon: <Activity className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'home.tools.bmi.title',
+    descKey: 'home.tools.bmi.desc',
+    tagKeys: ['home.tools.bmi.tagBmi', 'home.tools.bmi.tagChina'],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/temperature' as const,
+    icon: <Thermometer className="h-8 w-8 text-orange-500" />,
+    titleKey: 'home.tools.temperature.title',
+    descKey: 'home.tools.temperature.desc',
+    tagKeys: [
+      'home.tools.temperature.tagCelsius',
+      'home.tools.temperature.tagFahrenheit',
+      'home.tools.temperature.tagKelvin',
+    ],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
   },
 ];
 

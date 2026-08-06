@@ -16,6 +16,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import Fuse from 'fuse.js';
 import {
+  Activity,
   ArrowLeftRight,
   Binary,
   Braces,
@@ -38,8 +39,10 @@ import {
   Hash,
   Heart,
   Home,
+  House,
   ImageIcon,
   KeyRound,
+  Landmark,
   Layers,
   Link as LinkIcon,
   ListOrdered,
@@ -67,6 +70,7 @@ import {
   Sun,
   Table,
   Tag,
+  Thermometer,
   Type,
   Video,
   X,
@@ -391,10 +395,40 @@ const videoNavItems: NavItem[] = [
 ];
 const lifeNavItems: NavItem[] = [
   {
+    to: '/world-clock',
+    icon: <Clock className="h-4 w-4 text-sky-500" />,
+    labelKey: 'nav.worldClock',
+    keywords: '世界时间 时区 城市 utc time timezone world clock',
+  },
+  {
     to: '/gushi-namer',
     icon: <Flower2 className="h-4 w-4 text-rose-500" />,
     labelKey: 'nav.gushiNamer',
     keywords: '古诗 取名 姓名 诗经 楚辞 唐诗 宋词 name poetry',
+  },
+  {
+    to: '/social-insurance',
+    icon: <Landmark className="h-4 w-4 text-violet-500" />,
+    labelKey: 'nav.socialInsurance',
+    keywords: '五险一金 社保 公积金 工资 social insurance housing fund',
+  },
+  {
+    to: '/mortgage',
+    icon: <House className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.mortgage',
+    keywords: '房贷 贷款 等额本息 等额本金 mortgage loan',
+  },
+  {
+    to: '/bmi',
+    icon: <Activity className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'nav.bmi',
+    keywords: 'bmi 体重 身高 健康 body mass index',
+  },
+  {
+    to: '/temperature',
+    icon: <Thermometer className="h-4 w-4 text-orange-500" />,
+    labelKey: 'nav.temperature',
+    keywords: '温度 摄氏 华氏 开尔文 celsius fahrenheit kelvin',
   },
 ];
 
@@ -531,6 +565,8 @@ const ALL_NAV_ITEMS_MAP: Record<string, NavItem> = Object.fromEntries(
     ...convertNavItems,
     ...frontendNavItems,
     ...textNavItems,
+    ...videoNavItems,
+    ...lifeNavItems,
   ].map((item) => [item.to, item]),
 );
 

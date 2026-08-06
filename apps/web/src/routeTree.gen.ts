@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as YamlRouteImport } from './routes/yaml'
 import { Route as XmlJsonRouteImport } from './routes/xml-json'
 import { Route as XmlRouteImport } from './routes/xml'
+import { Route as WorldClockRouteImport } from './routes/world-clock'
 import { Route as WebpGifRouteImport } from './routes/webp-gif'
 import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
@@ -19,9 +20,11 @@ import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as TotpRouteImport } from './routes/totp'
 import { Route as TextRouteImport } from './routes/text'
+import { Route as TemperatureRouteImport } from './routes/temperature'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
 import { Route as SqlRouteImport } from './routes/sql'
+import { Route as SocialInsuranceRouteImport } from './routes/social-insurance'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScreenRecorderRouteImport } from './routes/screen-recorder'
 import { Route as Rot13RouteImport } from './routes/rot13'
@@ -29,6 +32,7 @@ import { Route as RegexRouteImport } from './routes/regex'
 import { Route as QrcodeRouteImport } from './routes/qrcode'
 import { Route as PasswordRouteImport } from './routes/password'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
+import { Route as MortgageRouteImport } from './routes/mortgage'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JwtRouteImport } from './routes/jwt'
@@ -55,6 +59,7 @@ import { Route as CookieRouteImport } from './routes/cookie'
 import { Route as ContrastRouteImport } from './routes/contrast'
 import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
+import { Route as BmiRouteImport } from './routes/bmi'
 import { Route as Base64RouteImport } from './routes/base64'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -71,6 +76,11 @@ const XmlJsonRoute = XmlJsonRouteImport.update({
 const XmlRoute = XmlRouteImport.update({
   id: '/xml',
   path: '/xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorldClockRoute = WorldClockRouteImport.update({
+  id: '/world-clock',
+  path: '/world-clock',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WebpGifRoute = WebpGifRouteImport.update({
@@ -108,6 +118,11 @@ const TextRoute = TextRouteImport.update({
   path: '/text',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TemperatureRoute = TemperatureRouteImport.update({
+  id: '/temperature',
+  path: '/temperature',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TableConvertRoute = TableConvertRouteImport.update({
   id: '/table-convert',
   path: '/table-convert',
@@ -121,6 +136,11 @@ const SqlPlaygroundRoute = SqlPlaygroundRouteImport.update({
 const SqlRoute = SqlRouteImport.update({
   id: '/sql',
   path: '/sql',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SocialInsuranceRoute = SocialInsuranceRouteImport.update({
+  id: '/social-insurance',
+  path: '/social-insurance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -156,6 +176,11 @@ const PasswordRoute = PasswordRouteImport.update({
 const NumberBaseRoute = NumberBaseRouteImport.update({
   id: '/number-base',
   path: '/number-base',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MortgageRoute = MortgageRouteImport.update({
+  id: '/mortgage',
+  path: '/mortgage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarkdownRoute = MarkdownRouteImport.update({
@@ -288,6 +313,11 @@ const CipherRoute = CipherRouteImport.update({
   path: '/cipher',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BmiRoute = BmiRouteImport.update({
+  id: '/bmi',
+  path: '/bmi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Base64Route = Base64RouteImport.update({
   id: '/base64',
   path: '/base64',
@@ -302,6 +332,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
+  '/bmi': typeof BmiRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
@@ -328,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
+  '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
   '/password': typeof PasswordRoute
   '/qrcode': typeof QrcodeRoute
@@ -335,9 +367,11 @@ export interface FileRoutesByFullPath {
   '/rot13': typeof Rot13Route
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
+  '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
+  '/temperature': typeof TemperatureRoute
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
@@ -345,6 +379,7 @@ export interface FileRoutesByFullPath {
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/webp-gif': typeof WebpGifRoute
+  '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
@@ -352,6 +387,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
+  '/bmi': typeof BmiRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
@@ -378,6 +414,7 @@ export interface FileRoutesByTo {
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
+  '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
   '/password': typeof PasswordRoute
   '/qrcode': typeof QrcodeRoute
@@ -385,9 +422,11 @@ export interface FileRoutesByTo {
   '/rot13': typeof Rot13Route
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
+  '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
+  '/temperature': typeof TemperatureRoute
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
@@ -395,6 +434,7 @@ export interface FileRoutesByTo {
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/webp-gif': typeof WebpGifRoute
+  '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
@@ -403,6 +443,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/base64': typeof Base64Route
+  '/bmi': typeof BmiRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
@@ -429,6 +470,7 @@ export interface FileRoutesById {
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
+  '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
   '/password': typeof PasswordRoute
   '/qrcode': typeof QrcodeRoute
@@ -436,9 +478,11 @@ export interface FileRoutesById {
   '/rot13': typeof Rot13Route
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
+  '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/table-convert': typeof TableConvertRoute
+  '/temperature': typeof TemperatureRoute
   '/text': typeof TextRoute
   '/totp': typeof TotpRoute
   '/unicode': typeof UnicodeRoute
@@ -446,6 +490,7 @@ export interface FileRoutesById {
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
   '/webp-gif': typeof WebpGifRoute
+  '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
   '/yaml': typeof YamlRoute
@@ -455,6 +500,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/base64'
+    | '/bmi'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
@@ -481,6 +527,7 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/login'
     | '/markdown'
+    | '/mortgage'
     | '/number-base'
     | '/password'
     | '/qrcode'
@@ -488,9 +535,11 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/screen-recorder'
     | '/settings'
+    | '/social-insurance'
     | '/sql'
     | '/sql-playground'
     | '/table-convert'
+    | '/temperature'
     | '/text'
     | '/totp'
     | '/unicode'
@@ -498,6 +547,7 @@ export interface FileRouteTypes {
     | '/user-agent'
     | '/uuid'
     | '/webp-gif'
+    | '/world-clock'
     | '/xml'
     | '/xml-json'
     | '/yaml'
@@ -505,6 +555,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/base64'
+    | '/bmi'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
@@ -531,6 +582,7 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/login'
     | '/markdown'
+    | '/mortgage'
     | '/number-base'
     | '/password'
     | '/qrcode'
@@ -538,9 +590,11 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/screen-recorder'
     | '/settings'
+    | '/social-insurance'
     | '/sql'
     | '/sql-playground'
     | '/table-convert'
+    | '/temperature'
     | '/text'
     | '/totp'
     | '/unicode'
@@ -548,6 +602,7 @@ export interface FileRouteTypes {
     | '/user-agent'
     | '/uuid'
     | '/webp-gif'
+    | '/world-clock'
     | '/xml'
     | '/xml-json'
     | '/yaml'
@@ -555,6 +610,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/base64'
+    | '/bmi'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
@@ -581,6 +637,7 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/login'
     | '/markdown'
+    | '/mortgage'
     | '/number-base'
     | '/password'
     | '/qrcode'
@@ -588,9 +645,11 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/screen-recorder'
     | '/settings'
+    | '/social-insurance'
     | '/sql'
     | '/sql-playground'
     | '/table-convert'
+    | '/temperature'
     | '/text'
     | '/totp'
     | '/unicode'
@@ -598,6 +657,7 @@ export interface FileRouteTypes {
     | '/user-agent'
     | '/uuid'
     | '/webp-gif'
+    | '/world-clock'
     | '/xml'
     | '/xml-json'
     | '/yaml'
@@ -606,6 +666,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Base64Route: typeof Base64Route
+  BmiRoute: typeof BmiRoute
   CipherRoute: typeof CipherRoute
   ColorConverterRoute: typeof ColorConverterRoute
   ContrastRoute: typeof ContrastRoute
@@ -632,6 +693,7 @@ export interface RootRouteChildren {
   JwtRoute: typeof JwtRoute
   LoginRoute: typeof LoginRoute
   MarkdownRoute: typeof MarkdownRoute
+  MortgageRoute: typeof MortgageRoute
   NumberBaseRoute: typeof NumberBaseRoute
   PasswordRoute: typeof PasswordRoute
   QrcodeRoute: typeof QrcodeRoute
@@ -639,9 +701,11 @@ export interface RootRouteChildren {
   Rot13Route: typeof Rot13Route
   ScreenRecorderRoute: typeof ScreenRecorderRoute
   SettingsRoute: typeof SettingsRoute
+  SocialInsuranceRoute: typeof SocialInsuranceRoute
   SqlRoute: typeof SqlRoute
   SqlPlaygroundRoute: typeof SqlPlaygroundRoute
   TableConvertRoute: typeof TableConvertRoute
+  TemperatureRoute: typeof TemperatureRoute
   TextRoute: typeof TextRoute
   TotpRoute: typeof TotpRoute
   UnicodeRoute: typeof UnicodeRoute
@@ -649,6 +713,7 @@ export interface RootRouteChildren {
   UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
   WebpGifRoute: typeof WebpGifRoute
+  WorldClockRoute: typeof WorldClockRoute
   XmlRoute: typeof XmlRoute
   XmlJsonRoute: typeof XmlJsonRoute
   YamlRoute: typeof YamlRoute
@@ -675,6 +740,13 @@ declare module '@tanstack/react-router' {
       path: '/xml'
       fullPath: '/xml'
       preLoaderRoute: typeof XmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/world-clock': {
+      id: '/world-clock'
+      path: '/world-clock'
+      fullPath: '/world-clock'
+      preLoaderRoute: typeof WorldClockRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/webp-gif': {
@@ -726,6 +798,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TextRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/temperature': {
+      id: '/temperature'
+      path: '/temperature'
+      fullPath: '/temperature'
+      preLoaderRoute: typeof TemperatureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/table-convert': {
       id: '/table-convert'
       path: '/table-convert'
@@ -745,6 +824,13 @@ declare module '@tanstack/react-router' {
       path: '/sql'
       fullPath: '/sql'
       preLoaderRoute: typeof SqlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/social-insurance': {
+      id: '/social-insurance'
+      path: '/social-insurance'
+      fullPath: '/social-insurance'
+      preLoaderRoute: typeof SocialInsuranceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -794,6 +880,13 @@ declare module '@tanstack/react-router' {
       path: '/number-base'
       fullPath: '/number-base'
       preLoaderRoute: typeof NumberBaseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mortgage': {
+      id: '/mortgage'
+      path: '/mortgage'
+      fullPath: '/mortgage'
+      preLoaderRoute: typeof MortgageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/markdown': {
@@ -978,6 +1071,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CipherRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bmi': {
+      id: '/bmi'
+      path: '/bmi'
+      fullPath: '/bmi'
+      preLoaderRoute: typeof BmiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/base64': {
       id: '/base64'
       path: '/base64'
@@ -998,6 +1098,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Base64Route: Base64Route,
+  BmiRoute: BmiRoute,
   CipherRoute: CipherRoute,
   ColorConverterRoute: ColorConverterRoute,
   ContrastRoute: ContrastRoute,
@@ -1024,6 +1125,7 @@ const rootRouteChildren: RootRouteChildren = {
   JwtRoute: JwtRoute,
   LoginRoute: LoginRoute,
   MarkdownRoute: MarkdownRoute,
+  MortgageRoute: MortgageRoute,
   NumberBaseRoute: NumberBaseRoute,
   PasswordRoute: PasswordRoute,
   QrcodeRoute: QrcodeRoute,
@@ -1031,9 +1133,11 @@ const rootRouteChildren: RootRouteChildren = {
   Rot13Route: Rot13Route,
   ScreenRecorderRoute: ScreenRecorderRoute,
   SettingsRoute: SettingsRoute,
+  SocialInsuranceRoute: SocialInsuranceRoute,
   SqlRoute: SqlRoute,
   SqlPlaygroundRoute: SqlPlaygroundRoute,
   TableConvertRoute: TableConvertRoute,
+  TemperatureRoute: TemperatureRoute,
   TextRoute: TextRoute,
   TotpRoute: TotpRoute,
   UnicodeRoute: UnicodeRoute,
@@ -1041,6 +1145,7 @@ const rootRouteChildren: RootRouteChildren = {
   UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,
   WebpGifRoute: WebpGifRoute,
+  WorldClockRoute: WorldClockRoute,
   XmlRoute: XmlRoute,
   XmlJsonRoute: XmlJsonRoute,
   YamlRoute: YamlRoute,

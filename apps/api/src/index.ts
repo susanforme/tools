@@ -198,6 +198,10 @@ const favoriteOrderInput = validator('json', (value, c) => {
 
 const routes = app
   .get('/health', (c) => c.json({ ok: true }))
+  .get('/time', (c) => {
+    c.header('Cache-Control', 'no-store');
+    return c.json({ utc: new Date().toISOString() });
+  })
   .post('/auth/register', registerInput, async (c) => {
     const input = c.req.valid('json');
     const existing = await c.env.DB.prepare(
