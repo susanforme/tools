@@ -36,6 +36,7 @@ import {
   FileStack,
   FileText,
   Fingerprint,
+  Flower2,
   Globe,
   Hash,
   ImageIcon,
@@ -619,6 +620,22 @@ const videoTools = [
   },
 ];
 
+const lifeTools = [
+  {
+    to: '/gushi-namer' as const,
+    icon: <Flower2 className="h-8 w-8 text-rose-500" />,
+    titleKey: 'home.tools.gushiNamer.title',
+    descKey: 'home.tools.gushiNamer.desc',
+    tagKeys: [
+      'home.tools.gushiNamer.tagPoetry',
+      'home.tools.gushiNamer.tagSource',
+      'home.tools.gushiNamer.tagLocal',
+    ],
+    gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
+    border: 'hover:border-rose-300 dark:hover:border-rose-700',
+  },
+];
+
 type ToolConfig = {
   to: string;
   icon: React.ReactNode;
@@ -809,6 +826,7 @@ const ALL_TOOLS = [
   ...textTools,
   ...frontendTools,
   ...videoTools,
+  ...lifeTools,
 ];
 
 const HOME_CATEGORIES = [
@@ -831,6 +849,7 @@ const HOME_CATEGORIES = [
   { value: 'design', labelKey: 'shell.designTools', icon: Palette },
   { value: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
   { value: 'video', labelKey: 'shell.videoTools', icon: Video },
+  { value: 'life', labelKey: 'shell.lifeTools', icon: Flower2 },
   { value: 'all', labelKey: 'home.allTools', icon: Layers },
 ] as const;
 
@@ -890,6 +909,7 @@ function HomePageContent({
   const isDesignCategory = category === 'design';
   const isImageCategory = category === 'image';
   const isVideoCategory = category === 'video';
+  const isLifeCategory = category === 'life';
   const visibleConvertTools =
     category === 'all'
       ? convertTools
@@ -1381,6 +1401,37 @@ function HomePageContent({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {videoTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 生活工具 */}
+        {(isLifeCategory || category === 'all') && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500">
+                <Flower2 className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupLife')}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('home.lifeSubtitle')}
+                </p>
+              </div>
+              <div className="flex-1 h-px bg-border ml-2" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {lifeTools.map((tool) => (
                 <ToolCard
                   key={tool.to}
                   tool={tool}

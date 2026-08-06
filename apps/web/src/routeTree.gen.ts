@@ -41,6 +41,7 @@ import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
 import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HashRouteImport } from './routes/hash'
+import { Route as GushiNamerRouteImport } from './routes/gushi-namer'
 import { Route as FontRouteImport } from './routes/font'
 import { Route as DiffRouteImport } from './routes/diff'
 import { Route as DatetimeRouteImport } from './routes/datetime'
@@ -217,6 +218,11 @@ const HashRoute = HashRouteImport.update({
   path: '/hash',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GushiNamerRoute = GushiNamerRouteImport.update({
+  id: '/gushi-namer',
+  path: '/gushi-namer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FontRoute = FontRouteImport.update({
   id: '/font',
   path: '/font',
@@ -309,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
   '/font': typeof FontRoute
+  '/gushi-namer': typeof GushiNamerRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -358,6 +365,7 @@ export interface FileRoutesByTo {
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
   '/font': typeof FontRoute
+  '/gushi-namer': typeof GushiNamerRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -408,6 +416,7 @@ export interface FileRoutesById {
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
   '/font': typeof FontRoute
+  '/gushi-namer': typeof GushiNamerRoute
   '/hash': typeof HashRoute
   '/hmac': typeof HmacRoute
   '/html': typeof HtmlRoute
@@ -459,6 +468,7 @@ export interface FileRouteTypes {
     | '/datetime'
     | '/diff'
     | '/font'
+    | '/gushi-namer'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -508,6 +518,7 @@ export interface FileRouteTypes {
     | '/datetime'
     | '/diff'
     | '/font'
+    | '/gushi-namer'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -557,6 +568,7 @@ export interface FileRouteTypes {
     | '/datetime'
     | '/diff'
     | '/font'
+    | '/gushi-namer'
     | '/hash'
     | '/hmac'
     | '/html'
@@ -607,6 +619,7 @@ export interface RootRouteChildren {
   DatetimeRoute: typeof DatetimeRoute
   DiffRoute: typeof DiffRoute
   FontRoute: typeof FontRoute
+  GushiNamerRoute: typeof GushiNamerRoute
   HashRoute: typeof HashRoute
   HmacRoute: typeof HmacRoute
   HtmlRoute: typeof HtmlRoute
@@ -867,6 +880,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HashRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gushi-namer': {
+      id: '/gushi-namer'
+      path: '/gushi-namer'
+      fullPath: '/gushi-namer'
+      preLoaderRoute: typeof GushiNamerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/font': {
       id: '/font'
       path: '/font'
@@ -991,6 +1011,7 @@ const rootRouteChildren: RootRouteChildren = {
   DatetimeRoute: DatetimeRoute,
   DiffRoute: DiffRoute,
   FontRoute: FontRoute,
+  GushiNamerRoute: GushiNamerRoute,
   HashRoute: HashRoute,
   HmacRoute: HmacRoute,
   HtmlRoute: HtmlRoute,

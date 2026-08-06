@@ -33,6 +33,7 @@ import {
   FileStack,
   FileText,
   Fingerprint,
+  Flower2,
   Globe,
   Hash,
   Heart,
@@ -386,6 +387,14 @@ const videoNavItems: NavItem[] = [
     keywords: 'screen recorder capture video recording 录屏',
   },
 ];
+const lifeNavItems: NavItem[] = [
+  {
+    to: '/gushi-namer',
+    icon: <Flower2 className="h-4 w-4 text-rose-500" />,
+    labelKey: 'nav.gushiNamer',
+    keywords: '古诗 取名 姓名 诗经 楚辞 唐诗 宋词 name poetry',
+  },
+];
 
 const ALL_CATEGORIES: CategoryDef[] = [
   {
@@ -417,6 +426,11 @@ const ALL_CATEGORIES: CategoryDef[] = [
     labelKey: 'shell.videoTools',
     icon: <Video className="w-4 h-4" />,
     items: videoNavItems,
+  },
+  {
+    labelKey: 'shell.lifeTools',
+    icon: <Flower2 className="w-4 h-4" />,
+    items: lifeNavItems,
   },
 ];
 
@@ -726,6 +740,7 @@ const SIDEBAR_ITEMS = [
   { category: 'design', labelKey: 'shell.designTools', icon: Palette },
   { category: 'image', labelKey: 'shell.imageTools', icon: ImageIcon },
   { category: 'video', labelKey: 'shell.videoTools', icon: Video },
+  { category: 'life', labelKey: 'shell.lifeTools', icon: Flower2 },
 ] as const;
 
 function DesktopSidebar() {
