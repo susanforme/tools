@@ -90,7 +90,12 @@ import {
 } from '../components/ui/hover-card';
 import { Input } from '../components/ui/input';
 import { Toaster } from '../components/ui/sonner';
-import { TooltipProvider } from '../components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../components/ui/tooltip';
 
 export const Route = createRootRoute({
   component: RootDocument,
@@ -99,16 +104,25 @@ export const Route = createRootRoute({
 // ─── 主题切换按钮 ──────────────────────────────────────────
 
 function ThemeToggle() {
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const dark = theme === 'dark';
+  const label = t(dark ? 'shell.lightMode' : 'shell.darkMode');
   return (
-    <button
-      onClick={toggleTheme}
-      aria-label={dark ? '切换为浅色模式' : '切换为深色模式'}
-      className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer"
-    >
-      {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={toggleTheme}
+          aria-label={label}
+          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        >
+          {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" sideOffset={6}>
+        {label}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -858,7 +872,10 @@ function DesktopSidebar() {
         </Link>
         <Link
           to="/settings"
-          className={navClass(location.pathname === '/settings')}
+          className={navClass(
+            location.pathname === '/settings' ||
+              location.pathname === '/settings-data',
+          )}
         >
           <Settings className="h-5 w-5" />
           {t('shell.settings')}
@@ -891,12 +908,18 @@ function AuthNav() {
 
   if (session.status === 'guest') {
     return (
-      <Button asChild size="sm" variant="ghost">
-        <Link to="/login">
-          <LogIn />
-          <span className="hidden sm:inline">{t('auth.navLogin')}</span>
-        </Link>
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button asChild size="icon-sm" variant="ghost">
+            <Link to="/login" aria-label={t('auth.navLogin')}>
+              <LogIn />
+            </Link>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" sideOffset={6}>
+          {t('auth.navLogin')}
+        </TooltipContent>
+      </Tooltip>
     );
   }
 
@@ -1006,14 +1029,21 @@ function RootContent() {
                 </Link>
                 <ToolSearch />
                 <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-                  <Link
-                    to="/"
-                    search={{ category: 'favorites' }}
-                    className="hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:flex"
-                  >
-                    <Star className="h-4 w-4" />
-                    {t('shell.favorites')}
-                  </Link>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to="/"
+                        search={{ category: 'favorites' }}
+                        aria-label={t('shell.favorites')}
+                        className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:flex"
+                      >
+                        <Star className="h-4 w-4" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" sideOffset={6}>
+                      {t('shell.favorites')}
+                    </TooltipContent>
+                  </Tooltip>
                   <ThemeToggle />
                   <LangSwitcher />
                   <AuthNav />

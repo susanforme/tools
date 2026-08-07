@@ -27,6 +27,7 @@ import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as SocialInsuranceRouteImport } from './routes/social-insurance'
+import { Route as SettingsDataRouteImport } from './routes/settings-data'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScreenRecorderRouteImport } from './routes/screen-recorder'
 import { Route as Rot13RouteImport } from './routes/rot13'
@@ -155,6 +156,11 @@ const SqlRoute = SqlRouteImport.update({
 const SocialInsuranceRoute = SocialInsuranceRouteImport.update({
   id: '/social-insurance',
   path: '/social-insurance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsDataRoute = SettingsDataRouteImport.update({
+  id: '/settings-data',
+  path: '/settings-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -393,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/rot13': typeof Rot13Route
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
+  '/settings-data': typeof SettingsDataRoute
   '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
@@ -452,6 +459,7 @@ export interface FileRoutesByTo {
   '/rot13': typeof Rot13Route
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
+  '/settings-data': typeof SettingsDataRoute
   '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
@@ -512,6 +520,7 @@ export interface FileRoutesById {
   '/rot13': typeof Rot13Route
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
+  '/settings-data': typeof SettingsDataRoute
   '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
   '/sql-playground': typeof SqlPlaygroundRoute
@@ -573,6 +582,7 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/screen-recorder'
     | '/settings'
+    | '/settings-data'
     | '/social-insurance'
     | '/sql'
     | '/sql-playground'
@@ -632,6 +642,7 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/screen-recorder'
     | '/settings'
+    | '/settings-data'
     | '/social-insurance'
     | '/sql'
     | '/sql-playground'
@@ -691,6 +702,7 @@ export interface FileRouteTypes {
     | '/rot13'
     | '/screen-recorder'
     | '/settings'
+    | '/settings-data'
     | '/social-insurance'
     | '/sql'
     | '/sql-playground'
@@ -751,6 +763,7 @@ export interface RootRouteChildren {
   Rot13Route: typeof Rot13Route
   ScreenRecorderRoute: typeof ScreenRecorderRoute
   SettingsRoute: typeof SettingsRoute
+  SettingsDataRoute: typeof SettingsDataRoute
   SocialInsuranceRoute: typeof SocialInsuranceRoute
   SqlRoute: typeof SqlRoute
   SqlPlaygroundRoute: typeof SqlPlaygroundRoute
@@ -897,6 +910,13 @@ declare module '@tanstack/react-router' {
       path: '/social-insurance'
       fullPath: '/social-insurance'
       preLoaderRoute: typeof SocialInsuranceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings-data': {
+      id: '/settings-data'
+      path: '/settings-data'
+      fullPath: '/settings-data'
+      preLoaderRoute: typeof SettingsDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -1215,6 +1235,7 @@ const rootRouteChildren: RootRouteChildren = {
   Rot13Route: Rot13Route,
   ScreenRecorderRoute: ScreenRecorderRoute,
   SettingsRoute: SettingsRoute,
+  SettingsDataRoute: SettingsDataRoute,
   SocialInsuranceRoute: SocialInsuranceRoute,
   SqlRoute: SqlRoute,
   SqlPlaygroundRoute: SqlPlaygroundRoute,

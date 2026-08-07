@@ -978,6 +978,15 @@ const RECOMMENDED_TOOLS: ToolConfig[] = [
   frontendTools.at(-2)!,
 ];
 
+function EmptyState({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-muted-foreground">
+      {icon}
+      <p className="text-sm">{label}</p>
+    </div>
+  );
+}
+
 function HomePage() {
   const { t } = useTranslation();
   const { ready, favoritePaths, isFavorite, toggleFavorite, reorderFavorites } =
@@ -1133,6 +1142,13 @@ function HomePageContent({
       )}
 
       <div className="space-y-8">
+        {category === 'favorites' && favoriteTools.length === 0 && (
+          <EmptyState
+            icon={<Star className="size-8" />}
+            label={t('home.emptyFavorites')}
+          />
+        )}
+
         {category === 'recommended' && (
           <section>
             <h2 className="mb-4 text-xl font-bold">{t('home.recommended')}</h2>
