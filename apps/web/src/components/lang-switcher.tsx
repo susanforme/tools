@@ -17,12 +17,14 @@ export function LangSwitcher() {
     <Select value={current} onValueChange={(v) => setLanguage(v as Locale)}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <SelectTrigger
-            aria-label={t('shell.language')}
-            className="h-8 w-8 justify-center border-none bg-transparent p-0 text-muted-foreground shadow-none hover:bg-accent hover:text-foreground focus-visible:ring-0 [&>svg:last-child]:hidden"
-          >
-            <Globe className="h-4 w-4" />
-          </SelectTrigger>
+          <span>
+            <SelectTrigger
+              aria-label={t('shell.language')}
+              className="h-8 w-8 justify-center border-none bg-transparent p-0 text-muted-foreground shadow-none hover:bg-accent hover:text-foreground focus-visible:ring-0 [&>svg:last-child]:hidden"
+            >
+              <Globe className="h-4 w-4" />
+            </SelectTrigger>
+          </span>
         </TooltipTrigger>
         <TooltipContent side="bottom" sideOffset={6}>
           {t('shell.language')}

@@ -21,11 +21,14 @@ import { Link, createFileRoute } from '@tanstack/react-router';
 import {
   Activity,
   AlignLeft,
+  AudioLines,
   ArrowRight,
   ArrowLeftRight,
   Binary,
   Braces,
+  CalendarClock,
   CaseSensitive,
+  Captions,
   Clock,
   Code2,
   Contrast,
@@ -43,6 +46,7 @@ import {
   Hash,
   House,
   ImageIcon,
+  Images,
   KeyRound,
   Landmark,
   Layers,
@@ -249,7 +253,169 @@ const encodeTools = [
   },
 ];
 
+const developerExtraTools = [
+  {
+    to: '/har-analyzer' as const,
+    icon: <Activity className="h-8 w-8 text-cyan-500" />,
+    titleKey: 'home.tools.harAnalyzer.title',
+    descKey: 'home.tools.harAnalyzer.desc',
+    tagKeys: [
+      'home.tools.harAnalyzer.tagWaterfall',
+      'home.tools.harAnalyzer.tagTiming',
+    ],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/hex-inspector' as const,
+    icon: <Binary className="h-8 w-8 text-lime-500" />,
+    titleKey: 'home.tools.hexInspector.title',
+    descKey: 'home.tools.hexInspector.desc',
+    tagKeys: [
+      'home.tools.hexInspector.tagHex',
+      'home.tools.hexInspector.tagEndian',
+    ],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
+  {
+    to: '/webauthn-debugger' as const,
+    icon: <Fingerprint className="h-8 w-8 text-purple-500" />,
+    titleKey: 'home.tools.webauthnDebugger.title',
+    descKey: 'home.tools.webauthnDebugger.desc',
+    tagKeys: [
+      'home.tools.webauthnDebugger.tagPasskey',
+      'home.tools.webauthnDebugger.tagCredential',
+    ],
+    gradient: 'hover:bg-purple-50 dark:hover:bg-purple-950/20',
+    border: 'hover:border-purple-300 dark:hover:border-purple-700',
+  },
+  {
+    to: '/json-data' as const,
+    icon: <Braces className="h-8 w-8 text-amber-500" />,
+    titleKey: 'home.tools.jsonData.title',
+    descKey: 'home.tools.jsonData.desc',
+    tagKeys: ['home.tools.jsonData.tagPath', 'home.tools.jsonData.tagPatch'],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
+  {
+    to: '/email-headers' as const,
+    icon: <FileText className="h-8 w-8 text-teal-500" />,
+    titleKey: 'home.tools.emailHeaders.title',
+    descKey: 'home.tools.emailHeaders.desc',
+    tagKeys: [
+      'home.tools.emailHeaders.tagReceived',
+      'home.tools.emailHeaders.tagAuth',
+    ],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
+    to: '/json-schema' as const,
+    icon: <Braces className="h-8 w-8 text-amber-500" />,
+    titleKey: 'home.tools.jsonSchema.title',
+    descKey: 'home.tools.jsonSchema.desc',
+    tagKeys: [
+      'home.tools.jsonSchema.tagValidate',
+      'home.tools.jsonSchema.tagTypes',
+    ],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
+  {
+    to: '/openapi' as const,
+    icon: <FileCode2 className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.openapi.title',
+    descKey: 'home.tools.openapi.desc',
+    tagKeys: [
+      'home.tools.openapi.tagEndpoints',
+      'home.tools.openapi.tagSchema',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
+    to: '/cron' as const,
+    icon: <Clock className="h-8 w-8 text-violet-500" />,
+    titleKey: 'home.tools.cron.title',
+    descKey: 'home.tools.cron.desc',
+    tagKeys: ['home.tools.cron.tagParse', 'home.tools.cron.tagPreview'],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/env' as const,
+    icon: <FileText className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'home.tools.envTool.title',
+    descKey: 'home.tools.envTool.desc',
+    tagKeys: ['home.tools.envTool.tagSort', 'home.tools.envTool.tagDiff'],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/mock-data' as const,
+    icon: <Dices className="h-8 w-8 text-pink-500" />,
+    titleKey: 'home.tools.mockData.title',
+    descKey: 'home.tools.mockData.desc',
+    tagKeys: ['home.tools.mockData.tagFaker', 'home.tools.mockData.tagJson'],
+    gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
+    border: 'hover:border-pink-300 dark:hover:border-pink-700',
+  },
+  {
+    to: '/sql-data' as const,
+    icon: <Database className="h-8 w-8 text-cyan-500" />,
+    titleKey: 'home.tools.sqlData.title',
+    descKey: 'home.tools.sqlData.desc',
+    tagKeys: ['home.tools.sqlData.tagCreate', 'home.tools.sqlData.tagInsert'],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/csp' as const,
+    icon: <ShieldAlert className="h-8 w-8 text-red-500" />,
+    titleKey: 'home.tools.cspTool.title',
+    descKey: 'home.tools.cspTool.desc',
+    tagKeys: ['home.tools.cspTool.tagPolicy', 'home.tools.cspTool.tagHeader'],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+  {
+    to: '/git-tool' as const,
+    icon: <Code2 className="h-8 w-8 text-orange-500" />,
+    titleKey: 'home.tools.gitTool.title',
+    descKey: 'home.tools.gitTool.desc',
+    tagKeys: ['home.tools.gitTool.tagIgnore', 'home.tools.gitTool.tagCommit'],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/bundle-inspector' as const,
+    icon: <Activity className="h-8 w-8 text-indigo-500" />,
+    titleKey: 'home.tools.bundleInspector.title',
+    descKey: 'home.tools.bundleInspector.desc',
+    tagKeys: [
+      'home.tools.bundleInspector.tagMap',
+      'home.tools.bundleInspector.tagSize',
+    ],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+];
+
 const cryptoTools = [
+  {
+    to: '/certificate-tool' as const,
+    icon: <KeyRound className="h-8 w-8 text-teal-500" />,
+    titleKey: 'home.tools.certificateTool.title',
+    descKey: 'home.tools.certificateTool.desc',
+    tagKeys: [
+      'home.tools.certificateTool.tagX509',
+      'home.tools.certificateTool.tagCsr',
+    ],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
   {
     to: '/hash' as const,
     icon: <Hash className="w-8 h-8 text-emerald-500" />,
@@ -299,7 +465,11 @@ const cryptoTools = [
     icon: <Fingerprint className="w-8 h-8 text-purple-500" />,
     titleKey: 'home.tools.jwt.title',
     descKey: 'home.tools.jwt.desc',
-    tagKeys: ['home.tools.jwt.tagDecode', 'home.tools.jwt.tagExpiry'],
+    tagKeys: [
+      'home.tools.jwt.tagDecode',
+      'home.tools.jwt.tagExpiry',
+      'home.tools.jwt.tagJwk',
+    ],
     gradient: 'hover:bg-purple-50 dark:hover:bg-purple-950/20',
     border: 'hover:border-purple-300 dark:hover:border-purple-700',
   },
@@ -324,6 +494,30 @@ const cryptoTools = [
 ];
 
 const networkTools = [
+  {
+    to: '/webrtc-diagnostics' as const,
+    icon: <Network className="h-8 w-8 text-indigo-500" />,
+    titleKey: 'home.tools.webrtcDiagnostics.title',
+    descKey: 'home.tools.webrtcDiagnostics.desc',
+    tagKeys: [
+      'home.tools.webrtcDiagnostics.tagIce',
+      'home.tools.webrtcDiagnostics.tagDevices',
+    ],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/realtime-debugger' as const,
+    icon: <Network className="h-8 w-8 text-cyan-500" />,
+    titleKey: 'home.tools.realtimeDebugger.title',
+    descKey: 'home.tools.realtimeDebugger.desc',
+    tagKeys: [
+      'home.tools.realtimeDebugger.tagWebSocket',
+      'home.tools.realtimeDebugger.tagSse',
+    ],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
   {
     to: '/http-request' as const,
     icon: <Send className="w-8 h-8 text-blue-500" />,
@@ -440,6 +634,42 @@ const convertTools = [
 
 const textTools = [
   {
+    to: '/pdf-toolkit' as const,
+    icon: <FileText className="h-8 w-8 text-red-500" />,
+    titleKey: 'home.tools.pdfToolkit.title',
+    descKey: 'home.tools.pdfToolkit.desc',
+    tagKeys: [
+      'home.tools.pdfToolkit.tagPages',
+      'home.tools.pdfToolkit.tagMetadata',
+    ],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+  {
+    to: '/batch-files' as const,
+    icon: <FileStack className="h-8 w-8 text-amber-500" />,
+    titleKey: 'home.tools.batchFiles.title',
+    descKey: 'home.tools.batchFiles.desc',
+    tagKeys: [
+      'home.tools.batchFiles.tagRename',
+      'home.tools.batchFiles.tagHash',
+    ],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
+  {
+    to: '/text-to-speech' as const,
+    icon: <AudioLines className="h-8 w-8 text-violet-500" />,
+    titleKey: 'home.tools.textToSpeech.title',
+    descKey: 'home.tools.textToSpeech.desc',
+    tagKeys: [
+      'home.tools.textToSpeech.tagVoice',
+      'home.tools.textToSpeech.tagSpeed',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
     to: '/diff' as const,
     icon: <ArrowLeftRight className="w-8 h-8 text-orange-500" />,
     titleKey: 'home.tools.diff.title',
@@ -507,6 +737,30 @@ const textTools = [
 ];
 
 const frontendTools = [
+  {
+    to: '/gradient-studio' as const,
+    icon: <Palette className="h-8 w-8 text-fuchsia-500" />,
+    titleKey: 'home.tools.gradientStudio.title',
+    descKey: 'home.tools.gradientStudio.desc',
+    tagKeys: [
+      'home.tools.gradientStudio.tagGradient',
+      'home.tools.gradientStudio.tagLayers',
+    ],
+    gradient: 'hover:bg-fuchsia-50 dark:hover:bg-fuchsia-950/20',
+    border: 'hover:border-fuchsia-300 dark:hover:border-fuchsia-700',
+  },
+  {
+    to: '/svg-toolkit' as const,
+    icon: <FileCode2 className="h-8 w-8 text-orange-500" />,
+    titleKey: 'home.tools.svgToolkit.title',
+    descKey: 'home.tools.svgToolkit.desc',
+    tagKeys: [
+      'home.tools.svgToolkit.tagOptimize',
+      'home.tools.svgToolkit.tagSprite',
+    ],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
   {
     to: '/font' as const,
     icon: <Type className="w-8 h-8 text-emerald-500" />,
@@ -596,6 +850,51 @@ const frontendTools = [
     border: 'hover:border-sky-300 dark:hover:border-sky-700',
   },
   {
+    to: '/image-compare' as const,
+    icon: <Images className="h-8 w-8 text-rose-500" />,
+    titleKey: 'home.tools.imageCompare.title',
+    descKey: 'home.tools.imageCompare.desc',
+    tagKeys: [
+      'home.tools.imageCompare.tagDiff',
+      'home.tools.imageCompare.tagHeatmap',
+    ],
+    gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
+    border: 'hover:border-rose-300 dark:hover:border-rose-700',
+  },
+  {
+    to: '/pwa-icons' as const,
+    icon: <MonitorSmartphone className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.pwaIcons.title',
+    descKey: 'home.tools.pwaIcons.desc',
+    tagKeys: [
+      'home.tools.pwaIcons.tagIcons',
+      'home.tools.pwaIcons.tagManifest',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
+    to: '/image-palette' as const,
+    icon: <Palette className="h-8 w-8 text-fuchsia-500" />,
+    titleKey: 'home.tools.imagePalette.title',
+    descKey: 'home.tools.imagePalette.desc',
+    tagKeys: [
+      'home.tools.imagePalette.tagPalette',
+      'home.tools.imagePalette.tagCss',
+    ],
+    gradient: 'hover:bg-fuchsia-50 dark:hover:bg-fuchsia-950/20',
+    border: 'hover:border-fuchsia-300 dark:hover:border-fuchsia-700',
+  },
+  {
+    to: '/id-photo' as const,
+    icon: <ImageIcon className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.idPhoto.title',
+    descKey: 'home.tools.idPhoto.desc',
+    tagKeys: ['home.tools.idPhoto.tagSize', 'home.tools.idPhoto.tagSheet'],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
     to: '/image-privacy' as const,
     icon: <ShieldCheck className="h-8 w-8 text-emerald-500" />,
     titleKey: 'home.tools.imagePrivacy.title',
@@ -625,6 +924,18 @@ const frontendTools = [
 
 const videoTools = [
   {
+    to: '/audio-recorder' as const,
+    icon: <AudioLines className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'home.tools.audioRecorder.title',
+    descKey: 'home.tools.audioRecorder.desc',
+    tagKeys: [
+      'home.tools.audioRecorder.tagMic',
+      'home.tools.audioRecorder.tagRecords',
+    ],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
     to: '/screen-recorder' as const,
     icon: <Video className="h-8 w-8 text-red-500" />,
     titleKey: 'home.tools.screenRecorder.title',
@@ -650,9 +961,222 @@ const videoTools = [
     gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
     border: 'hover:border-rose-300 dark:hover:border-rose-700',
   },
+  {
+    to: '/video-editor' as const,
+    icon: <Video className="h-8 w-8 text-orange-500" />,
+    titleKey: 'home.tools.videoEditor.title',
+    descKey: 'home.tools.videoEditor.desc',
+    tagKeys: [
+      'home.tools.videoEditor.tagMerge',
+      'home.tools.videoEditor.tagAudio',
+      'home.tools.videoEditor.tagTransform',
+    ],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/video-animation' as const,
+    icon: <Images className="h-8 w-8 text-lime-500" />,
+    titleKey: 'home.tools.videoAnimation.title',
+    descKey: 'home.tools.videoAnimation.desc',
+    tagKeys: [
+      'home.tools.videoAnimation.tagGif',
+      'home.tools.videoAnimation.tagWebp',
+    ],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
+  {
+    to: '/audio-editor' as const,
+    icon: <AudioLines className="h-8 w-8 text-violet-500" />,
+    titleKey: 'home.tools.audioEditor.title',
+    descKey: 'home.tools.audioEditor.desc',
+    tagKeys: [
+      'home.tools.audioEditor.tagTrim',
+      'home.tools.audioEditor.tagMerge',
+      'home.tools.audioEditor.tagWaveform',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/subtitle-editor' as const,
+    icon: <Captions className="h-8 w-8 text-sky-500" />,
+    titleKey: 'home.tools.subtitleEditor.title',
+    descKey: 'home.tools.subtitleEditor.desc',
+    tagKeys: [
+      'home.tools.subtitleEditor.tagSrt',
+      'home.tools.subtitleEditor.tagVtt',
+      'home.tools.subtitleEditor.tagBurn',
+    ],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
+  },
 ];
 
 const lifeTools = [
+  {
+    to: '/finance-calculator' as const,
+    icon: <Landmark className="h-8 w-8 text-green-500" />,
+    titleKey: 'home.tools.financeCalculator.title',
+    descKey: 'home.tools.financeCalculator.desc',
+    tagKeys: [
+      'home.tools.financeCalculator.tagCompound',
+      'home.tools.financeCalculator.tagInflation',
+    ],
+    gradient: 'hover:bg-green-50 dark:hover:bg-green-950/20',
+    border: 'hover:border-green-300 dark:hover:border-green-700',
+  },
+  {
+    to: '/home-energy' as const,
+    icon: <Activity className="h-8 w-8 text-yellow-500" />,
+    titleKey: 'home.tools.homeEnergy.title',
+    descKey: 'home.tools.homeEnergy.desc',
+    tagKeys: [
+      'home.tools.homeEnergy.tagAppliance',
+      'home.tools.homeEnergy.tagCost',
+    ],
+    gradient: 'hover:bg-yellow-50 dark:hover:bg-yellow-950/20',
+    border: 'hover:border-yellow-300 dark:hover:border-yellow-700',
+  },
+  {
+    to: '/geometry-calculator' as const,
+    icon: <Ruler className="h-8 w-8 text-indigo-500" />,
+    titleKey: 'home.tools.geometryCalculator.title',
+    descKey: 'home.tools.geometryCalculator.desc',
+    tagKeys: [
+      'home.tools.geometryCalculator.tagArea',
+      'home.tools.geometryCalculator.tagMaterial',
+    ],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/date-calculator' as const,
+    icon: <CalendarClock className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.dateCalculator.title',
+    descKey: 'home.tools.dateCalculator.desc',
+    tagKeys: [
+      'home.tools.dateCalculator.tagAge',
+      'home.tools.dateCalculator.tagCountdown',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
+    to: '/salary-tax' as const,
+    icon: <Landmark className="h-8 w-8 text-amber-500" />,
+    titleKey: 'home.tools.salaryTax.title',
+    descKey: 'home.tools.salaryTax.desc',
+    tagKeys: ['home.tools.salaryTax.tagTax', 'home.tools.salaryTax.tagNet'],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
+  {
+    to: '/travel-cost' as const,
+    icon: <MapPin className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'home.tools.travelCost.title',
+    descKey: 'home.tools.travelCost.desc',
+    tagKeys: [
+      'home.tools.travelCost.tagFuel',
+      'home.tools.travelCost.tagElectric',
+    ],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/pace-calculator' as const,
+    icon: <Activity className="h-8 w-8 text-orange-500" />,
+    titleKey: 'home.tools.paceCalculator.title',
+    descKey: 'home.tools.paceCalculator.desc',
+    tagKeys: [
+      'home.tools.paceCalculator.tagPace',
+      'home.tools.paceCalculator.tagSpeed',
+    ],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/recipe-scale' as const,
+    icon: <ListOrdered className="h-8 w-8 text-rose-500" />,
+    titleKey: 'home.tools.recipeScale.title',
+    descKey: 'home.tools.recipeScale.desc',
+    tagKeys: [
+      'home.tools.recipeScale.tagServings',
+      'home.tools.recipeScale.tagRatio',
+    ],
+    gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
+    border: 'hover:border-rose-300 dark:hover:border-rose-700',
+  },
+  {
+    to: '/size-converter' as const,
+    icon: <Ruler className="h-8 w-8 text-violet-500" />,
+    titleKey: 'home.tools.sizeConverter.title',
+    descKey: 'home.tools.sizeConverter.desc',
+    tagKeys: [
+      'home.tools.sizeConverter.tagShoe',
+      'home.tools.sizeConverter.tagClothing',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/meeting-planner' as const,
+    icon: <Globe className="h-8 w-8 text-cyan-500" />,
+    titleKey: 'home.tools.meetingPlanner.title',
+    descKey: 'home.tools.meetingPlanner.desc',
+    tagKeys: [
+      'home.tools.meetingPlanner.tagCities',
+      'home.tools.meetingPlanner.tagTimezones',
+    ],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/ics-generator' as const,
+    icon: <FileText className="h-8 w-8 text-indigo-500" />,
+    titleKey: 'home.tools.icsGenerator.title',
+    descKey: 'home.tools.icsGenerator.desc',
+    tagKeys: [
+      'home.tools.icsGenerator.tagIcs',
+      'home.tools.icsGenerator.tagCalendar',
+    ],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/random-picker' as const,
+    icon: <Dices className="h-8 w-8 text-pink-500" />,
+    titleKey: 'home.tools.randomPicker.title',
+    descKey: 'home.tools.randomPicker.desc',
+    tagKeys: [
+      'home.tools.randomPicker.tagGroup',
+      'home.tools.randomPicker.tagDraw',
+    ],
+    gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
+    border: 'hover:border-pink-300 dark:hover:border-pink-700',
+  },
+  {
+    to: '/bill-split' as const,
+    icon: <ArrowLeftRight className="h-8 w-8 text-teal-500" />,
+    titleKey: 'home.tools.billSplit.title',
+    descKey: 'home.tools.billSplit.desc',
+    tagKeys: ['home.tools.billSplit.tagSplit', 'home.tools.billSplit.tagTip'],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
+    to: '/home-budget' as const,
+    icon: <House className="h-8 w-8 text-lime-500" />,
+    titleKey: 'home.tools.homeBudget.title',
+    descKey: 'home.tools.homeBudget.desc',
+    tagKeys: [
+      'home.tools.homeBudget.tagArea',
+      'home.tools.homeBudget.tagBudget',
+    ],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
   {
     to: '/world-clock' as const,
     icon: <Clock className="h-8 w-8 text-sky-500" />,
@@ -944,6 +1468,7 @@ const ALL_TOOLS = [
   ...frontendTools,
   ...videoTools,
   ...lifeTools,
+  ...developerExtraTools,
 ];
 
 const HOME_CATEGORIES = [
@@ -1376,6 +1901,37 @@ function HomePageContent({
         )}
 
         {/* 数据转换 / 互转 */}
+        {(isDeveloperCategory || category === 'all') && (
+          <div>
+            <div className="mb-5 flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-500">
+                <Code2 className="h-4 w-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold leading-none">
+                  {t('home.groupDeveloper')}
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('home.developerSubtitle')}
+                </p>
+              </div>
+              <div className="ml-2 h-px flex-1 bg-border" />
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {developerExtraTools.map((tool) => (
+                <ToolCard
+                  key={tool.to}
+                  tool={tool}
+                  t={t}
+                  isFavorite={isFavorite(tool.to)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 数据转换 / 互转 */}
         {(isDeveloperCategory ||
           isConversionCategory ||
           category === 'all') && (
@@ -1461,6 +2017,10 @@ function HomePageContent({
                 .filter(
                   (tool) =>
                     tool.to !== '/image' &&
+                    tool.to !== '/image-compare' &&
+                    tool.to !== '/pwa-icons' &&
+                    tool.to !== '/image-palette' &&
+                    tool.to !== '/id-photo' &&
                     tool.to !== '/image-privacy' &&
                     tool.to !== '/webp-gif',
                 )
@@ -1499,6 +2059,10 @@ function HomePageContent({
                 .filter(
                   (tool) =>
                     tool.to === '/image' ||
+                    tool.to === '/image-compare' ||
+                    tool.to === '/pwa-icons' ||
+                    tool.to === '/image-palette' ||
+                    tool.to === '/id-photo' ||
                     tool.to === '/image-privacy' ||
                     tool.to === '/webp-gif',
                 )

@@ -4,6 +4,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { db, type ScreenRecording } from '@/lib/db';
 import {
+  formatRecordingDuration,
+  formatRecordingSize,
   getRecordingExtension,
   getSupportedRecordingMimeType,
   isScreenRecordingSupported,
@@ -81,27 +83,15 @@ async function closeCapture(capture: ActiveCapture): Promise<void> {
   await capture.audioContext?.close().catch(() => undefined);
 }
 
-function formatDuration(durationMs: number): string {
-  const seconds = Math.floor(durationMs / 1000);
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const rest = seconds % 60;
-  return hours > 0
-    ? [hours, minutes, rest]
-        .map((value) => String(value).padStart(2, '0'))
-        .join(':')
-    : [minutes, rest].map((value) => String(value).padStart(2, '0')).join(':');
-}
-
-function formatFileSize(size: number): string {
-  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-  return `${(size / 1024 / 1024).toFixed(1)} MB`;
-}
-
 function ScreenRecorderPage() {
   const { t, i18n } = useTranslation();
   const recordings = useLiveQuery(
-    () => db.screenRecordings.orderBy('createdAt').reverse().toArray(),
+    () =>
+      db.screenRecordings
+        .orderBy('createdAt')
+        .reverse()
+        .filter((record) => record.kind !== 'audio')
+        .toArray(),
     [],
   );
   const previewRef = useRef<HTMLVideoElement | null>(null);
@@ -330,6 +320,7 @@ function ScreenRecorderPage() {
       const { size } = await storageWorker.close();
       const recordingRecord: ScreenRecording = {
         id,
+        kind: 'screen',
         fileName,
         mimeType,
         createdAt: startedAtRef.current,
@@ -425,7 +416,7 @@ function ScreenRecorderPage() {
             {t('screenRecorder.captureTitle')}
           </CardTitle>
           <span className="font-mono text-lg tabular-nums">
-            {formatDuration(elapsedMs)}
+            {formatRecordingDuration(elapsedMs)}
           </span>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -547,8 +538,8 @@ function ScreenRecorderPage() {
                     }).format(item.createdAt)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {formatDuration(item.durationMs)} ·{' '}
-                    {formatFileSize(item.size)}
+                    {formatRecordingDuration(item.durationMs)} ·{' '}
+                    {formatRecordingSize(item.size)}
                   </p>
                 </div>
                 <Button

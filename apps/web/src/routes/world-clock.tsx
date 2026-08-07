@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/lib/api';
+import { COMMON_CITIES } from '@/lib/life-calculators';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Clock, Globe2, LoaderCircle, RefreshCw } from 'lucide-react';
@@ -10,21 +11,6 @@ import { useTranslation } from 'react-i18next';
 export const Route = createFileRoute('/world-clock')({
   component: WorldClockPage,
 });
-
-const CITIES = [
-  ['shanghai', 'Asia/Shanghai'],
-  ['tokyo', 'Asia/Tokyo'],
-  ['singapore', 'Asia/Singapore'],
-  ['dubai', 'Asia/Dubai'],
-  ['london', 'Europe/London'],
-  ['paris', 'Europe/Paris'],
-  ['moscow', 'Europe/Moscow'],
-  ['newYork', 'America/New_York'],
-  ['losAngeles', 'America/Los_Angeles'],
-  ['saoPaulo', 'America/Sao_Paulo'],
-  ['sydney', 'Australia/Sydney'],
-  ['auckland', 'Pacific/Auckland'],
-] as const;
 
 async function fetchUtcTime() {
   const requestStartedAt = Date.now();
@@ -102,7 +88,7 @@ function WorldClockPage() {
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {CITIES.map(([city, timeZone]) => (
+        {COMMON_CITIES.map(([city, timeZone]) => (
           <CityClock
             key={city}
             city={t(`worldClock.cities.${city}`)}

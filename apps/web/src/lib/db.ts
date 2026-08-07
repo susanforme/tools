@@ -73,6 +73,7 @@ export interface CachedFont {
 
 export interface ScreenRecording {
   id: string;
+  kind?: 'screen' | 'audio';
   fileName: string;
   mimeType: string;
   createdAt: number;

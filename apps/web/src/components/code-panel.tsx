@@ -1,10 +1,5 @@
-import { useTheme } from '@/hooks/use-theme';
-import Editor from '@monaco-editor/react';
-import { Check, Copy } from 'lucide-react';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import '../lib/monaco';
-import { Button } from './ui/button';
+import { MonacoTextEditor } from './monaco-editor';
 
 export interface CodePanelProps {
   input: string;
@@ -28,29 +23,6 @@ export function CodePanel({
 }: CodePanelProps) {
   const { t } = useTranslation();
   const resolvedOutputLanguage = outputLanguage ?? language;
-  const [copied, setCopied] = useState(false);
-  const { theme: pageTheme } = useTheme();
-
-  const handleCopy = async () => {
-    if (!output) return;
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const theme = pageTheme === 'dark' ? 'vs-dark' : 'light';
-
-  const baseOptions = {
-    minimap: { enabled: false },
-    fontSize: 13,
-    lineNumbers: 'on' as const,
-    wordWrap: 'on' as const,
-    scrollBeyondLastLine: false,
-    automaticLayout: true,
-    tabSize: 2,
-    renderLineHighlight: 'all' as const,
-  };
-
   return (
     <div className="flex flex-col gap-3">
       {error && (
@@ -59,55 +31,18 @@ export function CodePanel({
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              {t('panel.input')}
-            </label>
-            {/* 占位，与输出面板的复制按钮行等高，保持左右对称 */}
-            <span className="h-6" />
-          </div>
-          <div className="rounded-md overflow-hidden border border-input">
-            <Editor
-              height="480px"
-              language={language}
-              value={input}
-              onChange={(v) => onInputChange(v ?? '')}
-              theme={theme}
-              options={baseOptions}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              {t('panel.output')}
-            </label>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleCopy}
-              disabled={!output}
-              className="h-6 px-2 text-xs gap-1"
-            >
-              {copied ? (
-                <Check className="w-3 h-3" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
-              {copied ? t('panel.copied') : t('panel.copy')}
-            </Button>
-          </div>
-          <div className="rounded-md overflow-hidden border border-input">
-            <Editor
-              height="480px"
-              language={resolvedOutputLanguage}
-              value={output}
-              theme={theme}
-              options={{ ...baseOptions, readOnly: true }}
-            />
-          </div>
-        </div>
+        <MonacoTextEditor
+          label={t('panel.input')}
+          language={language}
+          value={input}
+          onChange={onInputChange}
+        />
+        <MonacoTextEditor
+          readOnly
+          label={t('panel.output')}
+          language={resolvedOutputLanguage}
+          value={output}
+        />
       </div>
     </div>
   );

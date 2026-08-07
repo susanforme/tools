@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
-import { Eraser, UserRound } from 'lucide-react';
+import { Eraser, SlidersHorizontal, UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Separator } from './ui/separator';
 
-type SettingsSection = 'account' | 'data';
+type SettingsSection = 'account' | 'preferences' | 'data';
 
 export function SettingsLayout({
   active,
@@ -23,6 +23,12 @@ export function SettingsLayout({
       icon: UserRound,
       label: t('settingsPage.accountTitle'),
       to: '/settings' as const,
+    },
+    {
+      id: 'preferences' as const,
+      icon: SlidersHorizontal,
+      label: t('settingsPage.preferencesTitle'),
+      to: '/settings-preferences' as const,
     },
     {
       id: 'data' as const,

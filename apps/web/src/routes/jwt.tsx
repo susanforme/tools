@@ -1,4 +1,6 @@
 import { HistoryPanel } from '@/components/history-panel';
+import { JwkPanel } from '@/components/jwk-panel';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { useToolHistory } from '@/hooks/useToolHistory';
 import { createFileRoute } from '@tanstack/react-router';
 import {
@@ -22,6 +24,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '../components/ui/resizable';
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/jwt')({ component: JwtPage });
 
@@ -163,6 +166,30 @@ function CopyButton({ text }: { text: string }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 function JwtPage() {
+  const { t } = useTranslation();
+  const [mode, setMode] = useQueryParam<'jwt' | 'jwk'>(
+    'mode',
+    StringParam,
+    'jwt',
+  );
+  return (
+    <div className="mx-auto max-w-7xl space-y-4 px-4 py-6">
+      <h1 className="text-2xl font-bold">{t('jwt.title')}</h1>
+      <Tabs
+        value={mode}
+        onValueChange={(value) => setMode(value as 'jwt' | 'jwk')}
+      >
+        <TabsList>
+          <TabsTrigger value="jwt">JWT</TabsTrigger>
+          <TabsTrigger value="jwk">JWK</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {mode === 'jwt' ? <JwtCodecPage /> : <JwkPanel />}
+    </div>
+  );
+}
+
+function JwtCodecPage() {
   const { t } = useTranslation();
   const { add } = useToolHistory();
 
@@ -345,12 +372,7 @@ function JwtPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-5">
-      {/* 标题 */}
-      <div>
-        <h1 className="text-2xl font-bold">{t('jwt.title')}</h1>
-      </div>
-
+    <div className="space-y-5">
       {/* 主布局：左侧 Token + 中间操作栏 + 右侧结构化表单 */}
       <ResizablePanelGroup
         orientation="horizontal"

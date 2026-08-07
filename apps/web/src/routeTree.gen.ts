@@ -13,58 +13,104 @@ import { Route as YamlRouteImport } from './routes/yaml'
 import { Route as XmlJsonRouteImport } from './routes/xml-json'
 import { Route as XmlRouteImport } from './routes/xml'
 import { Route as WorldClockRouteImport } from './routes/world-clock'
+import { Route as WebrtcDiagnosticsRouteImport } from './routes/webrtc-diagnostics'
 import { Route as WebpGifRouteImport } from './routes/webp-gif'
+import { Route as WebauthnDebuggerRouteImport } from './routes/webauthn-debugger'
 import { Route as VideoTrimmerRouteImport } from './routes/video-trimmer'
+import { Route as VideoEditorRouteImport } from './routes/video-editor'
+import { Route as VideoAnimationRouteImport } from './routes/video-animation'
 import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnitConverterRouteImport } from './routes/unit-converter'
 import { Route as UnicodeRouteImport } from './routes/unicode'
+import { Route as TravelCostRouteImport } from './routes/travel-cost'
 import { Route as TotpRouteImport } from './routes/totp'
+import { Route as TextToSpeechRouteImport } from './routes/text-to-speech'
 import { Route as TextRouteImport } from './routes/text'
 import { Route as TemperatureRouteImport } from './routes/temperature'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
+import { Route as SvgToolkitRouteImport } from './routes/svg-toolkit'
+import { Route as SubtitleEditorRouteImport } from './routes/subtitle-editor'
 import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
+import { Route as SqlDataRouteImport } from './routes/sql-data'
 import { Route as SqlRouteImport } from './routes/sql'
 import { Route as SocialInsuranceRouteImport } from './routes/social-insurance'
+import { Route as SizeConverterRouteImport } from './routes/size-converter'
+import { Route as SettingsPreferencesRouteImport } from './routes/settings-preferences'
 import { Route as SettingsDataRouteImport } from './routes/settings-data'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScreenRecorderRouteImport } from './routes/screen-recorder'
+import { Route as SalaryTaxRouteImport } from './routes/salary-tax'
 import { Route as Rot13RouteImport } from './routes/rot13'
 import { Route as RegexRouteImport } from './routes/regex'
+import { Route as RecipeScaleRouteImport } from './routes/recipe-scale'
+import { Route as RealtimeDebuggerRouteImport } from './routes/realtime-debugger'
+import { Route as RandomPickerRouteImport } from './routes/random-picker'
 import { Route as QrcodeRouteImport } from './routes/qrcode'
+import { Route as PwaIconsRouteImport } from './routes/pwa-icons'
+import { Route as PdfToolkitRouteImport } from './routes/pdf-toolkit'
 import { Route as PasswordRouteImport } from './routes/password'
+import { Route as PaceCalculatorRouteImport } from './routes/pace-calculator'
+import { Route as OpenapiRouteImport } from './routes/openapi'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MortgageRouteImport } from './routes/mortgage'
+import { Route as MockDataRouteImport } from './routes/mock-data'
+import { Route as MeetingPlannerRouteImport } from './routes/meeting-planner'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JwtRouteImport } from './routes/jwt'
+import { Route as JsonSchemaRouteImport } from './routes/json-schema'
+import { Route as JsonDataRouteImport } from './routes/json-data'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
 import { Route as IpLookupRouteImport } from './routes/ip-lookup'
 import { Route as ImagePrivacyRouteImport } from './routes/image-privacy'
+import { Route as ImagePaletteRouteImport } from './routes/image-palette'
+import { Route as ImageCompareRouteImport } from './routes/image-compare'
 import { Route as ImageRouteImport } from './routes/image'
+import { Route as IdPhotoRouteImport } from './routes/id-photo'
+import { Route as IcsGeneratorRouteImport } from './routes/ics-generator'
 import { Route as HttpStatusRouteImport } from './routes/http-status'
 import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
+import { Route as HomeEnergyRouteImport } from './routes/home-energy'
+import { Route as HomeBudgetRouteImport } from './routes/home-budget'
 import { Route as HmacRouteImport } from './routes/hmac'
+import { Route as HexInspectorRouteImport } from './routes/hex-inspector'
 import { Route as HashRouteImport } from './routes/hash'
+import { Route as HarAnalyzerRouteImport } from './routes/har-analyzer'
 import { Route as GushiNamerRouteImport } from './routes/gushi-namer'
+import { Route as GradientStudioRouteImport } from './routes/gradient-studio'
+import { Route as GitToolRouteImport } from './routes/git-tool'
+import { Route as GeometryCalculatorRouteImport } from './routes/geometry-calculator'
 import { Route as FontRouteImport } from './routes/font'
+import { Route as FinanceCalculatorRouteImport } from './routes/finance-calculator'
+import { Route as EnvRouteImport } from './routes/env'
+import { Route as EmailHeadersRouteImport } from './routes/email-headers'
 import { Route as DiffRouteImport } from './routes/diff'
 import { Route as DatetimeRouteImport } from './routes/datetime'
+import { Route as DateCalculatorRouteImport } from './routes/date-calculator'
 import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssUnitRouteImport } from './routes/css-unit'
 import { Route as CssLayoutRouteImport } from './routes/css-layout'
 import { Route as CssAnimationRouteImport } from './routes/css-animation'
 import { Route as CssRouteImport } from './routes/css'
+import { Route as CspRouteImport } from './routes/csp'
+import { Route as CronRouteImport } from './routes/cron'
 import { Route as CorsRouteImport } from './routes/cors'
 import { Route as CookieRouteImport } from './routes/cookie'
 import { Route as ContrastRouteImport } from './routes/contrast'
 import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
+import { Route as CertificateToolRouteImport } from './routes/certificate-tool'
+import { Route as BundleInspectorRouteImport } from './routes/bundle-inspector'
 import { Route as BmiRouteImport } from './routes/bmi'
+import { Route as BillSplitRouteImport } from './routes/bill-split'
+import { Route as BatchFilesRouteImport } from './routes/batch-files'
 import { Route as Base64RouteImport } from './routes/base64'
+import { Route as AudioRecorderRouteImport } from './routes/audio-recorder'
+import { Route as AudioEditorRouteImport } from './routes/audio-editor'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -88,14 +134,34 @@ const WorldClockRoute = WorldClockRouteImport.update({
   path: '/world-clock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WebrtcDiagnosticsRoute = WebrtcDiagnosticsRouteImport.update({
+  id: '/webrtc-diagnostics',
+  path: '/webrtc-diagnostics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WebpGifRoute = WebpGifRouteImport.update({
   id: '/webp-gif',
   path: '/webp-gif',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WebauthnDebuggerRoute = WebauthnDebuggerRouteImport.update({
+  id: '/webauthn-debugger',
+  path: '/webauthn-debugger',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VideoTrimmerRoute = VideoTrimmerRouteImport.update({
   id: '/video-trimmer',
   path: '/video-trimmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideoEditorRoute = VideoEditorRouteImport.update({
+  id: '/video-editor',
+  path: '/video-editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideoAnimationRoute = VideoAnimationRouteImport.update({
+  id: '/video-animation',
+  path: '/video-animation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UuidRoute = UuidRouteImport.update({
@@ -123,9 +189,19 @@ const UnicodeRoute = UnicodeRouteImport.update({
   path: '/unicode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TravelCostRoute = TravelCostRouteImport.update({
+  id: '/travel-cost',
+  path: '/travel-cost',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TotpRoute = TotpRouteImport.update({
   id: '/totp',
   path: '/totp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TextToSpeechRoute = TextToSpeechRouteImport.update({
+  id: '/text-to-speech',
+  path: '/text-to-speech',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TextRoute = TextRouteImport.update({
@@ -143,9 +219,24 @@ const TableConvertRoute = TableConvertRouteImport.update({
   path: '/table-convert',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SvgToolkitRoute = SvgToolkitRouteImport.update({
+  id: '/svg-toolkit',
+  path: '/svg-toolkit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubtitleEditorRoute = SubtitleEditorRouteImport.update({
+  id: '/subtitle-editor',
+  path: '/subtitle-editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SqlPlaygroundRoute = SqlPlaygroundRouteImport.update({
   id: '/sql-playground',
   path: '/sql-playground',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SqlDataRoute = SqlDataRouteImport.update({
+  id: '/sql-data',
+  path: '/sql-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SqlRoute = SqlRouteImport.update({
@@ -156,6 +247,16 @@ const SqlRoute = SqlRouteImport.update({
 const SocialInsuranceRoute = SocialInsuranceRouteImport.update({
   id: '/social-insurance',
   path: '/social-insurance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SizeConverterRoute = SizeConverterRouteImport.update({
+  id: '/size-converter',
+  path: '/size-converter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsPreferencesRoute = SettingsPreferencesRouteImport.update({
+  id: '/settings-preferences',
+  path: '/settings-preferences',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsDataRoute = SettingsDataRouteImport.update({
@@ -173,6 +274,11 @@ const ScreenRecorderRoute = ScreenRecorderRouteImport.update({
   path: '/screen-recorder',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalaryTaxRoute = SalaryTaxRouteImport.update({
+  id: '/salary-tax',
+  path: '/salary-tax',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Rot13Route = Rot13RouteImport.update({
   id: '/rot13',
   path: '/rot13',
@@ -183,14 +289,49 @@ const RegexRoute = RegexRouteImport.update({
   path: '/regex',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecipeScaleRoute = RecipeScaleRouteImport.update({
+  id: '/recipe-scale',
+  path: '/recipe-scale',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RealtimeDebuggerRoute = RealtimeDebuggerRouteImport.update({
+  id: '/realtime-debugger',
+  path: '/realtime-debugger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RandomPickerRoute = RandomPickerRouteImport.update({
+  id: '/random-picker',
+  path: '/random-picker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QrcodeRoute = QrcodeRouteImport.update({
   id: '/qrcode',
   path: '/qrcode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PwaIconsRoute = PwaIconsRouteImport.update({
+  id: '/pwa-icons',
+  path: '/pwa-icons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PdfToolkitRoute = PdfToolkitRouteImport.update({
+  id: '/pdf-toolkit',
+  path: '/pdf-toolkit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PasswordRoute = PasswordRouteImport.update({
   id: '/password',
   path: '/password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaceCalculatorRoute = PaceCalculatorRouteImport.update({
+  id: '/pace-calculator',
+  path: '/pace-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpenapiRoute = OpenapiRouteImport.update({
+  id: '/openapi',
+  path: '/openapi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NumberBaseRoute = NumberBaseRouteImport.update({
@@ -201,6 +342,16 @@ const NumberBaseRoute = NumberBaseRouteImport.update({
 const MortgageRoute = MortgageRouteImport.update({
   id: '/mortgage',
   path: '/mortgage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MockDataRoute = MockDataRouteImport.update({
+  id: '/mock-data',
+  path: '/mock-data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingPlannerRoute = MeetingPlannerRouteImport.update({
+  id: '/meeting-planner',
+  path: '/meeting-planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarkdownRoute = MarkdownRouteImport.update({
@@ -216,6 +367,16 @@ const LoginRoute = LoginRouteImport.update({
 const JwtRoute = JwtRouteImport.update({
   id: '/jwt',
   path: '/jwt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JsonSchemaRoute = JsonSchemaRouteImport.update({
+  id: '/json-schema',
+  path: '/json-schema',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JsonDataRoute = JsonDataRouteImport.update({
+  id: '/json-data',
+  path: '/json-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JsonRoute = JsonRouteImport.update({
@@ -238,9 +399,29 @@ const ImagePrivacyRoute = ImagePrivacyRouteImport.update({
   path: '/image-privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImagePaletteRoute = ImagePaletteRouteImport.update({
+  id: '/image-palette',
+  path: '/image-palette',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImageCompareRoute = ImageCompareRouteImport.update({
+  id: '/image-compare',
+  path: '/image-compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ImageRoute = ImageRouteImport.update({
   id: '/image',
   path: '/image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IdPhotoRoute = IdPhotoRouteImport.update({
+  id: '/id-photo',
+  path: '/id-photo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IcsGeneratorRoute = IcsGeneratorRouteImport.update({
+  id: '/ics-generator',
+  path: '/ics-generator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HttpStatusRoute = HttpStatusRouteImport.update({
@@ -258,9 +439,24 @@ const HtmlRoute = HtmlRouteImport.update({
   path: '/html',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HomeEnergyRoute = HomeEnergyRouteImport.update({
+  id: '/home-energy',
+  path: '/home-energy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeBudgetRoute = HomeBudgetRouteImport.update({
+  id: '/home-budget',
+  path: '/home-budget',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HmacRoute = HmacRouteImport.update({
   id: '/hmac',
   path: '/hmac',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HexInspectorRoute = HexInspectorRouteImport.update({
+  id: '/hex-inspector',
+  path: '/hex-inspector',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HashRoute = HashRouteImport.update({
@@ -268,14 +464,49 @@ const HashRoute = HashRouteImport.update({
   path: '/hash',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HarAnalyzerRoute = HarAnalyzerRouteImport.update({
+  id: '/har-analyzer',
+  path: '/har-analyzer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GushiNamerRoute = GushiNamerRouteImport.update({
   id: '/gushi-namer',
   path: '/gushi-namer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GradientStudioRoute = GradientStudioRouteImport.update({
+  id: '/gradient-studio',
+  path: '/gradient-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GitToolRoute = GitToolRouteImport.update({
+  id: '/git-tool',
+  path: '/git-tool',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeometryCalculatorRoute = GeometryCalculatorRouteImport.update({
+  id: '/geometry-calculator',
+  path: '/geometry-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FontRoute = FontRouteImport.update({
   id: '/font',
   path: '/font',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceCalculatorRoute = FinanceCalculatorRouteImport.update({
+  id: '/finance-calculator',
+  path: '/finance-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnvRoute = EnvRouteImport.update({
+  id: '/env',
+  path: '/env',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmailHeadersRoute = EmailHeadersRouteImport.update({
+  id: '/email-headers',
+  path: '/email-headers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiffRoute = DiffRouteImport.update({
@@ -286,6 +517,11 @@ const DiffRoute = DiffRouteImport.update({
 const DatetimeRoute = DatetimeRouteImport.update({
   id: '/datetime',
   path: '/datetime',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DateCalculatorRoute = DateCalculatorRouteImport.update({
+  id: '/date-calculator',
+  path: '/date-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CsvConvertRoute = CsvConvertRouteImport.update({
@@ -313,6 +549,16 @@ const CssRoute = CssRouteImport.update({
   path: '/css',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CspRoute = CspRouteImport.update({
+  id: '/csp',
+  path: '/csp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CronRoute = CronRouteImport.update({
+  id: '/cron',
+  path: '/cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CorsRoute = CorsRouteImport.update({
   id: '/cors',
   path: '/cors',
@@ -338,14 +584,44 @@ const CipherRoute = CipherRouteImport.update({
   path: '/cipher',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CertificateToolRoute = CertificateToolRouteImport.update({
+  id: '/certificate-tool',
+  path: '/certificate-tool',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BundleInspectorRoute = BundleInspectorRouteImport.update({
+  id: '/bundle-inspector',
+  path: '/bundle-inspector',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BmiRoute = BmiRouteImport.update({
   id: '/bmi',
   path: '/bmi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BillSplitRoute = BillSplitRouteImport.update({
+  id: '/bill-split',
+  path: '/bill-split',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BatchFilesRoute = BatchFilesRouteImport.update({
+  id: '/batch-files',
+  path: '/batch-files',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Base64Route = Base64RouteImport.update({
   id: '/base64',
   path: '/base64',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AudioRecorderRoute = AudioRecorderRouteImport.update({
+  id: '/audio-recorder',
+  path: '/audio-recorder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AudioEditorRoute = AudioEditorRouteImport.update({
+  id: '/audio-editor',
+  path: '/audio-editor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArchiveRoute = ArchiveRouteImport.update({
@@ -362,58 +638,104 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/audio-editor': typeof AudioEditorRoute
+  '/audio-recorder': typeof AudioRecorderRoute
   '/base64': typeof Base64Route
+  '/batch-files': typeof BatchFilesRoute
+  '/bill-split': typeof BillSplitRoute
   '/bmi': typeof BmiRoute
+  '/bundle-inspector': typeof BundleInspectorRoute
+  '/certificate-tool': typeof CertificateToolRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
+  '/cron': typeof CronRoute
+  '/csp': typeof CspRoute
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
+  '/email-headers': typeof EmailHeadersRoute
+  '/env': typeof EnvRoute
+  '/finance-calculator': typeof FinanceCalculatorRoute
   '/font': typeof FontRoute
+  '/geometry-calculator': typeof GeometryCalculatorRoute
+  '/git-tool': typeof GitToolRoute
+  '/gradient-studio': typeof GradientStudioRoute
   '/gushi-namer': typeof GushiNamerRoute
+  '/har-analyzer': typeof HarAnalyzerRoute
   '/hash': typeof HashRoute
+  '/hex-inspector': typeof HexInspectorRoute
   '/hmac': typeof HmacRoute
+  '/home-budget': typeof HomeBudgetRoute
+  '/home-energy': typeof HomeEnergyRoute
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
+  '/ics-generator': typeof IcsGeneratorRoute
+  '/id-photo': typeof IdPhotoRoute
   '/image': typeof ImageRoute
+  '/image-compare': typeof ImageCompareRoute
+  '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/json-data': typeof JsonDataRoute
+  '/json-schema': typeof JsonSchemaRoute
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
+  '/meeting-planner': typeof MeetingPlannerRoute
+  '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
+  '/openapi': typeof OpenapiRoute
+  '/pace-calculator': typeof PaceCalculatorRoute
   '/password': typeof PasswordRoute
+  '/pdf-toolkit': typeof PdfToolkitRoute
+  '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
+  '/random-picker': typeof RandomPickerRoute
+  '/realtime-debugger': typeof RealtimeDebuggerRoute
+  '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
+  '/salary-tax': typeof SalaryTaxRoute
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
+  '/settings-preferences': typeof SettingsPreferencesRoute
+  '/size-converter': typeof SizeConverterRoute
   '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
+  '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
+  '/subtitle-editor': typeof SubtitleEditorRoute
+  '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
   '/temperature': typeof TemperatureRoute
   '/text': typeof TextRoute
+  '/text-to-speech': typeof TextToSpeechRoute
   '/totp': typeof TotpRoute
+  '/travel-cost': typeof TravelCostRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/video-animation': typeof VideoAnimationRoute
+  '/video-editor': typeof VideoEditorRoute
   '/video-trimmer': typeof VideoTrimmerRoute
+  '/webauthn-debugger': typeof WebauthnDebuggerRoute
   '/webp-gif': typeof WebpGifRoute
+  '/webrtc-diagnostics': typeof WebrtcDiagnosticsRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
@@ -422,58 +744,104 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/audio-editor': typeof AudioEditorRoute
+  '/audio-recorder': typeof AudioRecorderRoute
   '/base64': typeof Base64Route
+  '/batch-files': typeof BatchFilesRoute
+  '/bill-split': typeof BillSplitRoute
   '/bmi': typeof BmiRoute
+  '/bundle-inspector': typeof BundleInspectorRoute
+  '/certificate-tool': typeof CertificateToolRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
+  '/cron': typeof CronRoute
+  '/csp': typeof CspRoute
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
+  '/email-headers': typeof EmailHeadersRoute
+  '/env': typeof EnvRoute
+  '/finance-calculator': typeof FinanceCalculatorRoute
   '/font': typeof FontRoute
+  '/geometry-calculator': typeof GeometryCalculatorRoute
+  '/git-tool': typeof GitToolRoute
+  '/gradient-studio': typeof GradientStudioRoute
   '/gushi-namer': typeof GushiNamerRoute
+  '/har-analyzer': typeof HarAnalyzerRoute
   '/hash': typeof HashRoute
+  '/hex-inspector': typeof HexInspectorRoute
   '/hmac': typeof HmacRoute
+  '/home-budget': typeof HomeBudgetRoute
+  '/home-energy': typeof HomeEnergyRoute
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
+  '/ics-generator': typeof IcsGeneratorRoute
+  '/id-photo': typeof IdPhotoRoute
   '/image': typeof ImageRoute
+  '/image-compare': typeof ImageCompareRoute
+  '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/json-data': typeof JsonDataRoute
+  '/json-schema': typeof JsonSchemaRoute
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
+  '/meeting-planner': typeof MeetingPlannerRoute
+  '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
+  '/openapi': typeof OpenapiRoute
+  '/pace-calculator': typeof PaceCalculatorRoute
   '/password': typeof PasswordRoute
+  '/pdf-toolkit': typeof PdfToolkitRoute
+  '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
+  '/random-picker': typeof RandomPickerRoute
+  '/realtime-debugger': typeof RealtimeDebuggerRoute
+  '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
+  '/salary-tax': typeof SalaryTaxRoute
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
+  '/settings-preferences': typeof SettingsPreferencesRoute
+  '/size-converter': typeof SizeConverterRoute
   '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
+  '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
+  '/subtitle-editor': typeof SubtitleEditorRoute
+  '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
   '/temperature': typeof TemperatureRoute
   '/text': typeof TextRoute
+  '/text-to-speech': typeof TextToSpeechRoute
   '/totp': typeof TotpRoute
+  '/travel-cost': typeof TravelCostRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/video-animation': typeof VideoAnimationRoute
+  '/video-editor': typeof VideoEditorRoute
   '/video-trimmer': typeof VideoTrimmerRoute
+  '/webauthn-debugger': typeof WebauthnDebuggerRoute
   '/webp-gif': typeof WebpGifRoute
+  '/webrtc-diagnostics': typeof WebrtcDiagnosticsRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
@@ -483,58 +851,104 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/audio-editor': typeof AudioEditorRoute
+  '/audio-recorder': typeof AudioRecorderRoute
   '/base64': typeof Base64Route
+  '/batch-files': typeof BatchFilesRoute
+  '/bill-split': typeof BillSplitRoute
   '/bmi': typeof BmiRoute
+  '/bundle-inspector': typeof BundleInspectorRoute
+  '/certificate-tool': typeof CertificateToolRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
   '/cookie': typeof CookieRoute
   '/cors': typeof CorsRoute
+  '/cron': typeof CronRoute
+  '/csp': typeof CspRoute
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
+  '/email-headers': typeof EmailHeadersRoute
+  '/env': typeof EnvRoute
+  '/finance-calculator': typeof FinanceCalculatorRoute
   '/font': typeof FontRoute
+  '/geometry-calculator': typeof GeometryCalculatorRoute
+  '/git-tool': typeof GitToolRoute
+  '/gradient-studio': typeof GradientStudioRoute
   '/gushi-namer': typeof GushiNamerRoute
+  '/har-analyzer': typeof HarAnalyzerRoute
   '/hash': typeof HashRoute
+  '/hex-inspector': typeof HexInspectorRoute
   '/hmac': typeof HmacRoute
+  '/home-budget': typeof HomeBudgetRoute
+  '/home-energy': typeof HomeEnergyRoute
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
+  '/ics-generator': typeof IcsGeneratorRoute
+  '/id-photo': typeof IdPhotoRoute
   '/image': typeof ImageRoute
+  '/image-compare': typeof ImageCompareRoute
+  '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
+  '/json-data': typeof JsonDataRoute
+  '/json-schema': typeof JsonSchemaRoute
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
+  '/meeting-planner': typeof MeetingPlannerRoute
+  '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
+  '/openapi': typeof OpenapiRoute
+  '/pace-calculator': typeof PaceCalculatorRoute
   '/password': typeof PasswordRoute
+  '/pdf-toolkit': typeof PdfToolkitRoute
+  '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
+  '/random-picker': typeof RandomPickerRoute
+  '/realtime-debugger': typeof RealtimeDebuggerRoute
+  '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
   '/rot13': typeof Rot13Route
+  '/salary-tax': typeof SalaryTaxRoute
   '/screen-recorder': typeof ScreenRecorderRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
+  '/settings-preferences': typeof SettingsPreferencesRoute
+  '/size-converter': typeof SizeConverterRoute
   '/social-insurance': typeof SocialInsuranceRoute
   '/sql': typeof SqlRoute
+  '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
+  '/subtitle-editor': typeof SubtitleEditorRoute
+  '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
   '/temperature': typeof TemperatureRoute
   '/text': typeof TextRoute
+  '/text-to-speech': typeof TextToSpeechRoute
   '/totp': typeof TotpRoute
+  '/travel-cost': typeof TravelCostRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
+  '/video-animation': typeof VideoAnimationRoute
+  '/video-editor': typeof VideoEditorRoute
   '/video-trimmer': typeof VideoTrimmerRoute
+  '/webauthn-debugger': typeof WebauthnDebuggerRoute
   '/webp-gif': typeof WebpGifRoute
+  '/webrtc-diagnostics': typeof WebrtcDiagnosticsRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
@@ -545,58 +959,104 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/archive'
+    | '/audio-editor'
+    | '/audio-recorder'
     | '/base64'
+    | '/batch-files'
+    | '/bill-split'
     | '/bmi'
+    | '/bundle-inspector'
+    | '/certificate-tool'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
     | '/cookie'
     | '/cors'
+    | '/cron'
+    | '/csp'
     | '/css'
     | '/css-animation'
     | '/css-layout'
     | '/css-unit'
     | '/csv-convert'
+    | '/date-calculator'
     | '/datetime'
     | '/diff'
+    | '/email-headers'
+    | '/env'
+    | '/finance-calculator'
     | '/font'
+    | '/geometry-calculator'
+    | '/git-tool'
+    | '/gradient-studio'
     | '/gushi-namer'
+    | '/har-analyzer'
     | '/hash'
+    | '/hex-inspector'
     | '/hmac'
+    | '/home-budget'
+    | '/home-energy'
     | '/html'
     | '/http-request'
     | '/http-status'
+    | '/ics-generator'
+    | '/id-photo'
     | '/image'
+    | '/image-compare'
+    | '/image-palette'
     | '/image-privacy'
     | '/ip-lookup'
     | '/js'
     | '/json'
+    | '/json-data'
+    | '/json-schema'
     | '/jwt'
     | '/login'
     | '/markdown'
+    | '/meeting-planner'
+    | '/mock-data'
     | '/mortgage'
     | '/number-base'
+    | '/openapi'
+    | '/pace-calculator'
     | '/password'
+    | '/pdf-toolkit'
+    | '/pwa-icons'
     | '/qrcode'
+    | '/random-picker'
+    | '/realtime-debugger'
+    | '/recipe-scale'
     | '/regex'
     | '/rot13'
+    | '/salary-tax'
     | '/screen-recorder'
     | '/settings'
     | '/settings-data'
+    | '/settings-preferences'
+    | '/size-converter'
     | '/social-insurance'
     | '/sql'
+    | '/sql-data'
     | '/sql-playground'
+    | '/subtitle-editor'
+    | '/svg-toolkit'
     | '/table-convert'
     | '/temperature'
     | '/text'
+    | '/text-to-speech'
     | '/totp'
+    | '/travel-cost'
     | '/unicode'
     | '/unit-converter'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/video-animation'
+    | '/video-editor'
     | '/video-trimmer'
+    | '/webauthn-debugger'
     | '/webp-gif'
+    | '/webrtc-diagnostics'
     | '/world-clock'
     | '/xml'
     | '/xml-json'
@@ -605,58 +1065,104 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/archive'
+    | '/audio-editor'
+    | '/audio-recorder'
     | '/base64'
+    | '/batch-files'
+    | '/bill-split'
     | '/bmi'
+    | '/bundle-inspector'
+    | '/certificate-tool'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
     | '/cookie'
     | '/cors'
+    | '/cron'
+    | '/csp'
     | '/css'
     | '/css-animation'
     | '/css-layout'
     | '/css-unit'
     | '/csv-convert'
+    | '/date-calculator'
     | '/datetime'
     | '/diff'
+    | '/email-headers'
+    | '/env'
+    | '/finance-calculator'
     | '/font'
+    | '/geometry-calculator'
+    | '/git-tool'
+    | '/gradient-studio'
     | '/gushi-namer'
+    | '/har-analyzer'
     | '/hash'
+    | '/hex-inspector'
     | '/hmac'
+    | '/home-budget'
+    | '/home-energy'
     | '/html'
     | '/http-request'
     | '/http-status'
+    | '/ics-generator'
+    | '/id-photo'
     | '/image'
+    | '/image-compare'
+    | '/image-palette'
     | '/image-privacy'
     | '/ip-lookup'
     | '/js'
     | '/json'
+    | '/json-data'
+    | '/json-schema'
     | '/jwt'
     | '/login'
     | '/markdown'
+    | '/meeting-planner'
+    | '/mock-data'
     | '/mortgage'
     | '/number-base'
+    | '/openapi'
+    | '/pace-calculator'
     | '/password'
+    | '/pdf-toolkit'
+    | '/pwa-icons'
     | '/qrcode'
+    | '/random-picker'
+    | '/realtime-debugger'
+    | '/recipe-scale'
     | '/regex'
     | '/rot13'
+    | '/salary-tax'
     | '/screen-recorder'
     | '/settings'
     | '/settings-data'
+    | '/settings-preferences'
+    | '/size-converter'
     | '/social-insurance'
     | '/sql'
+    | '/sql-data'
     | '/sql-playground'
+    | '/subtitle-editor'
+    | '/svg-toolkit'
     | '/table-convert'
     | '/temperature'
     | '/text'
+    | '/text-to-speech'
     | '/totp'
+    | '/travel-cost'
     | '/unicode'
     | '/unit-converter'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/video-animation'
+    | '/video-editor'
     | '/video-trimmer'
+    | '/webauthn-debugger'
     | '/webp-gif'
+    | '/webrtc-diagnostics'
     | '/world-clock'
     | '/xml'
     | '/xml-json'
@@ -665,58 +1171,104 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/archive'
+    | '/audio-editor'
+    | '/audio-recorder'
     | '/base64'
+    | '/batch-files'
+    | '/bill-split'
     | '/bmi'
+    | '/bundle-inspector'
+    | '/certificate-tool'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
     | '/cookie'
     | '/cors'
+    | '/cron'
+    | '/csp'
     | '/css'
     | '/css-animation'
     | '/css-layout'
     | '/css-unit'
     | '/csv-convert'
+    | '/date-calculator'
     | '/datetime'
     | '/diff'
+    | '/email-headers'
+    | '/env'
+    | '/finance-calculator'
     | '/font'
+    | '/geometry-calculator'
+    | '/git-tool'
+    | '/gradient-studio'
     | '/gushi-namer'
+    | '/har-analyzer'
     | '/hash'
+    | '/hex-inspector'
     | '/hmac'
+    | '/home-budget'
+    | '/home-energy'
     | '/html'
     | '/http-request'
     | '/http-status'
+    | '/ics-generator'
+    | '/id-photo'
     | '/image'
+    | '/image-compare'
+    | '/image-palette'
     | '/image-privacy'
     | '/ip-lookup'
     | '/js'
     | '/json'
+    | '/json-data'
+    | '/json-schema'
     | '/jwt'
     | '/login'
     | '/markdown'
+    | '/meeting-planner'
+    | '/mock-data'
     | '/mortgage'
     | '/number-base'
+    | '/openapi'
+    | '/pace-calculator'
     | '/password'
+    | '/pdf-toolkit'
+    | '/pwa-icons'
     | '/qrcode'
+    | '/random-picker'
+    | '/realtime-debugger'
+    | '/recipe-scale'
     | '/regex'
     | '/rot13'
+    | '/salary-tax'
     | '/screen-recorder'
     | '/settings'
     | '/settings-data'
+    | '/settings-preferences'
+    | '/size-converter'
     | '/social-insurance'
     | '/sql'
+    | '/sql-data'
     | '/sql-playground'
+    | '/subtitle-editor'
+    | '/svg-toolkit'
     | '/table-convert'
     | '/temperature'
     | '/text'
+    | '/text-to-speech'
     | '/totp'
+    | '/travel-cost'
     | '/unicode'
     | '/unit-converter'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
+    | '/video-animation'
+    | '/video-editor'
     | '/video-trimmer'
+    | '/webauthn-debugger'
     | '/webp-gif'
+    | '/webrtc-diagnostics'
     | '/world-clock'
     | '/xml'
     | '/xml-json'
@@ -726,58 +1278,104 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArchiveRoute: typeof ArchiveRoute
+  AudioEditorRoute: typeof AudioEditorRoute
+  AudioRecorderRoute: typeof AudioRecorderRoute
   Base64Route: typeof Base64Route
+  BatchFilesRoute: typeof BatchFilesRoute
+  BillSplitRoute: typeof BillSplitRoute
   BmiRoute: typeof BmiRoute
+  BundleInspectorRoute: typeof BundleInspectorRoute
+  CertificateToolRoute: typeof CertificateToolRoute
   CipherRoute: typeof CipherRoute
   ColorConverterRoute: typeof ColorConverterRoute
   ContrastRoute: typeof ContrastRoute
   CookieRoute: typeof CookieRoute
   CorsRoute: typeof CorsRoute
+  CronRoute: typeof CronRoute
+  CspRoute: typeof CspRoute
   CssRoute: typeof CssRoute
   CssAnimationRoute: typeof CssAnimationRoute
   CssLayoutRoute: typeof CssLayoutRoute
   CssUnitRoute: typeof CssUnitRoute
   CsvConvertRoute: typeof CsvConvertRoute
+  DateCalculatorRoute: typeof DateCalculatorRoute
   DatetimeRoute: typeof DatetimeRoute
   DiffRoute: typeof DiffRoute
+  EmailHeadersRoute: typeof EmailHeadersRoute
+  EnvRoute: typeof EnvRoute
+  FinanceCalculatorRoute: typeof FinanceCalculatorRoute
   FontRoute: typeof FontRoute
+  GeometryCalculatorRoute: typeof GeometryCalculatorRoute
+  GitToolRoute: typeof GitToolRoute
+  GradientStudioRoute: typeof GradientStudioRoute
   GushiNamerRoute: typeof GushiNamerRoute
+  HarAnalyzerRoute: typeof HarAnalyzerRoute
   HashRoute: typeof HashRoute
+  HexInspectorRoute: typeof HexInspectorRoute
   HmacRoute: typeof HmacRoute
+  HomeBudgetRoute: typeof HomeBudgetRoute
+  HomeEnergyRoute: typeof HomeEnergyRoute
   HtmlRoute: typeof HtmlRoute
   HttpRequestRoute: typeof HttpRequestRoute
   HttpStatusRoute: typeof HttpStatusRoute
+  IcsGeneratorRoute: typeof IcsGeneratorRoute
+  IdPhotoRoute: typeof IdPhotoRoute
   ImageRoute: typeof ImageRoute
+  ImageCompareRoute: typeof ImageCompareRoute
+  ImagePaletteRoute: typeof ImagePaletteRoute
   ImagePrivacyRoute: typeof ImagePrivacyRoute
   IpLookupRoute: typeof IpLookupRoute
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
+  JsonDataRoute: typeof JsonDataRoute
+  JsonSchemaRoute: typeof JsonSchemaRoute
   JwtRoute: typeof JwtRoute
   LoginRoute: typeof LoginRoute
   MarkdownRoute: typeof MarkdownRoute
+  MeetingPlannerRoute: typeof MeetingPlannerRoute
+  MockDataRoute: typeof MockDataRoute
   MortgageRoute: typeof MortgageRoute
   NumberBaseRoute: typeof NumberBaseRoute
+  OpenapiRoute: typeof OpenapiRoute
+  PaceCalculatorRoute: typeof PaceCalculatorRoute
   PasswordRoute: typeof PasswordRoute
+  PdfToolkitRoute: typeof PdfToolkitRoute
+  PwaIconsRoute: typeof PwaIconsRoute
   QrcodeRoute: typeof QrcodeRoute
+  RandomPickerRoute: typeof RandomPickerRoute
+  RealtimeDebuggerRoute: typeof RealtimeDebuggerRoute
+  RecipeScaleRoute: typeof RecipeScaleRoute
   RegexRoute: typeof RegexRoute
   Rot13Route: typeof Rot13Route
+  SalaryTaxRoute: typeof SalaryTaxRoute
   ScreenRecorderRoute: typeof ScreenRecorderRoute
   SettingsRoute: typeof SettingsRoute
   SettingsDataRoute: typeof SettingsDataRoute
+  SettingsPreferencesRoute: typeof SettingsPreferencesRoute
+  SizeConverterRoute: typeof SizeConverterRoute
   SocialInsuranceRoute: typeof SocialInsuranceRoute
   SqlRoute: typeof SqlRoute
+  SqlDataRoute: typeof SqlDataRoute
   SqlPlaygroundRoute: typeof SqlPlaygroundRoute
+  SubtitleEditorRoute: typeof SubtitleEditorRoute
+  SvgToolkitRoute: typeof SvgToolkitRoute
   TableConvertRoute: typeof TableConvertRoute
   TemperatureRoute: typeof TemperatureRoute
   TextRoute: typeof TextRoute
+  TextToSpeechRoute: typeof TextToSpeechRoute
   TotpRoute: typeof TotpRoute
+  TravelCostRoute: typeof TravelCostRoute
   UnicodeRoute: typeof UnicodeRoute
   UnitConverterRoute: typeof UnitConverterRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
+  VideoAnimationRoute: typeof VideoAnimationRoute
+  VideoEditorRoute: typeof VideoEditorRoute
   VideoTrimmerRoute: typeof VideoTrimmerRoute
+  WebauthnDebuggerRoute: typeof WebauthnDebuggerRoute
   WebpGifRoute: typeof WebpGifRoute
+  WebrtcDiagnosticsRoute: typeof WebrtcDiagnosticsRoute
   WorldClockRoute: typeof WorldClockRoute
   XmlRoute: typeof XmlRoute
   XmlJsonRoute: typeof XmlJsonRoute
@@ -814,6 +1412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldClockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/webrtc-diagnostics': {
+      id: '/webrtc-diagnostics'
+      path: '/webrtc-diagnostics'
+      fullPath: '/webrtc-diagnostics'
+      preLoaderRoute: typeof WebrtcDiagnosticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/webp-gif': {
       id: '/webp-gif'
       path: '/webp-gif'
@@ -821,11 +1426,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WebpGifRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/webauthn-debugger': {
+      id: '/webauthn-debugger'
+      path: '/webauthn-debugger'
+      fullPath: '/webauthn-debugger'
+      preLoaderRoute: typeof WebauthnDebuggerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/video-trimmer': {
       id: '/video-trimmer'
       path: '/video-trimmer'
       fullPath: '/video-trimmer'
       preLoaderRoute: typeof VideoTrimmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/video-editor': {
+      id: '/video-editor'
+      path: '/video-editor'
+      fullPath: '/video-editor'
+      preLoaderRoute: typeof VideoEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/video-animation': {
+      id: '/video-animation'
+      path: '/video-animation'
+      fullPath: '/video-animation'
+      preLoaderRoute: typeof VideoAnimationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/uuid': {
@@ -863,11 +1489,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnicodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/travel-cost': {
+      id: '/travel-cost'
+      path: '/travel-cost'
+      fullPath: '/travel-cost'
+      preLoaderRoute: typeof TravelCostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/totp': {
       id: '/totp'
       path: '/totp'
       fullPath: '/totp'
       preLoaderRoute: typeof TotpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/text-to-speech': {
+      id: '/text-to-speech'
+      path: '/text-to-speech'
+      fullPath: '/text-to-speech'
+      preLoaderRoute: typeof TextToSpeechRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/text': {
@@ -891,11 +1531,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TableConvertRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/svg-toolkit': {
+      id: '/svg-toolkit'
+      path: '/svg-toolkit'
+      fullPath: '/svg-toolkit'
+      preLoaderRoute: typeof SvgToolkitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subtitle-editor': {
+      id: '/subtitle-editor'
+      path: '/subtitle-editor'
+      fullPath: '/subtitle-editor'
+      preLoaderRoute: typeof SubtitleEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sql-playground': {
       id: '/sql-playground'
       path: '/sql-playground'
       fullPath: '/sql-playground'
       preLoaderRoute: typeof SqlPlaygroundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sql-data': {
+      id: '/sql-data'
+      path: '/sql-data'
+      fullPath: '/sql-data'
+      preLoaderRoute: typeof SqlDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sql': {
@@ -910,6 +1571,20 @@ declare module '@tanstack/react-router' {
       path: '/social-insurance'
       fullPath: '/social-insurance'
       preLoaderRoute: typeof SocialInsuranceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/size-converter': {
+      id: '/size-converter'
+      path: '/size-converter'
+      fullPath: '/size-converter'
+      preLoaderRoute: typeof SizeConverterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings-preferences': {
+      id: '/settings-preferences'
+      path: '/settings-preferences'
+      fullPath: '/settings-preferences'
+      preLoaderRoute: typeof SettingsPreferencesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings-data': {
@@ -933,6 +1608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScreenRecorderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/salary-tax': {
+      id: '/salary-tax'
+      path: '/salary-tax'
+      fullPath: '/salary-tax'
+      preLoaderRoute: typeof SalaryTaxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rot13': {
       id: '/rot13'
       path: '/rot13'
@@ -947,6 +1629,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/recipe-scale': {
+      id: '/recipe-scale'
+      path: '/recipe-scale'
+      fullPath: '/recipe-scale'
+      preLoaderRoute: typeof RecipeScaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/realtime-debugger': {
+      id: '/realtime-debugger'
+      path: '/realtime-debugger'
+      fullPath: '/realtime-debugger'
+      preLoaderRoute: typeof RealtimeDebuggerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/random-picker': {
+      id: '/random-picker'
+      path: '/random-picker'
+      fullPath: '/random-picker'
+      preLoaderRoute: typeof RandomPickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qrcode': {
       id: '/qrcode'
       path: '/qrcode'
@@ -954,11 +1657,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QrcodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pwa-icons': {
+      id: '/pwa-icons'
+      path: '/pwa-icons'
+      fullPath: '/pwa-icons'
+      preLoaderRoute: typeof PwaIconsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pdf-toolkit': {
+      id: '/pdf-toolkit'
+      path: '/pdf-toolkit'
+      fullPath: '/pdf-toolkit'
+      preLoaderRoute: typeof PdfToolkitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/password': {
       id: '/password'
       path: '/password'
       fullPath: '/password'
       preLoaderRoute: typeof PasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pace-calculator': {
+      id: '/pace-calculator'
+      path: '/pace-calculator'
+      fullPath: '/pace-calculator'
+      preLoaderRoute: typeof PaceCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/openapi': {
+      id: '/openapi'
+      path: '/openapi'
+      fullPath: '/openapi'
+      preLoaderRoute: typeof OpenapiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/number-base': {
@@ -973,6 +1704,20 @@ declare module '@tanstack/react-router' {
       path: '/mortgage'
       fullPath: '/mortgage'
       preLoaderRoute: typeof MortgageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mock-data': {
+      id: '/mock-data'
+      path: '/mock-data'
+      fullPath: '/mock-data'
+      preLoaderRoute: typeof MockDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meeting-planner': {
+      id: '/meeting-planner'
+      path: '/meeting-planner'
+      fullPath: '/meeting-planner'
+      preLoaderRoute: typeof MeetingPlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/markdown': {
@@ -994,6 +1739,20 @@ declare module '@tanstack/react-router' {
       path: '/jwt'
       fullPath: '/jwt'
       preLoaderRoute: typeof JwtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/json-schema': {
+      id: '/json-schema'
+      path: '/json-schema'
+      fullPath: '/json-schema'
+      preLoaderRoute: typeof JsonSchemaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/json-data': {
+      id: '/json-data'
+      path: '/json-data'
+      fullPath: '/json-data'
+      preLoaderRoute: typeof JsonDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/json': {
@@ -1024,11 +1783,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImagePrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/image-palette': {
+      id: '/image-palette'
+      path: '/image-palette'
+      fullPath: '/image-palette'
+      preLoaderRoute: typeof ImagePaletteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/image-compare': {
+      id: '/image-compare'
+      path: '/image-compare'
+      fullPath: '/image-compare'
+      preLoaderRoute: typeof ImageCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/image': {
       id: '/image'
       path: '/image'
       fullPath: '/image'
       preLoaderRoute: typeof ImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/id-photo': {
+      id: '/id-photo'
+      path: '/id-photo'
+      fullPath: '/id-photo'
+      preLoaderRoute: typeof IdPhotoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ics-generator': {
+      id: '/ics-generator'
+      path: '/ics-generator'
+      fullPath: '/ics-generator'
+      preLoaderRoute: typeof IcsGeneratorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/http-status': {
@@ -1052,11 +1839,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HtmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/home-energy': {
+      id: '/home-energy'
+      path: '/home-energy'
+      fullPath: '/home-energy'
+      preLoaderRoute: typeof HomeEnergyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-budget': {
+      id: '/home-budget'
+      path: '/home-budget'
+      fullPath: '/home-budget'
+      preLoaderRoute: typeof HomeBudgetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hmac': {
       id: '/hmac'
       path: '/hmac'
       fullPath: '/hmac'
       preLoaderRoute: typeof HmacRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hex-inspector': {
+      id: '/hex-inspector'
+      path: '/hex-inspector'
+      fullPath: '/hex-inspector'
+      preLoaderRoute: typeof HexInspectorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hash': {
@@ -1066,6 +1874,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HashRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/har-analyzer': {
+      id: '/har-analyzer'
+      path: '/har-analyzer'
+      fullPath: '/har-analyzer'
+      preLoaderRoute: typeof HarAnalyzerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gushi-namer': {
       id: '/gushi-namer'
       path: '/gushi-namer'
@@ -1073,11 +1888,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GushiNamerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gradient-studio': {
+      id: '/gradient-studio'
+      path: '/gradient-studio'
+      fullPath: '/gradient-studio'
+      preLoaderRoute: typeof GradientStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/git-tool': {
+      id: '/git-tool'
+      path: '/git-tool'
+      fullPath: '/git-tool'
+      preLoaderRoute: typeof GitToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/geometry-calculator': {
+      id: '/geometry-calculator'
+      path: '/geometry-calculator'
+      fullPath: '/geometry-calculator'
+      preLoaderRoute: typeof GeometryCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/font': {
       id: '/font'
       path: '/font'
       fullPath: '/font'
       preLoaderRoute: typeof FontRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance-calculator': {
+      id: '/finance-calculator'
+      path: '/finance-calculator'
+      fullPath: '/finance-calculator'
+      preLoaderRoute: typeof FinanceCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/env': {
+      id: '/env'
+      path: '/env'
+      fullPath: '/env'
+      preLoaderRoute: typeof EnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/email-headers': {
+      id: '/email-headers'
+      path: '/email-headers'
+      fullPath: '/email-headers'
+      preLoaderRoute: typeof EmailHeadersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/diff': {
@@ -1092,6 +1949,13 @@ declare module '@tanstack/react-router' {
       path: '/datetime'
       fullPath: '/datetime'
       preLoaderRoute: typeof DatetimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/date-calculator': {
+      id: '/date-calculator'
+      path: '/date-calculator'
+      fullPath: '/date-calculator'
+      preLoaderRoute: typeof DateCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/csv-convert': {
@@ -1129,6 +1993,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CssRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/csp': {
+      id: '/csp'
+      path: '/csp'
+      fullPath: '/csp'
+      preLoaderRoute: typeof CspRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cron': {
+      id: '/cron'
+      path: '/cron'
+      fullPath: '/cron'
+      preLoaderRoute: typeof CronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cors': {
       id: '/cors'
       path: '/cors'
@@ -1164,6 +2042,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CipherRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/certificate-tool': {
+      id: '/certificate-tool'
+      path: '/certificate-tool'
+      fullPath: '/certificate-tool'
+      preLoaderRoute: typeof CertificateToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bundle-inspector': {
+      id: '/bundle-inspector'
+      path: '/bundle-inspector'
+      fullPath: '/bundle-inspector'
+      preLoaderRoute: typeof BundleInspectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bmi': {
       id: '/bmi'
       path: '/bmi'
@@ -1171,11 +2063,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BmiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bill-split': {
+      id: '/bill-split'
+      path: '/bill-split'
+      fullPath: '/bill-split'
+      preLoaderRoute: typeof BillSplitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/batch-files': {
+      id: '/batch-files'
+      path: '/batch-files'
+      fullPath: '/batch-files'
+      preLoaderRoute: typeof BatchFilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/base64': {
       id: '/base64'
       path: '/base64'
       fullPath: '/base64'
       preLoaderRoute: typeof Base64RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audio-recorder': {
+      id: '/audio-recorder'
+      path: '/audio-recorder'
+      fullPath: '/audio-recorder'
+      preLoaderRoute: typeof AudioRecorderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audio-editor': {
+      id: '/audio-editor'
+      path: '/audio-editor'
+      fullPath: '/audio-editor'
+      preLoaderRoute: typeof AudioEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/archive': {
@@ -1198,58 +2118,104 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArchiveRoute: ArchiveRoute,
+  AudioEditorRoute: AudioEditorRoute,
+  AudioRecorderRoute: AudioRecorderRoute,
   Base64Route: Base64Route,
+  BatchFilesRoute: BatchFilesRoute,
+  BillSplitRoute: BillSplitRoute,
   BmiRoute: BmiRoute,
+  BundleInspectorRoute: BundleInspectorRoute,
+  CertificateToolRoute: CertificateToolRoute,
   CipherRoute: CipherRoute,
   ColorConverterRoute: ColorConverterRoute,
   ContrastRoute: ContrastRoute,
   CookieRoute: CookieRoute,
   CorsRoute: CorsRoute,
+  CronRoute: CronRoute,
+  CspRoute: CspRoute,
   CssRoute: CssRoute,
   CssAnimationRoute: CssAnimationRoute,
   CssLayoutRoute: CssLayoutRoute,
   CssUnitRoute: CssUnitRoute,
   CsvConvertRoute: CsvConvertRoute,
+  DateCalculatorRoute: DateCalculatorRoute,
   DatetimeRoute: DatetimeRoute,
   DiffRoute: DiffRoute,
+  EmailHeadersRoute: EmailHeadersRoute,
+  EnvRoute: EnvRoute,
+  FinanceCalculatorRoute: FinanceCalculatorRoute,
   FontRoute: FontRoute,
+  GeometryCalculatorRoute: GeometryCalculatorRoute,
+  GitToolRoute: GitToolRoute,
+  GradientStudioRoute: GradientStudioRoute,
   GushiNamerRoute: GushiNamerRoute,
+  HarAnalyzerRoute: HarAnalyzerRoute,
   HashRoute: HashRoute,
+  HexInspectorRoute: HexInspectorRoute,
   HmacRoute: HmacRoute,
+  HomeBudgetRoute: HomeBudgetRoute,
+  HomeEnergyRoute: HomeEnergyRoute,
   HtmlRoute: HtmlRoute,
   HttpRequestRoute: HttpRequestRoute,
   HttpStatusRoute: HttpStatusRoute,
+  IcsGeneratorRoute: IcsGeneratorRoute,
+  IdPhotoRoute: IdPhotoRoute,
   ImageRoute: ImageRoute,
+  ImageCompareRoute: ImageCompareRoute,
+  ImagePaletteRoute: ImagePaletteRoute,
   ImagePrivacyRoute: ImagePrivacyRoute,
   IpLookupRoute: IpLookupRoute,
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
+  JsonDataRoute: JsonDataRoute,
+  JsonSchemaRoute: JsonSchemaRoute,
   JwtRoute: JwtRoute,
   LoginRoute: LoginRoute,
   MarkdownRoute: MarkdownRoute,
+  MeetingPlannerRoute: MeetingPlannerRoute,
+  MockDataRoute: MockDataRoute,
   MortgageRoute: MortgageRoute,
   NumberBaseRoute: NumberBaseRoute,
+  OpenapiRoute: OpenapiRoute,
+  PaceCalculatorRoute: PaceCalculatorRoute,
   PasswordRoute: PasswordRoute,
+  PdfToolkitRoute: PdfToolkitRoute,
+  PwaIconsRoute: PwaIconsRoute,
   QrcodeRoute: QrcodeRoute,
+  RandomPickerRoute: RandomPickerRoute,
+  RealtimeDebuggerRoute: RealtimeDebuggerRoute,
+  RecipeScaleRoute: RecipeScaleRoute,
   RegexRoute: RegexRoute,
   Rot13Route: Rot13Route,
+  SalaryTaxRoute: SalaryTaxRoute,
   ScreenRecorderRoute: ScreenRecorderRoute,
   SettingsRoute: SettingsRoute,
   SettingsDataRoute: SettingsDataRoute,
+  SettingsPreferencesRoute: SettingsPreferencesRoute,
+  SizeConverterRoute: SizeConverterRoute,
   SocialInsuranceRoute: SocialInsuranceRoute,
   SqlRoute: SqlRoute,
+  SqlDataRoute: SqlDataRoute,
   SqlPlaygroundRoute: SqlPlaygroundRoute,
+  SubtitleEditorRoute: SubtitleEditorRoute,
+  SvgToolkitRoute: SvgToolkitRoute,
   TableConvertRoute: TableConvertRoute,
   TemperatureRoute: TemperatureRoute,
   TextRoute: TextRoute,
+  TextToSpeechRoute: TextToSpeechRoute,
   TotpRoute: TotpRoute,
+  TravelCostRoute: TravelCostRoute,
   UnicodeRoute: UnicodeRoute,
   UnitConverterRoute: UnitConverterRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,
+  VideoAnimationRoute: VideoAnimationRoute,
+  VideoEditorRoute: VideoEditorRoute,
   VideoTrimmerRoute: VideoTrimmerRoute,
+  WebauthnDebuggerRoute: WebauthnDebuggerRoute,
   WebpGifRoute: WebpGifRoute,
+  WebrtcDiagnosticsRoute: WebrtcDiagnosticsRoute,
   WorldClockRoute: WorldClockRoute,
   XmlRoute: XmlRoute,
   XmlJsonRoute: XmlJsonRoute,

@@ -27,6 +27,13 @@ export const SCREEN_RECORDING_MIME_TYPES = [
   'video/mp4',
 ] as const;
 
+export const AUDIO_RECORDING_MIME_TYPES = [
+  'audio/webm;codecs=opus',
+  'audio/ogg;codecs=opus',
+  'audio/mp4',
+  'audio/webm',
+] as const;
+
 export function getSupportedRecordingMimeType(): string | null {
   if (typeof MediaRecorder === 'undefined') return null;
   return (
@@ -38,6 +45,49 @@ export function getSupportedRecordingMimeType(): string | null {
 
 export function getRecordingExtension(mimeType: string): 'mp4' | 'webm' {
   return mimeType.startsWith('video/mp4') ? 'mp4' : 'webm';
+}
+
+export function getSupportedAudioRecordingMimeType(): string | null {
+  if (typeof MediaRecorder === 'undefined') return null;
+  return (
+    AUDIO_RECORDING_MIME_TYPES.find((type) =>
+      MediaRecorder.isTypeSupported(type),
+    ) ?? null
+  );
+}
+
+export function getAudioRecordingExtension(
+  mimeType: string,
+): 'm4a' | 'ogg' | 'webm' {
+  if (mimeType.startsWith('audio/mp4')) return 'm4a';
+  if (mimeType.startsWith('audio/ogg')) return 'ogg';
+  return 'webm';
+}
+
+export function isAudioRecordingSupported(): boolean {
+  return Boolean(
+    window.isSecureContext &&
+    typeof navigator.mediaDevices?.getUserMedia === 'function' &&
+    typeof navigator.storage?.getDirectory === 'function' &&
+    getSupportedAudioRecordingMimeType(),
+  );
+}
+
+export function formatRecordingDuration(durationMs: number): string {
+  const seconds = Math.floor(durationMs / 1000);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const rest = seconds % 60;
+  return hours > 0
+    ? [hours, minutes, rest]
+        .map((value) => String(value).padStart(2, '0'))
+        .join(':')
+    : [minutes, rest].map((value) => String(value).padStart(2, '0')).join(':');
+}
+
+export function formatRecordingSize(size: number): string {
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  return `${(size / 1024 / 1024).toFixed(1)} MB`;
 }
 
 export function getRecordingCleanupPlan(

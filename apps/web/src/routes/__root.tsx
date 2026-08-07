@@ -17,10 +17,13 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import Fuse from 'fuse.js';
 import {
   Activity,
+  AudioLines,
   ArrowLeftRight,
   Binary,
   Braces,
+  CalendarClock,
   CaseSensitive,
+  Captions,
   ChevronRight,
   CircleUserRound,
   Clock,
@@ -42,6 +45,7 @@ import {
   Home,
   House,
   ImageIcon,
+  Images,
   KeyRound,
   Landmark,
   Layers,
@@ -54,6 +58,7 @@ import {
   Menu,
   MonitorSmartphone,
   Moon,
+  Network,
   Paintbrush,
   Palette,
   QrCode,
@@ -217,6 +222,12 @@ const encodeNavItems: NavItem[] = [
 
 const cryptoNavItems: NavItem[] = [
   {
+    to: '/certificate-tool',
+    icon: <KeyRound className="h-4 w-4 text-teal-500" />,
+    labelKey: 'nav.certificateTool',
+    keywords: 'x509 pem csr certificate 证书 公钥 域名 有效期',
+  },
+  {
     to: '/hash',
     icon: <Hash className="w-4 h-4 text-emerald-500" />,
     labelKey: 'nav.hash',
@@ -240,6 +251,7 @@ const cryptoNavItems: NavItem[] = [
     to: '/jwt',
     icon: <Fingerprint className="w-4 h-4 text-purple-500" />,
     labelKey: 'nav.jwt',
+    keywords: 'jwt jwk pem signature verify public key 公钥 签名 验证',
   },
   {
     to: '/uuid',
@@ -254,6 +266,18 @@ const cryptoNavItems: NavItem[] = [
 ];
 
 const networkNavItems: NavItem[] = [
+  {
+    to: '/webrtc-diagnostics',
+    icon: <Network className="h-4 w-4 text-indigo-500" />,
+    labelKey: 'nav.webrtcDiagnostics',
+    keywords: 'webrtc ice stun turn camera microphone codec candidate',
+  },
+  {
+    to: '/realtime-debugger',
+    icon: <Network className="h-4 w-4 text-cyan-500" />,
+    labelKey: 'nav.realtimeDebugger',
+    keywords: 'websocket sse eventsource realtime debug 实时 调试',
+  },
   {
     to: '/http-request',
     icon: <Send className="w-4 h-4 text-blue-500" />,
@@ -311,6 +335,25 @@ const convertNavItems: NavItem[] = [
 
 const textNavItems: NavItem[] = [
   {
+    to: '/pdf-toolkit',
+    icon: <FileText className="h-4 w-4 text-red-500" />,
+    labelKey: 'nav.pdfToolkit',
+    keywords:
+      'pdf merge split rotate reorder watermark metadata images 合并 拆分 水印',
+  },
+  {
+    to: '/batch-files',
+    icon: <FileStack className="h-4 w-4 text-amber-500" />,
+    labelKey: 'nav.batchFiles',
+    keywords: '批量 文件 重命名 扩展名 hash manifest rename files',
+  },
+  {
+    to: '/text-to-speech',
+    icon: <AudioLines className="h-4 w-4 text-violet-500" />,
+    labelKey: 'nav.textToSpeech',
+    keywords: '文本 朗读 语音 tts speech synthesis voice',
+  },
+  {
     to: '/diff',
     icon: <ArrowLeftRight className="w-4 h-4 text-orange-500" />,
     labelKey: 'nav.diff',
@@ -339,6 +382,18 @@ const textNavItems: NavItem[] = [
 ];
 
 const frontendNavItems: NavItem[] = [
+  {
+    to: '/gradient-studio',
+    icon: <Palette className="h-4 w-4 text-fuchsia-500" />,
+    labelKey: 'nav.gradientStudio',
+    keywords: 'gradient css linear radial conic mesh pattern noise 渐变',
+  },
+  {
+    to: '/svg-toolkit',
+    icon: <FileCode2 className="h-4 w-4 text-orange-500" />,
+    labelKey: 'nav.svgToolkit',
+    keywords: 'svg optimize data uri react jsx sprite',
+  },
   {
     to: '/font',
     icon: <Type className="w-4 h-4 text-emerald-500" />,
@@ -377,6 +432,30 @@ const frontendNavItems: NavItem[] = [
     labelKey: 'nav.imageTool',
   },
   {
+    to: '/image-compare',
+    icon: <Images className="h-4 w-4 text-rose-500" />,
+    labelKey: 'nav.imageCompare',
+    keywords: 'image compare diff heatmap slider blink 图片 对比 差异',
+  },
+  {
+    to: '/pwa-icons',
+    icon: <MonitorSmartphone className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.pwaIcons',
+    keywords: 'pwa favicon icon manifest maskable apple touch',
+  },
+  {
+    to: '/image-palette',
+    icon: <Palette className="h-4 w-4 text-fuchsia-500" />,
+    labelKey: 'nav.imagePalette',
+    keywords: '图片 取色 调色板 palette color tailwind css contrast',
+  },
+  {
+    to: '/id-photo',
+    icon: <ImageIcon className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.idPhoto',
+    keywords: '证件照 背景 换色 一寸 二寸 passport photo a4',
+  },
+  {
     to: '/image-privacy',
     icon: <ShieldCheck className="h-4 w-4 text-emerald-500" />,
     labelKey: 'nav.imagePrivacy',
@@ -393,27 +472,128 @@ const frontendNavItems: NavItem[] = [
 const imageNavItems = frontendNavItems.filter(
   (item) =>
     item.to === '/image' ||
+    item.to === '/image-compare' ||
+    item.to === '/pwa-icons' ||
+    item.to === '/image-palette' ||
+    item.to === '/id-photo' ||
     item.to === '/image-privacy' ||
     item.to === '/webp-gif',
 );
 const designNavItems = frontendNavItems.filter(
   (item) =>
     item.to !== '/image' &&
+    item.to !== '/image-compare' &&
+    item.to !== '/pwa-icons' &&
+    item.to !== '/image-palette' &&
+    item.to !== '/id-photo' &&
     item.to !== '/image-privacy' &&
     item.to !== '/webp-gif',
 );
+const developerToolNavItems: NavItem[] = [
+  {
+    to: '/har-analyzer',
+    icon: <Activity className="h-4 w-4 text-cyan-500" />,
+    labelKey: 'nav.harAnalyzer',
+    keywords: 'har network waterfall request timing size headers 网络 瀑布图',
+  },
+  {
+    to: '/hex-inspector',
+    icon: <Binary className="h-4 w-4 text-lime-500" />,
+    labelKey: 'nav.hexInspector',
+    keywords: 'hex binary mime magic bytes endian strings 二进制 十六进制',
+  },
+  {
+    to: '/webauthn-debugger',
+    icon: <Fingerprint className="h-4 w-4 text-purple-500" />,
+    labelKey: 'nav.webauthnDebugger',
+    keywords: 'webauthn passkey credential authenticator biometric 通行密钥',
+  },
+  {
+    to: '/json-data',
+    icon: <Braces className="h-4 w-4 text-amber-500" />,
+    labelKey: 'nav.jsonData',
+    keywords: 'jsonpath json lines ndjson json patch rfc6902',
+  },
+  {
+    to: '/email-headers',
+    icon: <FileText className="h-4 w-4 text-teal-500" />,
+    labelKey: 'nav.emailHeaders',
+    keywords: 'email mail header received spf dkim dmarc mime 邮件头',
+  },
+  {
+    to: '/json-schema',
+    icon: <Braces className="h-4 w-4 text-amber-500" />,
+    labelKey: 'nav.jsonSchema',
+    keywords: 'json schema validate typescript infer 校验 推导 类型',
+  },
+  {
+    to: '/openapi',
+    icon: <FileCode2 className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.openapi',
+    keywords: 'openapi swagger endpoint schema curl 接口',
+  },
+  {
+    to: '/cron',
+    icon: <Clock className="h-4 w-4 text-violet-500" />,
+    labelKey: 'nav.cron',
+    keywords: 'cron crontab schedule expression 定时 表达式',
+  },
+  {
+    to: '/env',
+    icon: <FileText className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'nav.envTool',
+    keywords: 'env dotenv environment diff secret 环境变量',
+  },
+  {
+    to: '/mock-data',
+    icon: <Dices className="h-4 w-4 text-pink-500" />,
+    labelKey: 'nav.mockData',
+    keywords: 'mock faker fake data json 测试数据',
+  },
+  {
+    to: '/sql-data',
+    icon: <Database className="h-4 w-4 text-cyan-500" />,
+    labelKey: 'nav.sqlData',
+    keywords: 'sql insert create table mock seed 测试数据',
+  },
+  {
+    to: '/csp',
+    icon: <ShieldAlert className="h-4 w-4 text-red-500" />,
+    labelKey: 'nav.cspTool',
+    keywords: 'content security policy csp header 安全策略',
+  },
+  {
+    to: '/git-tool',
+    icon: <Code2 className="h-4 w-4 text-orange-500" />,
+    labelKey: 'nav.gitTool',
+    keywords: 'gitignore conventional commit semver version git',
+  },
+  {
+    to: '/bundle-inspector',
+    icon: <Activity className="h-4 w-4 text-indigo-500" />,
+    labelKey: 'nav.bundleInspector',
+    keywords: 'bundle sourcemap size module build 体积 模块',
+  },
+];
 const developerNavItems = [
   ...formatterNavItems,
   ...encodeNavItems,
   ...convertNavItems.filter((item) => item.to !== '/number-base'),
   ...networkNavItems,
   ...cryptoNavItems,
+  ...developerToolNavItems,
 ];
 const conversionNavItems = [
   ...convertNavItems.filter((item) => item.to === '/number-base'),
   ...textNavItems,
 ];
 const videoNavItems: NavItem[] = [
+  {
+    to: '/audio-recorder',
+    icon: <AudioLines className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'nav.audioRecorder',
+    keywords: 'audio recorder microphone voice record 录音 麦克风',
+  },
   {
     to: '/screen-recorder',
     icon: <Video className="h-4 w-4 text-red-500" />,
@@ -426,8 +606,117 @@ const videoNavItems: NavItem[] = [
     labelKey: 'nav.videoTrimmer',
     keywords: '视频 剪辑 裁剪 trim clip mediabunny video',
   },
+  {
+    to: '/video-editor',
+    icon: <Video className="h-4 w-4 text-orange-500" />,
+    labelKey: 'nav.videoEditor',
+    keywords:
+      '视频 合并 旋转 裁剪 静音 音轨 封面 媒体信息 编码 码率 帧率 metadata merge rotate',
+  },
+  {
+    to: '/video-animation',
+    icon: <Images className="h-4 w-4 text-lime-500" />,
+    labelKey: 'nav.videoAnimation',
+    keywords: '视频 gif webp 动图 animation',
+  },
+  {
+    to: '/audio-editor',
+    icon: <AudioLines className="h-4 w-4 text-violet-500" />,
+    labelKey: 'nav.audioEditor',
+    keywords: '音频 裁剪 合并 波形 audio trim merge waveform',
+  },
+  {
+    to: '/subtitle-editor',
+    icon: <Captions className="h-4 w-4 text-sky-500" />,
+    labelKey: 'nav.subtitleEditor',
+    keywords: '字幕 srt vtt 烧录 subtitle captions',
+  },
 ];
 const lifeNavItems: NavItem[] = [
+  {
+    to: '/finance-calculator',
+    icon: <Landmark className="h-4 w-4 text-green-500" />,
+    labelKey: 'nav.financeCalculator',
+    keywords: '复利 定投 储蓄 提前还贷 通胀 理财 finance compound investment',
+  },
+  {
+    to: '/home-energy',
+    icon: <Activity className="h-4 w-4 text-yellow-500" />,
+    labelKey: 'nav.homeEnergy',
+    keywords: '家庭 用电 电器 电费 功率 energy electricity appliance',
+  },
+  {
+    to: '/geometry-calculator',
+    icon: <Ruler className="h-4 w-4 text-indigo-500" />,
+    labelKey: 'nav.geometryCalculator',
+    keywords: '几何 面积 体积 坡度 角度 材料 geometry area volume slope',
+  },
+  {
+    to: '/date-calculator',
+    icon: <CalendarClock className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.dateCalculator',
+    keywords: '日期 年龄 间隔 倒计时 工作日 date age countdown workday',
+  },
+  {
+    to: '/salary-tax',
+    icon: <Landmark className="h-4 w-4 text-amber-500" />,
+    labelKey: 'nav.salaryTax',
+    keywords: '个税 工资 到手 salary tax income',
+  },
+  {
+    to: '/travel-cost',
+    icon: <MapPin className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'nav.travelCost',
+    keywords: '油耗 电费 旅行 成本 fuel electric travel cost',
+  },
+  {
+    to: '/pace-calculator',
+    icon: <Activity className="h-4 w-4 text-orange-500" />,
+    labelKey: 'nav.paceCalculator',
+    keywords: '跑步 配速 时间 距离 pace running',
+  },
+  {
+    to: '/recipe-scale',
+    icon: <ListOrdered className="h-4 w-4 text-rose-500" />,
+    labelKey: 'nav.recipeScale',
+    keywords: '食谱 比例 份数 recipe servings scale',
+  },
+  {
+    to: '/size-converter',
+    icon: <Ruler className="h-4 w-4 text-violet-500" />,
+    labelKey: 'nav.sizeConverter',
+    keywords: '衣服 鞋码 尺码 size shoe clothing',
+  },
+  {
+    to: '/meeting-planner',
+    icon: <Globe className="h-4 w-4 text-cyan-500" />,
+    labelKey: 'nav.meetingPlanner',
+    keywords: '时差 会议 城市 timezone meeting planner',
+  },
+  {
+    to: '/ics-generator',
+    icon: <FileText className="h-4 w-4 text-indigo-500" />,
+    labelKey: 'nav.icsGenerator',
+    keywords: 'ics 日历 事件 calendar event',
+  },
+  {
+    to: '/random-picker',
+    icon: <Dices className="h-4 w-4 text-pink-500" />,
+    labelKey: 'nav.randomPicker',
+    keywords: '随机 分组 抽签 转盘 random group draw wheel',
+  },
+  {
+    to: '/bill-split',
+    icon: <ArrowLeftRight className="h-4 w-4 text-teal-500" />,
+    labelKey: 'nav.billSplit',
+    keywords: 'aa 分账 小费 bill split tip',
+  },
+  {
+    to: '/home-budget',
+    icon: <House className="h-4 w-4 text-lime-500" />,
+    labelKey: 'nav.homeBudget',
+    keywords: '房屋 面积 公摊 装修 预算 home area renovation budget',
+  },
   {
     to: '/world-clock',
     icon: <Clock className="h-4 w-4 text-sky-500" />,
@@ -874,6 +1163,7 @@ function DesktopSidebar() {
           to="/settings"
           className={navClass(
             location.pathname === '/settings' ||
+              location.pathname === '/settings-preferences' ||
               location.pathname === '/settings-data',
           )}
         >
