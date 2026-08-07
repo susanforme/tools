@@ -21,7 +21,7 @@ export function LangSwitcher() {
       >
         <Globe className="h-4 w-4" />
       </SelectTrigger>
-      <SelectContent align="end">
+      <SelectContent position="popper" side="bottom" sideOffset={6} align="end">
         {(Object.entries(LOCALE_LABELS) as [Locale, string][]).map(
           ([lang, label]) => (
             <SelectItem key={lang} value={lang}>
