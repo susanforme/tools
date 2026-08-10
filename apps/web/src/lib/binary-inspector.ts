@@ -1,5 +1,48 @@
 export type BinaryFormat = { name: string; mime: string };
 
+export type MimeTypeEntry = {
+  extension: string;
+  mime: string;
+  description: string;
+};
+
+// ponytail: 内置常用 Web MIME；需要完整 IANA 数据时再改为生成表。
+export const MIME_TYPES: MimeTypeEntry[] = [
+  ['html', 'text/html', 'HTML'],
+  ['css', 'text/css', 'CSS'],
+  ['js,mjs', 'text/javascript', 'JavaScript'],
+  ['json,map', 'application/json', 'JSON'],
+  ['xml', 'application/xml', 'XML'],
+  ['txt,log', 'text/plain', 'Text'],
+  ['csv', 'text/csv', 'CSV'],
+  ['pdf', 'application/pdf', 'PDF'],
+  ['png', 'image/png', 'PNG'],
+  ['jpg,jpeg', 'image/jpeg', 'JPEG'],
+  ['gif', 'image/gif', 'GIF'],
+  ['webp', 'image/webp', 'WebP'],
+  ['svg', 'image/svg+xml', 'SVG'],
+  ['ico', 'image/x-icon', 'Icon'],
+  ['mp3', 'audio/mpeg', 'MP3'],
+  ['wav', 'audio/wav', 'WAV'],
+  ['mp4', 'video/mp4', 'MP4'],
+  ['webm', 'video/webm', 'WebM'],
+  ['zip', 'application/zip', 'ZIP'],
+  ['gz', 'application/gzip', 'Gzip'],
+  ['7z', 'application/x-7z-compressed', '7-Zip'],
+  ['wasm', 'application/wasm', 'WebAssembly'],
+  ['woff', 'font/woff', 'WOFF'],
+  ['woff2', 'font/woff2', 'WOFF2'],
+].map(([extension, mime, description]) => ({ extension, mime, description }));
+
+export function findMimeTypes(query: string): MimeTypeEntry[] {
+  const value = query.trim().toLowerCase().replace(/^\./, '');
+  return MIME_TYPES.filter((entry) =>
+    [entry.extension, entry.mime, entry.description.toLowerCase()].some(
+      (field) => field.includes(value),
+    ),
+  );
+}
+
 const SIGNATURES: Array<{
   bytes: number[];
   offset?: number;

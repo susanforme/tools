@@ -1,4 +1,5 @@
 import { useFavorites } from '@/hooks/useFavorites';
+import { detectToolSuggestions } from '@/lib/advanced-tools';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
   DndContext,
@@ -59,23 +60,29 @@ import {
   Paintbrush,
   Palette,
   QrCode,
+  Ratio,
   Regex as RegexIcon,
   RotateCw,
   Ruler,
   Scissors,
   Send,
+  Share2,
   ShieldAlert,
   ShieldCheck,
   ShieldPlus,
   Shuffle,
   Sparkles,
+  SquareAsterisk,
   Star,
   Table,
   Tag,
+  Terminal,
   Thermometer,
   Type,
   Upload,
   Video,
+  Wallet,
+  Wind,
 } from 'lucide-react';
 import React from 'react';
 import { flushSync } from 'react-dom';
@@ -99,8 +106,8 @@ const formatterTools = [
     descKey: 'home.tools.json.desc',
     tagKeys: [
       'home.tools.json.tagFormat',
-      'home.tools.json.tagMinify',
-      'home.tools.json.tagValidate',
+      'home.tools.json.tagSchema',
+      'home.tools.json.tagPath',
     ],
     gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
     border: 'hover:border-amber-300 dark:hover:border-amber-700',
@@ -255,6 +262,30 @@ const encodeTools = [
 
 const developerExtraTools = [
   {
+    to: '/trace-context' as const,
+    icon: <Network className="h-8 w-8 text-sky-500" />,
+    titleKey: 'home.tools.traceContext.title',
+    descKey: 'home.tools.traceContext.desc',
+    tagKeys: [
+      'home.tools.traceContext.tagTraceparent',
+      'home.tools.traceContext.tagTracestate',
+    ],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
+  },
+  {
+    to: '/pipeline' as const,
+    icon: <Share2 className="h-8 w-8 text-violet-500" />,
+    titleKey: 'home.tools.pipeline.title',
+    descKey: 'home.tools.pipeline.desc',
+    tagKeys: [
+      'home.tools.pipeline.tagRecipe',
+      'home.tools.pipeline.tagTransform',
+    ],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
     to: '/har-analyzer' as const,
     icon: <Activity className="h-8 w-8 text-cyan-500" />,
     titleKey: 'home.tools.harAnalyzer.title',
@@ -279,6 +310,18 @@ const developerExtraTools = [
     border: 'hover:border-lime-300 dark:hover:border-lime-700',
   },
   {
+    to: '/docker-compose' as const,
+    icon: <Terminal className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.dockerCompose.title',
+    descKey: 'home.tools.dockerCompose.desc',
+    tagKeys: [
+      'home.tools.dockerCompose.tagRun',
+      'home.tools.dockerCompose.tagCompose',
+    ],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
     to: '/webauthn-debugger' as const,
     icon: <Fingerprint className="h-8 w-8 text-purple-500" />,
     titleKey: 'home.tools.webauthnDebugger.title',
@@ -291,15 +334,6 @@ const developerExtraTools = [
     border: 'hover:border-purple-300 dark:hover:border-purple-700',
   },
   {
-    to: '/json-data' as const,
-    icon: <Braces className="h-8 w-8 text-amber-500" />,
-    titleKey: 'home.tools.jsonData.title',
-    descKey: 'home.tools.jsonData.desc',
-    tagKeys: ['home.tools.jsonData.tagPath', 'home.tools.jsonData.tagPatch'],
-    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
-    border: 'hover:border-amber-300 dark:hover:border-amber-700',
-  },
-  {
     to: '/email-headers' as const,
     icon: <FileText className="h-8 w-8 text-teal-500" />,
     titleKey: 'home.tools.emailHeaders.title',
@@ -310,18 +344,6 @@ const developerExtraTools = [
     ],
     gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
     border: 'hover:border-teal-300 dark:hover:border-teal-700',
-  },
-  {
-    to: '/json-schema' as const,
-    icon: <Braces className="h-8 w-8 text-amber-500" />,
-    titleKey: 'home.tools.jsonSchema.title',
-    descKey: 'home.tools.jsonSchema.desc',
-    tagKeys: [
-      'home.tools.jsonSchema.tagValidate',
-      'home.tools.jsonSchema.tagTypes',
-    ],
-    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
-    border: 'hover:border-amber-300 dark:hover:border-amber-700',
   },
   {
     to: '/openapi' as const,
@@ -381,6 +403,30 @@ const developerExtraTools = [
     border: 'hover:border-red-300 dark:hover:border-red-700',
   },
   {
+    to: '/unix-permissions' as const,
+    icon: <Terminal className="h-8 w-8 text-slate-500" />,
+    titleKey: 'home.tools.unixPermissions.title',
+    descKey: 'home.tools.unixPermissions.desc',
+    tagKeys: [
+      'home.tools.unixPermissions.tagOctal',
+      'home.tools.unixPermissions.tagSpecial',
+    ],
+    gradient: 'hover:bg-slate-50 dark:hover:bg-slate-950/20',
+    border: 'hover:border-slate-300 dark:hover:border-slate-700',
+  },
+  {
+    to: '/seo-files' as const,
+    icon: <Globe className="h-8 w-8 text-green-500" />,
+    titleKey: 'home.tools.seoFiles.title',
+    descKey: 'home.tools.seoFiles.desc',
+    tagKeys: [
+      'home.tools.seoFiles.tagRobots',
+      'home.tools.seoFiles.tagSitemap',
+    ],
+    gradient: 'hover:bg-green-50 dark:hover:bg-green-950/20',
+    border: 'hover:border-green-300 dark:hover:border-green-700',
+  },
+  {
     to: '/git-tool' as const,
     icon: <Code2 className="h-8 w-8 text-orange-500" />,
     titleKey: 'home.tools.gitTool.title',
@@ -404,6 +450,15 @@ const developerExtraTools = [
 ];
 
 const cryptoTools = [
+  {
+    to: '/oauth' as const,
+    icon: <ShieldPlus className="h-8 w-8 text-blue-500" />,
+    titleKey: 'home.tools.oauth.title',
+    descKey: 'home.tools.oauth.desc',
+    tagKeys: ['home.tools.oauth.tagPkce', 'home.tools.oauth.tagCallback'],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
   {
     to: '/certificate-tool' as const,
     icon: <KeyRound className="h-8 w-8 text-teal-500" />,
@@ -478,7 +533,11 @@ const cryptoTools = [
     icon: <Dices className="w-8 h-8 text-pink-500" />,
     titleKey: 'home.tools.uuid.title',
     descKey: 'home.tools.uuid.desc',
-    tagKeys: ['home.tools.uuid.tagV4', 'home.tools.uuid.tagBatch'],
+    tagKeys: [
+      'home.tools.uuid.tagV4',
+      'home.tools.uuid.tagNanoid',
+      'home.tools.uuid.tagUlid',
+    ],
     gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
     border: 'hover:border-pink-300 dark:hover:border-pink-700',
   },
@@ -494,6 +553,15 @@ const cryptoTools = [
 ];
 
 const networkTools = [
+  {
+    to: '/dns' as const,
+    icon: <Network className="h-8 w-8 text-sky-500" />,
+    titleKey: 'home.tools.dns.title',
+    descKey: 'home.tools.dns.desc',
+    tagKeys: ['home.tools.dns.tagDoh', 'home.tools.dns.tagRecords'],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
+  },
   {
     to: '/webrtc-diagnostics' as const,
     icon: <Network className="h-8 w-8 text-indigo-500" />,
@@ -532,6 +600,18 @@ const networkTools = [
     border: 'hover:border-blue-300 dark:hover:border-blue-700',
   },
   {
+    to: '/curl-converter' as const,
+    icon: <Terminal className="w-8 h-8 text-slate-600" />,
+    titleKey: 'home.tools.curlConverter.title',
+    descKey: 'home.tools.curlConverter.desc',
+    tagKeys: [
+      'home.tools.curlConverter.tagCurl',
+      'home.tools.curlConverter.tagFetch',
+    ],
+    gradient: 'hover:bg-slate-50 dark:hover:bg-slate-950/20',
+    border: 'hover:border-slate-300 dark:hover:border-slate-700',
+  },
+  {
     to: '/cors' as const,
     icon: <ShieldAlert className="w-8 h-8 text-orange-500" />,
     titleKey: 'home.tools.cors.title',
@@ -550,11 +630,33 @@ const networkTools = [
     border: 'hover:border-amber-300 dark:hover:border-amber-700',
   },
   {
+    to: '/cidr' as const,
+    icon: <Network className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'home.tools.cidr.title',
+    descKey: 'home.tools.cidr.desc',
+    tagKeys: ['home.tools.cidr.tagSubnet', 'home.tools.cidr.tagRange'],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/ipv6' as const,
+    icon: <Network className="h-8 w-8 text-sky-500" />,
+    titleKey: 'home.tools.ipv6.title',
+    descKey: 'home.tools.ipv6.desc',
+    tagKeys: ['home.tools.ipv6.tagCidr', 'home.tools.ipv6.tagUla'],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
+  },
+  {
     to: '/ip-lookup' as const,
     icon: <MapPin className="w-8 h-8 text-red-500" />,
     titleKey: 'home.tools.ipLookup.title',
     descKey: 'home.tools.ipLookup.desc',
-    tagKeys: ['home.tools.ipLookup.tagGeo', 'home.tools.ipLookup.tagExtract'],
+    tagKeys: [
+      'home.tools.ipLookup.tagGeo',
+      'home.tools.ipLookup.tagCidr',
+      'home.tools.ipLookup.tagExtract',
+    ],
     gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
     border: 'hover:border-red-300 dark:hover:border-red-700',
   },
@@ -690,7 +792,7 @@ const textTools = [
     tagKeys: [
       'home.tools.text.tagDedupe',
       'home.tools.text.tagSort',
-      'home.tools.text.tagStats',
+      'home.tools.text.tagZh',
     ],
     gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
     border: 'hover:border-lime-300 dark:hover:border-lime-700',
@@ -834,6 +936,54 @@ const frontendTools = [
     ],
     gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
     border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/css-shadow' as const,
+    icon: <Wind className="w-8 h-8 text-stone-500" />,
+    titleKey: 'home.tools.cssShadow.title',
+    descKey: 'home.tools.cssShadow.desc',
+    tagKeys: [
+      'home.tools.cssShadow.tagShadow',
+      'home.tools.cssShadow.tagRadius',
+    ],
+    gradient: 'hover:bg-stone-50 dark:hover:bg-stone-950/20',
+    border: 'hover:border-stone-300 dark:hover:border-stone-700',
+  },
+  {
+    to: '/css-tailwind' as const,
+    icon: <SquareAsterisk className="w-8 h-8 text-cyan-600" />,
+    titleKey: 'home.tools.cssTailwind.title',
+    descKey: 'home.tools.cssTailwind.desc',
+    tagKeys: [
+      'home.tools.cssTailwind.tagToCss',
+      'home.tools.cssTailwind.tagToTw',
+    ],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/aspect-ratio' as const,
+    icon: <Ratio className="w-8 h-8 text-teal-500" />,
+    titleKey: 'home.tools.aspectRatio.title',
+    descKey: 'home.tools.aspectRatio.desc',
+    tagKeys: [
+      'home.tools.aspectRatio.tagRatio',
+      'home.tools.aspectRatio.tagSafe',
+    ],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
+    to: '/og-preview' as const,
+    icon: <Share2 className="w-8 h-8 text-sky-600" />,
+    titleKey: 'home.tools.ogPreview.title',
+    descKey: 'home.tools.ogPreview.desc',
+    tagKeys: [
+      'home.tools.ogPreview.tagMeta',
+      'home.tools.ogPreview.tagPreview',
+    ],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
   },
   {
     to: '/image' as const,
@@ -1015,6 +1165,18 @@ const videoTools = [
 ];
 
 const lifeTools = [
+  {
+    to: '/rmb-uppercase' as const,
+    icon: <Wallet className="h-8 w-8 text-red-500" />,
+    titleKey: 'home.tools.rmbUppercase.title',
+    descKey: 'home.tools.rmbUppercase.desc',
+    tagKeys: [
+      'home.tools.rmbUppercase.tagAmount',
+      'home.tools.rmbUppercase.tagChinese',
+    ],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
   {
     to: '/finance-calculator' as const,
     icon: <Landmark className="h-8 w-8 text-green-500" />,
@@ -1567,6 +1729,8 @@ function HomePageContent({
   const [localOrder, setLocalOrder] = React.useState<string[]>(favoritePaths);
   // 当前正在拖拽的工具路径（用于 DragOverlay）
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [smartInput, setSmartInput] = React.useState('');
+  const smartSuggestions = detectToolSuggestions(smartInput);
 
   // 当 DB 数据变化时，同步到本地顺序（拖拽过程中不覆盖）
   React.useEffect(() => {
@@ -1664,6 +1828,31 @@ function HomePageContent({
             </button>
           ))}
         </div>
+      )}
+
+      {category === 'recommended' && (
+        <section className="space-y-3 rounded-2xl border p-4">
+          <h2 className="font-semibold">{t('home.smart.title')}</h2>
+          <textarea
+            value={smartInput}
+            onChange={(event) => setSmartInput(event.target.value)}
+            className="h-24 w-full resize-none rounded-md border bg-background p-3 font-mono text-sm"
+            placeholder={t('home.smart.placeholder')}
+          />
+          {smartSuggestions.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {smartSuggestions.map((suggestion) => (
+                <a
+                  key={suggestion.path}
+                  href={suggestion.path}
+                  className="rounded-full border px-3 py-1.5 text-sm hover:bg-muted"
+                >
+                  {t(`home.smart.tools.${suggestion.code}`)}
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
       )}
 
       <div className="space-y-8">
@@ -2022,7 +2211,8 @@ function HomePageContent({
                     tool.to !== '/image-palette' &&
                     tool.to !== '/id-photo' &&
                     tool.to !== '/image-privacy' &&
-                    tool.to !== '/webp-gif',
+                    tool.to !== '/webp-gif' &&
+                    tool.to !== '/og-preview',
                 )
                 .map((tool) => (
                   <ToolCard
@@ -2064,7 +2254,8 @@ function HomePageContent({
                     tool.to === '/image-palette' ||
                     tool.to === '/id-photo' ||
                     tool.to === '/image-privacy' ||
-                    tool.to === '/webp-gif',
+                    tool.to === '/webp-gif' ||
+                    tool.to === '/og-preview',
                 )
                 .map((tool) => (
                   <ToolCard

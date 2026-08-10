@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { MarkupQueryPanel } from '@/components/protocol-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,7 +53,7 @@ function useHtmlTool(initialInput = '') {
   };
 }
 
-type TabType = 'format' | 'minify';
+type TabType = 'format' | 'minify' | 'query';
 
 function HtmlPage() {
   const { t } = useTranslation();
@@ -109,6 +110,7 @@ function HtmlPage() {
         <TabsList>
           <TabsTrigger value="format">{t('html.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('html.tabMinify')}</TabsTrigger>
+          <TabsTrigger value="query">CSS Selector / XPath</TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-4 mt-4">
@@ -155,6 +157,9 @@ function HtmlPage() {
             error={min.error}
             language="html"
           />
+        </TabsContent>
+        <TabsContent value="query" className="mt-4">
+          <MarkupQueryPanel />
         </TabsContent>
       </Tabs>
     </div>

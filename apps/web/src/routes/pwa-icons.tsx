@@ -1,8 +1,11 @@
 import { FileDropzone } from '@/components/file-dropzone';
 import { MonacoTextEditor } from '@/components/monaco-editor';
+import { ManifestAuditPanel } from '@/components/modern-web-tool-panels';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { downloadBlob } from '@/lib/download';
 import { createPngIco } from '@/lib/pwa-icons';
 import { createFileRoute } from '@tanstack/react-router';
@@ -51,6 +54,11 @@ async function renderIcon(
 
 function PwaIconsPage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<'icons' | 'audit'>(
+    'tab',
+    StringParam,
+    'icons',
+  );
   const [source, setSource] = useState<ImageBitmap | null>(null);
   const [name, setName] = useState('Breeze Tools');
   const [shortName, setShortName] = useState('Tools');
@@ -175,88 +183,106 @@ function PwaIconsPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('pwaIcons.title')}</h1>
-      <FileDropzone
-        accept="image/*"
-        onFiles={(files) => files[0] && void load(files[0].file)}
-        className="flex min-h-28 items-center justify-center rounded-xl p-4 text-center"
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as 'icons' | 'audit')}
       >
-        <div>
-          <AppWindow className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-          {t('pwaIcons.drop')}
-        </div>
-      </FileDropzone>
-      <div className="grid gap-3 sm:grid-cols-4">
-        <div className="space-y-2">
-          <Label>{t('pwaIcons.name')}</Label>
-          <Input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>{t('pwaIcons.shortName')}</Label>
-          <Input
-            value={shortName}
-            onChange={(event) => setShortName(event.target.value)}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>{t('pwaIcons.theme')}</Label>
-          <Input
-            type="color"
-            value={themeColor}
-            onChange={(event) => setThemeColor(event.target.value)}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>{t('pwaIcons.background')}</Label>
-          <Input
-            type="color"
-            value={backgroundColor}
-            onChange={(event) => setBackgroundColor(event.target.value)}
-          />
-        </div>
-      </div>
-      <div className="flex gap-2">
-        <Button disabled={!source || loading} onClick={() => void generate()}>
-          {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
-          {t('pwaIcons.generate')}
-        </Button>
-        <Button
-          variant="outline"
-          disabled={!icons.length}
-          onClick={() => void download()}
-        >
-          {t('pwaIcons.download')}
-        </Button>
-      </div>
-      {error && <div className="text-sm text-destructive">{error}</div>}
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="grid grid-cols-3 gap-3">
-          {icons
-            .filter((icon) => icon.name.endsWith('.png'))
-            .map((icon) => (
-              <div
-                key={icon.name}
-                className="rounded-xl border p-3 text-center"
-              >
-                <img
-                  src={icon.url}
-                  alt=""
-                  className={`mx-auto h-24 w-24 object-contain ${icon.name.includes('maskable') ? 'rounded-full' : ''}`}
-                />
-                <div className="mt-2 truncate text-xs">{icon.name}</div>
-              </div>
-            ))}
-        </div>
-        <MonacoTextEditor
-          readOnly
-          label="manifest.webmanifest"
-          language="json"
-          height="420px"
-          value={manifest}
-        />
-      </div>
+        <TabsList>
+          <TabsTrigger value="icons">{t('modern.iconGenerator')}</TabsTrigger>
+          <TabsTrigger value="audit">{t('modern.manifestAudit')}</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === 'audit' ? (
+        <ManifestAuditPanel />
+      ) : (
+        <>
+          <FileDropzone
+            accept="image/*"
+            onFiles={(files) => files[0] && void load(files[0].file)}
+            className="flex min-h-28 items-center justify-center rounded-xl p-4 text-center"
+          >
+            <div>
+              <AppWindow className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+              {t('pwaIcons.drop')}
+            </div>
+          </FileDropzone>
+          <div className="grid gap-3 sm:grid-cols-4">
+            <div className="space-y-2">
+              <Label>{t('pwaIcons.name')}</Label>
+              <Input
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('pwaIcons.shortName')}</Label>
+              <Input
+                value={shortName}
+                onChange={(event) => setShortName(event.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('pwaIcons.theme')}</Label>
+              <Input
+                type="color"
+                value={themeColor}
+                onChange={(event) => setThemeColor(event.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('pwaIcons.background')}</Label>
+              <Input
+                type="color"
+                value={backgroundColor}
+                onChange={(event) => setBackgroundColor(event.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              disabled={!source || loading}
+              onClick={() => void generate()}
+            >
+              {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
+              {t('pwaIcons.generate')}
+            </Button>
+            <Button
+              variant="outline"
+              disabled={!icons.length}
+              onClick={() => void download()}
+            >
+              {t('pwaIcons.download')}
+            </Button>
+          </div>
+          {error && <div className="text-sm text-destructive">{error}</div>}
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-3 gap-3">
+              {icons
+                .filter((icon) => icon.name.endsWith('.png'))
+                .map((icon) => (
+                  <div
+                    key={icon.name}
+                    className="rounded-xl border p-3 text-center"
+                  >
+                    <img
+                      src={icon.url}
+                      alt=""
+                      className={`mx-auto h-24 w-24 object-contain ${icon.name.includes('maskable') ? 'rounded-full' : ''}`}
+                    />
+                    <div className="mt-2 truncate text-xs">{icon.name}</div>
+                  </div>
+                ))}
+            </div>
+            <MonacoTextEditor
+              readOnly
+              label="manifest.webmanifest"
+              language="json"
+              height="420px"
+              value={manifest}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

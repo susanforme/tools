@@ -1,4 +1,6 @@
 import { FileDropzone } from '@/components/file-dropzone';
+import { HttpLogPanel } from '@/components/extra-tool-panels';
+import { StructuredLogPanel } from '@/components/protocol-tool-panels';
 import { MonacoTextEditor } from '@/components/monaco-editor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
@@ -30,6 +32,11 @@ function bytes(value: number): string {
 
 function HarAnalyzerPage() {
   const { t } = useTranslation();
+  const [mode, setMode] = useQueryParam<'har' | 'logs' | 'structured-logs'>(
+    'tab',
+    StringParam,
+    'har',
+  );
   const [view, setView] = useQueryParam<View>('view', StringParam, 'waterfall');
   const [analysis, setAnalysis] = useState<HarAnalysis | null>(null);
   const [selected, setSelected] = useState<HarEntry | null>(null);
@@ -73,157 +80,187 @@ function HarAnalyzerPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('harAnalyzer.title')}</h1>
-      <FileDropzone
-        accept=".har,application/json"
-        onFiles={(files) => files[0] && void load(files[0].file)}
-        className="flex min-h-28 items-center justify-center rounded-xl p-5 text-center"
+      <Tabs
+        value={mode}
+        onValueChange={(value) =>
+          setMode(value as 'har' | 'logs' | 'structured-logs')
+        }
       >
-        <div>
-          <FileSearch className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-          {t('harAnalyzer.drop')}
-        </div>
-      </FileDropzone>
-      {error && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {error}
-        </div>
-      )}
-      {analysis && (
+        <TabsList>
+          <TabsTrigger value="har">HAR</TabsTrigger>
+          <TabsTrigger value="logs">{t('harAnalyzer.httpLogs')}</TabsTrigger>
+          <TabsTrigger value="structured-logs">logfmt / Syslog</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {mode === 'logs' ? (
+        <HttpLogPanel />
+      ) : mode === 'structured-logs' ? (
+        <StructuredLogPanel />
+      ) : (
         <>
-          <div className="grid gap-3 sm:grid-cols-4">
-            {metrics.map(([Icon, label, value]) => (
-              <Card key={String(label)}>
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-semibold">
-                  {value}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <Tabs value={view} onValueChange={(value) => setView(value as View)}>
-            <TabsList className="flex h-auto flex-wrap">
-              <TabsTrigger value="waterfall">
-                {t('harAnalyzer.waterfall')}
-              </TabsTrigger>
-              <TabsTrigger value="failures">
-                {t('harAnalyzer.failures')}
-              </TabsTrigger>
-              <TabsTrigger value="slow">{t('harAnalyzer.slow')}</TabsTrigger>
-              <TabsTrigger value="size">{t('harAnalyzer.size')}</TabsTrigger>
-              <TabsTrigger value="domains">
-                {t('harAnalyzer.domainStats')}
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          {view === 'domains' ? (
-            <div className="grid gap-4 lg:grid-cols-2">
-              {[analysis.domains, analysis.mimeTypes].map(
-                (groups, groupIndex) => (
-                  <Card key={groupIndex}>
-                    <CardContent className="divide-y pt-3">
-                      {groups.map((item) => (
-                        <div
-                          key={item.name}
-                          className="flex items-center gap-3 py-2 text-sm"
-                        >
-                          <span className="min-w-0 flex-1 truncate">
-                            {item.name}
-                          </span>
-                          <span>{item.count}</span>
-                          <span className="w-24 text-right text-muted-foreground">
-                            {bytes(item.bytes)}
-                          </span>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                ),
-              )}
+          <FileDropzone
+            accept=".har,application/json"
+            onFiles={(files) => files[0] && void load(files[0].file)}
+            className="flex min-h-28 items-center justify-center rounded-xl p-5 text-center"
+          >
+            <div>
+              <FileSearch className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+              {t('harAnalyzer.drop')}
             </div>
-          ) : view === 'waterfall' ? (
-            <div className="overflow-x-auto rounded-xl border p-3">
-              <svg
-                viewBox={`0 0 1000 ${Math.max(Math.min(entries.length, 200), 1) * 28}`}
-                className="min-w-[900px]"
-                role="img"
-                aria-label={t('harAnalyzer.waterfall')}
-              >
-                {entries.slice(0, 200).map((entry, index) => {
-                  const x =
-                    330 + ((entry.startedAt - analysis.startedAt) / span) * 650;
-                  const width = Math.max((entry.duration / span) * 650, 2);
-                  return (
-                    <g
-                      key={`${entry.startedAt}-${index}`}
-                      className="cursor-pointer"
-                      onClick={() => setSelected(entry)}
-                    >
-                      <text
-                        x="4"
-                        y={index * 28 + 18}
-                        className="fill-foreground text-[11px]"
-                      >{`${entry.method} ${entry.url.slice(0, 48)}`}</text>
-                      <rect
-                        x={x}
-                        y={index * 28 + 6}
-                        width={width}
-                        height="14"
-                        rx="3"
-                        className={
-                          entry.status >= 400 || entry.status === 0
-                            ? 'fill-destructive'
-                            : 'fill-blue-500'
-                        }
-                      >
-                        <title>{`${entry.duration.toFixed(0)} ms · ${bytes(entry.size)}`}</title>
-                      </rect>
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
-          ) : (
-            <div className="divide-y rounded-xl border">
-              {entries.slice(0, 200).map((entry, index) => (
-                <button
-                  key={`${entry.startedAt}-${index}`}
-                  className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-muted"
-                  onClick={() => setSelected(entry)}
-                >
-                  <span className="w-12 font-medium">{entry.method}</span>
-                  <span className="min-w-0 flex-1 truncate">{entry.url}</span>
-                  <span
-                    className={
-                      entry.status >= 400 || entry.status === 0
-                        ? 'text-destructive'
-                        : 'text-muted-foreground'
-                    }
-                  >
-                    {entry.status}
-                  </span>
-                  <span className="w-20 text-right tabular-nums">
-                    {entry.duration.toFixed(0)} ms
-                  </span>
-                  <span className="w-20 text-right text-muted-foreground">
-                    {bytes(entry.size)}
-                  </span>
-                </button>
-              ))}
+          </FileDropzone>
+          {error && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {error}
             </div>
           )}
-          {selected && (
-            <MonacoTextEditor
-              readOnly
-              label={t('harAnalyzer.details')}
-              language="json"
-              height="360px"
-              value={JSON.stringify(selected, null, 2)}
-            />
+          {analysis && (
+            <>
+              <div className="grid gap-3 sm:grid-cols-4">
+                {metrics.map(([Icon, label, value]) => (
+                  <Card key={String(label)}>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Icon className="h-4 w-4" />
+                        {label}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-2xl font-semibold">
+                      {value}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <Tabs
+                value={view}
+                onValueChange={(value) => setView(value as View)}
+              >
+                <TabsList className="flex h-auto flex-wrap">
+                  <TabsTrigger value="waterfall">
+                    {t('harAnalyzer.waterfall')}
+                  </TabsTrigger>
+                  <TabsTrigger value="failures">
+                    {t('harAnalyzer.failures')}
+                  </TabsTrigger>
+                  <TabsTrigger value="slow">
+                    {t('harAnalyzer.slow')}
+                  </TabsTrigger>
+                  <TabsTrigger value="size">
+                    {t('harAnalyzer.size')}
+                  </TabsTrigger>
+                  <TabsTrigger value="domains">
+                    {t('harAnalyzer.domainStats')}
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+              {view === 'domains' ? (
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {[analysis.domains, analysis.mimeTypes].map(
+                    (groups, groupIndex) => (
+                      <Card key={groupIndex}>
+                        <CardContent className="divide-y pt-3">
+                          {groups.map((item) => (
+                            <div
+                              key={item.name}
+                              className="flex items-center gap-3 py-2 text-sm"
+                            >
+                              <span className="min-w-0 flex-1 truncate">
+                                {item.name}
+                              </span>
+                              <span>{item.count}</span>
+                              <span className="w-24 text-right text-muted-foreground">
+                                {bytes(item.bytes)}
+                              </span>
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+                    ),
+                  )}
+                </div>
+              ) : view === 'waterfall' ? (
+                <div className="overflow-x-auto rounded-xl border p-3">
+                  <svg
+                    viewBox={`0 0 1000 ${Math.max(Math.min(entries.length, 200), 1) * 28}`}
+                    className="min-w-[900px]"
+                    role="img"
+                    aria-label={t('harAnalyzer.waterfall')}
+                  >
+                    {entries.slice(0, 200).map((entry, index) => {
+                      const x =
+                        330 +
+                        ((entry.startedAt - analysis.startedAt) / span) * 650;
+                      const width = Math.max((entry.duration / span) * 650, 2);
+                      return (
+                        <g
+                          key={`${entry.startedAt}-${index}`}
+                          className="cursor-pointer"
+                          onClick={() => setSelected(entry)}
+                        >
+                          <text
+                            x="4"
+                            y={index * 28 + 18}
+                            className="fill-foreground text-[11px]"
+                          >{`${entry.method} ${entry.url.slice(0, 48)}`}</text>
+                          <rect
+                            x={x}
+                            y={index * 28 + 6}
+                            width={width}
+                            height="14"
+                            rx="3"
+                            className={
+                              entry.status >= 400 || entry.status === 0
+                                ? 'fill-destructive'
+                                : 'fill-blue-500'
+                            }
+                          >
+                            <title>{`${entry.duration.toFixed(0)} ms · ${bytes(entry.size)}`}</title>
+                          </rect>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                </div>
+              ) : (
+                <div className="divide-y rounded-xl border">
+                  {entries.slice(0, 200).map((entry, index) => (
+                    <button
+                      key={`${entry.startedAt}-${index}`}
+                      className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-muted"
+                      onClick={() => setSelected(entry)}
+                    >
+                      <span className="w-12 font-medium">{entry.method}</span>
+                      <span className="min-w-0 flex-1 truncate">
+                        {entry.url}
+                      </span>
+                      <span
+                        className={
+                          entry.status >= 400 || entry.status === 0
+                            ? 'text-destructive'
+                            : 'text-muted-foreground'
+                        }
+                      >
+                        {entry.status}
+                      </span>
+                      <span className="w-20 text-right tabular-nums">
+                        {entry.duration.toFixed(0)} ms
+                      </span>
+                      <span className="w-20 text-right text-muted-foreground">
+                        {bytes(entry.size)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {selected && (
+                <MonacoTextEditor
+                  readOnly
+                  label={t('harAnalyzer.details')}
+                  language="json"
+                  height="360px"
+                  value={JSON.stringify(selected, null, 2)}
+                />
+              )}
+            </>
           )}
         </>
       )}

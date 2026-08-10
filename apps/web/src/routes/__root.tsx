@@ -62,24 +62,30 @@ import {
   Paintbrush,
   Palette,
   QrCode,
+  Ratio,
   Regex as RegexIcon,
   RotateCw,
   Ruler,
   Search,
   Send,
+  Share2,
   Settings,
   ShieldAlert,
   ShieldCheck,
   ShieldPlus,
   Scissors,
   Sparkles,
+  SquareAsterisk,
   Star,
   Sun,
   Table,
   Tag,
+  Terminal,
   Thermometer,
   Type,
   Video,
+  Wallet,
+  Wind,
   X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -153,6 +159,8 @@ const formatterNavItems: NavItem[] = [
     to: '/json',
     icon: <Braces className="w-4 h-4 text-amber-500" />,
     labelKey: 'nav.json',
+    keywords:
+      'json format minify schema typescript zod interface jsonpath ndjson patch 格式化 类型',
   },
   {
     to: '/html',
@@ -202,6 +210,7 @@ const encodeNavItems: NavItem[] = [
     to: '/base64',
     icon: <Binary className="w-4 h-4 text-rose-500" />,
     labelKey: 'nav.base64',
+    keywords: 'base64 base32 encode decode 编码 解码',
   },
   {
     to: '/url-encode',
@@ -222,10 +231,16 @@ const encodeNavItems: NavItem[] = [
 
 const cryptoNavItems: NavItem[] = [
   {
+    to: '/oauth',
+    icon: <ShieldPlus className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.oauth',
+    keywords: 'oauth oidc pkce authorization callback state nonce 授权 登录',
+  },
+  {
     to: '/certificate-tool',
     icon: <KeyRound className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.certificateTool',
-    keywords: 'x509 pem csr certificate 证书 公钥 域名 有效期',
+    keywords: 'x509 pem jwk csr certificate 证书 公钥 域名 有效期 转换',
   },
   {
     to: '/hash',
@@ -267,6 +282,12 @@ const cryptoNavItems: NavItem[] = [
 
 const networkNavItems: NavItem[] = [
   {
+    to: '/dns',
+    icon: <Network className="h-4 w-4 text-sky-500" />,
+    labelKey: 'nav.dns',
+    keywords: 'dns doh domain record cname mx txt ns 域名 解析',
+  },
+  {
     to: '/webrtc-diagnostics',
     icon: <Network className="h-4 w-4 text-indigo-500" />,
     labelKey: 'nav.webrtcDiagnostics',
@@ -284,6 +305,12 @@ const networkNavItems: NavItem[] = [
     labelKey: 'nav.httpRequest',
   },
   {
+    to: '/curl-converter',
+    icon: <Terminal className="w-4 h-4 text-slate-600" />,
+    labelKey: 'nav.curlConverter',
+    keywords: 'curl fetch axios http converter 转换',
+  },
+  {
     to: '/cors',
     icon: <ShieldAlert className="w-4 h-4 text-orange-500" />,
     labelKey: 'nav.cors',
@@ -292,6 +319,18 @@ const networkNavItems: NavItem[] = [
     to: '/cookie',
     icon: <Cookie className="w-4 h-4 text-amber-500" />,
     labelKey: 'nav.cookie',
+  },
+  {
+    to: '/cidr',
+    icon: <Network className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'nav.cidr',
+    keywords: 'cidr ipv4 subnet mask broadcast range 子网 掩码 广播',
+  },
+  {
+    to: '/ipv6',
+    icon: <Network className="h-4 w-4 text-sky-500" />,
+    labelKey: 'nav.ipv6',
+    keywords: 'ipv6 cidr compress expand ula 网络 地址',
   },
   {
     to: '/ip-lookup',
@@ -427,6 +466,30 @@ const frontendNavItems: NavItem[] = [
     labelKey: 'nav.cssAnimation',
   },
   {
+    to: '/css-shadow',
+    icon: <Wind className="w-4 h-4 text-stone-500" />,
+    labelKey: 'nav.cssShadow',
+    keywords: 'box-shadow border-radius 阴影 圆角 css',
+  },
+  {
+    to: '/css-tailwind',
+    icon: <SquareAsterisk className="w-4 h-4 text-cyan-600" />,
+    labelKey: 'nav.cssTailwind',
+    keywords: 'tailwind css class converter 转换',
+  },
+  {
+    to: '/aspect-ratio',
+    icon: <Ratio className="w-4 h-4 text-teal-500" />,
+    labelKey: 'nav.aspectRatio',
+    keywords: 'aspect ratio safe area 宽高比 安全区',
+  },
+  {
+    to: '/og-preview',
+    icon: <Share2 className="w-4 h-4 text-sky-600" />,
+    labelKey: 'nav.ogPreview',
+    keywords: 'og open graph meta twitter preview 分享 预览',
+  },
+  {
     to: '/image',
     icon: <ImageIcon className="w-4 h-4 text-sky-500" />,
     labelKey: 'nav.imageTool',
@@ -477,7 +540,8 @@ const imageNavItems = frontendNavItems.filter(
     item.to === '/image-palette' ||
     item.to === '/id-photo' ||
     item.to === '/image-privacy' ||
-    item.to === '/webp-gif',
+    item.to === '/webp-gif' ||
+    item.to === '/og-preview',
 );
 const designNavItems = frontendNavItems.filter(
   (item) =>
@@ -487,9 +551,22 @@ const designNavItems = frontendNavItems.filter(
     item.to !== '/image-palette' &&
     item.to !== '/id-photo' &&
     item.to !== '/image-privacy' &&
-    item.to !== '/webp-gif',
+    item.to !== '/webp-gif' &&
+    item.to !== '/og-preview',
 );
 const developerToolNavItems: NavItem[] = [
+  {
+    to: '/trace-context',
+    icon: <Network className="h-4 w-4 text-sky-500" />,
+    labelKey: 'nav.traceContext',
+    keywords: 'traceparent tracestate baggage opentelemetry tracing 链路追踪',
+  },
+  {
+    to: '/pipeline',
+    icon: <Share2 className="h-4 w-4 text-violet-500" />,
+    labelKey: 'nav.pipeline',
+    keywords: 'pipeline recipe transform encode decode hash 处理 管道',
+  },
   {
     to: '/har-analyzer',
     icon: <Activity className="h-4 w-4 text-cyan-500" />,
@@ -503,28 +580,22 @@ const developerToolNavItems: NavItem[] = [
     keywords: 'hex binary mime magic bytes endian strings 二进制 十六进制',
   },
   {
+    to: '/docker-compose',
+    icon: <Terminal className="h-4 w-4 text-blue-500" />,
+    labelKey: 'nav.dockerCompose',
+    keywords: 'docker run compose yaml container 容器 转换',
+  },
+  {
     to: '/webauthn-debugger',
     icon: <Fingerprint className="h-4 w-4 text-purple-500" />,
     labelKey: 'nav.webauthnDebugger',
     keywords: 'webauthn passkey credential authenticator biometric 通行密钥',
   },
   {
-    to: '/json-data',
-    icon: <Braces className="h-4 w-4 text-amber-500" />,
-    labelKey: 'nav.jsonData',
-    keywords: 'jsonpath json lines ndjson json patch rfc6902',
-  },
-  {
     to: '/email-headers',
     icon: <FileText className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.emailHeaders',
     keywords: 'email mail header received spf dkim dmarc mime 邮件头',
-  },
-  {
-    to: '/json-schema',
-    icon: <Braces className="h-4 w-4 text-amber-500" />,
-    labelKey: 'nav.jsonSchema',
-    keywords: 'json schema validate typescript infer 校验 推导 类型',
   },
   {
     to: '/openapi',
@@ -561,6 +632,18 @@ const developerToolNavItems: NavItem[] = [
     icon: <ShieldAlert className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.cspTool',
     keywords: 'content security policy csp header 安全策略',
+  },
+  {
+    to: '/unix-permissions',
+    icon: <Terminal className="h-4 w-4 text-slate-500" />,
+    labelKey: 'nav.unixPermissions',
+    keywords: 'unix linux chmod permissions rwx 755 setuid sticky 权限',
+  },
+  {
+    to: '/seo-files',
+    icon: <Globe className="h-4 w-4 text-green-500" />,
+    labelKey: 'nav.seoFiles',
+    keywords: 'seo robots.txt sitemap.xml crawler search engine 检查',
   },
   {
     to: '/git-tool',
@@ -633,6 +716,12 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
+  {
+    to: '/rmb-uppercase',
+    icon: <Wallet className="h-4 w-4 text-red-500" />,
+    labelKey: 'nav.rmbUppercase',
+    keywords: '人民币 大写 金额 rmb uppercase chinese money',
+  },
   {
     to: '/finance-calculator',
     icon: <Landmark className="h-4 w-4 text-green-500" />,

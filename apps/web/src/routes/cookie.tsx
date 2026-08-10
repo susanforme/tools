@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { inspectModernCookie, type CookieIssue } from '@/lib/modern-web-tools';
 import { Cookie } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -66,6 +67,12 @@ function flagBadge(flag: string) {
         className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
       >
         Secure
+      </Badge>
+    );
+  if (lower === 'partitioned')
+    return (
+      <Badge key={flag} variant="secondary" className="text-xs">
+        Partitioned
       </Badge>
     );
   if (lower.startsWith('samesite')) {
@@ -142,9 +149,11 @@ function CookiePage() {
   const [rawInput, setRawInput] = useState('');
   const [parsedFromInput, setParsedFromInput] = useState<ParsedCookie[]>([]);
   const [parsed, setParsed] = useState(false);
+  const [issues, setIssues] = useState<CookieIssue[]>([]);
 
   const parse = () => {
     setParsedFromInput(parseCookieString(rawInput));
+    setIssues(inspectModernCookie(rawInput));
     setParsed(true);
   };
 
@@ -174,6 +183,22 @@ function CookiePage() {
       {parsed && parsedFromInput.length > 0 && (
         <CookieTable cookies={parsedFromInput} />
       )}
+      {parsed && issues.length > 0 && (
+        <div className="space-y-2">
+          {issues.map((issue, index) => (
+            <div
+              key={`${issue.code}-${index}`}
+              className={`rounded-md border px-3 py-2 text-sm ${
+                issue.level === 'error'
+                  ? 'border-destructive/30 text-destructive'
+                  : 'text-amber-600'
+              }`}
+            >
+              {t(`modern.cookieIssues.${issue.code}`)}
+            </div>
+          ))}
+        </div>
+      )}
       {parsed && parsedFromInput.length === 0 && rawInput.trim() && (
         <p className="text-sm text-muted-foreground py-2">
           {t('cookie.noResult')}
@@ -192,6 +217,8 @@ function CookiePage() {
             ['SameSite=Strict', '不随跨站请求发送'],
             ['SameSite=Lax', '跨站导航时发送（GET）'],
             ['SameSite=None', '始终发送，需配合 Secure'],
+            ['Partitioned', '分区 Cookie，需配合 Secure'],
+            ['__Host- / __Secure-', 'Cookie 名称前缀约束'],
             ['Expires / Max-Age', 'Cookie 过期时间'],
             ['Domain', '指定 Cookie 作用域名'],
             ['Path', '指定 Cookie 作用路径'],

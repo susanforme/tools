@@ -1,3 +1,4 @@
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
@@ -9,6 +10,9 @@ import {
 } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/text')({ component: TextPage });
+
+type TabType = 'dedupe' | 'empty' | 'sort' | 'stats' | 'case' | 'zh';
+type ZhDirection = 's2t' | 't2s';
 
 // ─── 工具函数 ──────────────────────────────────────────────
 
@@ -599,22 +603,89 @@ function CaseTab() {
   );
 }
 
+// ─── Tab: 简繁转换 ─────────────────────────────────────────
+
+function ZhTab() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [direction, setDirection] = useQueryParam<ZhDirection>(
+    'dir',
+    StringParam,
+    's2t',
+  );
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const run = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const OpenCC = await import('opencc-js');
+      const converter = OpenCC.Converter(
+        direction === 's2t'
+          ? { from: 'cn', to: 'tw' }
+          : { from: 'tw', to: 'cn' },
+      );
+      setOutput(converter(input));
+    } catch (e) {
+      setError(`转换失败：${(e as Error).message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clear = () => {
+    setInput('');
+    setOutput('');
+    setError(null);
+  };
+
+  return (
+    <TextPanel input={input} output={output} onInputChange={setInput}>
+      <div className="flex items-center gap-3 flex-wrap">
+        <select
+          value={direction}
+          onChange={(e) => setDirection(e.target.value as ZhDirection)}
+          className="text-sm border rounded-md px-2 py-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+        >
+          <option value="s2t">简体 → 繁体</option>
+          <option value="t2s">繁体 → 简体</option>
+        </select>
+        <Button size="sm" onClick={run} disabled={loading}>
+          {loading ? '转换中…' : '转换'}
+        </Button>
+        <Button size="sm" variant="outline" onClick={clear}>
+          清空
+        </Button>
+      </div>
+      {error && (
+        <div className="text-destructive text-sm bg-destructive/10 border border-destructive/30 rounded-md px-3 py-2">
+          {error}
+        </div>
+      )}
+    </TextPanel>
+  );
+}
+
 // ─── 主页面 ────────────────────────────────────────────────
 
 function TextPage() {
+  const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'dedupe');
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">文本处理工具</h1>
       </div>
 
-      <Tabs defaultValue="dedupe">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
         <TabsList className="flex-wrap h-auto gap-1">
           <TabsTrigger value="dedupe">去重复行</TabsTrigger>
           <TabsTrigger value="empty">去空行</TabsTrigger>
           <TabsTrigger value="sort">行排序</TabsTrigger>
           <TabsTrigger value="stats">行/词统计</TabsTrigger>
           <TabsTrigger value="case">大小写转换</TabsTrigger>
+          <TabsTrigger value="zh">简繁转换</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dedupe" className="mt-4">
@@ -631,6 +702,9 @@ function TextPage() {
         </TabsContent>
         <TabsContent value="case" className="mt-4">
           <CaseTab />
+        </TabsContent>
+        <TabsContent value="zh" className="mt-4">
+          <ZhTab />
         </TabsContent>
       </Tabs>
     </div>

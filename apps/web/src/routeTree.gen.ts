@@ -22,9 +22,11 @@ import { Route as VideoAnimationRouteImport } from './routes/video-animation'
 import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
+import { Route as UnixPermissionsRouteImport } from './routes/unix-permissions'
 import { Route as UnitConverterRouteImport } from './routes/unit-converter'
 import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as TravelCostRouteImport } from './routes/travel-cost'
+import { Route as TraceContextRouteImport } from './routes/trace-context'
 import { Route as TotpRouteImport } from './routes/totp'
 import { Route as TextToSpeechRouteImport } from './routes/text-to-speech'
 import { Route as TextRouteImport } from './routes/text'
@@ -40,19 +42,24 @@ import { Route as SizeConverterRouteImport } from './routes/size-converter'
 import { Route as SettingsPreferencesRouteImport } from './routes/settings-preferences'
 import { Route as SettingsDataRouteImport } from './routes/settings-data'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SeoFilesRouteImport } from './routes/seo-files'
 import { Route as ScreenRecorderRouteImport } from './routes/screen-recorder'
 import { Route as SalaryTaxRouteImport } from './routes/salary-tax'
 import { Route as Rot13RouteImport } from './routes/rot13'
+import { Route as RmbUppercaseRouteImport } from './routes/rmb-uppercase'
 import { Route as RegexRouteImport } from './routes/regex'
 import { Route as RecipeScaleRouteImport } from './routes/recipe-scale'
 import { Route as RealtimeDebuggerRouteImport } from './routes/realtime-debugger'
 import { Route as RandomPickerRouteImport } from './routes/random-picker'
 import { Route as QrcodeRouteImport } from './routes/qrcode'
 import { Route as PwaIconsRouteImport } from './routes/pwa-icons'
+import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as PdfToolkitRouteImport } from './routes/pdf-toolkit'
 import { Route as PasswordRouteImport } from './routes/password'
 import { Route as PaceCalculatorRouteImport } from './routes/pace-calculator'
 import { Route as OpenapiRouteImport } from './routes/openapi'
+import { Route as OgPreviewRouteImport } from './routes/og-preview'
+import { Route as OauthRouteImport } from './routes/oauth'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MortgageRouteImport } from './routes/mortgage'
 import { Route as MockDataRouteImport } from './routes/mock-data'
@@ -60,10 +67,9 @@ import { Route as MeetingPlannerRouteImport } from './routes/meeting-planner'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JwtRouteImport } from './routes/jwt'
-import { Route as JsonSchemaRouteImport } from './routes/json-schema'
-import { Route as JsonDataRouteImport } from './routes/json-data'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
+import { Route as Ipv6RouteImport } from './routes/ipv6'
 import { Route as IpLookupRouteImport } from './routes/ip-lookup'
 import { Route as ImagePrivacyRouteImport } from './routes/image-privacy'
 import { Route as ImagePaletteRouteImport } from './routes/image-palette'
@@ -88,11 +94,16 @@ import { Route as FontRouteImport } from './routes/font'
 import { Route as FinanceCalculatorRouteImport } from './routes/finance-calculator'
 import { Route as EnvRouteImport } from './routes/env'
 import { Route as EmailHeadersRouteImport } from './routes/email-headers'
+import { Route as DockerComposeRouteImport } from './routes/docker-compose'
+import { Route as DnsRouteImport } from './routes/dns'
 import { Route as DiffRouteImport } from './routes/diff'
 import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as DateCalculatorRouteImport } from './routes/date-calculator'
+import { Route as CurlConverterRouteImport } from './routes/curl-converter'
 import { Route as CsvConvertRouteImport } from './routes/csv-convert'
 import { Route as CssUnitRouteImport } from './routes/css-unit'
+import { Route as CssTailwindRouteImport } from './routes/css-tailwind'
+import { Route as CssShadowRouteImport } from './routes/css-shadow'
 import { Route as CssLayoutRouteImport } from './routes/css-layout'
 import { Route as CssAnimationRouteImport } from './routes/css-animation'
 import { Route as CssRouteImport } from './routes/css'
@@ -103,6 +114,7 @@ import { Route as CookieRouteImport } from './routes/cookie'
 import { Route as ContrastRouteImport } from './routes/contrast'
 import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
+import { Route as CidrRouteImport } from './routes/cidr'
 import { Route as CertificateToolRouteImport } from './routes/certificate-tool'
 import { Route as BundleInspectorRouteImport } from './routes/bundle-inspector'
 import { Route as BmiRouteImport } from './routes/bmi'
@@ -111,6 +123,7 @@ import { Route as BatchFilesRouteImport } from './routes/batch-files'
 import { Route as Base64RouteImport } from './routes/base64'
 import { Route as AudioRecorderRouteImport } from './routes/audio-recorder'
 import { Route as AudioEditorRouteImport } from './routes/audio-editor'
+import { Route as AspectRatioRouteImport } from './routes/aspect-ratio'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -179,6 +192,11 @@ const UrlEncodeRoute = UrlEncodeRouteImport.update({
   path: '/url-encode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UnixPermissionsRoute = UnixPermissionsRouteImport.update({
+  id: '/unix-permissions',
+  path: '/unix-permissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UnitConverterRoute = UnitConverterRouteImport.update({
   id: '/unit-converter',
   path: '/unit-converter',
@@ -192,6 +210,11 @@ const UnicodeRoute = UnicodeRouteImport.update({
 const TravelCostRoute = TravelCostRouteImport.update({
   id: '/travel-cost',
   path: '/travel-cost',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TraceContextRoute = TraceContextRouteImport.update({
+  id: '/trace-context',
+  path: '/trace-context',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TotpRoute = TotpRouteImport.update({
@@ -269,6 +292,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SeoFilesRoute = SeoFilesRouteImport.update({
+  id: '/seo-files',
+  path: '/seo-files',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScreenRecorderRoute = ScreenRecorderRouteImport.update({
   id: '/screen-recorder',
   path: '/screen-recorder',
@@ -282,6 +310,11 @@ const SalaryTaxRoute = SalaryTaxRouteImport.update({
 const Rot13Route = Rot13RouteImport.update({
   id: '/rot13',
   path: '/rot13',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RmbUppercaseRoute = RmbUppercaseRouteImport.update({
+  id: '/rmb-uppercase',
+  path: '/rmb-uppercase',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegexRoute = RegexRouteImport.update({
@@ -314,6 +347,11 @@ const PwaIconsRoute = PwaIconsRouteImport.update({
   path: '/pwa-icons',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PipelineRoute = PipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PdfToolkitRoute = PdfToolkitRouteImport.update({
   id: '/pdf-toolkit',
   path: '/pdf-toolkit',
@@ -332,6 +370,16 @@ const PaceCalculatorRoute = PaceCalculatorRouteImport.update({
 const OpenapiRoute = OpenapiRouteImport.update({
   id: '/openapi',
   path: '/openapi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OgPreviewRoute = OgPreviewRouteImport.update({
+  id: '/og-preview',
+  path: '/og-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OauthRoute = OauthRouteImport.update({
+  id: '/oauth',
+  path: '/oauth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NumberBaseRoute = NumberBaseRouteImport.update({
@@ -369,16 +417,6 @@ const JwtRoute = JwtRouteImport.update({
   path: '/jwt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JsonSchemaRoute = JsonSchemaRouteImport.update({
-  id: '/json-schema',
-  path: '/json-schema',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JsonDataRoute = JsonDataRouteImport.update({
-  id: '/json-data',
-  path: '/json-data',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const JsonRoute = JsonRouteImport.update({
   id: '/json',
   path: '/json',
@@ -387,6 +425,11 @@ const JsonRoute = JsonRouteImport.update({
 const JsRoute = JsRouteImport.update({
   id: '/js',
   path: '/js',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Ipv6Route = Ipv6RouteImport.update({
+  id: '/ipv6',
+  path: '/ipv6',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IpLookupRoute = IpLookupRouteImport.update({
@@ -509,6 +552,16 @@ const EmailHeadersRoute = EmailHeadersRouteImport.update({
   path: '/email-headers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DockerComposeRoute = DockerComposeRouteImport.update({
+  id: '/docker-compose',
+  path: '/docker-compose',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DnsRoute = DnsRouteImport.update({
+  id: '/dns',
+  path: '/dns',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiffRoute = DiffRouteImport.update({
   id: '/diff',
   path: '/diff',
@@ -524,6 +577,11 @@ const DateCalculatorRoute = DateCalculatorRouteImport.update({
   path: '/date-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CurlConverterRoute = CurlConverterRouteImport.update({
+  id: '/curl-converter',
+  path: '/curl-converter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CsvConvertRoute = CsvConvertRouteImport.update({
   id: '/csv-convert',
   path: '/csv-convert',
@@ -532,6 +590,16 @@ const CsvConvertRoute = CsvConvertRouteImport.update({
 const CssUnitRoute = CssUnitRouteImport.update({
   id: '/css-unit',
   path: '/css-unit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CssTailwindRoute = CssTailwindRouteImport.update({
+  id: '/css-tailwind',
+  path: '/css-tailwind',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CssShadowRoute = CssShadowRouteImport.update({
+  id: '/css-shadow',
+  path: '/css-shadow',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CssLayoutRoute = CssLayoutRouteImport.update({
@@ -584,6 +652,11 @@ const CipherRoute = CipherRouteImport.update({
   path: '/cipher',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CidrRoute = CidrRouteImport.update({
+  id: '/cidr',
+  path: '/cidr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificateToolRoute = CertificateToolRouteImport.update({
   id: '/certificate-tool',
   path: '/certificate-tool',
@@ -624,6 +697,11 @@ const AudioEditorRoute = AudioEditorRouteImport.update({
   path: '/audio-editor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AspectRatioRoute = AspectRatioRouteImport.update({
+  id: '/aspect-ratio',
+  path: '/aspect-ratio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
@@ -638,6 +716,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/aspect-ratio': typeof AspectRatioRoute
   '/audio-editor': typeof AudioEditorRoute
   '/audio-recorder': typeof AudioRecorderRoute
   '/base64': typeof Base64Route
@@ -646,6 +725,7 @@ export interface FileRoutesByFullPath {
   '/bmi': typeof BmiRoute
   '/bundle-inspector': typeof BundleInspectorRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/cidr': typeof CidrRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
@@ -656,11 +736,16 @@ export interface FileRoutesByFullPath {
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
+  '/css-shadow': typeof CssShadowRoute
+  '/css-tailwind': typeof CssTailwindRoute
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/curl-converter': typeof CurlConverterRoute
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
+  '/dns': typeof DnsRoute
+  '/docker-compose': typeof DockerComposeRoute
   '/email-headers': typeof EmailHeadersRoute
   '/env': typeof EnvRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
@@ -685,10 +770,9 @@ export interface FileRoutesByFullPath {
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
+  '/ipv6': typeof Ipv6Route
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
-  '/json-data': typeof JsonDataRoute
-  '/json-schema': typeof JsonSchemaRoute
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
@@ -696,19 +780,24 @@ export interface FileRoutesByFullPath {
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
+  '/oauth': typeof OauthRoute
+  '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
   '/pace-calculator': typeof PaceCalculatorRoute
   '/password': typeof PasswordRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
+  '/pipeline': typeof PipelineRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
   '/random-picker': typeof RandomPickerRoute
   '/realtime-debugger': typeof RealtimeDebuggerRoute
   '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
+  '/rmb-uppercase': typeof RmbUppercaseRoute
   '/rot13': typeof Rot13Route
   '/salary-tax': typeof SalaryTaxRoute
   '/screen-recorder': typeof ScreenRecorderRoute
+  '/seo-files': typeof SeoFilesRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
@@ -724,9 +813,11 @@ export interface FileRoutesByFullPath {
   '/text': typeof TextRoute
   '/text-to-speech': typeof TextToSpeechRoute
   '/totp': typeof TotpRoute
+  '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
+  '/unix-permissions': typeof UnixPermissionsRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
@@ -744,6 +835,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/aspect-ratio': typeof AspectRatioRoute
   '/audio-editor': typeof AudioEditorRoute
   '/audio-recorder': typeof AudioRecorderRoute
   '/base64': typeof Base64Route
@@ -752,6 +844,7 @@ export interface FileRoutesByTo {
   '/bmi': typeof BmiRoute
   '/bundle-inspector': typeof BundleInspectorRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/cidr': typeof CidrRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
@@ -762,11 +855,16 @@ export interface FileRoutesByTo {
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
+  '/css-shadow': typeof CssShadowRoute
+  '/css-tailwind': typeof CssTailwindRoute
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/curl-converter': typeof CurlConverterRoute
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
+  '/dns': typeof DnsRoute
+  '/docker-compose': typeof DockerComposeRoute
   '/email-headers': typeof EmailHeadersRoute
   '/env': typeof EnvRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
@@ -791,10 +889,9 @@ export interface FileRoutesByTo {
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
+  '/ipv6': typeof Ipv6Route
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
-  '/json-data': typeof JsonDataRoute
-  '/json-schema': typeof JsonSchemaRoute
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
@@ -802,19 +899,24 @@ export interface FileRoutesByTo {
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
+  '/oauth': typeof OauthRoute
+  '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
   '/pace-calculator': typeof PaceCalculatorRoute
   '/password': typeof PasswordRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
+  '/pipeline': typeof PipelineRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
   '/random-picker': typeof RandomPickerRoute
   '/realtime-debugger': typeof RealtimeDebuggerRoute
   '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
+  '/rmb-uppercase': typeof RmbUppercaseRoute
   '/rot13': typeof Rot13Route
   '/salary-tax': typeof SalaryTaxRoute
   '/screen-recorder': typeof ScreenRecorderRoute
+  '/seo-files': typeof SeoFilesRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
@@ -830,9 +932,11 @@ export interface FileRoutesByTo {
   '/text': typeof TextRoute
   '/text-to-speech': typeof TextToSpeechRoute
   '/totp': typeof TotpRoute
+  '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
+  '/unix-permissions': typeof UnixPermissionsRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
@@ -851,6 +955,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/aspect-ratio': typeof AspectRatioRoute
   '/audio-editor': typeof AudioEditorRoute
   '/audio-recorder': typeof AudioRecorderRoute
   '/base64': typeof Base64Route
@@ -859,6 +964,7 @@ export interface FileRoutesById {
   '/bmi': typeof BmiRoute
   '/bundle-inspector': typeof BundleInspectorRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/cidr': typeof CidrRoute
   '/cipher': typeof CipherRoute
   '/color-converter': typeof ColorConverterRoute
   '/contrast': typeof ContrastRoute
@@ -869,11 +975,16 @@ export interface FileRoutesById {
   '/css': typeof CssRoute
   '/css-animation': typeof CssAnimationRoute
   '/css-layout': typeof CssLayoutRoute
+  '/css-shadow': typeof CssShadowRoute
+  '/css-tailwind': typeof CssTailwindRoute
   '/css-unit': typeof CssUnitRoute
   '/csv-convert': typeof CsvConvertRoute
+  '/curl-converter': typeof CurlConverterRoute
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/diff': typeof DiffRoute
+  '/dns': typeof DnsRoute
+  '/docker-compose': typeof DockerComposeRoute
   '/email-headers': typeof EmailHeadersRoute
   '/env': typeof EnvRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
@@ -898,10 +1009,9 @@ export interface FileRoutesById {
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/ip-lookup': typeof IpLookupRoute
+  '/ipv6': typeof Ipv6Route
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
-  '/json-data': typeof JsonDataRoute
-  '/json-schema': typeof JsonSchemaRoute
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
@@ -909,19 +1019,24 @@ export interface FileRoutesById {
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
+  '/oauth': typeof OauthRoute
+  '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
   '/pace-calculator': typeof PaceCalculatorRoute
   '/password': typeof PasswordRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
+  '/pipeline': typeof PipelineRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
   '/random-picker': typeof RandomPickerRoute
   '/realtime-debugger': typeof RealtimeDebuggerRoute
   '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
+  '/rmb-uppercase': typeof RmbUppercaseRoute
   '/rot13': typeof Rot13Route
   '/salary-tax': typeof SalaryTaxRoute
   '/screen-recorder': typeof ScreenRecorderRoute
+  '/seo-files': typeof SeoFilesRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
@@ -937,9 +1052,11 @@ export interface FileRoutesById {
   '/text': typeof TextRoute
   '/text-to-speech': typeof TextToSpeechRoute
   '/totp': typeof TotpRoute
+  '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
+  '/unix-permissions': typeof UnixPermissionsRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
   '/uuid': typeof UuidRoute
@@ -959,6 +1076,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/archive'
+    | '/aspect-ratio'
     | '/audio-editor'
     | '/audio-recorder'
     | '/base64'
@@ -967,6 +1085,7 @@ export interface FileRouteTypes {
     | '/bmi'
     | '/bundle-inspector'
     | '/certificate-tool'
+    | '/cidr'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
@@ -977,11 +1096,16 @@ export interface FileRouteTypes {
     | '/css'
     | '/css-animation'
     | '/css-layout'
+    | '/css-shadow'
+    | '/css-tailwind'
     | '/css-unit'
     | '/csv-convert'
+    | '/curl-converter'
     | '/date-calculator'
     | '/datetime'
     | '/diff'
+    | '/dns'
+    | '/docker-compose'
     | '/email-headers'
     | '/env'
     | '/finance-calculator'
@@ -1006,10 +1130,9 @@ export interface FileRouteTypes {
     | '/image-palette'
     | '/image-privacy'
     | '/ip-lookup'
+    | '/ipv6'
     | '/js'
     | '/json'
-    | '/json-data'
-    | '/json-schema'
     | '/jwt'
     | '/login'
     | '/markdown'
@@ -1017,19 +1140,24 @@ export interface FileRouteTypes {
     | '/mock-data'
     | '/mortgage'
     | '/number-base'
+    | '/oauth'
+    | '/og-preview'
     | '/openapi'
     | '/pace-calculator'
     | '/password'
     | '/pdf-toolkit'
+    | '/pipeline'
     | '/pwa-icons'
     | '/qrcode'
     | '/random-picker'
     | '/realtime-debugger'
     | '/recipe-scale'
     | '/regex'
+    | '/rmb-uppercase'
     | '/rot13'
     | '/salary-tax'
     | '/screen-recorder'
+    | '/seo-files'
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
@@ -1045,9 +1173,11 @@ export interface FileRouteTypes {
     | '/text'
     | '/text-to-speech'
     | '/totp'
+    | '/trace-context'
     | '/travel-cost'
     | '/unicode'
     | '/unit-converter'
+    | '/unix-permissions'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
@@ -1065,6 +1195,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/archive'
+    | '/aspect-ratio'
     | '/audio-editor'
     | '/audio-recorder'
     | '/base64'
@@ -1073,6 +1204,7 @@ export interface FileRouteTypes {
     | '/bmi'
     | '/bundle-inspector'
     | '/certificate-tool'
+    | '/cidr'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
@@ -1083,11 +1215,16 @@ export interface FileRouteTypes {
     | '/css'
     | '/css-animation'
     | '/css-layout'
+    | '/css-shadow'
+    | '/css-tailwind'
     | '/css-unit'
     | '/csv-convert'
+    | '/curl-converter'
     | '/date-calculator'
     | '/datetime'
     | '/diff'
+    | '/dns'
+    | '/docker-compose'
     | '/email-headers'
     | '/env'
     | '/finance-calculator'
@@ -1112,10 +1249,9 @@ export interface FileRouteTypes {
     | '/image-palette'
     | '/image-privacy'
     | '/ip-lookup'
+    | '/ipv6'
     | '/js'
     | '/json'
-    | '/json-data'
-    | '/json-schema'
     | '/jwt'
     | '/login'
     | '/markdown'
@@ -1123,19 +1259,24 @@ export interface FileRouteTypes {
     | '/mock-data'
     | '/mortgage'
     | '/number-base'
+    | '/oauth'
+    | '/og-preview'
     | '/openapi'
     | '/pace-calculator'
     | '/password'
     | '/pdf-toolkit'
+    | '/pipeline'
     | '/pwa-icons'
     | '/qrcode'
     | '/random-picker'
     | '/realtime-debugger'
     | '/recipe-scale'
     | '/regex'
+    | '/rmb-uppercase'
     | '/rot13'
     | '/salary-tax'
     | '/screen-recorder'
+    | '/seo-files'
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
@@ -1151,9 +1292,11 @@ export interface FileRouteTypes {
     | '/text'
     | '/text-to-speech'
     | '/totp'
+    | '/trace-context'
     | '/travel-cost'
     | '/unicode'
     | '/unit-converter'
+    | '/unix-permissions'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
@@ -1171,6 +1314,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/archive'
+    | '/aspect-ratio'
     | '/audio-editor'
     | '/audio-recorder'
     | '/base64'
@@ -1179,6 +1323,7 @@ export interface FileRouteTypes {
     | '/bmi'
     | '/bundle-inspector'
     | '/certificate-tool'
+    | '/cidr'
     | '/cipher'
     | '/color-converter'
     | '/contrast'
@@ -1189,11 +1334,16 @@ export interface FileRouteTypes {
     | '/css'
     | '/css-animation'
     | '/css-layout'
+    | '/css-shadow'
+    | '/css-tailwind'
     | '/css-unit'
     | '/csv-convert'
+    | '/curl-converter'
     | '/date-calculator'
     | '/datetime'
     | '/diff'
+    | '/dns'
+    | '/docker-compose'
     | '/email-headers'
     | '/env'
     | '/finance-calculator'
@@ -1218,10 +1368,9 @@ export interface FileRouteTypes {
     | '/image-palette'
     | '/image-privacy'
     | '/ip-lookup'
+    | '/ipv6'
     | '/js'
     | '/json'
-    | '/json-data'
-    | '/json-schema'
     | '/jwt'
     | '/login'
     | '/markdown'
@@ -1229,19 +1378,24 @@ export interface FileRouteTypes {
     | '/mock-data'
     | '/mortgage'
     | '/number-base'
+    | '/oauth'
+    | '/og-preview'
     | '/openapi'
     | '/pace-calculator'
     | '/password'
     | '/pdf-toolkit'
+    | '/pipeline'
     | '/pwa-icons'
     | '/qrcode'
     | '/random-picker'
     | '/realtime-debugger'
     | '/recipe-scale'
     | '/regex'
+    | '/rmb-uppercase'
     | '/rot13'
     | '/salary-tax'
     | '/screen-recorder'
+    | '/seo-files'
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
@@ -1257,9 +1411,11 @@ export interface FileRouteTypes {
     | '/text'
     | '/text-to-speech'
     | '/totp'
+    | '/trace-context'
     | '/travel-cost'
     | '/unicode'
     | '/unit-converter'
+    | '/unix-permissions'
     | '/url-encode'
     | '/user-agent'
     | '/uuid'
@@ -1278,6 +1434,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArchiveRoute: typeof ArchiveRoute
+  AspectRatioRoute: typeof AspectRatioRoute
   AudioEditorRoute: typeof AudioEditorRoute
   AudioRecorderRoute: typeof AudioRecorderRoute
   Base64Route: typeof Base64Route
@@ -1286,6 +1443,7 @@ export interface RootRouteChildren {
   BmiRoute: typeof BmiRoute
   BundleInspectorRoute: typeof BundleInspectorRoute
   CertificateToolRoute: typeof CertificateToolRoute
+  CidrRoute: typeof CidrRoute
   CipherRoute: typeof CipherRoute
   ColorConverterRoute: typeof ColorConverterRoute
   ContrastRoute: typeof ContrastRoute
@@ -1296,11 +1454,16 @@ export interface RootRouteChildren {
   CssRoute: typeof CssRoute
   CssAnimationRoute: typeof CssAnimationRoute
   CssLayoutRoute: typeof CssLayoutRoute
+  CssShadowRoute: typeof CssShadowRoute
+  CssTailwindRoute: typeof CssTailwindRoute
   CssUnitRoute: typeof CssUnitRoute
   CsvConvertRoute: typeof CsvConvertRoute
+  CurlConverterRoute: typeof CurlConverterRoute
   DateCalculatorRoute: typeof DateCalculatorRoute
   DatetimeRoute: typeof DatetimeRoute
   DiffRoute: typeof DiffRoute
+  DnsRoute: typeof DnsRoute
+  DockerComposeRoute: typeof DockerComposeRoute
   EmailHeadersRoute: typeof EmailHeadersRoute
   EnvRoute: typeof EnvRoute
   FinanceCalculatorRoute: typeof FinanceCalculatorRoute
@@ -1325,10 +1488,9 @@ export interface RootRouteChildren {
   ImagePaletteRoute: typeof ImagePaletteRoute
   ImagePrivacyRoute: typeof ImagePrivacyRoute
   IpLookupRoute: typeof IpLookupRoute
+  Ipv6Route: typeof Ipv6Route
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
-  JsonDataRoute: typeof JsonDataRoute
-  JsonSchemaRoute: typeof JsonSchemaRoute
   JwtRoute: typeof JwtRoute
   LoginRoute: typeof LoginRoute
   MarkdownRoute: typeof MarkdownRoute
@@ -1336,19 +1498,24 @@ export interface RootRouteChildren {
   MockDataRoute: typeof MockDataRoute
   MortgageRoute: typeof MortgageRoute
   NumberBaseRoute: typeof NumberBaseRoute
+  OauthRoute: typeof OauthRoute
+  OgPreviewRoute: typeof OgPreviewRoute
   OpenapiRoute: typeof OpenapiRoute
   PaceCalculatorRoute: typeof PaceCalculatorRoute
   PasswordRoute: typeof PasswordRoute
   PdfToolkitRoute: typeof PdfToolkitRoute
+  PipelineRoute: typeof PipelineRoute
   PwaIconsRoute: typeof PwaIconsRoute
   QrcodeRoute: typeof QrcodeRoute
   RandomPickerRoute: typeof RandomPickerRoute
   RealtimeDebuggerRoute: typeof RealtimeDebuggerRoute
   RecipeScaleRoute: typeof RecipeScaleRoute
   RegexRoute: typeof RegexRoute
+  RmbUppercaseRoute: typeof RmbUppercaseRoute
   Rot13Route: typeof Rot13Route
   SalaryTaxRoute: typeof SalaryTaxRoute
   ScreenRecorderRoute: typeof ScreenRecorderRoute
+  SeoFilesRoute: typeof SeoFilesRoute
   SettingsRoute: typeof SettingsRoute
   SettingsDataRoute: typeof SettingsDataRoute
   SettingsPreferencesRoute: typeof SettingsPreferencesRoute
@@ -1364,9 +1531,11 @@ export interface RootRouteChildren {
   TextRoute: typeof TextRoute
   TextToSpeechRoute: typeof TextToSpeechRoute
   TotpRoute: typeof TotpRoute
+  TraceContextRoute: typeof TraceContextRoute
   TravelCostRoute: typeof TravelCostRoute
   UnicodeRoute: typeof UnicodeRoute
   UnitConverterRoute: typeof UnitConverterRoute
+  UnixPermissionsRoute: typeof UnixPermissionsRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
   UuidRoute: typeof UuidRoute
@@ -1475,6 +1644,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UrlEncodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/unix-permissions': {
+      id: '/unix-permissions'
+      path: '/unix-permissions'
+      fullPath: '/unix-permissions'
+      preLoaderRoute: typeof UnixPermissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/unit-converter': {
       id: '/unit-converter'
       path: '/unit-converter'
@@ -1494,6 +1670,13 @@ declare module '@tanstack/react-router' {
       path: '/travel-cost'
       fullPath: '/travel-cost'
       preLoaderRoute: typeof TravelCostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trace-context': {
+      id: '/trace-context'
+      path: '/trace-context'
+      fullPath: '/trace-context'
+      preLoaderRoute: typeof TraceContextRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/totp': {
@@ -1601,6 +1784,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/seo-files': {
+      id: '/seo-files'
+      path: '/seo-files'
+      fullPath: '/seo-files'
+      preLoaderRoute: typeof SeoFilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/screen-recorder': {
       id: '/screen-recorder'
       path: '/screen-recorder'
@@ -1620,6 +1810,13 @@ declare module '@tanstack/react-router' {
       path: '/rot13'
       fullPath: '/rot13'
       preLoaderRoute: typeof Rot13RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rmb-uppercase': {
+      id: '/rmb-uppercase'
+      path: '/rmb-uppercase'
+      fullPath: '/rmb-uppercase'
+      preLoaderRoute: typeof RmbUppercaseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/regex': {
@@ -1664,6 +1861,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PwaIconsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pipeline': {
+      id: '/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof PipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pdf-toolkit': {
       id: '/pdf-toolkit'
       path: '/pdf-toolkit'
@@ -1690,6 +1894,20 @@ declare module '@tanstack/react-router' {
       path: '/openapi'
       fullPath: '/openapi'
       preLoaderRoute: typeof OpenapiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/og-preview': {
+      id: '/og-preview'
+      path: '/og-preview'
+      fullPath: '/og-preview'
+      preLoaderRoute: typeof OgPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth': {
+      id: '/oauth'
+      path: '/oauth'
+      fullPath: '/oauth'
+      preLoaderRoute: typeof OauthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/number-base': {
@@ -1741,20 +1959,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JwtRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/json-schema': {
-      id: '/json-schema'
-      path: '/json-schema'
-      fullPath: '/json-schema'
-      preLoaderRoute: typeof JsonSchemaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/json-data': {
-      id: '/json-data'
-      path: '/json-data'
-      fullPath: '/json-data'
-      preLoaderRoute: typeof JsonDataRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/json': {
       id: '/json'
       path: '/json'
@@ -1767,6 +1971,13 @@ declare module '@tanstack/react-router' {
       path: '/js'
       fullPath: '/js'
       preLoaderRoute: typeof JsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ipv6': {
+      id: '/ipv6'
+      path: '/ipv6'
+      fullPath: '/ipv6'
+      preLoaderRoute: typeof Ipv6RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ip-lookup': {
@@ -1937,6 +2148,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailHeadersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docker-compose': {
+      id: '/docker-compose'
+      path: '/docker-compose'
+      fullPath: '/docker-compose'
+      preLoaderRoute: typeof DockerComposeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dns': {
+      id: '/dns'
+      path: '/dns'
+      fullPath: '/dns'
+      preLoaderRoute: typeof DnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/diff': {
       id: '/diff'
       path: '/diff'
@@ -1958,6 +2183,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DateCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/curl-converter': {
+      id: '/curl-converter'
+      path: '/curl-converter'
+      fullPath: '/curl-converter'
+      preLoaderRoute: typeof CurlConverterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/csv-convert': {
       id: '/csv-convert'
       path: '/csv-convert'
@@ -1970,6 +2202,20 @@ declare module '@tanstack/react-router' {
       path: '/css-unit'
       fullPath: '/css-unit'
       preLoaderRoute: typeof CssUnitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/css-tailwind': {
+      id: '/css-tailwind'
+      path: '/css-tailwind'
+      fullPath: '/css-tailwind'
+      preLoaderRoute: typeof CssTailwindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/css-shadow': {
+      id: '/css-shadow'
+      path: '/css-shadow'
+      fullPath: '/css-shadow'
+      preLoaderRoute: typeof CssShadowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/css-layout': {
@@ -2042,6 +2288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CipherRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cidr': {
+      id: '/cidr'
+      path: '/cidr'
+      fullPath: '/cidr'
+      preLoaderRoute: typeof CidrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/certificate-tool': {
       id: '/certificate-tool'
       path: '/certificate-tool'
@@ -2098,6 +2351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AudioEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aspect-ratio': {
+      id: '/aspect-ratio'
+      path: '/aspect-ratio'
+      fullPath: '/aspect-ratio'
+      preLoaderRoute: typeof AspectRatioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/archive': {
       id: '/archive'
       path: '/archive'
@@ -2118,6 +2378,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArchiveRoute: ArchiveRoute,
+  AspectRatioRoute: AspectRatioRoute,
   AudioEditorRoute: AudioEditorRoute,
   AudioRecorderRoute: AudioRecorderRoute,
   Base64Route: Base64Route,
@@ -2126,6 +2387,7 @@ const rootRouteChildren: RootRouteChildren = {
   BmiRoute: BmiRoute,
   BundleInspectorRoute: BundleInspectorRoute,
   CertificateToolRoute: CertificateToolRoute,
+  CidrRoute: CidrRoute,
   CipherRoute: CipherRoute,
   ColorConverterRoute: ColorConverterRoute,
   ContrastRoute: ContrastRoute,
@@ -2136,11 +2398,16 @@ const rootRouteChildren: RootRouteChildren = {
   CssRoute: CssRoute,
   CssAnimationRoute: CssAnimationRoute,
   CssLayoutRoute: CssLayoutRoute,
+  CssShadowRoute: CssShadowRoute,
+  CssTailwindRoute: CssTailwindRoute,
   CssUnitRoute: CssUnitRoute,
   CsvConvertRoute: CsvConvertRoute,
+  CurlConverterRoute: CurlConverterRoute,
   DateCalculatorRoute: DateCalculatorRoute,
   DatetimeRoute: DatetimeRoute,
   DiffRoute: DiffRoute,
+  DnsRoute: DnsRoute,
+  DockerComposeRoute: DockerComposeRoute,
   EmailHeadersRoute: EmailHeadersRoute,
   EnvRoute: EnvRoute,
   FinanceCalculatorRoute: FinanceCalculatorRoute,
@@ -2165,10 +2432,9 @@ const rootRouteChildren: RootRouteChildren = {
   ImagePaletteRoute: ImagePaletteRoute,
   ImagePrivacyRoute: ImagePrivacyRoute,
   IpLookupRoute: IpLookupRoute,
+  Ipv6Route: Ipv6Route,
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
-  JsonDataRoute: JsonDataRoute,
-  JsonSchemaRoute: JsonSchemaRoute,
   JwtRoute: JwtRoute,
   LoginRoute: LoginRoute,
   MarkdownRoute: MarkdownRoute,
@@ -2176,19 +2442,24 @@ const rootRouteChildren: RootRouteChildren = {
   MockDataRoute: MockDataRoute,
   MortgageRoute: MortgageRoute,
   NumberBaseRoute: NumberBaseRoute,
+  OauthRoute: OauthRoute,
+  OgPreviewRoute: OgPreviewRoute,
   OpenapiRoute: OpenapiRoute,
   PaceCalculatorRoute: PaceCalculatorRoute,
   PasswordRoute: PasswordRoute,
   PdfToolkitRoute: PdfToolkitRoute,
+  PipelineRoute: PipelineRoute,
   PwaIconsRoute: PwaIconsRoute,
   QrcodeRoute: QrcodeRoute,
   RandomPickerRoute: RandomPickerRoute,
   RealtimeDebuggerRoute: RealtimeDebuggerRoute,
   RecipeScaleRoute: RecipeScaleRoute,
   RegexRoute: RegexRoute,
+  RmbUppercaseRoute: RmbUppercaseRoute,
   Rot13Route: Rot13Route,
   SalaryTaxRoute: SalaryTaxRoute,
   ScreenRecorderRoute: ScreenRecorderRoute,
+  SeoFilesRoute: SeoFilesRoute,
   SettingsRoute: SettingsRoute,
   SettingsDataRoute: SettingsDataRoute,
   SettingsPreferencesRoute: SettingsPreferencesRoute,
@@ -2204,9 +2475,11 @@ const rootRouteChildren: RootRouteChildren = {
   TextRoute: TextRoute,
   TextToSpeechRoute: TextToSpeechRoute,
   TotpRoute: TotpRoute,
+  TraceContextRoute: TraceContextRoute,
   TravelCostRoute: TravelCostRoute,
   UnicodeRoute: UnicodeRoute,
   UnitConverterRoute: UnitConverterRoute,
+  UnixPermissionsRoute: UnixPermissionsRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,
   UuidRoute: UuidRoute,

@@ -1,3 +1,18 @@
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { CacheControlPanel } from '@/components/extra-tool-panels';
+import {
+  ContentNegotiationPanel,
+  ForwardedPanel,
+  HttpMessageSignaturePanel,
+  LinkHeaderPanel,
+} from '@/components/modern-web-tool-panels';
+import {
+  ContentDispositionPanel,
+  MultipartPanel,
+  RateLimitPanel,
+  StructuredFieldPanel,
+} from '@/components/protocol-tool-panels';
+import { decodeBasicAuth, encodeBasicAuth } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { Check, Copy, Loader2, Plus, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -111,8 +126,37 @@ function KVEditor({
 }
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
-const TABS = ['params', 'headers', 'body'] as const;
+const TABS = [
+  'params',
+  'headers',
+  'auth',
+  'body',
+  'cache',
+  'structured',
+  'rate-limit',
+  'disposition',
+  'multipart',
+  'signature',
+  'link-header',
+  'forwarded',
+  'negotiation',
+] as const;
 type Tab = (typeof TABS)[number];
+const TAB_LABELS: Record<Tab, string> = {
+  params: 'Params',
+  headers: 'Headers',
+  auth: 'Basic Auth',
+  body: 'Body',
+  cache: 'Cache-Control',
+  structured: 'Structured Fields',
+  'rate-limit': 'RateLimit',
+  disposition: 'Content-Disposition',
+  multipart: 'Multipart',
+  signature: 'HTTP Signatures',
+  'link-header': 'Link',
+  forwarded: 'Forwarded',
+  negotiation: 'Accept',
+};
 
 function statusColor(code: number) {
   if (code < 300) return 'text-green-500';
@@ -125,7 +169,7 @@ function HttpRequestPage() {
   const { t } = useTranslation();
   const [method, setMethod] = useState('GET');
   const [url, setUrl] = useState('https://httpbin.org/get');
-  const [tab, setTab] = useState<Tab>('params');
+  const [tab, setTab] = useQueryParam<Tab>('tab', StringParam, 'params');
   const [params, setParams] = useState<KVPair[]>([newKV()]);
   const [headers, setHeaders] = useState<KVPair[]>([newKV()]);
   const [bodyType, setBodyType] = useState<BodyType>('none');
@@ -136,6 +180,41 @@ function HttpRequestPage() {
   const [error, setError] = useState<string | null>(null);
   const [responseTab, setResponseTab] = useState<'body' | 'headers'>('body');
   const [copiedCurl, setCopiedCurl] = useState(false);
+  const [authUsername, setAuthUsername] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authHeader, setAuthHeader] = useState('');
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const applyBasicAuth = () => {
+    const value = encodeBasicAuth(authUsername, authPassword);
+    setAuthHeader(value);
+    const index = headers.findIndex(
+      (header) => header.key.toLowerCase() === 'authorization',
+    );
+    if (index < 0) {
+      setHeaders([...headers, { key: 'Authorization', value, enabled: true }]);
+    } else {
+      setHeaders(
+        headers.map((header, itemIndex) =>
+          itemIndex === index ? { ...header, value, enabled: true } : header,
+        ),
+      );
+    }
+    setAuthError(null);
+  };
+
+  const parseBasicAuth = () => {
+    try {
+      const parsed = decodeBasicAuth(authHeader);
+      setAuthUsername(parsed.username);
+      setAuthPassword(parsed.password);
+      setAuthError(null);
+    } catch (cause) {
+      setAuthError(
+        t('httpRequest.authError', { msg: (cause as Error).message }),
+      );
+    }
+  };
 
   const buildUrl = () => {
     try {
@@ -305,14 +384,14 @@ function HttpRequestPage() {
 
       {/* Tabs */}
       <div className="border rounded-lg overflow-hidden">
-        <div className="flex border-b bg-muted/30">
-          {TABS.map((t) => (
+        <div className="flex flex-wrap border-b bg-muted/30">
+          {TABS.map((item) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              key={item}
+              onClick={() => setTab(item)}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${tab === item ? 'border-b-2 border-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              {t === 'params' ? 'Params' : t === 'headers' ? 'Headers' : 'Body'}
+              {TAB_LABELS[item]}
             </button>
           ))}
         </div>
@@ -332,6 +411,42 @@ function HttpRequestPage() {
               keyPlaceholder={t('httpRequest.headerName')}
               valuePlaceholder={t('httpRequest.value')}
             />
+          )}
+          {tab === 'auth' && (
+            <div className="space-y-3">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input
+                  value={authUsername}
+                  onChange={(event) => setAuthUsername(event.target.value)}
+                  placeholder={t('httpRequest.authUsername')}
+                  className="h-9 rounded border bg-transparent px-3 text-sm"
+                />
+                <input
+                  type="password"
+                  value={authPassword}
+                  onChange={(event) => setAuthPassword(event.target.value)}
+                  placeholder={t('httpRequest.authPassword')}
+                  className="h-9 rounded border bg-transparent px-3 text-sm"
+                />
+              </div>
+              <input
+                value={authHeader}
+                onChange={(event) => setAuthHeader(event.target.value)}
+                placeholder="Basic dXNlcjpwYXNz"
+                className="h-9 w-full rounded border bg-transparent px-3 font-mono text-sm"
+              />
+              <div className="flex gap-2">
+                <Button size="sm" onClick={applyBasicAuth}>
+                  {t('httpRequest.authApply')}
+                </Button>
+                <Button size="sm" variant="outline" onClick={parseBasicAuth}>
+                  {t('httpRequest.authParse')}
+                </Button>
+              </div>
+              {authError && (
+                <p className="text-sm text-destructive">{authError}</p>
+              )}
+            </div>
           )}
           {tab === 'body' && (
             <div className="space-y-3">
@@ -377,6 +492,15 @@ function HttpRequestPage() {
               )}
             </div>
           )}
+          {tab === 'cache' && <CacheControlPanel />}
+          {tab === 'structured' && <StructuredFieldPanel />}
+          {tab === 'rate-limit' && <RateLimitPanel />}
+          {tab === 'disposition' && <ContentDispositionPanel />}
+          {tab === 'multipart' && <MultipartPanel />}
+          {tab === 'signature' && <HttpMessageSignaturePanel />}
+          {tab === 'link-header' && <LinkHeaderPanel />}
+          {tab === 'forwarded' && <ForwardedPanel />}
+          {tab === 'negotiation' && <ContentNegotiationPanel />}
         </div>
       </div>
 

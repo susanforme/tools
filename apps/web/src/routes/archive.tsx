@@ -1,4 +1,5 @@
 import { ArchiveFileBrowser } from '@/components/archive-file-browser';
+import { CompressionBenchmarkPanel } from '@/components/extra-tool-panels';
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -42,7 +43,7 @@ import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/archive')({ component: ArchivePage });
 
-type ArchiveTab = 'compress' | 'decompress';
+type ArchiveTab = 'compress' | 'decompress' | 'benchmark';
 type CompressedResult = { url: string; name: string; size: number };
 
 const FORMATS = ['zip', 'gzip', 'deflate', '7z'] as const;
@@ -99,7 +100,9 @@ function ArchivePage() {
     format: ArchiveFormat;
   }>({ tab: StringParam, format: StringParam });
   const tab: ArchiveTab =
-    query.tab === 'decompress' ? 'decompress' : 'compress';
+    query.tab === 'decompress' || query.tab === 'benchmark'
+      ? query.tab
+      : 'compress';
   const format: ArchiveFormat = FORMATS.includes(query.format as ArchiveFormat)
     ? (query.format as ArchiveFormat)
     : 'zip';
@@ -295,6 +298,7 @@ function ArchivePage() {
           <TabsTrigger value="decompress">
             {t('archive.decompress')}
           </TabsTrigger>
+          <TabsTrigger value="benchmark">{t('archive.benchmark')}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -304,7 +308,9 @@ function ArchivePage() {
         </div>
       )}
 
-      {tab === 'compress' ? (
+      {tab === 'benchmark' ? (
+        <CompressionBenchmarkPanel />
+      ) : tab === 'compress' ? (
         <>
           <ArchiveFileBrowser
             editable

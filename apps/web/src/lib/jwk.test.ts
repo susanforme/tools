@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { jwkToPem, verifyJwtWithJwk, type PublicJwk } from './jwk';
+import {
+  generateKeyPair,
+  jwkToPem,
+  pemToJwk,
+  verifyJwtWithJwk,
+  type PublicJwk,
+} from './jwk';
 
 function base64Url(value: string | ArrayBuffer): string {
   const bytes =
@@ -13,6 +19,12 @@ function base64Url(value: string | ArrayBuffer): string {
 }
 
 describe('JWK utilities', () => {
+  it('generates an EC key pair', async () => {
+    const pair = await generateKeyPair('P-256');
+    expect(pair.publicJwk).toMatchObject({ kty: 'EC', crv: 'P-256' });
+    expect(pair.privatePem).toContain('BEGIN PRIVATE KEY');
+  });
+
   it('exports PEM and verifies an RS256 JWT', async () => {
     const keys = await crypto.subtle.generateKey(
       {
@@ -38,7 +50,23 @@ describe('JWK utilities', () => {
       new TextEncoder().encode(input),
     );
 
-    await expect(jwkToPem(jwk)).resolves.toContain('BEGIN PUBLIC KEY');
+    const pem = await jwkToPem(jwk);
+    expect(pem).toContain('BEGIN PUBLIC KEY');
+    await expect(pemToJwk(pem)).resolves.toMatchObject({
+      kty: 'RSA',
+      n: jwk.n,
+      e: jwk.e,
+    });
+    const privateJwk = (await crypto.subtle.exportKey(
+      'jwk',
+      keys.privateKey,
+    )) as PublicJwk;
+    const privatePem = await jwkToPem(privateJwk);
+    expect(privatePem).toContain('BEGIN PRIVATE KEY');
+    await expect(pemToJwk(privatePem)).resolves.toMatchObject({
+      kty: 'RSA',
+      d: privateJwk.d,
+    });
     await expect(
       verifyJwtWithJwk(`${input}.${base64Url(signature)}`, jwk),
     ).resolves.toBe(true);

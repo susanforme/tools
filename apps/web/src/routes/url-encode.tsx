@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { IdnPanel } from '@/components/extra-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/url-encode')({
   component: UrlEncodePage,
 });
 
-type TabType = 'encode' | 'decode' | 'parse';
+type TabType = 'encode' | 'decode' | 'parse' | 'idn';
 
 function useTool(init = '') {
   const [input, setInput] = useState(init);
@@ -161,6 +162,7 @@ function UrlEncodePage() {
           <TabsTrigger value="encode">{t('urlEncode.tabEncode')}</TabsTrigger>
           <TabsTrigger value="decode">{t('urlEncode.tabDecode')}</TabsTrigger>
           <TabsTrigger value="parse">{t('urlEncode.tabParse')}</TabsTrigger>
+          <TabsTrigger value="idn">Punycode / IDN</TabsTrigger>
         </TabsList>
         <TabsContent value="encode" className="mt-4">
           <IOPanel
@@ -222,6 +224,9 @@ function UrlEncodePage() {
               </div>
             </div>
           </div>
+        </TabsContent>
+        <TabsContent value="idn" className="mt-4">
+          <IdnPanel />
         </TabsContent>
       </Tabs>
     </div>

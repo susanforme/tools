@@ -1,39 +1,46 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Button } from '../components/ui/button'
-import { Copy, Check, Hash } from 'lucide-react'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChecksumPanel } from '@/components/extra-tool-panels';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { createSri, verifySri, type SriAlgorithm } from '@/lib/advanced-tools';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '../components/ui/button';
+import { Copy, Check, Hash } from 'lucide-react';
 
-export const Route = createFileRoute('/hash')({ component: HashPage })
+export const Route = createFileRoute('/hash')({ component: HashPage });
 
 type HashResult = {
-  md5: string
-  sha1: string
-  sha256: string
-  sha512: string
-}
+  md5: string;
+  sha1: string;
+  sha256: string;
+  sha512: string;
+};
 
 async function bufToHex(buf: ArrayBuffer): Promise<string> {
   return Array.from(new Uint8Array(buf))
     .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
+    .join('');
 }
 
-async function computeWebCryptoHash(text: string, algo: string): Promise<string> {
-  const enc = new TextEncoder()
-  const buf = await crypto.subtle.digest(algo, enc.encode(text))
-  return bufToHex(buf)
+async function computeWebCryptoHash(
+  text: string,
+  algo: string,
+): Promise<string> {
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.digest(algo, enc.encode(text));
+  return bufToHex(buf);
 }
 
 async function computeAllHashes(text: string): Promise<HashResult> {
-  const CryptoJS = (await import('crypto-js')).default
+  const CryptoJS = (await import('crypto-js')).default;
   const [sha1, sha256, sha512] = await Promise.all([
     computeWebCryptoHash(text, 'SHA-1'),
     computeWebCryptoHash(text, 'SHA-256'),
     computeWebCryptoHash(text, 'SHA-512'),
-  ])
-  const md5 = CryptoJS.MD5(text).toString()
-  return { md5, sha1, sha256, sha512 }
+  ]);
+  const md5 = CryptoJS.MD5(text).toString();
+  return { md5, sha1, sha256, sha512 };
 }
 
 const HASH_LABELS = [
@@ -41,55 +48,64 @@ const HASH_LABELS = [
   { key: 'sha1', label: 'SHA-1', bits: 160 },
   { key: 'sha256', label: 'SHA-256', bits: 256 },
   { key: 'sha512', label: 'SHA-512', bits: 512 },
-] as const
+] as const;
 
 function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
   const copy = async () => {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500)
-  }
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
   return (
     <button
       onClick={copy}
       className="shrink-0 p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
       title="复制"
     >
-      {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+      {copied ? (
+        <Check className="w-3.5 h-3.5 text-green-500" />
+      ) : (
+        <Copy className="w-3.5 h-3.5" />
+      )}
     </button>
-  )
+  );
 }
 
 function HashPage() {
-  const { t } = useTranslation()
-  const [input, setInput] = useState('')
-  const [result, setResult] = useState<HashResult | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [uppercase, setUppercase] = useState(false)
+  const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<'hash' | 'sri' | 'checksum'>(
+    'tab',
+    StringParam,
+    'hash',
+  );
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState<HashResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [uppercase, setUppercase] = useState(false);
 
   const compute = async () => {
-    if (!input.trim()) return
-    setLoading(true)
-    setError(null)
+    if (!input.trim()) return;
+    setLoading(true);
+    setError(null);
     try {
-      const r = await computeAllHashes(input)
-      setResult(r)
+      const r = await computeAllHashes(input);
+      setResult(r);
     } catch (e) {
-      setError(t('hash.computeError', { msg: (e as Error).message }))
+      setError(t('hash.computeError', { msg: (e as Error).message }));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const clear = () => {
-    setInput('')
-    setResult(null)
-    setError(null)
-  }
+    setInput('');
+    setResult(null);
+    setError(null);
+  };
 
-  const displayHash = (h: string) => uppercase ? h.toUpperCase() : h
+  const displayHash = (h: string) => (uppercase ? h.toUpperCase() : h);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
@@ -97,54 +113,182 @@ function HashPage() {
         <h1 className="text-2xl font-bold">{t('hash.title')}</h1>
       </div>
 
-      <div className="space-y-3">
-        <textarea
-          className="w-full h-32 p-3 font-mono text-sm bg-background border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={t('hash.placeholder')}
-          spellCheck={false}
-        />
-        <div className="flex items-center gap-2 flex-wrap">
-          <Button size="sm" onClick={compute} disabled={loading || !input.trim()}>
-            {loading ? t('hash.computing') : t('hash.compute')}
-          </Button>
-          <Button size="sm" variant="outline" onClick={clear}>{t('hash.clear')}</Button>
-          <label className="flex items-center gap-1.5 text-sm text-muted-foreground cursor-pointer select-none ml-2">
-            <input
-              type="checkbox"
-              checked={uppercase}
-              onChange={(e) => setUppercase(e.target.checked)}
-              className="rounded"
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as 'hash' | 'sri' | 'checksum')}
+      >
+        <TabsList>
+          <TabsTrigger value="hash">{t('hash.tabHash')}</TabsTrigger>
+          <TabsTrigger value="sri">SRI</TabsTrigger>
+          <TabsTrigger value="checksum">CRC / xxHash</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      {tab === 'checksum' ? (
+        <ChecksumPanel />
+      ) : tab === 'sri' ? (
+        <SriPanel />
+      ) : (
+        <>
+          <div className="space-y-3">
+            <textarea
+              className="w-full h-32 p-3 font-mono text-sm bg-background border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t('hash.placeholder')}
+              spellCheck={false}
             />
-            {t('hash.uppercase')}
-          </label>
-        </div>
-      </div>
-
-      {error && (
-        <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md">{error}</div>
-      )}
-
-      {result && (
-        <div className="space-y-3">
-          {HASH_LABELS.map(({ key, label, bits }) => (
-            <div key={key} className="border rounded-lg overflow-hidden">
-              <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 border-b">
-                <Hash className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs font-semibold text-muted-foreground">{label}</span>
-                <span className="text-xs text-muted-foreground/60">({bits} bit)</span>
-                <div className="ml-auto">
-                  <CopyButton text={displayHash(result[key])} />
-                </div>
-              </div>
-              <div className="px-3 py-2.5 font-mono text-sm break-all select-all bg-background">
-                {displayHash(result[key])}
-              </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Button
+                size="sm"
+                onClick={compute}
+                disabled={loading || !input.trim()}
+              >
+                {loading ? t('hash.computing') : t('hash.compute')}
+              </Button>
+              <Button size="sm" variant="outline" onClick={clear}>
+                {t('hash.clear')}
+              </Button>
+              <label className="flex items-center gap-1.5 text-sm text-muted-foreground cursor-pointer select-none ml-2">
+                <input
+                  type="checkbox"
+                  checked={uppercase}
+                  onChange={(e) => setUppercase(e.target.checked)}
+                  className="rounded"
+                />
+                {t('hash.uppercase')}
+              </label>
             </div>
-          ))}
-        </div>
+          </div>
+
+          {error && (
+            <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-md">
+              {error}
+            </div>
+          )}
+
+          {result && (
+            <div className="space-y-3">
+              {HASH_LABELS.map(({ key, label, bits }) => (
+                <div key={key} className="border rounded-lg overflow-hidden">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 border-b">
+                    <Hash className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span className="text-xs font-semibold text-muted-foreground">
+                      {label}
+                    </span>
+                    <span className="text-xs text-muted-foreground/60">
+                      ({bits} bit)
+                    </span>
+                    <div className="ml-auto">
+                      <CopyButton text={displayHash(result[key])} />
+                    </div>
+                  </div>
+                  <div className="px-3 py-2.5 font-mono text-sm break-all select-all bg-background">
+                    {displayHash(result[key])}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
-  )
+  );
+}
+
+function SriPanel() {
+  const { t } = useTranslation();
+  const [algorithm, setAlgorithm] = useQueryParam<SriAlgorithm>(
+    'algorithm',
+    StringParam,
+    'SHA-384',
+  );
+  const [source, setSource] = useState<Uint8Array | null>(null);
+  const [url, setUrl] = useState('');
+  const [integrity, setIntegrity] = useState('');
+  const [result, setResult] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const getSource = async () => {
+    if (source) return source;
+    if (!url.trim()) throw new Error(t('hash.sriSourceRequired'));
+    const response = await fetch(url);
+    if (!response.ok)
+      throw new Error(`${response.status} ${response.statusText}`);
+    return new Uint8Array(await response.arrayBuffer());
+  };
+  const generate = async () => {
+    setError(null);
+    try {
+      const value = await createSri(await getSource(), algorithm);
+      setIntegrity(value);
+      setResult(value);
+    } catch (cause) {
+      setError(t('hash.sriFailed', { msg: (cause as Error).message }));
+    }
+  };
+  const verify = async () => {
+    setError(null);
+    try {
+      setResult(
+        (await verifySri(await getSource(), integrity))
+          ? t('hash.sriValid')
+          : t('hash.sriInvalid'),
+      );
+    } catch (cause) {
+      setError(t('hash.sriFailed', { msg: (cause as Error).message }));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <input
+        type="file"
+        onChange={(event) =>
+          event.target.files?.[0]
+            ?.arrayBuffer()
+            .then((buffer) => setSource(new Uint8Array(buffer)))
+        }
+      />
+      <input
+        className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+        value={url}
+        onChange={(event) => {
+          setUrl(event.target.value);
+          setSource(null);
+        }}
+        placeholder={t('hash.sriUrl')}
+      />
+      <div className="flex flex-wrap gap-2">
+        {(['SHA-256', 'SHA-384', 'SHA-512'] as const).map((item) => (
+          <Button
+            key={item}
+            size="sm"
+            variant={algorithm === item ? 'default' : 'outline'}
+            onClick={() => setAlgorithm(item)}
+          >
+            {item}
+          </Button>
+        ))}
+      </div>
+      <textarea
+        className="h-24 w-full rounded-md border bg-background p-3 font-mono text-sm"
+        value={integrity}
+        onChange={(event) => setIntegrity(event.target.value)}
+        placeholder="sha384-…"
+      />
+      <div className="flex gap-2">
+        <Button onClick={() => void generate()}>{t('hash.sriGenerate')}</Button>
+        <Button variant="outline" onClick={() => void verify()}>
+          {t('hash.sriVerify')}
+        </Button>
+      </div>
+      {result && (
+        <div className="break-all rounded-md border p-3 font-mono text-sm">
+          {result}
+        </div>
+      )}
+      {error && <p className="text-sm text-destructive">{error}</p>}
+    </div>
+  );
 }

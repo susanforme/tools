@@ -1,4 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { IntlPlaygroundPanel } from '@/components/protocol-tool-panels';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
   ArrowLeftRight,
   Calendar,
@@ -30,7 +32,7 @@ export const Route = createFileRoute('/datetime')({ component: DatetimePage });
 
 // ─── 常量 ──────────────────────────────────────────────────
 
-const TABS = ['unix', 'timezone', 'diff', 'iso'] as const;
+const TABS = ['unix', 'timezone', 'diff', 'iso', 'intl'] as const;
 type Tab = (typeof TABS)[number];
 
 // 常用时区列表
@@ -828,7 +830,7 @@ function LiveClock() {
 
 function DatetimePage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>('unix');
+  const [tab, setTab] = useQueryParam<Tab>('tab', StringParam, 'unix');
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
@@ -859,6 +861,7 @@ function DatetimePage() {
             <ShieldCheck className="w-3.5 h-3.5 mr-1.5" />
             {t('datetime.tabIso')}
           </TabsTrigger>
+          <TabsTrigger value="intl">{t('protocol.tabs.intl')}</TabsTrigger>
         </TabsList>
 
         <div className="mt-4">
@@ -873,6 +876,9 @@ function DatetimePage() {
           </TabsContent>
           <TabsContent value="iso">
             <IsoTab />
+          </TabsContent>
+          <TabsContent value="intl">
+            <IntlPlaygroundPanel />
           </TabsContent>
         </div>
       </Tabs>

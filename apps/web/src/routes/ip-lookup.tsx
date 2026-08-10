@@ -1,4 +1,15 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import {
+  aggregateIpv4Range,
+  expandIpv4Range,
+  parseCidr,
+  type CidrResult,
+} from '@/lib/cidr';
+import {
+  generateMacAddress,
+  inspectMacAddress,
+  type MacAddressInfo,
+} from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   Building2,
@@ -76,7 +87,7 @@ function InfoRow({
     </div>
   );
 }
-type TabType = 'lookup' | 'myip' | 'extract';
+type TabType = 'lookup' | 'myip' | 'extract' | 'cidr' | 'mac';
 
 function IpCard({ info }: { info: IpInfo }) {
   if (info.status === 'fail') {
@@ -160,6 +171,15 @@ function IpLookupPage() {
   const [myIpResult, setMyIpResult] = useState<IpInfo | null>(null);
   const [myIpLoading, setMyIpLoading] = useState(false);
 
+  const [cidrInput, setCidrInput] = useState('192.168.1.0/24');
+  const [cidrResult, setCidrResult] = useState<CidrResult | null>(null);
+  const [cidrError, setCidrError] = useState<string | null>(null);
+  const [rangeInput, setRangeInput] = useState('192.168.1.1 - 192.168.1.10');
+  const [rangeOutput, setRangeOutput] = useState('');
+  const [macInput, setMacInput] = useState('02:00:00:00:00:01');
+  const [macResult, setMacResult] = useState<MacAddressInfo | null>(null);
+  const [toolError, setToolError] = useState<string | null>(null);
+
   const lookup = async (ip?: string) => {
     const target = ip ?? lookupIp.trim();
     if (!target) return;
@@ -196,6 +216,41 @@ function IpLookupPage() {
     setExtractedIps(all);
   };
 
+  const calcCidr = () => {
+    setCidrError(null);
+    try {
+      setCidrResult(parseCidr(cidrInput));
+    } catch (e) {
+      setCidrResult(null);
+      setCidrError(`计算失败：${(e as Error).message}`);
+    }
+  };
+
+  const runRange = (mode: 'expand' | 'aggregate') => {
+    setToolError(null);
+    try {
+      setRangeOutput(
+        (mode === 'expand'
+          ? expandIpv4Range(rangeInput)
+          : aggregateIpv4Range(rangeInput)
+        ).join('\n'),
+      );
+    } catch (cause) {
+      setRangeOutput('');
+      setToolError(t('ipLookup.rangeError', { msg: (cause as Error).message }));
+    }
+  };
+
+  const inspectMac = () => {
+    setToolError(null);
+    try {
+      setMacResult(inspectMacAddress(macInput));
+    } catch (cause) {
+      setMacResult(null);
+      setToolError(t('ipLookup.macError', { msg: (cause as Error).message }));
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
       <div>
@@ -208,10 +263,12 @@ function IpLookupPage() {
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
-        <TabsList>
+        <TabsList className="max-w-full justify-start overflow-x-auto">
           <TabsTrigger value="lookup">IP 查询</TabsTrigger>
           <TabsTrigger value="myip">本机 IP</TabsTrigger>
           <TabsTrigger value="extract">提取 IP</TabsTrigger>
+          <TabsTrigger value="cidr">CIDR 计算</TabsTrigger>
+          <TabsTrigger value="mac">{t('ipLookup.tabMac')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="lookup" className="mt-4 space-y-3">
@@ -310,6 +367,149 @@ function IpLookupPage() {
             </p>
           )}
         </TabsContent>
+
+        <TabsContent value="cidr" className="mt-4 space-y-3">
+          <div className="flex gap-2">
+            <input
+              value={cidrInput}
+              onChange={(e) => setCidrInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && calcCidr()}
+              placeholder="例如 192.168.1.0/24"
+              className="flex-1 h-9 px-3 text-sm rounded border bg-transparent font-mono focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+            <Button size="sm" onClick={calcCidr} className="shrink-0">
+              计算
+            </Button>
+          </div>
+          {cidrError && (
+            <div className="rounded-md bg-destructive/10 border border-destructive/30 text-destructive text-sm px-4 py-2">
+              {cidrError}
+            </div>
+          )}
+          {cidrResult && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {(
+                [
+                  { label: '网络地址', value: cidrResult.network },
+                  { label: '广播地址', value: cidrResult.broadcast },
+                  { label: '子网掩码', value: cidrResult.netmask },
+                  { label: '通配符掩码', value: cidrResult.wildcard },
+                  { label: '首个可用主机', value: cidrResult.firstHost },
+                  { label: '末个可用主机', value: cidrResult.lastHost },
+                  {
+                    label: '可用主机数',
+                    value: String(cidrResult.usableHosts),
+                  },
+                  { label: 'CIDR', value: cidrResult.cidr },
+                  { label: 'IP 二进制', value: cidrResult.ipBinary },
+                  { label: '掩码二进制', value: cidrResult.maskBinary },
+                ] as const
+              ).map((item) => (
+                <div
+                  key={item.label}
+                  className="border rounded-lg px-3 py-2 space-y-0.5"
+                >
+                  <div className="text-xs text-muted-foreground">
+                    {item.label}
+                  </div>
+                  <div className="font-mono text-sm break-all">
+                    {item.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="space-y-3 rounded-xl border p-4">
+            <div className="text-sm font-medium">
+              {t('ipLookup.rangeTitle')}
+            </div>
+            <input
+              value={rangeInput}
+              onChange={(event) => setRangeInput(event.target.value)}
+              className="h-9 w-full rounded border bg-transparent px-3 font-mono text-sm"
+            />
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => runRange('expand')}
+              >
+                {t('ipLookup.expandRange')}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => runRange('aggregate')}
+              >
+                {t('ipLookup.aggregateRange')}
+              </Button>
+            </div>
+            {rangeOutput && (
+              <textarea
+                readOnly
+                value={rangeOutput}
+                className="h-40 w-full resize-y rounded border bg-muted/20 p-3 font-mono text-xs"
+              />
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="mac" className="mt-4 space-y-3">
+          <div className="flex gap-2">
+            <input
+              value={macInput}
+              onChange={(event) => setMacInput(event.target.value)}
+              className="h-9 flex-1 rounded border bg-transparent px-3 font-mono text-sm"
+            />
+            <Button size="sm" onClick={inspectMac}>
+              {t('ipLookup.parseMac')}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const value = generateMacAddress();
+                setMacInput(value);
+                setMacResult(inspectMacAddress(value));
+              }}
+            >
+              {t('ipLookup.generateMac')}
+            </Button>
+          </div>
+          {macResult && (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {[
+                [t('ipLookup.macColon'), macResult.colon],
+                [t('ipLookup.macHyphen'), macResult.hyphen],
+                [t('ipLookup.macPlain'), macResult.plain],
+                [
+                  t('ipLookup.macAddressType'),
+                  t(
+                    macResult.multicast
+                      ? 'ipLookup.multicast'
+                      : 'ipLookup.unicast',
+                  ),
+                ],
+                [
+                  t('ipLookup.macAdminType'),
+                  t(
+                    macResult.locallyAdministered
+                      ? 'ipLookup.localMac'
+                      : 'ipLookup.globalMac',
+                  ),
+                ],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-lg border p-3">
+                  <div className="text-xs text-muted-foreground">{label}</div>
+                  <div className="font-mono text-sm">{value}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+        {toolError && (
+          <p className="mt-3 text-sm text-destructive">{toolError}</p>
+        )}
       </Tabs>
     </div>
   );

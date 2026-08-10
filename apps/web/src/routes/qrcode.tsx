@@ -1,10 +1,20 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { wifiQrValue } from '@/lib/developer-tools';
+import { structuredQrValue, type StructuredQrKind } from '@/lib/advanced-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { Check, Copy, Download, QrCode, Upload, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { Slider } from '../components/ui/slider';
 import {
   Tabs,
@@ -395,7 +405,193 @@ function DecodeTab() {
 
 // ─── 主组件 ───────────────────────────────────────────────
 
-type QrTabType = 'generate' | 'decode';
+function WifiTab() {
+  const { t } = useTranslation();
+  const [ssid, setSsid] = useState('');
+  const [password, setPassword] = useState('');
+  const [security, setSecurity] = useState<'WPA' | 'WEP' | 'nopass'>('WPA');
+  const [hidden, setHidden] = useState(false);
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const generate = async () => {
+    setError(null);
+    try {
+      if (!ssid) throw new Error(t('qrcode.wifiSsidRequired'));
+      const QRCode = await import('qrcode');
+      setDataUrl(
+        await QRCode.default.toDataURL(
+          wifiQrValue(ssid, password, security, hidden),
+          { width: 320, margin: 2, errorCorrectionLevel: 'M' },
+        ),
+      );
+    } catch (cause) {
+      setDataUrl(null);
+      setError(t('qrcode.generateError', { msg: (cause as Error).message }));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2 sm:col-span-2">
+          <Label>SSID</Label>
+          <Input
+            value={ssid}
+            onChange={(event) => setSsid(event.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>{t('qrcode.wifiPassword')}</Label>
+          <Input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>{t('qrcode.wifiSecurity')}</Label>
+          <Select
+            value={security}
+            onValueChange={(value) =>
+              setSecurity(value as 'WPA' | 'WEP' | 'nopass')
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="WPA">WPA/WPA2/WPA3</SelectItem>
+              <SelectItem value="WEP">WEP</SelectItem>
+              <SelectItem value="nopass">{t('qrcode.wifiOpen')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={hidden}
+          onChange={(event) => setHidden(event.target.checked)}
+        />
+        {t('qrcode.wifiHidden')}
+      </label>
+      <Button onClick={() => void generate()}>
+        {t('qrcode.wifiGenerate')}
+      </Button>
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      {dataUrl && (
+        <div className="space-y-3 rounded-xl border p-4 text-center">
+          <img
+            src={dataUrl}
+            alt={t('qrcode.qrAlt')}
+            className="mx-auto max-w-72"
+          />
+          <Button
+            variant="outline"
+            onClick={() => {
+              const link = document.createElement('a');
+              link.href = dataUrl;
+              link.download = 'wifi-qrcode.png';
+              link.click();
+            }}
+          >
+            <Download className="mr-1.5 h-4 w-4" />
+            {t('qrcode.downloadPng')}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+type QrTabType = 'generate' | 'decode' | 'wifi' | 'structured';
+
+const STRUCTURED_FIELDS: Record<StructuredQrKind, string[]> = {
+  vcard: ['name', 'organization', 'phone', 'email', 'url', 'address'],
+  email: ['email', 'subject', 'body'],
+  sms: ['phone', 'body'],
+  tel: ['phone'],
+  geo: ['latitude', 'longitude', 'query'],
+};
+
+function StructuredTab() {
+  const { t } = useTranslation();
+  const [kind, setKind] = useQueryParam<StructuredQrKind>(
+    'kind',
+    StringParam,
+    'vcard',
+  );
+  const [fields, setFields] = useState<Record<string, string>>({});
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const [payload, setPayload] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const generate = async () => {
+    setError(null);
+    try {
+      const value = structuredQrValue(kind, fields);
+      const QRCode = await import('qrcode');
+      setPayload(value);
+      setDataUrl(
+        await QRCode.default.toDataURL(value, {
+          width: 320,
+          margin: 2,
+          errorCorrectionLevel: 'M',
+        }),
+      );
+    } catch (cause) {
+      setDataUrl(null);
+      setError(t('qrcode.generateError', { msg: (cause as Error).message }));
+    }
+  };
+  return (
+    <div className="space-y-4">
+      <Select
+        value={kind}
+        onValueChange={(value) => setKind(value as StructuredQrKind)}
+      >
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {(['vcard', 'email', 'sms', 'tel', 'geo'] as const).map((item) => (
+            <SelectItem key={item} value={item}>
+              {t(`qrcode.structuredKinds.${item}`)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {STRUCTURED_FIELDS[kind].map((field) => (
+          <div key={field} className="space-y-1">
+            <Label>{t(`qrcode.structuredFields.${field}`)}</Label>
+            <Input
+              value={fields[field] ?? ''}
+              onChange={(event) =>
+                setFields((current) => ({
+                  ...current,
+                  [field]: event.target.value,
+                }))
+              }
+            />
+          </div>
+        ))}
+      </div>
+      <Button onClick={() => void generate()}>{t('qrcode.generate')}</Button>
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      {dataUrl && (
+        <div className="space-y-3 rounded-xl border p-4 text-center">
+          <img
+            src={dataUrl}
+            alt={t('qrcode.qrAlt')}
+            className="mx-auto max-w-72"
+          />
+          <Textarea readOnly value={payload} className="font-mono text-xs" />
+        </div>
+      )}
+    </div>
+  );
+}
 
 function QrCodePage() {
   const { t } = useTranslation();
@@ -418,12 +614,22 @@ function QrCodePage() {
         <TabsList>
           <TabsTrigger value="generate">{t('qrcode.tabGenerate')}</TabsTrigger>
           <TabsTrigger value="decode">{t('qrcode.tabDecode')}</TabsTrigger>
+          <TabsTrigger value="wifi">{t('qrcode.tabWifi')}</TabsTrigger>
+          <TabsTrigger value="structured">
+            {t('qrcode.tabStructured')}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="generate" className="mt-4">
           <GenerateTab />
         </TabsContent>
         <TabsContent value="decode" className="mt-4">
           <DecodeTab />
+        </TabsContent>
+        <TabsContent value="wifi" className="mt-4">
+          <WifiTab />
+        </TabsContent>
+        <TabsContent value="structured" className="mt-4">
+          <StructuredTab />
         </TabsContent>
       </Tabs>
     </div>

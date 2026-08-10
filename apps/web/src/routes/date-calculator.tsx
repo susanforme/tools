@@ -1,5 +1,6 @@
 import { Metric } from '@/components/calculator-ui';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { countCnHolidays, countCnWorkdays } from '@/lib/cn-holidays';
 import {
   calculateAge,
   countWorkdays,
@@ -15,7 +16,7 @@ import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 export const Route = createFileRoute('/date-calculator')({
   component: DateCalculatorPage,
 });
-type Mode = 'age' | 'interval' | 'countdown' | 'workdays';
+type Mode = 'age' | 'interval' | 'countdown' | 'workdays' | 'cnholiday';
 
 function DateCalculatorPage() {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ function DateCalculatorPage() {
     <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('dateCalculator.title')}</h1>
       <Tabs value={mode} onValueChange={(value) => setMode(value as Mode)}>
-        <TabsList>
+        <TabsList className="flex-wrap h-auto gap-1">
           <TabsTrigger value="age">{t('dateCalculator.age')}</TabsTrigger>
           <TabsTrigger value="interval">
             {t('dateCalculator.interval')}
@@ -53,6 +54,9 @@ function DateCalculatorPage() {
           </TabsTrigger>
           <TabsTrigger value="workdays">
             {t('dateCalculator.workdays')}
+          </TabsTrigger>
+          <TabsTrigger value="cnholiday">
+            {t('dateCalculator.cnholiday')}
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -112,6 +116,18 @@ function DateCalculatorPage() {
             label={t('dateCalculator.workdayCount')}
             value={String(countWorkdays(from, to))}
           />
+        )}
+        {mode === 'cnholiday' && (
+          <>
+            <Metric
+              label={t('dateCalculator.cnWorkdayCount')}
+              value={String(countCnWorkdays(from, to))}
+            />
+            <Metric
+              label={t('dateCalculator.cnHolidayCount')}
+              value={String(countCnHolidays(from, to))}
+            />
+          </>
         )}
         {mode === 'countdown' && (
           <>

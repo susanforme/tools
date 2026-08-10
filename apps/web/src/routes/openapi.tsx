@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { OpenApiDiffPanel } from '@/components/modern-web-tool-panels';
 import {
   extractOpenApiEndpoints,
   extractOpenApiSchemas,
@@ -21,7 +22,7 @@ import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/openapi')({ component: OpenApiPage });
 
-type Mode = 'endpoints' | 'schemas';
+type Mode = 'endpoints' | 'schemas' | 'diff';
 
 const SAMPLE = `openapi: 3.0.3
 info:
@@ -90,45 +91,52 @@ function OpenApiPage() {
         <TabsList>
           <TabsTrigger value="endpoints">{t('openapi.endpoints')}</TabsTrigger>
           <TabsTrigger value="schemas">{t('openapi.schemas')}</TabsTrigger>
+          <TabsTrigger value="diff">{t('modern.openapiDiff')}</TabsTrigger>
         </TabsList>
       </Tabs>
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="space-y-2">
-          <MonacoTextEditor
-            label={t('panel.input')}
-            language={input.trim().startsWith('{') ? 'json' : 'yaml'}
-            height="520px"
-            value={input}
-            onChange={setInput}
-          />
-          <Button onClick={parse}>{t('openapi.parse')}</Button>
-        </div>
-        <div className="space-y-2">
-          {mode === 'endpoints' && endpoints.length > 0 && (
-            <Select value={selected?.id} onValueChange={setSelectedId}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {endpoints.map((endpoint: OpenApiEndpoint) => (
-                  <SelectItem key={endpoint.id} value={endpoint.id}>
-                    {endpoint.id}
-                    {endpoint.summary ? ` · ${endpoint.summary}` : ''}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-          <MonacoTextEditor
-            readOnly
-            label={t('panel.output')}
-            language={mode === 'schemas' ? 'json' : 'shell'}
-            height="520px"
-            value={output}
-          />
-        </div>
-      </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {mode === 'diff' ? (
+        <OpenApiDiffPanel />
+      ) : (
+        <>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="space-y-2">
+              <MonacoTextEditor
+                label={t('panel.input')}
+                language={input.trim().startsWith('{') ? 'json' : 'yaml'}
+                height="520px"
+                value={input}
+                onChange={setInput}
+              />
+              <Button onClick={parse}>{t('openapi.parse')}</Button>
+            </div>
+            <div className="space-y-2">
+              {mode === 'endpoints' && endpoints.length > 0 && (
+                <Select value={selected?.id} onValueChange={setSelectedId}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {endpoints.map((endpoint: OpenApiEndpoint) => (
+                      <SelectItem key={endpoint.id} value={endpoint.id}>
+                        {endpoint.id}
+                        {endpoint.summary ? ` · ${endpoint.summary}` : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <MonacoTextEditor
+                readOnly
+                label={t('panel.output')}
+                language={mode === 'schemas' ? 'json' : 'shell'}
+                height="520px"
+                value={output}
+              />
+            </div>
+          </div>
+          {error && <p className="text-sm text-destructive">{error}</p>}
+        </>
+      )}
     </div>
   );
 }

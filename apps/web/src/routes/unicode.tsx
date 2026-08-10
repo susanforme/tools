@@ -1,5 +1,6 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
+import { UnicodeSecurityPanel } from '@/components/extra-tool-panels';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
@@ -160,7 +161,7 @@ function Panel({
   );
 }
 
-type TabType = 'escape' | 'utf8' | 'utf16' | 'codepoints';
+type TabType = 'escape' | 'utf8' | 'utf16' | 'codepoints' | 'security';
 
 function UnicodePage() {
   const { t } = useTranslation();
@@ -205,6 +206,7 @@ function UnicodePage() {
           <TabsTrigger value="codepoints">
             {t('unicode.tabCodepoints')}
           </TabsTrigger>
+          <TabsTrigger value="security">{t('unicode.tabSecurity')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="escape" className="mt-4">
@@ -316,6 +318,9 @@ function UnicodePage() {
               </div>
             </div>
           </div>
+        </TabsContent>
+        <TabsContent value="security" className="mt-4">
+          <UnicodeSecurityPanel />
         </TabsContent>
       </Tabs>
     </div>
