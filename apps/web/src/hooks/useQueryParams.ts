@@ -1,4 +1,8 @@
-import { useNavigate, useRouterState } from '@tanstack/react-router';
+import {
+  useMatch,
+  useNavigate,
+  useRouterState,
+} from '@tanstack/react-router';
 import { useCallback, useMemo } from 'react';
 
 // --- 类型定义 ---
@@ -10,6 +14,41 @@ export interface ParamConfig<T = any> {
   type: string;
   encode: (value: T | null | undefined) => any;
   decode: (value: any) => T | null | undefined;
+}
+
+/**
+ * 读取当前组件应绑定的 search。
+ *
+ * 离开路由进入 pending 时，TanStack Router 会先更新 location，
+ * 但仍继续渲染旧 match，直到目标路由 chunk 加载完成。
+ * 此时若直接读 location.search，带默认值的 query 会短暂回落，
+ * 造成「先闪首页/默认态再进入目标页」。
+ */
+function useLiveSearch(): Record<string, any> {
+  const renderedMatch = useMatch({
+    strict: false,
+    shouldThrow: false,
+    select: (match) => ({
+      pathname: match.pathname,
+      search: match.search as Record<string, any>,
+    }),
+  });
+
+  const location = useRouterState({
+    select: (state) => ({
+      pathname: state.location.pathname,
+      search: state.location.search as Record<string, any>,
+    }),
+  });
+
+  if (
+    renderedMatch != null &&
+    location.pathname !== renderedMatch.pathname
+  ) {
+    return renderedMatch.search;
+  }
+
+  return location.search;
 }
 
 // 🌟 核心修复点：HookParamConfig
@@ -111,11 +150,8 @@ export function useQueryParam<T>(
   defaultValue?: T,
 ) {
   const navigate = useNavigate();
-
-  // 精确订阅
-  const rawValue = useRouterState({
-    select: (s) => (s.location.search as Record<string, any>)[name],
-  });
+  const search = useLiveSearch();
+  const rawValue = search[name];
 
   const decodedValue = useMemo(() => {
     const value = paramConfig.decode(rawValue);
@@ -188,9 +224,7 @@ export function useQueryParams<
   ) => void,
 ] {
   const navigate = useNavigate();
-  const search = useRouterState({
-    select: (s) => s.location.search as Record<string, any>,
-  });
+  const search = useLiveSearch();
 
   const query = useMemo(() => {
     const decoded: Partial<ResultMap> = {};
