@@ -1,8 +1,11 @@
 import { cn } from '@/lib/utils';
+import { ColorVisionPanel } from '@/components/community-tool-panels';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import { Check, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/contrast')({ component: ContrastPage });
 
@@ -213,6 +216,11 @@ function ColorInput({
 
 function ContrastPage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<'ratio' | 'vision'>(
+    'tab',
+    StringParam,
+    'ratio',
+  );
 
   const [fgText, setFgText] = useState('#000000');
   const [bgText, setBgText] = useState('#ffffff');
@@ -248,131 +256,147 @@ function ContrastPage() {
   const bgHex = bgRgb ? rgbToHex(bgRgb.r, bgRgb.g, bgRgb.b) : '#ffffff';
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6 px-4 py-6">
       {/* 标题 */}
       <div>
         <h1 className="text-2xl font-bold">{t('contrast.title')}</h1>
       </div>
 
-      {/* 颜色输入 */}
-      <div className="space-y-4 p-4 rounded-xl border bg-card">
-        <ColorInput
-          label={t('contrast.fgColor')}
-          value={fgText}
-          onChange={setFgText}
-          rgb={fgRgb}
-        />
-        {/* 互换按钮 */}
-        <div className="flex justify-center">
-          <button
-            onClick={swap}
-            className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
-          >
-            ⇅ {t('contrast.swap')}
-          </button>
-        </div>
-        <ColorInput
-          label={t('contrast.bgColor')}
-          value={bgText}
-          onChange={setBgText}
-          rgb={bgRgb}
-        />
-      </div>
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as 'ratio' | 'vision')}
+      >
+        <TabsList>
+          <TabsTrigger value="ratio">{t('contrast.tabRatio')}</TabsTrigger>
+          <TabsTrigger value="vision">{t('contrast.tabVision')}</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-      {/* 预览区 */}
-      {fgRgb && bgRgb && (
-        <div
-          className="rounded-xl border overflow-hidden"
-          style={{ backgroundColor: bgHex }}
-        >
-          <div className="px-6 py-5 space-y-2">
-            <p
-              className="text-2xl font-bold leading-tight"
-              style={{ color: fgHex }}
+      {tab === 'vision' ? (
+        <ColorVisionPanel />
+      ) : (
+        <div className="mx-auto max-w-2xl space-y-6">
+          {/* 颜色输入 */}
+          <div className="space-y-4 p-4 rounded-xl border bg-card">
+            <ColorInput
+              label={t('contrast.fgColor')}
+              value={fgText}
+              onChange={setFgText}
+              rgb={fgRgb}
+            />
+            {/* 互换按钮 */}
+            <div className="flex justify-center">
+              <button
+                onClick={swap}
+                className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
+              >
+                ⇅ {t('contrast.swap')}
+              </button>
+            </div>
+            <ColorInput
+              label={t('contrast.bgColor')}
+              value={bgText}
+              onChange={setBgText}
+              rgb={bgRgb}
+            />
+          </div>
+
+          {/* 预览区 */}
+          {fgRgb && bgRgb && (
+            <div
+              className="rounded-xl border overflow-hidden"
+              style={{ backgroundColor: bgHex }}
             >
-              {t('contrast.previewLarge')}
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: fgHex }}>
-              {t('contrast.previewNormal')}
-            </p>
+              <div className="px-6 py-5 space-y-2">
+                <p
+                  className="text-2xl font-bold leading-tight"
+                  style={{ color: fgHex }}
+                >
+                  {t('contrast.previewLarge')}
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: fgHex }}>
+                  {t('contrast.previewNormal')}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* 对比度比例 */}
+          {ratio !== null && (
+            <div className="p-4 rounded-xl border bg-card space-y-4">
+              {/* 比例数值 */}
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-4xl font-bold tabular-nums text-foreground">
+                  {ratio.toFixed(2)}
+                  <span className="text-2xl font-semibold text-muted-foreground">
+                    :1
+                  </span>
+                </span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  {t(getRatingKey(ratio))}
+                </span>
+              </div>
+
+              {/* 进度条 */}
+              <div className="space-y-1">
+                <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
+                  {/* 背景渐变刻度 */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-500 opacity-30" />
+                  {/* 当前进度 */}
+                  <div
+                    className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-500 transition-all duration-300"
+                    style={{ width: `${Math.min((ratio / 21) * 100, 100)}%` }}
+                  />
+                </div>
+                {/* 刻度标注 */}
+                <div className="flex justify-between text-[10px] text-muted-foreground px-0.5">
+                  <span>1:1</span>
+                  <span>3:1</span>
+                  <span>4.5:1</span>
+                  <span>7:1</span>
+                  <span>21:1</span>
+                </div>
+              </div>
+
+              {/* 详细判断 */}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  WCAG 2.x
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <ResultRow
+                    label={t('contrast.aaLarge')}
+                    threshold={THRESHOLDS.AA_large}
+                    ratio={ratio}
+                  />
+                  <ResultRow
+                    label={t('contrast.aaaNormal')}
+                    threshold={THRESHOLDS.AAA_normal}
+                    ratio={ratio}
+                  />
+                  <ResultRow
+                    label={t('contrast.aaNormal')}
+                    threshold={THRESHOLDS.AA_normal}
+                    ratio={ratio}
+                  />
+                  <ResultRow
+                    label={t('contrast.aaaLarge')}
+                    threshold={THRESHOLDS.AAA_large}
+                    ratio={ratio}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 说明 */}
+          <div className="text-xs text-muted-foreground space-y-1 border-t pt-4">
+            <p>{t('contrast.noteAA')}</p>
+            <p>{t('contrast.noteAAA')}</p>
+            <p>{t('contrast.noteLarge')}</p>
           </div>
         </div>
       )}
-
-      {/* 对比度比例 */}
-      {ratio !== null && (
-        <div className="p-4 rounded-xl border bg-card space-y-4">
-          {/* 比例数值 */}
-          <div className="flex items-baseline gap-3 flex-wrap">
-            <span className="text-4xl font-bold tabular-nums text-foreground">
-              {ratio.toFixed(2)}
-              <span className="text-2xl font-semibold text-muted-foreground">
-                :1
-              </span>
-            </span>
-            <span className="text-sm font-medium text-muted-foreground">
-              {t(getRatingKey(ratio))}
-            </span>
-          </div>
-
-          {/* 进度条 */}
-          <div className="space-y-1">
-            <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
-              {/* 背景渐变刻度 */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-500 opacity-30" />
-              {/* 当前进度 */}
-              <div
-                className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-500 transition-all duration-300"
-                style={{ width: `${Math.min((ratio / 21) * 100, 100)}%` }}
-              />
-            </div>
-            {/* 刻度标注 */}
-            <div className="flex justify-between text-[10px] text-muted-foreground px-0.5">
-              <span>1:1</span>
-              <span>3:1</span>
-              <span>4.5:1</span>
-              <span>7:1</span>
-              <span>21:1</span>
-            </div>
-          </div>
-
-          {/* 详细判断 */}
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-              WCAG 2.x
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <ResultRow
-                label={t('contrast.aaLarge')}
-                threshold={THRESHOLDS.AA_large}
-                ratio={ratio}
-              />
-              <ResultRow
-                label={t('contrast.aaaNormal')}
-                threshold={THRESHOLDS.AAA_normal}
-                ratio={ratio}
-              />
-              <ResultRow
-                label={t('contrast.aaNormal')}
-                threshold={THRESHOLDS.AA_normal}
-                ratio={ratio}
-              />
-              <ResultRow
-                label={t('contrast.aaaLarge')}
-                threshold={THRESHOLDS.AAA_large}
-                ratio={ratio}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 说明 */}
-      <div className="text-xs text-muted-foreground space-y-1 border-t pt-4">
-        <p>{t('contrast.noteAA')}</p>
-        <p>{t('contrast.noteAAA')}</p>
-        <p>{t('contrast.noteLarge')}</p>
-      </div>
     </div>
   );
 }

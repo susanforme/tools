@@ -1,4 +1,5 @@
 import { HistoryPanel } from '@/components/history-panel';
+import { JqPanel, JsonGraphPanel } from '@/components/community-tool-panels';
 import { MonacoTextEditor } from '@/components/monaco-editor';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { JsonSchemaExamplePanel } from '@/components/protocol-tool-panels';
@@ -48,7 +49,9 @@ type Tab =
   | 'lines'
   | 'patch'
   | 'example'
-  | 'jcs';
+  | 'jcs'
+  | 'jq'
+  | 'graph';
 type Indent = '2' | '4' | 'tab';
 type SchemaMode = 'infer' | 'validate' | 'types';
 type SchemaSource = 'json' | 'schema';
@@ -95,6 +98,8 @@ function JsonPage() {
             {t('protocol.tabs.schemaExample')}
           </TabsTrigger>
           <TabsTrigger value="jcs">JCS</TabsTrigger>
+          <TabsTrigger value="jq">jq</TabsTrigger>
+          <TabsTrigger value="graph">{t('json.tabGraph')}</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === 'format' && <FormatPanel />}
@@ -105,6 +110,8 @@ function JsonPage() {
       {tab === 'patch' && <PatchPanel />}
       {tab === 'example' && <JsonSchemaExamplePanel />}
       {tab === 'jcs' && <JcsPanel />}
+      {tab === 'jq' && <JqPanel />}
+      {tab === 'graph' && <JsonGraphPanel />}
     </div>
   );
 }

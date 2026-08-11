@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { WebSandboxPanel } from '@/components/community-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,7 @@ import {
 
 export const Route = createFileRoute('/js')({ component: JsPage });
 
-type TabType = 'format' | 'minify' | 'obfuscate';
+type TabType = 'format' | 'minify' | 'obfuscate' | 'sandbox';
 
 function useTool(initialInput = '') {
   const [input, setInput] = useState(initialInput);
@@ -141,6 +142,7 @@ function JsPage() {
           <TabsTrigger value="format">{t('js.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('js.tabMinify')}</TabsTrigger>
           <TabsTrigger value="obfuscate">{t('js.tabObfuscate')}</TabsTrigger>
+          <TabsTrigger value="sandbox">{t('js.tabSandbox')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-3 mt-4">
@@ -195,6 +197,10 @@ function JsPage() {
             error={obf.error}
             language="javascript"
           />
+        </TabsContent>
+
+        <TabsContent value="sandbox" className="mt-4">
+          <WebSandboxPanel />
         </TabsContent>
       </Tabs>
     </div>

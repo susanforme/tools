@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CodePanel } from '../components/code-panel';
 import { XPathPanel } from '../components/tool-expansion-panels';
+import { PlistPanel } from '../components/community-tool-panels';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { StringParam, useQueryParam } from '../hooks/useQueryParams';
@@ -104,7 +105,7 @@ const SAMPLE_XML = `<?xml version="1.0" encoding="UTF-8"?>
 
 function XmlPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useQueryParam<'format' | 'xpath'>(
+  const [tab, setTab] = useQueryParam<'format' | 'xpath' | 'plist'>(
     'tab',
     StringParam,
     'format',
@@ -155,11 +156,12 @@ function XmlPage() {
       </div>
       <Tabs
         value={tab}
-        onValueChange={(value) => setTab(value as 'format' | 'xpath')}
+        onValueChange={(value) => setTab(value as 'format' | 'xpath' | 'plist')}
       >
         <TabsList>
           <TabsTrigger value="format">{t('xml.tabFormat')}</TabsTrigger>
           <TabsTrigger value="xpath">XPath</TabsTrigger>
+          <TabsTrigger value="plist">Plist</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === 'format' ? (
@@ -186,8 +188,10 @@ function XmlPage() {
             language="xml"
           />
         </>
-      ) : (
+      ) : tab === 'xpath' ? (
         <XPathPanel />
+      ) : (
+        <PlistPanel />
       )}
     </div>
   );

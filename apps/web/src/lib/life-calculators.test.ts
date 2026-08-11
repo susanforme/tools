@@ -17,6 +17,7 @@ import {
   materialEstimate,
   purchasingPower,
   requiredMonthlySavings,
+  searchWorldCities,
   slopeMetrics,
   splitBill,
   convertTemperature,
@@ -70,5 +71,8 @@ describe('life calculators', () => {
       units: 4,
       cost: 20,
     });
+    expect(searchWorldCities('美国').map(([id]) => id)).toContain('newYork');
+    expect(searchWorldCities('kuala')[0]?.[0]).toBe('kualaLumpur');
+    expect(searchWorldCities('阿拉斯加').map(([id]) => id)).toContain('alaska');
   });
 });

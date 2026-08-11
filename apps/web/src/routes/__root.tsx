@@ -160,7 +160,7 @@ const formatterNavItems: NavItem[] = [
     icon: <Braces className="w-4 h-4 text-amber-500" />,
     labelKey: 'nav.json',
     keywords:
-      'json format minify schema typescript zod interface jsonpath ndjson patch 格式化 类型',
+      'json format minify schema typescript zod interface jsonpath jq graph visualize ndjson patch 格式化 类型 关系图',
   },
   {
     to: '/html',
@@ -176,16 +176,19 @@ const formatterNavItems: NavItem[] = [
     to: '/js',
     icon: <FileCode2 className="w-4 h-4 text-yellow-500" />,
     labelKey: 'nav.js',
+    keywords: 'javascript html css sandbox playground 沙箱 运行 预览',
   },
   {
     to: '/xml',
     icon: <Tag className="w-4 h-4 text-orange-500" />,
     labelKey: 'nav.xml',
+    keywords: 'xml xpath plist apple binary property list 格式化 转换',
   },
   {
     to: '/markdown',
     icon: <FileText className="w-4 h-4 text-teal-500" />,
     labelKey: 'nav.markdown',
+    keywords: 'markdown mermaid diagram flowchart sequence svg png 图表 流程图',
   },
   {
     to: '/sql',
@@ -454,6 +457,8 @@ const frontendNavItems: NavItem[] = [
     to: '/contrast',
     icon: <Contrast className="w-4 h-4 text-blue-500" />,
     labelKey: 'nav.contrast',
+    keywords:
+      'wcag contrast color blindness protanopia deuteranopia tritanopia 色盲 色觉',
   },
   {
     to: '/css-layout',

@@ -1,5 +1,4 @@
 import { useFavorites } from '@/hooks/useFavorites';
-import { detectToolSuggestions } from '@/lib/advanced-tools';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
   DndContext,
@@ -108,6 +107,7 @@ const formatterTools = [
       'home.tools.json.tagFormat',
       'home.tools.json.tagSchema',
       'home.tools.json.tagPath',
+      'home.tools.json.tagQuery',
     ],
     gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
     border: 'hover:border-amber-300 dark:hover:border-amber-700',
@@ -143,6 +143,7 @@ const formatterTools = [
       'home.tools.js.tagFormat',
       'home.tools.js.tagMinify',
       'home.tools.js.tagObfuscate',
+      'home.tools.js.tagSandbox',
     ],
     gradient: 'hover:bg-yellow-50 dark:hover:bg-yellow-950/20',
     border: 'hover:border-yellow-300 dark:hover:border-yellow-700',
@@ -156,6 +157,7 @@ const formatterTools = [
       'home.tools.xml.tagFormat',
       'home.tools.xml.tagValidate',
       'home.tools.xml.tagMinify',
+      'home.tools.xml.tagPlist',
     ],
     gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
     border: 'hover:border-orange-300 dark:hover:border-orange-700',
@@ -168,6 +170,7 @@ const formatterTools = [
     tagKeys: [
       'home.tools.markdown.tagBeautify',
       'home.tools.markdown.tagPreview',
+      'home.tools.markdown.tagMermaid',
     ],
     gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
     border: 'hover:border-teal-300 dark:hover:border-teal-700',
@@ -907,6 +910,7 @@ const frontendTools = [
       'home.tools.contrast.tagAA',
       'home.tools.contrast.tagAAA',
       'home.tools.contrast.tagWCAG',
+      'home.tools.contrast.tagVision',
     ],
     gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
     border: 'hover:border-blue-300 dark:hover:border-blue-700',
@@ -1717,8 +1721,6 @@ function HomePageContent({
   const [localOrder, setLocalOrder] = React.useState<string[]>(favoritePaths);
   // 当前正在拖拽的工具路径（用于 DragOverlay）
   const [activeId, setActiveId] = React.useState<string | null>(null);
-  const [smartInput, setSmartInput] = React.useState('');
-  const smartSuggestions = detectToolSuggestions(smartInput);
 
   // 当 DB 数据变化时，同步到本地顺序（拖拽过程中不覆盖）
   React.useEffect(() => {
@@ -1816,31 +1818,6 @@ function HomePageContent({
             </button>
           ))}
         </div>
-      )}
-
-      {category === 'recommended' && (
-        <section className="space-y-3 rounded-2xl border p-4">
-          <h2 className="font-semibold">{t('home.smart.title')}</h2>
-          <textarea
-            value={smartInput}
-            onChange={(event) => setSmartInput(event.target.value)}
-            className="h-24 w-full resize-none rounded-md border bg-background p-3 font-mono text-sm"
-            placeholder={t('home.smart.placeholder')}
-          />
-          {smartSuggestions.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {smartSuggestions.map((suggestion) => (
-                <a
-                  key={suggestion.path}
-                  href={suggestion.path}
-                  className="rounded-full border px-3 py-1.5 text-sm hover:bg-muted"
-                >
-                  {t(`home.smart.tools.${suggestion.code}`)}
-                </a>
-              ))}
-            </div>
-          )}
-        </section>
       )}
 
       <div className="space-y-8">
