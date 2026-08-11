@@ -1,4 +1,5 @@
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
+import { PdfSignaturePanel } from '@/components/recommended-tool-panels';
 import { ChoiceField } from '@/components/calculator-ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,7 +32,8 @@ type Mode =
   | 'organize'
   | 'images'
   | 'watermark'
-  | 'metadata';
+  | 'metadata'
+  | 'signature';
 
 function PdfToolkitPage() {
   const { t } = useTranslation();
@@ -123,6 +125,7 @@ function PdfToolkitPage() {
               'images',
               'watermark',
               'metadata',
+              'signature',
             ] as const
           ).map((value) => (
             <TabsTrigger key={value} value={value}>
@@ -131,77 +134,86 @@ function PdfToolkitPage() {
           ))}
         </TabsList>
       </Tabs>
-      <FileDropzone
-        accept="application/pdf,.pdf"
-        multiple={mode === 'merge'}
-        onFiles={(dropped) => void receiveFiles(dropped)}
-        className="flex min-h-40 items-center justify-center rounded-xl p-6 text-center"
-      >
-        <div>
-          <FileText className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
-          <p>{t('pdfToolkit.drop')}</p>
-          {!!files.length && (
-            <p className="mt-2 text-sm text-muted-foreground">
-              {files.map(({ name }) => name).join(' · ')}
-            </p>
+      {mode === 'signature' ? (
+        <PdfSignaturePanel />
+      ) : (
+        <>
+          <FileDropzone
+            accept="application/pdf,.pdf"
+            multiple={mode === 'merge'}
+            onFiles={(dropped) => void receiveFiles(dropped)}
+            className="flex min-h-40 items-center justify-center rounded-xl p-6 text-center"
+          >
+            <div>
+              <FileText className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
+              <p>{t('pdfToolkit.drop')}</p>
+              {!!files.length && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {files.map(({ name }) => name).join(' · ')}
+                </p>
+              )}
+            </div>
+          </FileDropzone>
+          {mode === 'organize' && (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>{t('pdfToolkit.order')}</Label>
+                <Input
+                  value={order}
+                  onChange={(event) => setOrder(event.target.value)}
+                />
+              </div>
+              <ChoiceField
+                label={t('pdfToolkit.rotation')}
+                value={String(rotation)}
+                onChange={(value) => setRotation(Number(value))}
+                options={[0, 90, 180, 270].map((value) => ({
+                  value: String(value),
+                  label: `${value}°`,
+                }))}
+              />
+            </div>
           )}
-        </div>
-      </FileDropzone>
-      {mode === 'organize' && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label>{t('pdfToolkit.order')}</Label>
-            <Input
-              value={order}
-              onChange={(event) => setOrder(event.target.value)}
-            />
-          </div>
-          <ChoiceField
-            label={t('pdfToolkit.rotation')}
-            value={String(rotation)}
-            onChange={(value) => setRotation(Number(value))}
-            options={[0, 90, 180, 270].map((value) => ({
-              value: String(value),
-              label: `${value}°`,
-            }))}
-          />
-        </div>
-      )}
-      {mode === 'watermark' && (
-        <div className="space-y-1.5">
-          <Label>{t('pdfToolkit.watermarkText')}</Label>
-          <Input
-            value={watermark}
-            onChange={(event) => setWatermark(event.target.value)}
-          />
-        </div>
-      )}
-      {error && (
-        <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-          {error}
-        </div>
-      )}
-      <Button disabled={!files.length || loading} onClick={() => void run()}>
-        {loading ? (
-          <LoaderCircle className="h-4 w-4 animate-spin" />
-        ) : (
-          <Download className="h-4 w-4" />
-        )}
-        {t(mode === 'images' ? 'pdfToolkit.extract' : 'pdfToolkit.process')}
-      </Button>
-      {!!images.length && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {images.map((image) => (
-            <Button
-              key={image.name}
-              variant="outline"
-              onClick={() => downloadBlob(image.blob, image.name)}
-            >
+          {mode === 'watermark' && (
+            <div className="space-y-1.5">
+              <Label>{t('pdfToolkit.watermarkText')}</Label>
+              <Input
+                value={watermark}
+                onChange={(event) => setWatermark(event.target.value)}
+              />
+            </div>
+          )}
+          {error && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+          <Button
+            disabled={!files.length || loading}
+            onClick={() => void run()}
+          >
+            {loading ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
               <Download className="h-4 w-4" />
-              {image.name}
-            </Button>
-          ))}
-        </div>
+            )}
+            {t(mode === 'images' ? 'pdfToolkit.extract' : 'pdfToolkit.process')}
+          </Button>
+          {!!images.length && (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {images.map((image) => (
+                <Button
+                  key={image.name}
+                  variant="outline"
+                  onClick={() => downloadBlob(image.blob, image.name)}
+                >
+                  <Download className="h-4 w-4" />
+                  {image.name}
+                </Button>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

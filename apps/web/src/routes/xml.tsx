@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CodePanel } from '../components/code-panel';
 import { XPathPanel } from '../components/tool-expansion-panels';
 import { PlistPanel } from '../components/community-tool-panels';
+import { XsdPanel } from '../components/recommended-tool-panels';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { StringParam, useQueryParam } from '../hooks/useQueryParams';
@@ -105,7 +106,7 @@ const SAMPLE_XML = `<?xml version="1.0" encoding="UTF-8"?>
 
 function XmlPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useQueryParam<'format' | 'xpath' | 'plist'>(
+  const [tab, setTab] = useQueryParam<'format' | 'xpath' | 'plist' | 'xsd'>(
     'tab',
     StringParam,
     'format',
@@ -156,12 +157,15 @@ function XmlPage() {
       </div>
       <Tabs
         value={tab}
-        onValueChange={(value) => setTab(value as 'format' | 'xpath' | 'plist')}
+        onValueChange={(value) =>
+          setTab(value as 'format' | 'xpath' | 'plist' | 'xsd')
+        }
       >
         <TabsList>
           <TabsTrigger value="format">{t('xml.tabFormat')}</TabsTrigger>
           <TabsTrigger value="xpath">XPath</TabsTrigger>
           <TabsTrigger value="plist">Plist</TabsTrigger>
+          <TabsTrigger value="xsd">XSD</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === 'format' ? (
@@ -190,6 +194,8 @@ function XmlPage() {
         </>
       ) : tab === 'xpath' ? (
         <XPathPanel />
+      ) : tab === 'xsd' ? (
+        <XsdPanel />
       ) : (
         <PlistPanel />
       )}

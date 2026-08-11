@@ -92,6 +92,7 @@ import { Route as GeometryCalculatorRouteImport } from './routes/geometry-calcul
 import { Route as FontRouteImport } from './routes/font'
 import { Route as FinanceCalculatorRouteImport } from './routes/finance-calculator'
 import { Route as EnvRouteImport } from './routes/env'
+import { Route as EmojiPickerRouteImport } from './routes/emoji-picker'
 import { Route as EmailHeadersRouteImport } from './routes/email-headers'
 import { Route as DockerComposeRouteImport } from './routes/docker-compose'
 import { Route as DnsRouteImport } from './routes/dns'
@@ -541,6 +542,11 @@ const EnvRoute = EnvRouteImport.update({
   path: '/env',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmojiPickerRoute = EmojiPickerRouteImport.update({
+  id: '/emoji-picker',
+  path: '/emoji-picker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmailHeadersRoute = EmailHeadersRouteImport.update({
   id: '/email-headers',
   path: '/email-headers',
@@ -741,6 +747,7 @@ export interface FileRoutesByFullPath {
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
   '/email-headers': typeof EmailHeadersRoute
+  '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
   '/font': typeof FontRoute
@@ -859,6 +866,7 @@ export interface FileRoutesByTo {
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
   '/email-headers': typeof EmailHeadersRoute
+  '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
   '/font': typeof FontRoute
@@ -978,6 +986,7 @@ export interface FileRoutesById {
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
   '/email-headers': typeof EmailHeadersRoute
+  '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
   '/font': typeof FontRoute
@@ -1098,6 +1107,7 @@ export interface FileRouteTypes {
     | '/dns'
     | '/docker-compose'
     | '/email-headers'
+    | '/emoji-picker'
     | '/env'
     | '/finance-calculator'
     | '/font'
@@ -1216,6 +1226,7 @@ export interface FileRouteTypes {
     | '/dns'
     | '/docker-compose'
     | '/email-headers'
+    | '/emoji-picker'
     | '/env'
     | '/finance-calculator'
     | '/font'
@@ -1334,6 +1345,7 @@ export interface FileRouteTypes {
     | '/dns'
     | '/docker-compose'
     | '/email-headers'
+    | '/emoji-picker'
     | '/env'
     | '/finance-calculator'
     | '/font'
@@ -1453,6 +1465,7 @@ export interface RootRouteChildren {
   DnsRoute: typeof DnsRoute
   DockerComposeRoute: typeof DockerComposeRoute
   EmailHeadersRoute: typeof EmailHeadersRoute
+  EmojiPickerRoute: typeof EmojiPickerRoute
   EnvRoute: typeof EnvRoute
   FinanceCalculatorRoute: typeof FinanceCalculatorRoute
   FontRoute: typeof FontRoute
@@ -2121,6 +2134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnvRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/emoji-picker': {
+      id: '/emoji-picker'
+      path: '/emoji-picker'
+      fullPath: '/emoji-picker'
+      preLoaderRoute: typeof EmojiPickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/email-headers': {
       id: '/email-headers'
       path: '/email-headers'
@@ -2389,6 +2409,7 @@ const rootRouteChildren: RootRouteChildren = {
   DnsRoute: DnsRoute,
   DockerComposeRoute: DockerComposeRoute,
   EmailHeadersRoute: EmailHeadersRoute,
+  EmojiPickerRoute: EmojiPickerRoute,
   EnvRoute: EnvRoute,
   FinanceCalculatorRoute: FinanceCalculatorRoute,
   FontRoute: FontRoute,

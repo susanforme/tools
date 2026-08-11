@@ -70,6 +70,7 @@ import {
   ShieldCheck,
   ShieldPlus,
   Shuffle,
+  Smile,
   Sparkles,
   SquareAsterisk,
   Star,
@@ -738,6 +739,18 @@ const convertTools = [
 ];
 
 const textTools = [
+  {
+    to: '/emoji-picker' as const,
+    icon: <Smile className="h-8 w-8 text-amber-500" />,
+    titleKey: 'home.tools.emojiPicker.title',
+    descKey: 'home.tools.emojiPicker.desc',
+    tagKeys: [
+      'home.tools.emojiPicker.tagBrowse',
+      'home.tools.emojiPicker.tagCopy',
+    ],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
   {
     to: '/pdf-toolkit' as const,
     icon: <FileText className="h-8 w-8 text-red-500" />,

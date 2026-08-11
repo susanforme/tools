@@ -1,4 +1,5 @@
 import { Metric, NumberField } from '@/components/calculator-ui';
+import { BankValidationPanel } from '@/components/recommended-tool-panels';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
@@ -14,7 +15,13 @@ import { useTranslation } from 'react-i18next';
 export const Route = createFileRoute('/finance-calculator')({
   component: FinanceCalculatorPage,
 });
-type Mode = 'compound' | 'investment' | 'goal' | 'prepayment' | 'inflation';
+type Mode =
+  | 'compound'
+  | 'investment'
+  | 'goal'
+  | 'prepayment'
+  | 'inflation'
+  | 'bank';
 
 function FinanceCalculatorPage() {
   const { t } = useTranslation();
@@ -52,6 +59,7 @@ function FinanceCalculatorPage() {
               'goal',
               'prepayment',
               'inflation',
+              'bank',
             ] as const
           ).map((value) => (
             <TabsTrigger key={value} value={value}>
@@ -60,93 +68,99 @@ function FinanceCalculatorPage() {
           ))}
         </TabsList>
       </Tabs>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <NumberField
-          label={t(
-            mode === 'prepayment'
-              ? 'financeCalculator.principal'
-              : 'financeCalculator.initial',
-          )}
-          value={initial}
-          onChange={setInitial}
-        />
-        {mode === 'investment' && (
-          <NumberField
-            label={t('financeCalculator.monthly')}
-            value={monthly}
-            onChange={setMonthly}
-          />
-        )}
-        {mode === 'goal' && (
-          <NumberField
-            label={t('financeCalculator.target')}
-            value={target}
-            onChange={setTarget}
-          />
-        )}
-        {mode === 'prepayment' && (
-          <>
+      {mode === 'bank' ? (
+        <BankValidationPanel />
+      ) : (
+        <>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <NumberField
-              label={t('financeCalculator.months')}
-              value={months}
-              step={1}
-              onChange={setMonths}
+              label={t(
+                mode === 'prepayment'
+                  ? 'financeCalculator.principal'
+                  : 'financeCalculator.initial',
+              )}
+              value={initial}
+              onChange={setInitial}
             />
-            <NumberField
-              label={t('financeCalculator.prepaymentAmount')}
-              value={prepayment}
-              onChange={setPrepayment}
-            />
-          </>
-        )}
-        <NumberField
-          label={t(
-            mode === 'inflation'
-              ? 'financeCalculator.inflationRate'
-              : 'financeCalculator.rate',
-          )}
-          value={rate}
-          step={0.1}
-          onChange={setRate}
-        />
-        {mode !== 'prepayment' && (
-          <NumberField
-            label={t('financeCalculator.years')}
-            value={years}
-            step={1}
-            onChange={setYears}
-          />
-        )}
-      </div>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {mode === 'prepayment' ? (
-          <>
-            <Metric
-              label={t('financeCalculator.beforePayment')}
-              value={money(prepay.before)}
-            />
-            <Metric
-              label={t('financeCalculator.afterPayment')}
-              value={money(prepay.after)}
-            />
-            <Metric
-              label={t('financeCalculator.interestSaved')}
-              value={money(prepay.interestSaved)}
-            />
-          </>
-        ) : (
-          <Metric
-            label={t(
-              mode === 'goal'
-                ? 'financeCalculator.requiredMonthly'
-                : mode === 'inflation'
-                  ? 'financeCalculator.purchasingPower'
-                  : 'financeCalculator.futureValue',
+            {mode === 'investment' && (
+              <NumberField
+                label={t('financeCalculator.monthly')}
+                value={monthly}
+                onChange={setMonthly}
+              />
             )}
-            value={money(result)}
-          />
-        )}
-      </div>
+            {mode === 'goal' && (
+              <NumberField
+                label={t('financeCalculator.target')}
+                value={target}
+                onChange={setTarget}
+              />
+            )}
+            {mode === 'prepayment' && (
+              <>
+                <NumberField
+                  label={t('financeCalculator.months')}
+                  value={months}
+                  step={1}
+                  onChange={setMonths}
+                />
+                <NumberField
+                  label={t('financeCalculator.prepaymentAmount')}
+                  value={prepayment}
+                  onChange={setPrepayment}
+                />
+              </>
+            )}
+            <NumberField
+              label={t(
+                mode === 'inflation'
+                  ? 'financeCalculator.inflationRate'
+                  : 'financeCalculator.rate',
+              )}
+              value={rate}
+              step={0.1}
+              onChange={setRate}
+            />
+            {mode !== 'prepayment' && (
+              <NumberField
+                label={t('financeCalculator.years')}
+                value={years}
+                step={1}
+                onChange={setYears}
+              />
+            )}
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {mode === 'prepayment' ? (
+              <>
+                <Metric
+                  label={t('financeCalculator.beforePayment')}
+                  value={money(prepay.before)}
+                />
+                <Metric
+                  label={t('financeCalculator.afterPayment')}
+                  value={money(prepay.after)}
+                />
+                <Metric
+                  label={t('financeCalculator.interestSaved')}
+                  value={money(prepay.interestSaved)}
+                />
+              </>
+            ) : (
+              <Metric
+                label={t(
+                  mode === 'goal'
+                    ? 'financeCalculator.requiredMonthly'
+                    : mode === 'inflation'
+                      ? 'financeCalculator.purchasingPower'
+                      : 'financeCalculator.futureValue',
+                )}
+                value={money(result)}
+              />
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { WebSandboxPanel } from '@/components/community-tool-panels';
+import { EventInspectorPanel } from '@/components/recommended-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +15,7 @@ import {
 
 export const Route = createFileRoute('/js')({ component: JsPage });
 
-type TabType = 'format' | 'minify' | 'obfuscate' | 'sandbox';
+type TabType = 'format' | 'minify' | 'obfuscate' | 'sandbox' | 'events';
 
 function useTool(initialInput = '') {
   const [input, setInput] = useState(initialInput);
@@ -143,6 +144,9 @@ function JsPage() {
           <TabsTrigger value="minify">{t('js.tabMinify')}</TabsTrigger>
           <TabsTrigger value="obfuscate">{t('js.tabObfuscate')}</TabsTrigger>
           <TabsTrigger value="sandbox">{t('js.tabSandbox')}</TabsTrigger>
+          <TabsTrigger value="events">
+            {t('recommended.eventInspector')}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-3 mt-4">
@@ -201,6 +205,9 @@ function JsPage() {
 
         <TabsContent value="sandbox" className="mt-4">
           <WebSandboxPanel />
+        </TabsContent>
+        <TabsContent value="events" className="mt-4">
+          <EventInspectorPanel />
         </TabsContent>
       </Tabs>
     </div>

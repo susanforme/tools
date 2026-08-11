@@ -1,6 +1,12 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import {
+  AsciiArtPanel,
+  LoremPanel,
+  PhonePanel,
+} from '@/components/recommended-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import {
   Tabs,
@@ -11,7 +17,16 @@ import {
 
 export const Route = createFileRoute('/text')({ component: TextPage });
 
-type TabType = 'dedupe' | 'empty' | 'sort' | 'stats' | 'case' | 'zh';
+type TabType =
+  | 'dedupe'
+  | 'empty'
+  | 'sort'
+  | 'stats'
+  | 'case'
+  | 'zh'
+  | 'phone'
+  | 'lorem'
+  | 'ascii';
 type ZhDirection = 's2t' | 't2s';
 
 // ─── 工具函数 ──────────────────────────────────────────────
@@ -670,6 +685,7 @@ function ZhTab() {
 // ─── 主页面 ────────────────────────────────────────────────
 
 function TextPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useQueryParam<TabType>('tab', StringParam, 'dedupe');
 
   return (
@@ -686,6 +702,9 @@ function TextPage() {
           <TabsTrigger value="stats">行/词统计</TabsTrigger>
           <TabsTrigger value="case">大小写转换</TabsTrigger>
           <TabsTrigger value="zh">简繁转换</TabsTrigger>
+          <TabsTrigger value="phone">{t('recommended.phone')}</TabsTrigger>
+          <TabsTrigger value="lorem">Lorem Ipsum</TabsTrigger>
+          <TabsTrigger value="ascii">ASCII 艺术</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dedupe" className="mt-4">
@@ -705,6 +724,15 @@ function TextPage() {
         </TabsContent>
         <TabsContent value="zh" className="mt-4">
           <ZhTab />
+        </TabsContent>
+        <TabsContent value="phone" className="mt-4">
+          <PhonePanel />
+        </TabsContent>
+        <TabsContent value="lorem" className="mt-4">
+          <LoremPanel />
+        </TabsContent>
+        <TabsContent value="ascii" className="mt-4">
+          <AsciiArtPanel />
         </TabsContent>
       </Tabs>
     </div>

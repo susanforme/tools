@@ -69,6 +69,7 @@ import {
   Search,
   Send,
   Share2,
+  Smile,
   Settings,
   ShieldAlert,
   ShieldCheck,
@@ -176,13 +177,15 @@ const formatterNavItems: NavItem[] = [
     to: '/js',
     icon: <FileCode2 className="w-4 h-4 text-yellow-500" />,
     labelKey: 'nav.js',
-    keywords: 'javascript html css sandbox playground 沙箱 运行 预览',
+    keywords:
+      'javascript html css sandbox playground event inspector keyboard pointer clipboard 沙箱 运行 预览 事件 检查器',
   },
   {
     to: '/xml',
     icon: <Tag className="w-4 h-4 text-orange-500" />,
     labelKey: 'nav.xml',
-    keywords: 'xml xpath plist apple binary property list 格式化 转换',
+    keywords:
+      'xml xpath xsd schema validation plist apple binary property list 格式化 转换 校验',
   },
   {
     to: '/markdown',
@@ -219,11 +222,13 @@ const encodeNavItems: NavItem[] = [
     to: '/url-encode',
     icon: <LinkIcon className="w-4 h-4 text-sky-500" />,
     labelKey: 'nav.urlEncode',
+    keywords: 'url safe links redirect unwrap decode 跳转 链接 还原',
   },
   {
     to: '/unicode',
     icon: <Globe className="w-4 h-4 text-indigo-500" />,
     labelKey: 'nav.unicode',
+    keywords: 'unicode utf8 utf16 codepoint 转义 码位',
   },
   {
     to: '/regex',
@@ -377,17 +382,24 @@ const convertNavItems: NavItem[] = [
 
 const textNavItems: NavItem[] = [
   {
+    to: '/emoji-picker',
+    icon: <Smile className="h-4 w-4 text-amber-500" />,
+    labelKey: 'nav.emojiPicker',
+    keywords: 'emoji picker smiley symbol 表情 选择器 符号',
+  },
+  {
     to: '/pdf-toolkit',
     icon: <FileText className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.pdfToolkit',
     keywords:
-      'pdf merge split rotate reorder watermark metadata images 合并 拆分 水印',
+      'pdf merge split rotate reorder watermark metadata images signature byte range 合并 拆分 水印 签名',
   },
   {
     to: '/batch-files',
     icon: <FileStack className="h-4 w-4 text-amber-500" />,
     labelKey: 'nav.batchFiles',
-    keywords: '批量 文件 重命名 扩展名 hash manifest rename files',
+    keywords:
+      '批量 文件 重命名 扩展名 hash manifest split merge chunk rename files 大文件 拆分 合并 分片',
   },
   {
     to: '/text-to-speech',
@@ -405,16 +417,20 @@ const textNavItems: NavItem[] = [
     to: '/text',
     icon: <CaseSensitive className="w-4 h-4 text-lime-600" />,
     labelKey: 'nav.text',
+    keywords:
+      'text phone libphonenumber lorem ipsum ascii art 文本 手机号 占位文本 字符画',
   },
   {
     to: '/datetime',
     icon: <Clock className="w-4 h-4 text-blue-500" />,
     labelKey: 'nav.datetime',
+    keywords: 'date time stopwatch lap timer 日期 时间 秒表 计次',
   },
   {
     to: '/password',
     icon: <ShieldPlus className="w-4 h-4 text-emerald-600" />,
     labelKey: 'nav.password',
+    keywords: 'password bip39 mnemonic seed entropy 密码 助记词 校验和',
   },
   {
     to: '/qrcode',
@@ -731,7 +747,8 @@ const lifeNavItems: NavItem[] = [
     to: '/finance-calculator',
     icon: <Landmark className="h-4 w-4 text-green-500" />,
     labelKey: 'nav.financeCalculator',
-    keywords: '复利 定投 储蓄 提前还贷 通胀 理财 finance compound investment',
+    keywords:
+      '复利 定投 储蓄 提前还贷 通胀 理财 iban bank card luhn finance compound investment 银行卡',
   },
   {
     to: '/home-energy',

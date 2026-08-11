@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { IntlPlaygroundPanel } from '@/components/protocol-tool-panels';
+import { StopwatchPanel } from '@/components/recommended-tool-panels';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
   ArrowLeftRight,
@@ -32,7 +33,7 @@ export const Route = createFileRoute('/datetime')({ component: DatetimePage });
 
 // ─── 常量 ──────────────────────────────────────────────────
 
-const TABS = ['unix', 'timezone', 'diff', 'iso', 'intl'] as const;
+const TABS = ['unix', 'timezone', 'diff', 'iso', 'intl', 'stopwatch'] as const;
 type Tab = (typeof TABS)[number];
 
 // 常用时区列表
@@ -862,6 +863,9 @@ function DatetimePage() {
             {t('datetime.tabIso')}
           </TabsTrigger>
           <TabsTrigger value="intl">{t('protocol.tabs.intl')}</TabsTrigger>
+          <TabsTrigger value="stopwatch">
+            {t('recommended.stopwatch')}
+          </TabsTrigger>
         </TabsList>
 
         <div className="mt-4">
@@ -879,6 +883,9 @@ function DatetimePage() {
           </TabsContent>
           <TabsContent value="intl">
             <IntlPlaygroundPanel />
+          </TabsContent>
+          <TabsContent value="stopwatch">
+            <StopwatchPanel />
           </TabsContent>
         </div>
       </Tabs>

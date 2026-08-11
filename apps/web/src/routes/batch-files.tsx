@@ -1,8 +1,11 @@
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
 import { NumberField } from '@/components/calculator-ui';
+import { FileSplitMergePanel } from '@/components/recommended-tool-panels';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { renamedFileName, sha256, type RenameOptions } from '@/lib/batch-files';
 import { downloadBytes } from '@/lib/download';
 import { createFileRoute } from '@tanstack/react-router';
@@ -16,6 +19,11 @@ export const Route = createFileRoute('/batch-files')({
 
 function BatchFilesPage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<'rename' | 'split'>(
+    'tab',
+    StringParam,
+    'rename',
+  );
   const [files, setFiles] = useState<DroppedFile[]>([]);
   const [options, setOptions] = useState<RenameOptions>({
     extension: '',
@@ -74,74 +82,89 @@ function BatchFilesPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('batchFiles.title')}</h1>
-      <FileDropzone
-        multiple
-        onFiles={setFiles}
-        className="flex min-h-36 items-center justify-center rounded-xl p-6 text-center"
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as 'rename' | 'split')}
       >
-        <div>
-          <Files className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
-          {t('batchFiles.drop')}
-        </div>
-      </FileDropzone>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <TextField
-          label={t('batchFiles.prefix')}
-          value={options.prefix}
-          onChange={(value) => update('prefix', value)}
-        />
-        <NumberField
-          label={t('batchFiles.start')}
-          value={options.start}
-          min={0}
-          step={1}
-          onChange={(value) => update('start', value)}
-        />
-        <TextField
-          label={t('batchFiles.find')}
-          value={options.find}
-          onChange={(value) => update('find', value)}
-        />
-        <TextField
-          label={t('batchFiles.replace')}
-          value={options.replace}
-          onChange={(value) => update('replace', value)}
-        />
-        <TextField
-          label={t('batchFiles.extension')}
-          value={options.extension}
-          onChange={(value) => update('extension', value)}
-        />
-      </div>
-      {!!files.length && (
-        <div className="divide-y rounded-xl border">
-          {files.map(({ file }, index) => (
-            <div
-              key={`${file.name}-${index}`}
-              className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-2"
-            >
-              <span className="truncate text-muted-foreground">
-                {file.name}
-              </span>
-              <span className="truncate font-medium">
-                {renamedFileName(file.name, index, options)}
-              </span>
+        <TabsList>
+          <TabsTrigger value="rename">{t('batchFiles.rename')}</TabsTrigger>
+          <TabsTrigger value="split">{t('recommended.splitMerge')}</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === 'split' ? (
+        <FileSplitMergePanel />
+      ) : (
+        <>
+          <FileDropzone
+            multiple
+            onFiles={setFiles}
+            className="flex min-h-36 items-center justify-center rounded-xl p-6 text-center"
+          >
+            <div>
+              <Files className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
+              {t('batchFiles.drop')}
             </div>
-          ))}
-        </div>
+          </FileDropzone>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <TextField
+              label={t('batchFiles.prefix')}
+              value={options.prefix}
+              onChange={(value) => update('prefix', value)}
+            />
+            <NumberField
+              label={t('batchFiles.start')}
+              value={options.start}
+              min={0}
+              step={1}
+              onChange={(value) => update('start', value)}
+            />
+            <TextField
+              label={t('batchFiles.find')}
+              value={options.find}
+              onChange={(value) => update('find', value)}
+            />
+            <TextField
+              label={t('batchFiles.replace')}
+              value={options.replace}
+              onChange={(value) => update('replace', value)}
+            />
+            <TextField
+              label={t('batchFiles.extension')}
+              value={options.extension}
+              onChange={(value) => update('extension', value)}
+            />
+          </div>
+          {!!files.length && (
+            <div className="divide-y rounded-xl border">
+              {files.map(({ file }, index) => (
+                <div
+                  key={`${file.name}-${index}`}
+                  className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-2"
+                >
+                  <span className="truncate text-muted-foreground">
+                    {file.name}
+                  </span>
+                  <span className="truncate font-medium">
+                    {renamedFileName(file.name, index, options)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {error && <div className="text-sm text-destructive">{error}</div>}
+          <Button
+            disabled={!files.length || loading}
+            onClick={() => void download()}
+          >
+            {loading ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            {t('batchFiles.download')}
+          </Button>
+        </>
       )}
-      {error && <div className="text-sm text-destructive">{error}</div>}
-      <Button
-        disabled={!files.length || loading}
-        onClick={() => void download()}
-      >
-        {loading ? (
-          <LoaderCircle className="h-4 w-4 animate-spin" />
-        ) : (
-          <Download className="h-4 w-4" />
-        )}
-        {t('batchFiles.download')}
-      </Button>
     </div>
   );
 }
