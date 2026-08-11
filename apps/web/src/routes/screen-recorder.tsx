@@ -1,12 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { Input } from '@/components/ui/input';
+import {
+  StringParam,
+  useQueryParam,
+  useQueryParams,
+} from '@/hooks/useQueryParams';
 import { db, type ScreenRecording } from '@/lib/db';
 import {
   formatRecordingDuration,
   formatRecordingSize,
   getRecordingExtension,
+  getRecommendedScreenRecordingBitrate,
+  getScreenCaptureVideoConstraints,
   getSupportedRecordingMimeType,
   isScreenRecordingSupported,
   ScreenRecordingWorkerClient,
@@ -32,6 +39,125 @@ export const Route = createFileRoute('/screen-recorder')({
 });
 
 type AudioOption = 'on' | 'off';
+
+type QualityQuery = {
+  resolution: string;
+  frameRate: string;
+  videoBitrate: string;
+};
+
+type CaptureInfo = {
+  width: number | null;
+  height: number | null;
+  frameRate: number | null;
+  displaySurface: string | null;
+  videoBitsPerSecond: number;
+};
+
+type Suggestion = { value: string; label: string };
+
+const RESOLUTION_OPTIONS: Suggestion[] = [
+  { value: '1280x720', label: '720p' },
+  { value: '1920x1080', label: '1080p' },
+  { value: '2560x1440', label: '1440p' },
+  { value: '3840x2160', label: '4K' },
+];
+const FRAME_RATE_OPTIONS: Suggestion[] = [15, 24, 25, 30, 48, 50, 60].map(
+  (value) => ({ value: String(value), label: 'FPS' }),
+);
+const BITRATE_OPTIONS: Suggestion[] = [
+  { value: '5', label: '720p · 30 FPS' },
+  { value: '7.5', label: '720p · 60 FPS' },
+  { value: '8', label: '1080p · 30 FPS' },
+  { value: '12', label: '1080p · 60 FPS' },
+  { value: '16', label: '1440p · 30 FPS' },
+  { value: '24', label: '1440p · 60 FPS' },
+  { value: '40', label: '4K · 30 FPS' },
+  { value: '60', label: '4K · 60 FPS' },
+];
+
+const QUALITY_QUERY_PARAMS = {
+  resolution: StringParam,
+  frameRate: StringParam,
+  videoBitrate: StringParam,
+};
+
+function EditableSuggestionInput({
+  id,
+  value,
+  options,
+  placeholder,
+  disabled,
+  inputMode,
+  onChange,
+}: {
+  id: string;
+  value: string;
+  options: Suggestion[];
+  placeholder: string;
+  disabled: boolean;
+  inputMode?: 'decimal';
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className="relative"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}
+    >
+      <Input
+        id={id}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls={`${id}-suggestions`}
+        aria-autocomplete="list"
+        autoComplete="off"
+        inputMode={inputMode}
+        value={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        onFocus={() => setOpen(true)}
+        onClick={() => setOpen(true)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') setOpen(false);
+        }}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      {open && !disabled && (
+        <div
+          id={`${id}-suggestions`}
+          role="listbox"
+          className="absolute z-50 mt-1 max-h-64 w-full overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+        >
+          {options.map((option) => (
+            <Button
+              key={option.value}
+              type="button"
+              role="option"
+              aria-selected={value === option.value}
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between px-2 font-normal"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                onChange(option.value);
+                setOpen(false);
+              }}
+            >
+              <span>{option.value}</span>
+              <span className="text-xs text-muted-foreground">
+                {option.label}
+              </span>
+            </Button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 type ActiveCapture = {
   displayStream: MediaStream;
@@ -110,6 +236,7 @@ function ScreenRecorderPage() {
   const [playbackUrl, setPlaybackUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [captureInfo, setCaptureInfo] = useState<CaptureInfo | null>(null);
   const [systemAudio, setSystemAudio] = useQueryParam<AudioOption>(
     'systemAudio',
     StringParam,
@@ -120,6 +247,20 @@ function ScreenRecorderPage() {
     StringParam,
     'off',
   );
+  const [quality, setQuality] =
+    useQueryParams<QualityQuery>(QUALITY_QUERY_PARAMS);
+  const resolution =
+    quality.resolution?.toLowerCase() === 'auto'
+      ? ''
+      : (quality.resolution ?? '');
+  const frameRate =
+    quality.frameRate?.toLowerCase() === 'auto'
+      ? ''
+      : (quality.frameRate ?? '');
+  const videoBitrate =
+    quality.videoBitrate?.toLowerCase() === 'auto'
+      ? ''
+      : (quality.videoBitrate ?? '');
 
   useEffect(() => {
     mountedRef.current = true;
@@ -204,6 +345,7 @@ function ScreenRecorderPage() {
     setError(null);
     setNotice(null);
     setElapsedMs(0);
+    setCaptureInfo(null);
 
     let displayStream: MediaStream | null = null;
     let microphoneStream: MediaStream | null = null;
@@ -215,8 +357,25 @@ function ScreenRecorderPage() {
       const mimeType = getSupportedRecordingMimeType();
       if (!mimeType) throw new Error(t('screenRecorder.unsupported'));
 
+      const videoConstraints = getScreenCaptureVideoConstraints(
+        resolution,
+        frameRate,
+      );
+      const normalizedVideoBitrate = videoBitrate.trim().toLowerCase();
+      const requestedVideoBitrate =
+        !normalizedVideoBitrate || normalizedVideoBitrate === 'auto'
+          ? null
+          : Math.round(Number(normalizedVideoBitrate) * 1_000_000);
+      if (
+        requestedVideoBitrate !== null &&
+        (!Number.isFinite(requestedVideoBitrate) ||
+          requestedVideoBitrate <= 0 ||
+          requestedVideoBitrate > 4_294_967_295)
+      )
+        throw new Error('INVALID_VIDEO_BITRATE');
+
       displayStream = await navigator.mediaDevices.getDisplayMedia({
-        video: { frameRate: { ideal: 30, max: 60 } },
+        video: videoConstraints,
         audio: systemAudio === 'on',
       });
       if (systemAudio === 'on' && displayStream.getAudioTracks().length === 0) {
@@ -243,7 +402,28 @@ function ScreenRecorderPage() {
       const fileName = `${id}.${getRecordingExtension(mimeType)}`;
       await storageWorker.open(fileName);
       storageOpened = true;
-      const recorder = new MediaRecorder(recordingStream, { mimeType });
+      const settings = displayStream.getVideoTracks()[0]?.getSettings() as
+        | (MediaTrackSettings & { displaySurface?: string })
+        | undefined;
+      const videoBitsPerSecond =
+        requestedVideoBitrate ??
+        getRecommendedScreenRecordingBitrate(
+          settings?.width ?? 1920,
+          settings?.height ?? 1080,
+          settings?.frameRate ?? 30,
+        );
+      const recorder = new MediaRecorder(recordingStream, {
+        mimeType,
+        videoBitsPerSecond,
+      });
+      const recordingQuality: CaptureInfo = {
+        width: settings?.width ?? null,
+        height: settings?.height ?? null,
+        frameRate: settings?.frameRate ?? null,
+        displaySurface: settings?.displaySurface ?? null,
+        videoBitsPerSecond: recorder.videoBitsPerSecond,
+      };
+      setCaptureInfo(recordingQuality);
 
       recorderRef.current = recorder;
       captureRef.current = activeCapture;
@@ -270,6 +450,7 @@ function ScreenRecorderPage() {
             mimeType,
             capture: activeCapture,
             storageWorker,
+            quality: recordingQuality,
           });
         },
         { once: true },
@@ -296,7 +477,16 @@ function ScreenRecorderPage() {
       const message =
         cause instanceof DOMException && cause.name === 'NotAllowedError'
           ? t('screenRecorder.permissionDenied')
-          : t('screenRecorder.startError', { msg: String(cause) });
+          : cause instanceof Error &&
+              cause.message === 'INVALID_CAPTURE_RESOLUTION'
+            ? t('screenRecorder.invalidResolution')
+            : cause instanceof Error &&
+                cause.message === 'INVALID_CAPTURE_FRAME_RATE'
+              ? t('screenRecorder.invalidFrameRate')
+              : cause instanceof Error &&
+                  cause.message === 'INVALID_VIDEO_BITRATE'
+                ? t('screenRecorder.invalidVideoBitrate')
+                : t('screenRecorder.startError', { msg: String(cause) });
       setError(message);
     }
   }
@@ -307,12 +497,14 @@ function ScreenRecorderPage() {
     mimeType,
     capture,
     storageWorker,
+    quality,
   }: {
     id: string;
     fileName: string;
     mimeType: string;
     capture: ActiveCapture;
     storageWorker: ScreenRecordingWorkerClient;
+    quality: CaptureInfo;
   }) {
     try {
       await writeChainRef.current;
@@ -326,6 +518,10 @@ function ScreenRecorderPage() {
         createdAt: startedAtRef.current,
         durationMs: Date.now() - startedAtRef.current,
         size,
+        width: quality.width ?? undefined,
+        height: quality.height ?? undefined,
+        frameRate: quality.frameRate ?? undefined,
+        videoBitsPerSecond: quality.videoBitsPerSecond,
       };
       await db.screenRecordings.put(recordingRecord);
     } catch (cause) {
@@ -460,6 +656,86 @@ function ScreenRecorderPage() {
               </span>
             </label>
           </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="space-y-2">
+              <label
+                htmlFor="screen-recorder-resolution"
+                className="text-sm font-medium"
+              >
+                {t('screenRecorder.resolution')}
+              </label>
+              <EditableSuggestionInput
+                id="screen-recorder-resolution"
+                value={resolution}
+                options={RESOLUTION_OPTIONS}
+                disabled={recording}
+                placeholder={t('screenRecorder.auto')}
+                onChange={(value) =>
+                  setQuality({ resolution: value || undefined })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="screen-recorder-frame-rate"
+                className="text-sm font-medium"
+              >
+                {t('screenRecorder.frameRate')}
+              </label>
+              <EditableSuggestionInput
+                id="screen-recorder-frame-rate"
+                inputMode="decimal"
+                value={frameRate}
+                options={FRAME_RATE_OPTIONS}
+                disabled={recording}
+                placeholder={t('screenRecorder.auto')}
+                onChange={(value) =>
+                  setQuality({ frameRate: value || undefined })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="screen-recorder-video-bitrate"
+                className="text-sm font-medium"
+              >
+                {t('screenRecorder.videoBitrate')}
+              </label>
+              <EditableSuggestionInput
+                id="screen-recorder-video-bitrate"
+                inputMode="decimal"
+                value={videoBitrate}
+                options={BITRATE_OPTIONS}
+                disabled={recording}
+                placeholder={t('screenRecorder.auto')}
+                onChange={(value) =>
+                  setQuality({ videoBitrate: value || undefined })
+                }
+              />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {t('screenRecorder.qualityDescription')}
+          </p>
+          {captureInfo && (
+            <div className="rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+              <span className="font-medium">
+                {t('screenRecorder.actualOutput')}：
+              </span>{' '}
+              {captureInfo.width && captureInfo.height
+                ? `${captureInfo.width} × ${captureInfo.height}`
+                : '—'}
+              {captureInfo.frameRate
+                ? ` · ${captureInfo.frameRate.toFixed(1)} FPS`
+                : ''}
+              {captureInfo.videoBitsPerSecond
+                ? ` · ${(captureInfo.videoBitsPerSecond / 1_000_000).toFixed(1)} Mbps`
+                : ''}
+              {captureInfo.displaySurface
+                ? ` · ${captureInfo.displaySurface}`
+                : ''}
+            </div>
+          )}
           <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl border bg-black">
             <video
               ref={previewRef}
@@ -540,6 +816,15 @@ function ScreenRecorderPage() {
                   <p className="text-xs text-muted-foreground">
                     {formatRecordingDuration(item.durationMs)} ·{' '}
                     {formatRecordingSize(item.size)}
+                    {item.width && item.height
+                      ? ` · ${item.width} × ${item.height}`
+                      : ''}
+                    {item.frameRate
+                      ? ` · ${item.frameRate.toFixed(1)} FPS`
+                      : ''}
+                    {item.videoBitsPerSecond
+                      ? ` · ${(item.videoBitsPerSecond / 1_000_000).toFixed(1)} Mbps`
+                      : ''}
                   </p>
                 </div>
                 <Button

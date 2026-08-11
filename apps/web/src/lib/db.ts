@@ -79,6 +79,10 @@ export interface ScreenRecording {
   createdAt: number;
   durationMs: number;
   size: number;
+  width?: number;
+  height?: number;
+  frameRate?: number;
+  videoBitsPerSecond?: number;
 }
 
 // ─── 数据库 ────────────────────────────────────────────────────────────────

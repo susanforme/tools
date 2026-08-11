@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { CssSpecificityPanel } from '@/components/tool-expansion-panels';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +12,7 @@ import {
   TabsTrigger,
 } from '../components/ui/tabs';
 
-type TabType = 'format' | 'minify' | 'scss';
+type TabType = 'format' | 'minify' | 'scss' | 'specificity';
 
 export const Route = createFileRoute('/css')({
   component: CssPage,
@@ -142,6 +143,9 @@ function CssPage() {
           <TabsTrigger value="format">{t('css.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('css.tabMinify')}</TabsTrigger>
           <TabsTrigger value="scss">{t('css.tabScss')}</TabsTrigger>
+          <TabsTrigger value="specificity">
+            {t('css.tabSpecificity')}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-4 mt-4">
@@ -208,6 +212,10 @@ function CssPage() {
             language="scss"
             outputLanguage="css"
           />
+        </TabsContent>
+
+        <TabsContent value="specificity" className="mt-4">
+          <CssSpecificityPanel />
         </TabsContent>
       </Tabs>
     </div>

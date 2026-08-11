@@ -777,12 +777,6 @@ const lifeNavItems: NavItem[] = [
     keywords: '衣服 鞋码 尺码 size shoe clothing',
   },
   {
-    to: '/meeting-planner',
-    icon: <Globe className="h-4 w-4 text-cyan-500" />,
-    labelKey: 'nav.meetingPlanner',
-    keywords: '时差 会议 城市 timezone meeting planner',
-  },
-  {
     to: '/ics-generator',
     icon: <FileText className="h-4 w-4 text-indigo-500" />,
     labelKey: 'nav.icsGenerator',

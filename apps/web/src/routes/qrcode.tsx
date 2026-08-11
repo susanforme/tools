@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { BarcodePanel } from '@/components/tool-expansion-panels';
 import { wifiQrValue } from '@/lib/developer-tools';
 import { structuredQrValue, type StructuredQrKind } from '@/lib/advanced-tools';
 import { createFileRoute } from '@tanstack/react-router';
@@ -505,7 +506,7 @@ function WifiTab() {
   );
 }
 
-type QrTabType = 'generate' | 'decode' | 'wifi' | 'structured';
+type QrTabType = 'generate' | 'decode' | 'wifi' | 'structured' | 'barcode';
 
 const STRUCTURED_FIELDS: Record<StructuredQrKind, string[]> = {
   vcard: ['name', 'organization', 'phone', 'email', 'url', 'address'],
@@ -618,6 +619,7 @@ function QrCodePage() {
           <TabsTrigger value="structured">
             {t('qrcode.tabStructured')}
           </TabsTrigger>
+          <TabsTrigger value="barcode">{t('qrcode.tabBarcode')}</TabsTrigger>
         </TabsList>
         <TabsContent value="generate" className="mt-4">
           <GenerateTab />
@@ -630,6 +632,9 @@ function QrCodePage() {
         </TabsContent>
         <TabsContent value="structured" className="mt-4">
           <StructuredTab />
+        </TabsContent>
+        <TabsContent value="barcode" className="mt-4">
+          <BarcodePanel />
         </TabsContent>
       </Tabs>
     </div>

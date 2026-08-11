@@ -63,7 +63,6 @@ import { Route as OauthRouteImport } from './routes/oauth'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
 import { Route as MortgageRouteImport } from './routes/mortgage'
 import { Route as MockDataRouteImport } from './routes/mock-data'
-import { Route as MeetingPlannerRouteImport } from './routes/meeting-planner'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JwtRouteImport } from './routes/jwt'
@@ -395,11 +394,6 @@ const MortgageRoute = MortgageRouteImport.update({
 const MockDataRoute = MockDataRouteImport.update({
   id: '/mock-data',
   path: '/mock-data',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MeetingPlannerRoute = MeetingPlannerRouteImport.update({
-  id: '/meeting-planner',
-  path: '/meeting-planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarkdownRoute = MarkdownRouteImport.update({
@@ -776,7 +770,6 @@ export interface FileRoutesByFullPath {
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
-  '/meeting-planner': typeof MeetingPlannerRoute
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
@@ -895,7 +888,6 @@ export interface FileRoutesByTo {
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
-  '/meeting-planner': typeof MeetingPlannerRoute
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
@@ -1015,7 +1007,6 @@ export interface FileRoutesById {
   '/jwt': typeof JwtRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
-  '/meeting-planner': typeof MeetingPlannerRoute
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/number-base': typeof NumberBaseRoute
@@ -1136,7 +1127,6 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/login'
     | '/markdown'
-    | '/meeting-planner'
     | '/mock-data'
     | '/mortgage'
     | '/number-base'
@@ -1255,7 +1245,6 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/login'
     | '/markdown'
-    | '/meeting-planner'
     | '/mock-data'
     | '/mortgage'
     | '/number-base'
@@ -1374,7 +1363,6 @@ export interface FileRouteTypes {
     | '/jwt'
     | '/login'
     | '/markdown'
-    | '/meeting-planner'
     | '/mock-data'
     | '/mortgage'
     | '/number-base'
@@ -1494,7 +1482,6 @@ export interface RootRouteChildren {
   JwtRoute: typeof JwtRoute
   LoginRoute: typeof LoginRoute
   MarkdownRoute: typeof MarkdownRoute
-  MeetingPlannerRoute: typeof MeetingPlannerRoute
   MockDataRoute: typeof MockDataRoute
   MortgageRoute: typeof MortgageRoute
   NumberBaseRoute: typeof NumberBaseRoute
@@ -1929,13 +1916,6 @@ declare module '@tanstack/react-router' {
       path: '/mock-data'
       fullPath: '/mock-data'
       preLoaderRoute: typeof MockDataRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/meeting-planner': {
-      id: '/meeting-planner'
-      path: '/meeting-planner'
-      fullPath: '/meeting-planner'
-      preLoaderRoute: typeof MeetingPlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/markdown': {
@@ -2438,7 +2418,6 @@ const rootRouteChildren: RootRouteChildren = {
   JwtRoute: JwtRoute,
   LoginRoute: LoginRoute,
   MarkdownRoute: MarkdownRoute,
-  MeetingPlannerRoute: MeetingPlannerRoute,
   MockDataRoute: MockDataRoute,
   MortgageRoute: MortgageRoute,
   NumberBaseRoute: NumberBaseRoute,

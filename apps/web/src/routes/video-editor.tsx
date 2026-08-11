@@ -1,5 +1,6 @@
 import { FileDropzone } from '@/components/file-dropzone';
 import { MediaResult } from '@/components/media-result';
+import { StreamingManifestPanel } from '@/components/tool-expansion-panels';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -38,7 +39,13 @@ export const Route = createFileRoute('/video-editor')({
   component: VideoEditorPage,
 });
 
-type VideoTab = 'transform' | 'merge' | 'audio' | 'thumbnail' | 'info';
+type VideoTab =
+  | 'transform'
+  | 'merge'
+  | 'audio'
+  | 'thumbnail'
+  | 'info'
+  | 'manifest';
 type AudioAction = 'extract' | 'replace';
 type Rotation = '0' | '90' | '180' | '270';
 type Aspect = 'original' | '16:9' | '9:16' | '1:1';
@@ -229,7 +236,7 @@ function VideoEditorPage() {
     }
   };
 
-  const needsSingleVideo = tab !== 'merge';
+  const needsSingleVideo = tab !== 'merge' && tab !== 'manifest';
   const sourceIsVideo = info?.tracks.some((track) => track.type === 'video');
 
   return (
@@ -254,13 +261,20 @@ function VideoEditorPage() {
         }}
       >
         <TabsList className="h-auto flex-wrap">
-          {(['transform', 'merge', 'audio', 'thumbnail', 'info'] as const).map(
-            (value) => (
-              <TabsTrigger key={value} value={value}>
-                {t(`videoEditor.tabs.${value}`)}
-              </TabsTrigger>
-            ),
-          )}
+          {(
+            [
+              'transform',
+              'merge',
+              'audio',
+              'thumbnail',
+              'info',
+              'manifest',
+            ] as const
+          ).map((value) => (
+            <TabsTrigger key={value} value={value}>
+              {t(`videoEditor.tabs.${value}`)}
+            </TabsTrigger>
+          ))}
         </TabsList>
       </Tabs>
 
@@ -269,6 +283,8 @@ function VideoEditorPage() {
           {error}
         </div>
       )}
+
+      {tab === 'manifest' && <StreamingManifestPanel />}
 
       {needsSingleVideo && !file && (
         <FileDropzone

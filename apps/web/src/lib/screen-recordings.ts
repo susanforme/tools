@@ -34,6 +34,66 @@ export const AUDIO_RECORDING_MIME_TYPES = [
   'audio/webm',
 ] as const;
 
+export function getScreenCaptureVideoConstraints(
+  resolution: string,
+  frameRate: string,
+): MediaTrackConstraints {
+  const constraints: MediaTrackConstraints = {};
+  const normalizedResolution = resolution.trim().toLowerCase();
+  if (normalizedResolution && normalizedResolution !== 'auto') {
+    const match = resolution.trim().match(/^(\d+)\s*[x×]\s*(\d+)$/i);
+    const width = Number(match?.[1]);
+    const height = Number(match?.[2]);
+    if (
+      !Number.isSafeInteger(width) ||
+      width <= 0 ||
+      !Number.isSafeInteger(height) ||
+      height <= 0
+    )
+      throw new Error('INVALID_CAPTURE_RESOLUTION');
+    constraints.width = { ideal: width, max: width };
+    constraints.height = { ideal: height, max: height };
+  }
+  const normalizedFrameRate = frameRate.trim().toLowerCase();
+  if (normalizedFrameRate && normalizedFrameRate !== 'auto') {
+    const value = Number(frameRate);
+    if (!Number.isFinite(value) || value <= 0)
+      throw new Error('INVALID_CAPTURE_FRAME_RATE');
+    constraints.frameRate = { ideal: value, max: value };
+  }
+  return constraints;
+}
+
+export function getRecommendedScreenRecordingBitrate(
+  width: number,
+  height: number,
+  frameRate: number,
+): number {
+  const pixels = width * height;
+  const highFrameRate = frameRate > 30;
+  const mbps =
+    pixels >= 3840 * 2160
+      ? highFrameRate
+        ? 60
+        : 40
+      : pixels >= 2560 * 1440
+        ? highFrameRate
+          ? 24
+          : 16
+        : pixels >= 1920 * 1080
+          ? highFrameRate
+            ? 12
+            : 8
+          : pixels >= 1280 * 720
+            ? highFrameRate
+              ? 7.5
+              : 5
+            : highFrameRate
+              ? 4
+              : 2.5;
+  return mbps * 1_000_000;
+}
+
 export function getSupportedRecordingMimeType(): string | null {
   if (typeof MediaRecorder === 'undefined') return null;
   return (

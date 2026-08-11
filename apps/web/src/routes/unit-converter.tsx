@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { KubernetesQuantityPanel } from '@/components/tool-expansion-panels';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -32,9 +33,12 @@ const CATEGORIES = [
   'volume',
   'speed',
   'data',
+  'kubernetes',
 ] as const;
 
-function isCategory(value: string | undefined): value is UnitCategory {
+type PageCategory = (typeof CATEGORIES)[number];
+
+function isCategory(value: string | undefined): value is PageCategory {
   return CATEGORIES.some((category) => category === value);
 }
 
@@ -62,8 +66,10 @@ function UnitConverterPage() {
   });
   const [input, setInput] = useState('1');
   const category = isCategory(query.category) ? query.category : 'length';
-  const units = UNIT_CATEGORIES[category];
-  const defaults = DEFAULT_UNITS[category];
+  const unitCategory: UnitCategory =
+    category === 'kubernetes' ? 'length' : category;
+  const units = UNIT_CATEGORIES[unitCategory];
+  const defaults = DEFAULT_UNITS[unitCategory];
   const from = units.some((unit) => unit.id === query.from)
     ? query.from!
     : defaults[0];
@@ -72,11 +78,15 @@ function UnitConverterPage() {
     : defaults[1];
   const value = Number(input);
   const result = Number.isFinite(value)
-    ? convertUnit(value, category, from, to)
+    ? convertUnit(value, unitCategory, from, to)
     : Number.NaN;
 
   const changeCategory = (value: string) => {
     if (!isCategory(value)) return;
+    if (value === 'kubernetes') {
+      setQuery({ category: value });
+      return;
+    }
     const [nextFrom, nextTo] = DEFAULT_UNITS[value];
     setQuery({ category: value, from: nextFrom, to: nextTo });
   };
@@ -91,7 +101,7 @@ function UnitConverterPage() {
       </div>
 
       <Tabs value={category} onValueChange={changeCategory}>
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-6">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 sm:grid-cols-4 lg:grid-cols-7">
           {CATEGORIES.map((item) => (
             <TabsTrigger key={item} value={item}>
               {t(`unitConverter.categories.${item}`)}
@@ -100,39 +110,45 @@ function UnitConverterPage() {
         </TabsList>
       </Tabs>
 
-      <div className="grid items-stretch gap-3 md:grid-cols-[1fr_auto_1fr]">
-        <UnitCard
-          label={t('unitConverter.from')}
-          value={input}
-          unit={from}
-          units={units}
-          onValueChange={setInput}
-          onUnitChange={(next) => setQuery({ from: next })}
-        />
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="self-center justify-self-center"
-          onClick={() => setQuery({ from: to, to: from })}
-          aria-label={t('unitConverter.swap')}
-        >
-          <ArrowLeftRight className="h-4 w-4" />
-        </Button>
-        <UnitCard
-          label={t('unitConverter.to')}
-          value={formatValue(result)}
-          unit={to}
-          units={units}
-          onUnitChange={(next) => setQuery({ to: next })}
-          readOnly
-        />
-      </div>
+      {category === 'kubernetes' ? (
+        <KubernetesQuantityPanel />
+      ) : (
+        <>
+          <div className="grid items-stretch gap-3 md:grid-cols-[1fr_auto_1fr]">
+            <UnitCard
+              label={t('unitConverter.from')}
+              value={input}
+              unit={from}
+              units={units}
+              onValueChange={setInput}
+              onUnitChange={(next) => setQuery({ from: next })}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="self-center justify-self-center"
+              onClick={() => setQuery({ from: to, to: from })}
+              aria-label={t('unitConverter.swap')}
+            >
+              <ArrowLeftRight className="h-4 w-4" />
+            </Button>
+            <UnitCard
+              label={t('unitConverter.to')}
+              value={formatValue(result)}
+              unit={to}
+              units={units}
+              onUnitChange={(next) => setQuery({ to: next })}
+              readOnly
+            />
+          </div>
 
-      {category === 'data' && (
-        <p className="text-xs text-muted-foreground">
-          {t('unitConverter.dataHint')}
-        </p>
+          {category === 'data' && (
+            <p className="text-xs text-muted-foreground">
+              {t('unitConverter.dataHint')}
+            </p>
+          )}
+        </>
       )}
     </div>
   );

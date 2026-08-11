@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { SamlPanel } from '@/components/tool-expansion-panels';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +13,7 @@ export const Route = createFileRoute('/oauth')({ component: OAuthPage });
 
 function OAuthPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useQueryParam<'pkce' | 'callback'>(
+  const [tab, setTab] = useQueryParam<'pkce' | 'callback' | 'saml'>(
     'tab',
     StringParam,
     'pkce',
@@ -65,11 +66,12 @@ function OAuthPage() {
       <h1 className="text-2xl font-bold">{t('oauth.title')}</h1>
       <Tabs
         value={tab}
-        onValueChange={(value) => setTab(value as 'pkce' | 'callback')}
+        onValueChange={(value) => setTab(value as 'pkce' | 'callback' | 'saml')}
       >
         <TabsList>
           <TabsTrigger value="pkce">PKCE</TabsTrigger>
           <TabsTrigger value="callback">{t('oauth.callback')}</TabsTrigger>
+          <TabsTrigger value="saml">SAML 2.0</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === 'pkce' ? (
@@ -101,7 +103,7 @@ function OAuthPage() {
             {t('oauth.generate')}
           </Button>
         </div>
-      ) : (
+      ) : tab === 'callback' ? (
         <div className="space-y-3">
           <Textarea
             value={callback}
@@ -110,13 +112,19 @@ function OAuthPage() {
           />
           <Button onClick={parse}>{t('oauth.parse')}</Button>
         </div>
+      ) : (
+        <SamlPanel />
       )}
-      <Textarea
-        readOnly
-        value={output}
-        className="min-h-80 font-mono text-xs"
-      />
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {tab !== 'saml' && (
+        <>
+          <Textarea
+            readOnly
+            value={output}
+            className="min-h-80 font-mono text-xs"
+          />
+          {error && <p className="text-sm text-destructive">{error}</p>}
+        </>
+      )}
     </div>
   );
 }

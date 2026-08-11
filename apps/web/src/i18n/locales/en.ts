@@ -77,7 +77,6 @@ const en = {
     paceCalculator: 'Pace calculator',
     recipeScale: 'Recipe scaler',
     sizeConverter: 'Clothing and shoe sizes',
-    meetingPlanner: 'Meeting planner',
     icsGenerator: 'Calendar event generator',
     randomPicker: 'Random groups and draw',
     billSplit: 'Bill splitter',
@@ -227,8 +226,20 @@ const en = {
     microphone: 'Microphone',
     microphoneDescription:
       'Also record microphone input with separate permission',
+    auto: 'Auto',
+    resolution: 'Resolution',
+    frameRate: 'Frame rate (FPS)',
+    videoBitrate: 'Video bitrate (Mbps)',
+    qualityDescription:
+      'Leave blank for auto: resolution and frame rate follow the source, while bitrate matches the captured resolution and frame rate. Click a field for suggestions or type a value.',
+    actualOutput: 'Actual output',
     systemAudioUnavailable:
       'The selected display source did not provide system audio. Video recording will continue.',
+    invalidResolution:
+      'Resolution must be positive integer width x height, for example 1920x1080',
+    invalidFrameRate: 'Frame rate must be greater than 0',
+    invalidVideoBitrate:
+      'Video bitrate must be greater than 0 and no more than 4294.967295 Mbps',
     previewEmpty: 'Choose a screen or window to start the preview',
     start: 'Start recording',
     stop: 'Stop recording',
@@ -355,12 +366,6 @@ const en = {
     international: 'Conversion',
     reference:
       'Common reference sizes; check the brand size chart before buying.',
-  },
-  meetingPlanner: {
-    title: 'Meeting planner',
-    date: 'Date',
-    utcTime: 'UTC time',
-    cities: 'Cities',
   },
   icsGenerator: {
     title: 'Calendar event generator',
@@ -849,6 +854,7 @@ const en = {
       volume: 'Volume',
       speed: 'Speed',
       data: 'Data size',
+      kubernetes: 'Kubernetes',
     },
   },
   imagePrivacy: {
@@ -910,6 +916,7 @@ const en = {
       audio: 'Audio track',
       thumbnail: 'Thumbnail',
       info: 'Media info',
+      manifest: 'HLS / DASH',
     },
     rotation: 'Rotation',
     aspect: 'Aspect ratio',
@@ -1310,12 +1317,6 @@ const en = {
         desc: 'Find common sizes from foot length or chest size',
         tagShoe: 'Shoes',
         tagClothing: 'Clothing',
-      },
-      meetingPlanner: {
-        title: 'Meeting planner',
-        desc: 'View one meeting time across multiple cities',
-        tagCities: 'Multiple cities',
-        tagTimezones: 'Time zones',
       },
       icsGenerator: {
         title: 'Calendar event generator',
@@ -1834,6 +1835,7 @@ const en = {
     tabDecode: 'Decode QR',
     tabWifi: 'Wi-Fi QR',
     tabStructured: 'Structured content',
+    tabBarcode: 'Barcode',
     generate: 'Generate QR code',
     structuredKinds: {
       vcard: 'Contact vCard',
@@ -1929,6 +1931,7 @@ const en = {
     tabFormat: 'Format',
     tabMinify: 'Minify',
     tabScss: 'SCSS → CSS',
+    tabSpecificity: 'Specificity',
     convertTitle: 'px / vw / rem Converter',
     convertHint: 'Convert between px, rem and vw',
     viewportWidth: 'vw Base (Viewport Width)',
@@ -1970,6 +1973,7 @@ const en = {
   },
   xml: {
     title: 'XML Tools',
+    tabFormat: 'Format / validate',
     format: 'Format',
     validate: 'Validate',
     minify: 'Minify',
@@ -3054,6 +3058,28 @@ const en = {
     generate: 'Generate authorization parameters',
     parse: 'Parse callback',
     failed: 'OAuth operation failed: {{msg}}',
+  },
+  toolExpansion: {
+    failed: 'Operation failed: {{msg}}',
+    inspect: 'Inspect',
+    compare: 'Compare',
+    evaluate: 'Run XPath',
+    generate: 'Generate',
+    download: 'Download PNG',
+    convert: 'Convert',
+    samlPlaceholder:
+      'Paste a SAMLRequest, SAMLResponse, redirect URL, or raw XML',
+    samlWarning:
+      'Decodes and inspects fields only; XML signatures are not verified.',
+    endpoint: 'GraphQL endpoint',
+    operationName: 'Operation name (optional)',
+    bearerToken: 'Bearer token (optional)',
+    buildRequest: 'Build request and cURL',
+    manifestPlaceholder: 'Paste .m3u8 or MPD content',
+    selectorA: 'Selector A',
+    selectorB: 'Selector B',
+    cpuQuantity: 'CPU quantity, for example 500m',
+    memoryQuantity: 'Memory quantity, for example 512Mi',
   },
   modern: {
     secret: 'Signing key',

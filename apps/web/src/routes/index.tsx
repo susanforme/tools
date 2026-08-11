@@ -1283,18 +1283,6 @@ const lifeTools = [
     border: 'hover:border-violet-300 dark:hover:border-violet-700',
   },
   {
-    to: '/meeting-planner' as const,
-    icon: <Globe className="h-8 w-8 text-cyan-500" />,
-    titleKey: 'home.tools.meetingPlanner.title',
-    descKey: 'home.tools.meetingPlanner.desc',
-    tagKeys: [
-      'home.tools.meetingPlanner.tagCities',
-      'home.tools.meetingPlanner.tagTimezones',
-    ],
-    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
-    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
-  },
-  {
     to: '/ics-generator' as const,
     icon: <FileText className="h-8 w-8 text-indigo-500" />,
     titleKey: 'home.tools.icsGenerator.title',

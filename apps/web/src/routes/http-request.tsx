@@ -1,5 +1,6 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { CacheControlPanel } from '@/components/extra-tool-panels';
+import { GraphqlPanel } from '@/components/tool-expansion-panels';
 import {
   ContentNegotiationPanel,
   ForwardedPanel,
@@ -131,6 +132,7 @@ const TABS = [
   'headers',
   'auth',
   'body',
+  'graphql',
   'cache',
   'structured',
   'rate-limit',
@@ -147,6 +149,7 @@ const TAB_LABELS: Record<Tab, string> = {
   headers: 'Headers',
   auth: 'Basic Auth',
   body: 'Body',
+  graphql: 'GraphQL',
   cache: 'Cache-Control',
   structured: 'Structured Fields',
   'rate-limit': 'RateLimit',
@@ -492,6 +495,7 @@ function HttpRequestPage() {
               )}
             </div>
           )}
+          {tab === 'graphql' && <GraphqlPanel />}
           {tab === 'cache' && <CacheControlPanel />}
           {tab === 'structured' && <StructuredFieldPanel />}
           {tab === 'rate-limit' && <RateLimitPanel />}
