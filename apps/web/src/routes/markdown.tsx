@@ -1,7 +1,7 @@
 import { useTheme } from '@/hooks/use-theme';
 import { MermaidPanel } from '@/components/community-tool-panels';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
-import { renderMarkdown } from '@/lib/markdown';
+import { markdownToToc, renderMarkdown } from '@/lib/markdown';
 import Editor from '@monaco-editor/react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Eraser, WandSparkles } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Textarea } from '../components/ui/textarea';
 import '../lib/monaco';
 
 export const Route = createFileRoute('/markdown')({ component: MarkdownPage });
@@ -36,7 +37,7 @@ console.log(greeting);
 > 内容只在本地浏览器中处理。`;
 
 type MarkdownView = 'split' | 'edit' | 'preview';
-type MarkdownTool = 'markdown' | 'mermaid';
+type MarkdownTool = 'markdown' | 'mermaid' | 'toc';
 
 function MarkdownPage() {
   const { t } = useTranslation();
@@ -107,11 +108,38 @@ function MarkdownPage() {
         <TabsList>
           <TabsTrigger value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="mermaid">Mermaid</TabsTrigger>
+          <TabsTrigger value="toc">{t('markdown.toc')}</TabsTrigger>
         </TabsList>
       </Tabs>
 
       {tool === 'mermaid' ? (
         <MermaidPanel />
+      ) : tool === 'toc' ? (
+        <div className="grid min-w-0 gap-4 md:grid-cols-2">
+          <section className="min-w-0 overflow-hidden rounded-lg border bg-card">
+            <div className="border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">
+              {t('markdown.source')}
+            </div>
+            <Editor
+              height="620px"
+              language="markdown"
+              value={input}
+              onChange={(value) => setInput(value ?? '')}
+              theme={theme === 'dark' ? 'vs-dark' : 'light'}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                scrollBeyondLastLine: false,
+                wordWrap: 'on',
+              }}
+            />
+          </section>
+          <Textarea
+            readOnly
+            value={markdownToToc(input)}
+            className="min-h-[620px] resize-none font-mono text-sm"
+          />
+        </div>
       ) : (
         <>
           <div className="flex flex-wrap items-center gap-2">

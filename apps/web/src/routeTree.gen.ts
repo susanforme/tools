@@ -34,6 +34,7 @@ import { Route as TemperatureRouteImport } from './routes/temperature'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SvgToolkitRouteImport } from './routes/svg-toolkit'
 import { Route as SubtitleEditorRouteImport } from './routes/subtitle-editor'
+import { Route as StreamingManifestRouteImport } from './routes/streaming-manifest'
 import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
 import { Route as SqlDataRouteImport } from './routes/sql-data'
 import { Route as SqlRouteImport } from './routes/sql'
@@ -250,6 +251,11 @@ const SvgToolkitRoute = SvgToolkitRouteImport.update({
 const SubtitleEditorRoute = SubtitleEditorRouteImport.update({
   id: '/subtitle-editor',
   path: '/subtitle-editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreamingManifestRoute = StreamingManifestRouteImport.update({
+  id: '/streaming-manifest',
+  path: '/streaming-manifest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SqlPlaygroundRoute = SqlPlaygroundRouteImport.update({
@@ -806,6 +812,7 @@ export interface FileRoutesByFullPath {
   '/sql': typeof SqlRoute
   '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
+  '/streaming-manifest': typeof StreamingManifestRoute
   '/subtitle-editor': typeof SubtitleEditorRoute
   '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
@@ -925,6 +932,7 @@ export interface FileRoutesByTo {
   '/sql': typeof SqlRoute
   '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
+  '/streaming-manifest': typeof StreamingManifestRoute
   '/subtitle-editor': typeof SubtitleEditorRoute
   '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
@@ -1045,6 +1053,7 @@ export interface FileRoutesById {
   '/sql': typeof SqlRoute
   '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
+  '/streaming-manifest': typeof StreamingManifestRoute
   '/subtitle-editor': typeof SubtitleEditorRoute
   '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
@@ -1166,6 +1175,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/sql-data'
     | '/sql-playground'
+    | '/streaming-manifest'
     | '/subtitle-editor'
     | '/svg-toolkit'
     | '/table-convert'
@@ -1285,6 +1295,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/sql-data'
     | '/sql-playground'
+    | '/streaming-manifest'
     | '/subtitle-editor'
     | '/svg-toolkit'
     | '/table-convert'
@@ -1404,6 +1415,7 @@ export interface FileRouteTypes {
     | '/sql'
     | '/sql-data'
     | '/sql-playground'
+    | '/streaming-manifest'
     | '/subtitle-editor'
     | '/svg-toolkit'
     | '/table-convert'
@@ -1524,6 +1536,7 @@ export interface RootRouteChildren {
   SqlRoute: typeof SqlRoute
   SqlDataRoute: typeof SqlDataRoute
   SqlPlaygroundRoute: typeof SqlPlaygroundRoute
+  StreamingManifestRoute: typeof StreamingManifestRoute
   SubtitleEditorRoute: typeof SubtitleEditorRoute
   SvgToolkitRoute: typeof SvgToolkitRoute
   TableConvertRoute: typeof TableConvertRoute
@@ -1726,6 +1739,13 @@ declare module '@tanstack/react-router' {
       path: '/subtitle-editor'
       fullPath: '/subtitle-editor'
       preLoaderRoute: typeof SubtitleEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streaming-manifest': {
+      id: '/streaming-manifest'
+      path: '/streaming-manifest'
+      fullPath: '/streaming-manifest'
+      preLoaderRoute: typeof StreamingManifestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sql-playground': {
@@ -2468,6 +2488,7 @@ const rootRouteChildren: RootRouteChildren = {
   SqlRoute: SqlRoute,
   SqlDataRoute: SqlDataRoute,
   SqlPlaygroundRoute: SqlPlaygroundRoute,
+  StreamingManifestRoute: StreamingManifestRoute,
   SubtitleEditorRoute: SubtitleEditorRoute,
   SvgToolkitRoute: SvgToolkitRoute,
   TableConvertRoute: TableConvertRoute,

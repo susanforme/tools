@@ -264,6 +264,36 @@ async function transformVideo(
   }
 }
 
+async function trimVideo(
+  request: Extract<MediaWorkerRequest, { type: 'video-trim' }>,
+): Promise<void> {
+  const { Conversion, Mp4OutputFormat, WebMOutputFormat } =
+    await import('mediabunny');
+  const input = await createInput(request.file);
+  const stored = await createStoredOutput(
+    request.format === 'mp4' ? new Mp4OutputFormat() : new WebMOutputFormat(),
+    'clip',
+  );
+  try {
+    const conversion = await Conversion.init({
+      input,
+      output: stored.output,
+      tracks: 'primary',
+      trim: { start: request.start, end: request.end },
+      showWarnings: false,
+    });
+    if (!conversion.isValid) throw new Error('CONVERSION_UNAVAILABLE');
+    conversion.onProgress = postProgress;
+    await conversion.execute();
+    await postStored(stored);
+  } catch (cause) {
+    await failStored(stored);
+    throw cause;
+  } finally {
+    input.dispose();
+  }
+}
+
 async function extractAudio(file: File): Promise<void> {
   const { Conversion, WavOutputFormat } = await import('mediabunny');
   const input = await createInput(file);
@@ -737,6 +767,8 @@ async function handle(request: MediaWorkerRequest): Promise<void> {
       return inspect(request.file);
     case 'video-transform':
       return transformVideo(request);
+    case 'video-trim':
+      return trimVideo(request);
     case 'merge-video':
       return mergeVideo(request.files);
     case 'extract-audio':

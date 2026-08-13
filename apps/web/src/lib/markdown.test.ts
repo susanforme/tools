@@ -1,7 +1,7 @@
 import type { WindowLike } from 'dompurify';
 import { JSDOM } from 'jsdom';
 import { describe, expect, test } from 'vitest';
-import { renderMarkdown } from './markdown';
+import { markdownToToc, renderMarkdown } from './markdown';
 
 describe('Markdown preview', () => {
   test('renders GFM and removes executable HTML', () => {
@@ -13,5 +13,11 @@ describe('Markdown preview', () => {
     expect(html).toContain('<table>');
     expect(html).not.toContain('onerror');
     expect(html).not.toContain('<script');
+  });
+
+  test('builds a deduplicated Markdown table of contents', () => {
+    expect(markdownToToc('# API\n## Users\n## Users')).toBe(
+      '- [API](#api)\n  - [Users](#users)\n  - [Users](#users-1)',
+    );
   });
 });

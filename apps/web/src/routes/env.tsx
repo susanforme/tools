@@ -1,5 +1,10 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
-import { diffEnv, formatEnv, isSensitiveEnvKey } from '@/lib/developer-tools';
+import {
+  diffEnv,
+  formatEnv,
+  generateEnvExample,
+  isSensitiveEnvKey,
+} from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -10,7 +15,7 @@ import { Textarea } from '../components/ui/textarea';
 
 export const Route = createFileRoute('/env')({ component: EnvPage });
 
-type Mode = 'format' | 'diff';
+type Mode = 'format' | 'diff' | 'example';
 const SAMPLE =
   'API_URL=https://example.com\nAPI_TOKEN=secret\nNODE_ENV=production';
 
@@ -23,6 +28,7 @@ function EnvPage() {
   );
   const [reveal, setReveal] = useState(false);
   const output = useMemo(() => formatEnv(left, reveal), [left, reveal]);
+  const example = useMemo(() => generateEnvExample(left), [left]);
   const diff = useMemo(() => diffEnv(left, right), [left, right]);
   const displayValue = (key: string, value: string | null) =>
     value === null
@@ -39,22 +45,25 @@ function EnvPage() {
           <TabsList>
             <TabsTrigger value="format">{t('envTool.format')}</TabsTrigger>
             <TabsTrigger value="diff">{t('envTool.diff')}</TabsTrigger>
+            <TabsTrigger value="example">{t('envTool.example')}</TabsTrigger>
           </TabsList>
         </Tabs>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setReveal((value) => !value)}
-        >
-          {reveal ? (
-            <EyeOff className="h-4 w-4" />
-          ) : (
-            <Eye className="h-4 w-4" />
-          )}
-          {t(reveal ? 'envTool.hide' : 'envTool.reveal')}
-        </Button>
+        {mode !== 'example' && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setReveal((value) => !value)}
+          >
+            {reveal ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+            {t(reveal ? 'envTool.hide' : 'envTool.reveal')}
+          </Button>
+        )}
       </div>
-      {mode === 'format' ? (
+      {mode === 'format' || mode === 'example' ? (
         <div className="grid gap-4 lg:grid-cols-2">
           <Textarea
             value={left}
@@ -63,7 +72,7 @@ function EnvPage() {
           />
           <Textarea
             readOnly
-            value={output}
+            value={mode === 'example' ? example : output}
             className="min-h-[480px] font-mono text-xs"
           />
         </div>

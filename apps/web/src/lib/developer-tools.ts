@@ -280,6 +280,33 @@ export function openApiRequestExample(
     .join('\n');
 }
 
+export function openApiResponseExamples(
+  document: unknown,
+  endpoint: OpenApiEndpoint,
+): Record<string, unknown> {
+  const root = isRecord(document) ? document : {};
+  if (!isRecord(endpoint.operation.responses)) return {};
+  return Object.fromEntries(
+    Object.entries(endpoint.operation.responses).flatMap(([status, value]) => {
+      const response = resolveLocalRef(root, value);
+      if (!isRecord(response) || !isRecord(response.content)) return [];
+      return Object.entries(response.content).flatMap(([mediaType, media]) => {
+        if (!isRecord(media)) return [];
+        const namedExample = isRecord(media.examples)
+          ? Object.values(media.examples).find(isRecord)
+          : null;
+        const example =
+          'example' in media
+            ? media.example
+            : namedExample && 'value' in namedExample
+              ? namedExample.value
+              : exampleFromSchema(resolveLocalRef(root, media.schema));
+        return [[`${status} ${mediaType}`, example] as const];
+      });
+    }),
+  );
+}
+
 export function extractOpenApiSchemas(document: unknown): JsonObject {
   if (!isRecord(document) || !isRecord(document.components)) return {};
   return isRecord(document.components.schemas)
@@ -320,6 +347,12 @@ export function formatEnv(text: string, revealSecrets: boolean): string {
     .join('\n');
 }
 
+export function generateEnvExample(text: string): string {
+  return parseEnv(text)
+    .map(({ key, value }) => `${key}=${isSensitiveEnvKey(key) ? '' : value}`)
+    .join('\n');
+}
+
 export type EnvDiff = {
   key: string;
   left: string | null;
@@ -347,6 +380,55 @@ export function diffEnv(left: string, right: string): EnvDiff[] {
               : 'changed',
     };
   });
+}
+
+export type TableColumnProfile = {
+  name: string;
+  type: 'empty' | 'boolean' | 'number' | 'date' | 'string' | 'mixed';
+  empty: number;
+  unique: number;
+};
+
+export type TableProfile = {
+  rows: number;
+  columns: number;
+  duplicateRows: number;
+  irregularRows: number;
+  columnProfiles: TableColumnProfile[];
+};
+
+export function profileTable(rows: string[][]): TableProfile {
+  const [header = [], ...data] = rows;
+  const rowKeys = data.map((row) => JSON.stringify(row));
+  return {
+    rows: data.length,
+    columns: header.length,
+    duplicateRows: rowKeys.length - new Set(rowKeys).size,
+    irregularRows: data.filter((row) => row.length !== header.length).length,
+    columnProfiles: header.map((name, index) => {
+      const values = data.map((row) => row[index] ?? '');
+      const nonEmpty = values.filter((value) => value.trim() !== '');
+      const types = new Set(
+        nonEmpty.map((value) => {
+          if (/^(?:true|false)$/i.test(value)) return 'boolean';
+          if (Number.isFinite(Number(value))) return 'number';
+          if (/^\d{4}-\d{2}-\d{2}(?:[T ][^\s]+)?$/.test(value)) return 'date';
+          return 'string';
+        }),
+      );
+      return {
+        name: name || `column_${index + 1}`,
+        type:
+          nonEmpty.length === 0
+            ? 'empty'
+            : types.size === 1
+              ? ([...types][0] as TableColumnProfile['type'])
+              : 'mixed',
+        empty: values.length - nonEmpty.length,
+        unique: new Set(nonEmpty).size,
+      };
+    }),
+  };
 }
 
 function sqlValue(value: unknown): string {
@@ -449,6 +531,70 @@ export function compareVersions(left: string, right: string): -1 | 0 | 1 {
     return aPart < bPart ? -1 : 1;
   }
   return 0;
+}
+
+const PACKAGE_DEPENDENCY_GROUPS = [
+  'dependencies',
+  'devDependencies',
+  'peerDependencies',
+  'optionalDependencies',
+] as const;
+type PackageDependencyGroup = (typeof PACKAGE_DEPENDENCY_GROUPS)[number];
+
+export type PackageDependencyChange = {
+  name: string;
+  before: string | null;
+  after: string | null;
+  beforeGroup: PackageDependencyGroup | null;
+  afterGroup: PackageDependencyGroup | null;
+  status: 'added' | 'removed' | 'changed' | 'moved';
+};
+
+function packageDependencies(input: string) {
+  const value: unknown = JSON.parse(input);
+  if (!isRecord(value)) throw new Error('INVALID_PACKAGE_JSON');
+  const result = new Map<
+    string,
+    { version: string; group: PackageDependencyGroup }
+  >();
+  for (const group of PACKAGE_DEPENDENCY_GROUPS) {
+    if (!isRecord(value[group])) continue;
+    for (const [name, version] of Object.entries(value[group])) {
+      if (typeof version === 'string') result.set(name, { version, group });
+    }
+  }
+  return result;
+}
+
+export function diffPackageJson(
+  before: string,
+  after: string,
+): PackageDependencyChange[] {
+  const left = packageDependencies(before);
+  const right = packageDependencies(after);
+  return [...new Set([...left.keys(), ...right.keys()])]
+    .sort()
+    .flatMap((name) => {
+      const a = left.get(name);
+      const b = right.get(name);
+      if (a?.version === b?.version && a?.group === b?.group) return [];
+      return [
+        {
+          name,
+          before: a?.version ?? null,
+          after: b?.version ?? null,
+          beforeGroup: a?.group ?? null,
+          afterGroup: b?.group ?? null,
+          status: !a
+            ? 'added'
+            : !b
+              ? 'removed'
+              : a.version === b.version
+                ? 'moved'
+                : 'changed',
+        } satisfies PackageDependencyChange,
+      ];
+    });
 }
 
 export type BundleEntry = { name: string; size: number };

@@ -1,3 +1,5 @@
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { profileTable } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { ArrowLeftRight } from 'lucide-react';
 import { useState } from 'react';
@@ -12,6 +14,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { Separator } from '../components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/csv-convert')({
   component: CsvConvertPage,
@@ -133,6 +136,7 @@ type OutputFormat = (typeof OUTPUT_FORMATS)[number];
 
 const INPUT_FORMATS = ['csv', 'tsv', 'json'] as const;
 type InputFormat = (typeof INPUT_FORMATS)[number];
+type Tab = 'convert' | 'profile';
 
 /** 输出格式 → 可用作输入格式（SQL 无法直接反解，降级为 csv） */
 function outputToInput(fmt: OutputFormat): InputFormat {
@@ -151,6 +155,7 @@ function inputToOutput(fmt: InputFormat, current: OutputFormat): OutputFormat {
 // ─── component ────────────────────────────────────────────────────────────────
 function CsvConvertPage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<Tab>('tab', StringParam, 'convert');
   const [input, setInput] = useState(DEFAULT_CSV);
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -160,7 +165,7 @@ function CsvConvertPage() {
 
   const getInputDelimiter = (fmt: InputFormat) => (fmt === 'tsv' ? '\t' : ',');
 
-  const convert = () => {
+  const process = () => {
     setError(null);
     try {
       let rows: string[][];
@@ -173,6 +178,24 @@ function CsvConvertPage() {
 
       if (rows.length === 0) {
         setError(t('csvConvert.emptyInput'));
+        return;
+      }
+
+      if (tab === 'profile') {
+        const profile = profileTable(rows);
+        setOutput(
+          [
+            `${t('csvConvert.rows')}: ${profile.rows}`,
+            `${t('csvConvert.columns')}: ${profile.columns}`,
+            `${t('csvConvert.duplicates')}: ${profile.duplicateRows}`,
+            `${t('csvConvert.irregular')}: ${profile.irregularRows}`,
+            '',
+            ...profile.columnProfiles.map(
+              (column) =>
+                `${column.name}\t${t(`csvConvert.types.${column.type}`)}\t${t('csvConvert.empty')}: ${column.empty}\t${t('csvConvert.unique')}: ${column.unique}`,
+            ),
+          ].join('\n'),
+        );
         return;
       }
 
@@ -219,6 +242,13 @@ function CsvConvertPage() {
         <h1 className="text-2xl font-bold">{t('csvConvert.title')}</h1>
       </div>
 
+      <Tabs value={tab} onValueChange={(value) => setTab(value as Tab)}>
+        <TabsList>
+          <TabsTrigger value="convert">{t('csvConvert.convert')}</TabsTrigger>
+          <TabsTrigger value="profile">{t('csvConvert.profile')}</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       {/* 工具栏 */}
       <div className="flex items-center gap-3 flex-wrap">
         {/* 输入格式 */}
@@ -243,38 +273,41 @@ function CsvConvertPage() {
           </Select>
         </div>
 
-        {/* 互换按钮 */}
-        <button
-          onClick={swap}
-          title={t('csvConvert.swap')}
-          className="flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-        >
-          <ArrowLeftRight className="w-4 h-4" />
-        </button>
+        {tab === 'convert' && (
+          <button
+            onClick={swap}
+            title={t('csvConvert.swap')}
+            className="flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          >
+            <ArrowLeftRight className="w-4 h-4" />
+          </button>
+        )}
 
         {/* 输出格式 */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm shrink-0 text-muted-foreground">
-            {t('csvConvert.outputFmt')}
-          </span>
-          <Select
-            value={outputFmt}
-            onValueChange={(v) => setOutputFmt(v as OutputFormat)}
-          >
-            <SelectTrigger className="h-8 w-32 text-sm">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="csv">CSV</SelectItem>
-              <SelectItem value="tsv">TSV</SelectItem>
-              <SelectItem value="json">JSON</SelectItem>
-              <SelectItem value="sql">SQL INSERT</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {tab === 'convert' && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm shrink-0 text-muted-foreground">
+              {t('csvConvert.outputFmt')}
+            </span>
+            <Select
+              value={outputFmt}
+              onValueChange={(v) => setOutputFmt(v as OutputFormat)}
+            >
+              <SelectTrigger className="h-8 w-32 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="tsv">TSV</SelectItem>
+                <SelectItem value="json">JSON</SelectItem>
+                <SelectItem value="sql">SQL INSERT</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* SQL 表名（仅输出 SQL 时显示） */}
-        {outputFmt === 'sql' && (
+        {tab === 'convert' && outputFmt === 'sql' && (
           <>
             <Separator orientation="vertical" className="h-6" />
             <div className="flex items-center gap-2">
@@ -292,8 +325,8 @@ function CsvConvertPage() {
         )}
 
         <Separator orientation="vertical" className="h-6" />
-        <Button size="sm" onClick={convert}>
-          {t('csvConvert.convert')}
+        <Button size="sm" onClick={process}>
+          {t(tab === 'profile' ? 'csvConvert.profile' : 'csvConvert.convert')}
         </Button>
         <Button size="sm" variant="outline" onClick={clear}>
           {t('csvConvert.clear')}
@@ -307,7 +340,7 @@ function CsvConvertPage() {
         inputPlaceholder={t('csvConvert.inputPlaceholder')}
         error={error}
         language={inputLanguage}
-        outputLanguage={outputLanguage}
+        outputLanguage={tab === 'profile' ? 'plaintext' : outputLanguage}
       />
     </div>
   );

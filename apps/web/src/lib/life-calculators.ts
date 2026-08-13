@@ -588,6 +588,80 @@ export function createIcsEvent(input: {
   ].join('\r\n');
 }
 
+export type IcsInspection = {
+  events: Array<{
+    summary: string;
+    start: string;
+    end: string;
+    location: string;
+    recurrence: string;
+  }>;
+  issues: Array<{ event: number | null; code: string }>;
+};
+
+function icsTimestamp(value: string): number | null {
+  const match = value.match(
+    /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?$/,
+  );
+  if (!match) return null;
+  const parts = match.slice(1, 7).map((part) => Number(part ?? 0));
+  const [year, month, day, hour, minute, second] = parts;
+  // ponytail: 无 VTIMEZONE 引擎时按本地时间比较；需要展开跨时区 RRULE 时再引入成熟 iCalendar 库。
+  return match[7]
+    ? Date.UTC(year, month - 1, day, hour, minute, second)
+    : new Date(year, month - 1, day, hour, minute, second).getTime();
+}
+
+function unescapeIcs(value: string): string {
+  return value.replace(/\\n/gi, '\n').replace(/\\([,;\\])/g, '$1');
+}
+
+export function inspectIcs(input: string): IcsInspection {
+  const lines = input.replace(/\r?\n[ \t]/g, '').split(/\r?\n/);
+  const issues: IcsInspection['issues'] = [];
+  if (!lines.includes('BEGIN:VCALENDAR') || !lines.includes('END:VCALENDAR'))
+    issues.push({ event: null, code: 'calendarBounds' });
+  const events: IcsInspection['events'] = [];
+  let current: Record<string, string> | null = null;
+  for (const line of lines) {
+    if (line === 'BEGIN:VEVENT') {
+      current = {};
+      continue;
+    }
+    if (line === 'END:VEVENT') {
+      if (!current) continue;
+      const event = {
+        summary: unescapeIcs(current.SUMMARY ?? ''),
+        start: current.DTSTART ?? '',
+        end: current.DTEND ?? '',
+        location: unescapeIcs(current.LOCATION ?? ''),
+        recurrence: current.RRULE ?? '',
+      };
+      const index = events.length + 1;
+      if (!event.start) issues.push({ event: index, code: 'missingStart' });
+      const start = icsTimestamp(event.start);
+      const end = event.end ? icsTimestamp(event.end) : null;
+      if (event.start && start === null)
+        issues.push({ event: index, code: 'invalidStart' });
+      if (event.end && end === null)
+        issues.push({ event: index, code: 'invalidEnd' });
+      if (start !== null && end !== null && end <= start)
+        issues.push({ event: index, code: 'invalidRange' });
+      events.push(event);
+      current = null;
+      continue;
+    }
+    if (!current) continue;
+    const separator = line.indexOf(':');
+    if (separator < 1) continue;
+    current[line.slice(0, separator).split(';')[0]!.toUpperCase()] = line.slice(
+      separator + 1,
+    );
+  }
+  if (events.length === 0) issues.push({ event: null, code: 'noEvents' });
+  return { events, issues };
+}
+
 export function futureValue(
   initial: number,
   monthlyContribution: number,

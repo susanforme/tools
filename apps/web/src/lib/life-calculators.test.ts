@@ -14,6 +14,7 @@ import {
   createIcsEvent,
   dateInterval,
   futureValue,
+  inspectIcs,
   materialEstimate,
   purchasingPower,
   requiredMonthlySavings,
@@ -61,6 +62,11 @@ describe('life calculators', () => {
         end: new Date('2026-08-07T01:00:00Z'),
       }),
     ).toContain('SUMMARY:A\\,B');
+    expect(
+      inspectIcs(
+        'BEGIN:VCALENDAR\nBEGIN:VEVENT\nDTSTART:20260807T000000Z\nDTEND:20260807T010000Z\nSUMMARY:A\\,B\nEND:VEVENT\nEND:VCALENDAR',
+      ),
+    ).toMatchObject({ events: [{ summary: 'A,B' }], issues: [] });
     expect(futureValue(0, 100, 0, 1)).toBe(1_200);
     expect(requiredMonthlySavings(1_200, 0, 0, 1)).toBe(100);
     expect(calculatePrepayment(100_000, 0, 12, 10_000).interestSaved).toBe(0);

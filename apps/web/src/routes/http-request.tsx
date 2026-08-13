@@ -1,22 +1,8 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
-import { CacheControlPanel } from '@/components/extra-tool-panels';
-import { GraphqlPanel } from '@/components/tool-expansion-panels';
-import {
-  ContentNegotiationPanel,
-  ForwardedPanel,
-  HttpMessageSignaturePanel,
-  LinkHeaderPanel,
-} from '@/components/modern-web-tool-panels';
-import {
-  ContentDispositionPanel,
-  MultipartPanel,
-  RateLimitPanel,
-  StructuredFieldPanel,
-} from '@/components/protocol-tool-panels';
 import { decodeBasicAuth, encodeBasicAuth } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { Check, Copy, Loader2, Plus, Send, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
@@ -127,39 +113,15 @@ function KVEditor({
 }
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
-const TABS = [
-  'params',
-  'headers',
-  'auth',
-  'body',
-  'graphql',
-  'cache',
-  'structured',
-  'rate-limit',
-  'disposition',
-  'multipart',
-  'signature',
-  'link-header',
-  'forwarded',
-  'negotiation',
-] as const;
+const TABS = ['params', 'headers', 'auth', 'body'] as const;
 type Tab = (typeof TABS)[number];
 const TAB_LABELS: Record<Tab, string> = {
   params: 'Params',
   headers: 'Headers',
   auth: 'Basic Auth',
   body: 'Body',
-  graphql: 'GraphQL',
-  cache: 'Cache-Control',
-  structured: 'Structured Fields',
-  'rate-limit': 'RateLimit',
-  disposition: 'Content-Disposition',
-  multipart: 'Multipart',
-  signature: 'HTTP Signatures',
-  'link-header': 'Link',
-  forwarded: 'Forwarded',
-  negotiation: 'Accept',
 };
+const REQUEST_TIMEOUT_MS = 30_000;
 
 function statusColor(code: number) {
   if (code < 300) return 'text-green-500';
@@ -179,6 +141,7 @@ function HttpRequestPage() {
   const [bodyText, setBodyText] = useState('{\n  \n}');
   const [formFields, setFormFields] = useState<KVPair[]>([newKV()]);
   const [loading, setLoading] = useState(false);
+  const [elapsedMs, setElapsedMs] = useState(0);
   const [result, setResult] = useState<ResponseResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [responseTab, setResponseTab] = useState<'body' | 'headers'>('body');
@@ -187,6 +150,15 @@ function HttpRequestPage() {
   const [authPassword, setAuthPassword] = useState('');
   const [authHeader, setAuthHeader] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
+
+  useEffect(
+    () => () => {
+      abortControllerRef.current?.abort();
+    },
+    [],
+  );
 
   const applyBasicAuth = () => {
     const value = encodeBasicAuth(authUsername, authPassword);
@@ -232,10 +204,28 @@ function HttpRequestPage() {
   };
 
   const send = async () => {
+    if (loading) return;
+    const requestId = ++requestIdRef.current;
     setError(null);
     setResult(null);
     setLoading(true);
+    setElapsedMs(0);
     const start = Date.now();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    let timedOut = false;
+    const elapsedTimer = window.setInterval(
+      () => {
+        if (requestIdRef.current === requestId) {
+          setElapsedMs(Date.now() - start);
+        }
+      },
+      100,
+    );
+    const timeoutTimer = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, REQUEST_TIMEOUT_MS);
     try {
       const finalUrl = buildUrl();
       const reqHeaders: Record<string, string> = {};
@@ -265,28 +255,55 @@ function HttpRequestPage() {
         method,
         headers: reqHeaders,
         body,
+        signal: controller.signal,
       });
 
-      const time = Date.now() - start;
       const resHeaders: [string, string][] = [];
       res.headers.forEach((v, k) => resHeaders.push([k, v]));
       const resBody = await res.text();
 
+      if (requestIdRef.current !== requestId) return;
       setResult({
         status: res.status,
         statusText: res.statusText,
         headers: resHeaders,
         body: resBody,
-        time,
+        time: Date.now() - start,
         ok: res.ok,
       });
       setResponseTab('body');
     } catch (e) {
-      setError(t('httpRequest.sendError', { msg: (e as Error).message }));
+      if (requestIdRef.current !== requestId) return;
+      if (controller.signal.aborted) {
+        setError(
+          timedOut
+            ? t('httpRequest.timeoutError')
+            : t('httpRequest.cancelled'),
+        );
+      } else {
+        setError(t('httpRequest.sendError', { msg: (e as Error).message }));
+      }
     } finally {
-      setLoading(false);
+      window.clearInterval(elapsedTimer);
+      window.clearTimeout(timeoutTimer);
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
+      if (requestIdRef.current === requestId) setLoading(false);
     }
   };
+
+  const cancelRequest = () => {
+    const controller = abortControllerRef.current;
+    if (!controller) return;
+    ++requestIdRef.current;
+    abortControllerRef.current = null;
+    controller.abort();
+    setLoading(false);
+    setElapsedMs(0);
+    setError(t('httpRequest.cancelled'));
+  };
+  const activeTab = TABS.includes(tab) ? tab : 'params';
 
   const formattedBody = () => {
     if (!result) return '';
@@ -337,11 +354,11 @@ function HttpRequestPage() {
       </div>
 
       {/* URL bar */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2 sm:flex-nowrap">
         <select
           value={method}
           onChange={(e) => setMethod(e.target.value)}
-          className="h-9 px-2 rounded border bg-background text-sm font-mono font-semibold focus:outline-none focus:ring-1 focus:ring-ring min-w-[100px]"
+          className="h-9 min-w-[92px] rounded border bg-background px-2 font-mono text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-ring"
         >
           {METHODS.map((m) => (
             <option key={m} value={m}>
@@ -352,9 +369,9 @@ function HttpRequestPage() {
         <input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && send()}
+          onKeyDown={(e) => e.key === 'Enter' && !loading && send()}
           placeholder="https://example.com/api"
-          className="flex-1 h-9 px-3 text-sm rounded border bg-transparent font-mono focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-9 min-w-0 flex-1 rounded border bg-transparent px-3 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-ring"
         />
         <Button
           size="sm"
@@ -385,6 +402,24 @@ function HttpRequestPage() {
         </Button>
       </div>
 
+      {loading && (
+        <div
+          role="status"
+          className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/30 px-3 py-2 text-sm"
+        >
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          <span>{t('httpRequest.requesting', { seconds: Math.floor(elapsedMs / 1000) })}</span>
+          <span className="text-xs text-muted-foreground">
+            {t('httpRequest.timeoutHint', {
+              seconds: REQUEST_TIMEOUT_MS / 1000,
+            })}
+          </span>
+          <Button size="sm" variant="outline" onClick={cancelRequest}>
+            {t('httpRequest.cancel')}
+          </Button>
+        </div>
+      )}
+
       {/* Tabs */}
       <div className="border rounded-lg overflow-hidden">
         <div className="flex flex-wrap border-b bg-muted/30">
@@ -392,14 +427,14 @@ function HttpRequestPage() {
             <button
               key={item}
               onClick={() => setTab(item)}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${tab === item ? 'border-b-2 border-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`flex-1 px-3 py-2 text-sm font-medium transition-colors sm:flex-none ${activeTab === item ? 'border-b-2 border-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
             >
               {TAB_LABELS[item]}
             </button>
           ))}
         </div>
         <div className="p-3">
-          {tab === 'params' && (
+          {activeTab === 'params' && (
             <KVEditor
               pairs={params}
               onChange={setParams}
@@ -407,7 +442,7 @@ function HttpRequestPage() {
               valuePlaceholder={t('httpRequest.value')}
             />
           )}
-          {tab === 'headers' && (
+          {activeTab === 'headers' && (
             <KVEditor
               pairs={headers}
               onChange={setHeaders}
@@ -415,7 +450,7 @@ function HttpRequestPage() {
               valuePlaceholder={t('httpRequest.value')}
             />
           )}
-          {tab === 'auth' && (
+          {activeTab === 'auth' && (
             <div className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <input
@@ -451,7 +486,7 @@ function HttpRequestPage() {
               )}
             </div>
           )}
-          {tab === 'body' && (
+          {activeTab === 'body' && (
             <div className="space-y-3">
               <div className="flex gap-2 flex-wrap">
                 {(['none', 'json', 'form', 'text'] as BodyType[]).map((bt) => (
@@ -495,16 +530,6 @@ function HttpRequestPage() {
               )}
             </div>
           )}
-          {tab === 'graphql' && <GraphqlPanel />}
-          {tab === 'cache' && <CacheControlPanel />}
-          {tab === 'structured' && <StructuredFieldPanel />}
-          {tab === 'rate-limit' && <RateLimitPanel />}
-          {tab === 'disposition' && <ContentDispositionPanel />}
-          {tab === 'multipart' && <MultipartPanel />}
-          {tab === 'signature' && <HttpMessageSignaturePanel />}
-          {tab === 'link-header' && <LinkHeaderPanel />}
-          {tab === 'forwarded' && <ForwardedPanel />}
-          {tab === 'negotiation' && <ContentNegotiationPanel />}
         </div>
       </div>
 

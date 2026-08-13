@@ -4,6 +4,7 @@ import {
   extractOpenApiEndpoints,
   extractOpenApiSchemas,
   openApiRequestExample,
+  openApiResponseExamples,
   type OpenApiEndpoint,
 } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
@@ -22,7 +23,7 @@ import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/openapi')({ component: OpenApiPage });
 
-type Mode = 'endpoints' | 'schemas' | 'diff';
+type Mode = 'endpoints' | 'schemas' | 'mock' | 'diff';
 
 const SAMPLE = `openapi: 3.0.3
 info:
@@ -40,7 +41,12 @@ paths:
           required: true
           schema: { type: integer, example: 1 }
       responses:
-        '200': { description: OK }
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
 components:
   schemas:
     User:
@@ -80,9 +86,11 @@ function OpenApiPage() {
   const output =
     mode === 'schemas'
       ? JSON.stringify(extractOpenApiSchemas(document), null, 2)
-      : selected
-        ? openApiRequestExample(document, selected)
-        : '';
+      : mode === 'mock' && selected
+        ? JSON.stringify(openApiResponseExamples(document, selected), null, 2)
+        : selected
+          ? openApiRequestExample(document, selected)
+          : '';
 
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
@@ -91,6 +99,7 @@ function OpenApiPage() {
         <TabsList>
           <TabsTrigger value="endpoints">{t('openapi.endpoints')}</TabsTrigger>
           <TabsTrigger value="schemas">{t('openapi.schemas')}</TabsTrigger>
+          <TabsTrigger value="mock">{t('openapi.mock')}</TabsTrigger>
           <TabsTrigger value="diff">{t('modern.openapiDiff')}</TabsTrigger>
         </TabsList>
       </Tabs>
@@ -110,25 +119,28 @@ function OpenApiPage() {
               <Button onClick={parse}>{t('openapi.parse')}</Button>
             </div>
             <div className="space-y-2">
-              {mode === 'endpoints' && endpoints.length > 0 && (
-                <Select value={selected?.id} onValueChange={setSelectedId}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {endpoints.map((endpoint: OpenApiEndpoint) => (
-                      <SelectItem key={endpoint.id} value={endpoint.id}>
-                        {endpoint.id}
-                        {endpoint.summary ? ` · ${endpoint.summary}` : ''}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              {(mode === 'endpoints' || mode === 'mock') &&
+                endpoints.length > 0 && (
+                  <Select value={selected?.id} onValueChange={setSelectedId}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {endpoints.map((endpoint: OpenApiEndpoint) => (
+                        <SelectItem key={endpoint.id} value={endpoint.id}>
+                          {endpoint.id}
+                          {endpoint.summary ? ` · ${endpoint.summary}` : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               <MonacoTextEditor
                 readOnly
                 label={t('panel.output')}
-                language={mode === 'schemas' ? 'json' : 'shell'}
+                language={
+                  mode === 'schemas' || mode === 'mock' ? 'json' : 'shell'
+                }
                 height="520px"
                 value={output}
               />

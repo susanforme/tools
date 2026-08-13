@@ -38,6 +38,13 @@ export type MediaWorkerRequest =
       mute: boolean;
       clearMetadata: boolean;
     }
+  | {
+      type: 'video-trim';
+      file: File;
+      start: number;
+      end: number;
+      format: 'mp4' | 'webm';
+    }
   | { type: 'merge-video'; files: File[] }
   | { type: 'extract-audio'; file: File }
   | { type: 'replace-audio'; video: File; audio: File }

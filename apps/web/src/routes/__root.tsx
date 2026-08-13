@@ -5,6 +5,7 @@ import { ThemeProvider, useTheme } from '@/hooks/use-theme';
 import { api } from '@/lib/api';
 import { assertSessionActive } from '@/lib/optional-auth';
 import { queryClient } from '@/lib/query-client';
+import { getToolShell } from '@/lib/tool-shells';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
@@ -74,7 +75,6 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldPlus,
-  Scissors,
   Sparkles,
   SquareAsterisk,
   Star,
@@ -191,7 +191,8 @@ const formatterNavItems: NavItem[] = [
     to: '/markdown',
     icon: <FileText className="w-4 h-4 text-teal-500" />,
     labelKey: 'nav.markdown',
-    keywords: 'markdown mermaid diagram flowchart sequence svg png 图表 流程图',
+    keywords:
+      'markdown mermaid diagram flowchart sequence svg png toc table of contents 图表 流程图 目录',
   },
   {
     to: '/sql',
@@ -362,6 +363,8 @@ const convertNavItems: NavItem[] = [
     to: '/csv-convert',
     icon: <Database className="w-4 h-4 text-cyan-600" />,
     labelKey: 'nav.csvConvert',
+    keywords:
+      'csv tsv json sql profile data quality duplicate 空值 重复 数据体检',
   },
   {
     to: '/xml-json',
@@ -622,7 +625,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/openapi',
     icon: <FileCode2 className="h-4 w-4 text-blue-500" />,
     labelKey: 'nav.openapi',
-    keywords: 'openapi swagger endpoint schema curl 接口',
+    keywords:
+      'openapi swagger endpoint schema curl mock response example 接口 响应示例',
   },
   {
     to: '/cron',
@@ -634,7 +638,7 @@ const developerToolNavItems: NavItem[] = [
     to: '/env',
     icon: <FileText className="h-4 w-4 text-emerald-500" />,
     labelKey: 'nav.envTool',
-    keywords: 'env dotenv environment diff secret 环境变量',
+    keywords: 'env dotenv environment diff example secret 环境变量 示例',
   },
   {
     to: '/mock-data',
@@ -670,7 +674,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/git-tool',
     icon: <Code2 className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.gitTool',
-    keywords: 'gitignore conventional commit semver version git',
+    keywords:
+      'gitignore conventional commit semver version git package.json dependencies dependency diff 依赖 对比',
   },
   {
     to: '/bundle-inspector',
@@ -705,17 +710,17 @@ const videoNavItems: NavItem[] = [
     keywords: 'screen recorder capture video recording 录屏',
   },
   {
-    to: '/video-trimmer',
-    icon: <Scissors className="h-4 w-4 text-rose-500" />,
-    labelKey: 'nav.videoTrimmer',
-    keywords: '视频 剪辑 裁剪 trim clip mediabunny video',
-  },
-  {
     to: '/video-editor',
     icon: <Video className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.videoEditor',
     keywords:
       '视频 合并 旋转 裁剪 静音 音轨 封面 媒体信息 编码 码率 帧率 metadata merge rotate',
+  },
+  {
+    to: '/streaming-manifest',
+    icon: <ListOrdered className="h-4 w-4 text-orange-500" />,
+    labelKey: 'nav.streamingManifest',
+    keywords: 'HLS DASH m3u8 MPD 流媒体 清单 播放列表 manifest',
   },
   {
     to: '/video-animation',
@@ -802,7 +807,7 @@ const lifeNavItems: NavItem[] = [
     to: '/ics-generator',
     icon: <FileText className="h-4 w-4 text-indigo-500" />,
     labelKey: 'nav.icsGenerator',
-    keywords: 'ics 日历 事件 calendar event',
+    keywords: 'ics rrule calendar event inspect validate 日历 事件 检查',
   },
   {
     to: '/random-picker',
@@ -1403,60 +1408,72 @@ function RootDocument() {
 
 function RootContent() {
   const { t } = useTranslation();
+  const shell = useRouterState({
+    select: (state) => getToolShell(state.location.pathname),
+  });
+  const immersive = shell === 'immersive';
 
   return (
     <QueryClientProvider client={queryClient}>
       <div>
         <TooltipProvider>
-          <div className="min-h-screen bg-background text-foreground">
-            <DesktopSidebar />
-            <header className="fixed left-0 right-0 top-0 z-50 h-[68px] border-b bg-background/90 backdrop-blur-xl lg:left-64">
-              <nav className="flex h-full items-center gap-2 px-4 sm:gap-4 lg:px-8">
-                <div className="shrink-0 lg:hidden">
-                  <MobileNav />
-                </div>
-                <Link
-                  to="/"
-                  className="flex shrink-0 items-center gap-2 font-bold lg:hidden"
-                >
-                  <Code2 className="h-5 w-5 text-blue-600" />
-                  <span className="hidden sm:inline">Breeze Tools</span>
-                </Link>
-                <ToolSearch />
-                <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                        to="/"
-                        search={{ category: 'favorites' }}
-                        aria-label={t('shell.favorites')}
-                        className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:flex"
-                      >
-                        <Star className="h-4 w-4" />
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={6}>
-                      {t('shell.favorites')}
-                    </TooltipContent>
-                  </Tooltip>
-                  <ThemeToggle />
-                  <LangSwitcher />
-                  <AuthNav />
-                </div>
-              </nav>
-            </header>
-            <main className="min-h-screen pt-[68px] lg:pl-64">
+          {immersive ? (
+            <main className="min-h-screen bg-zinc-950 text-zinc-100">
               <Outlet />
             </main>
-          </div>
+          ) : (
+            <div className="min-h-screen bg-background text-foreground">
+              <DesktopSidebar />
+              <header className="fixed left-0 right-0 top-0 z-50 h-[68px] border-b bg-background/90 backdrop-blur-xl lg:left-64">
+                <nav className="flex h-full items-center gap-2 px-4 sm:gap-4 lg:px-8">
+                  <div className="shrink-0 lg:hidden">
+                    <MobileNav />
+                  </div>
+                  <Link
+                    to="/"
+                    className="flex shrink-0 items-center gap-2 font-bold lg:hidden"
+                  >
+                    <Code2 className="h-5 w-5 text-blue-600" />
+                    <span className="hidden sm:inline">Breeze Tools</span>
+                  </Link>
+                  <ToolSearch />
+                  <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to="/"
+                          search={{ category: 'favorites' }}
+                          aria-label={t('shell.favorites')}
+                          className="hidden h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:flex"
+                        >
+                          <Star className="h-4 w-4" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" sideOffset={6}>
+                        {t('shell.favorites')}
+                      </TooltipContent>
+                    </Tooltip>
+                    <ThemeToggle />
+                    <LangSwitcher />
+                    <AuthNav />
+                  </div>
+                </nav>
+              </header>
+              <main className="min-h-screen pt-[68px] lg:pl-64">
+                <Outlet />
+              </main>
+            </div>
+          )}
         </TooltipProvider>
-        <TanStackDevtools
-          config={{ position: 'bottom-right' }}
-          plugins={[
-            { name: 'Router', render: <TanStackRouterDevtoolsPanel /> },
-          ]}
-        />
-        <Toaster />
+        {!immersive && (
+          <TanStackDevtools
+            config={{ position: 'bottom-right' }}
+            plugins={[
+              { name: 'Router', render: <TanStackRouterDevtoolsPanel /> },
+            ]}
+          />
+        )}
+      {!immersive && <Toaster />}
       </div>
     </QueryClientProvider>
   );

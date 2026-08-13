@@ -8,12 +8,14 @@ import {
   compareVersions,
   compressIpv6,
   decodeBasicAuth,
+  diffPackageJson,
   diffEnv,
   dockerRunToCompose,
   encodeBasicAuth,
   expandIpv6,
   extractOpenApiEndpoints,
   formatEnv,
+  generateEnvExample,
   inferJsonSchema,
   mergeGitignore,
   parseCreateTable,
@@ -21,7 +23,9 @@ import {
   inspectSitemapXml,
   inspectIpv6,
   inspectMacAddress,
+  openApiResponseExamples,
   parseUnixMode,
+  profileTable,
   wifiQrValue,
 } from './developer-tools';
 
@@ -36,6 +40,9 @@ describe('developer tools', () => {
       'changed',
       'right-only',
     ]);
+    expect(generateEnvExample('API_TOKEN=x\nPORT=3000')).toBe(
+      'API_TOKEN=\nPORT=3000',
+    );
     expect(
       extractOpenApiEndpoints({ paths: { '/users': { get: {} } } })[0]?.id,
     ).toBe('GET /users');
@@ -48,6 +55,53 @@ describe('developer tools', () => {
     expect(mergeGitignore(['dist\n!dist/keep', 'dist\n.env'])).toBe(
       'dist\n!dist/keep\n.env',
     );
+  });
+
+  it('profiles tables, dependencies, and OpenAPI responses', () => {
+    expect(
+      profileTable([['id', 'active'], ['1', 'true'], ['1', 'true'], ['2']]),
+    ).toMatchObject({
+      rows: 3,
+      duplicateRows: 1,
+      irregularRows: 1,
+      columnProfiles: [
+        { name: 'id', type: 'number', unique: 2 },
+        { name: 'active', type: 'boolean', empty: 1 },
+      ],
+    });
+    expect(
+      diffPackageJson(
+        '{"dependencies":{"react":"18"},"devDependencies":{"vite":"5"}}',
+        '{"dependencies":{"react":"19","vite":"5"}}',
+      ),
+    ).toMatchObject([
+      { name: 'react', status: 'changed' },
+      { name: 'vite', status: 'moved' },
+    ]);
+    const document = {
+      paths: {
+        '/users': {
+          get: {
+            responses: {
+              200: {
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: { id: { type: 'integer' } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const endpoint = extractOpenApiEndpoints(document)[0]!;
+    expect(openApiResponseExamples(document, endpoint)).toEqual({
+      '200 application/json': { id: 0 },
+    });
   });
 
   it('calculates IPv4 subnets and Unix permissions', () => {

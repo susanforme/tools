@@ -4,7 +4,11 @@ import {
   EDITORCONFIG_TEMPLATES,
   GITIGNORE_TEMPLATES,
 } from '@/lib/dev-config-templates';
-import { compareVersions, mergeGitignore } from '@/lib/developer-tools';
+import {
+  compareVersions,
+  diffPackageJson,
+  mergeGitignore,
+} from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +25,13 @@ import { Textarea } from '../components/ui/textarea';
 
 export const Route = createFileRoute('/git-tool')({ component: GitToolPage });
 
-type Mode = 'ignore' | 'commit' | 'version' | 'range' | 'editorconfig';
+type Mode =
+  | 'ignore'
+  | 'commit'
+  | 'version'
+  | 'range'
+  | 'editorconfig'
+  | 'package';
 const COMMIT_TYPES = [
   'feat',
   'fix',
@@ -33,6 +43,13 @@ const COMMIT_TYPES = [
 ];
 const GITIGNORE_KEYS = Object.keys(GITIGNORE_TEMPLATES);
 const EDITORCONFIG_KEYS = Object.keys(EDITORCONFIG_TEMPLATES);
+const PACKAGE_BEFORE = `{
+  "dependencies": { "react": "^18.0.0" },
+  "devDependencies": { "vite": "^7.0.0" }
+}`;
+const PACKAGE_AFTER = `{
+  "dependencies": { "react": "^19.0.0", "vite": "^7.0.0" }
+}`;
 
 function GitToolPage() {
   const { t } = useTranslation();
@@ -49,6 +66,8 @@ function GitToolPage() {
   const [breaking, setBreaking] = useState('');
   const [versionA, setVersionA] = useState('1.2.3');
   const [versionB, setVersionB] = useState('2.0.0-beta.1');
+  const [packageBefore, setPackageBefore] = useState(PACKAGE_BEFORE);
+  const [packageAfter, setPackageAfter] = useState(PACKAGE_AFTER);
 
   const toggleTemplate = (key: string) => {
     setSelectedTemplates((prev) =>
@@ -70,6 +89,21 @@ function GitToolPage() {
       const header = `${type}${scope ? `(${scope})` : ''}: ${description}`;
       return breaking ? `${header}\n\nBREAKING CHANGE: ${breaking}` : header;
     }
+    if (mode === 'package') {
+      try {
+        const changes = diffPackageJson(packageBefore, packageAfter);
+        return changes.length
+          ? changes
+              .map(
+                ({ name, before, after, beforeGroup, afterGroup, status }) =>
+                  `${status === 'added' ? '+' : status === 'removed' ? '-' : '~'} ${name}: ${before ?? '—'} (${beforeGroup ?? '—'}) → ${after ?? '—'} (${afterGroup ?? '—'})`,
+              )
+              .join('\n')
+          : t('gitTool.packageNoChanges');
+      } catch (cause) {
+        return t('gitTool.packageError', { msg: (cause as Error).message });
+      }
+    }
     try {
       const result = compareVersions(versionA, versionB);
       return result === 0
@@ -86,6 +120,8 @@ function GitToolPage() {
     editorconfigKey,
     left,
     mode,
+    packageAfter,
+    packageBefore,
     right,
     scope,
     selectedTemplates,
@@ -105,6 +141,7 @@ function GitToolPage() {
           <TabsTrigger value="version">SemVer</TabsTrigger>
           <TabsTrigger value="range">SemVer Range</TabsTrigger>
           <TabsTrigger value="editorconfig">.editorconfig</TabsTrigger>
+          <TabsTrigger value="package">package.json</TabsTrigger>
         </TabsList>
       </Tabs>
       {mode === 'ignore' && (
@@ -199,6 +236,20 @@ function GitToolPage() {
         </div>
       )}
       {mode === 'range' && <SemverRangePanel />}
+      {mode === 'package' && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Textarea
+            value={packageBefore}
+            onChange={(event) => setPackageBefore(event.target.value)}
+            className="min-h-64 font-mono text-xs"
+          />
+          <Textarea
+            value={packageAfter}
+            onChange={(event) => setPackageAfter(event.target.value)}
+            className="min-h-64 font-mono text-xs"
+          />
+        </div>
+      )}
       {mode !== 'range' && (
         <Textarea
           readOnly
