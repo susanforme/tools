@@ -49,6 +49,18 @@ const CDN_EXTERNAL_PATTERN = new RegExp(
   `^(?:${CDN_EXTERNAL_NAMES_PATTERN})(?:/|$)`,
 );
 
+const REACT_CDN_BASE = `https://cdn.jsdelivr.net/npm/react@${CDN_MODULE_VERSIONS.react}`;
+const REACT_IMPORT_MAP = {
+  react: `${REACT_CDN_BASE}/+esm`,
+  'react/jsx-runtime': `${REACT_CDN_BASE}/jsx-runtime/+esm`,
+  'react/jsx-dev-runtime': `${REACT_CDN_BASE}/jsx-dev-runtime/+esm`,
+  'react-dom': `https://cdn.jsdelivr.net/npm/react-dom@${CDN_MODULE_VERSIONS['react-dom']}/+esm`,
+  'react-dom/client': `https://cdn.jsdelivr.net/npm/react-dom@${CDN_MODULE_VERSIONS['react-dom']}/client/+esm`,
+  'https://cdn.jsdelivr.net/npm/react@19.2.0/+esm': `${REACT_CDN_BASE}/+esm`,
+  'https://cdn.jsdelivr.net/npm/react@19.2.0/jsx-runtime/+esm': `${REACT_CDN_BASE}/jsx-runtime/+esm`,
+  'https://cdn.jsdelivr.net/npm/react@19.2.0/jsx-dev-runtime/+esm': `${REACT_CDN_BASE}/jsx-dev-runtime/+esm`,
+} as const;
+
 function cdnModuleUrl(
   source: string,
   packageName: keyof typeof CDN_MODULE_VERSIONS,
@@ -78,6 +90,16 @@ function cdnExternals(): Plugin {
         id: source,
         external: true,
       };
+    },
+    transformIndexHtml() {
+      return [
+        {
+          tag: 'script',
+          attrs: { type: 'importmap' },
+          children: JSON.stringify({ imports: REACT_IMPORT_MAP }),
+          injectTo: 'head-prepend',
+        },
+      ];
     },
     writeBundle(_, bundle) {
       for (const output of Object.values(bundle)) {
