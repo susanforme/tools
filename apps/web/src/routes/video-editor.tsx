@@ -2156,7 +2156,7 @@ function Timeline({
         >
           <div
             ref={contentRef}
-            className="relative min-h-full bg-zinc-50 dark:bg-zinc-900"
+            className="relative min-h-full min-w-full bg-zinc-50 dark:bg-zinc-900"
             style={{
               width: contentWidth,
               minHeight: 28 + tracks.length * 58 + (draggedAssetKind ? 29 : 0),
