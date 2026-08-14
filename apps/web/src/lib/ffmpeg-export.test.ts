@@ -14,10 +14,10 @@ describe('buildFfmpegExportArgs', () => {
 
   it('loads version-pinned FFmpeg cores from the CDN', () => {
     expect(getFfmpegCoreAssetUrl(true, 'ffmpeg-core.wasm')).toBe(
-      'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd/ffmpeg-core.wasm',
+      'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/esm/ffmpeg-core.wasm',
     );
     expect(getFfmpegCoreAssetUrl(false, 'ffmpeg-core.js')).toBe(
-      'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js',
+      'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm/ffmpeg-core.js',
     );
   });
 

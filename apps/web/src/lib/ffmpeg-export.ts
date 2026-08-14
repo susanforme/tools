@@ -9,7 +9,7 @@ export function getFfmpegCoreAssetUrl(
   fileName: string,
 ): string {
   const packageName = multiThread ? 'core-mt' : 'core';
-  return `${FFMPEG_CDN_ROOT}/@ffmpeg/${packageName}@${FFMPEG_CORE_VERSION}/dist/umd/${fileName}`;
+  return `${FFMPEG_CDN_ROOT}/@ffmpeg/${packageName}@${FFMPEG_CORE_VERSION}/dist/esm/${fileName}`;
 }
 
 export const FFMPEG_EXPORT_FORMATS = [

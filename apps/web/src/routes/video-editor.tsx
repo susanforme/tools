@@ -671,13 +671,17 @@ function VideoEditorPage() {
                 onProgress: (value) => setProgress(0.75 + value * 0.25),
               },
             );
+      setProgress(1);
       const url = URL.createObjectURL(finalOutput);
       const anchor = document.createElement('a');
       anchor.href = url;
       anchor.download = finalOutput.name;
+      document.body.append(anchor);
       anchor.click();
-      URL.revokeObjectURL(url);
-    } catch {
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1_000);
+    } catch (cause) {
+      console.error('Video export failed', cause);
       setError(t('videoEditor.opencut.exportError'));
     } finally {
       setLoading(false);
