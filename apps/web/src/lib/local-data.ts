@@ -1,5 +1,11 @@
 import { db } from './db';
 
+export type StoredDataUsage = {
+  totalBytes: number;
+  opfsBytes: number;
+  recordBytes: number;
+};
+
 function deleteDatabase(name: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.deleteDatabase(name);
@@ -33,6 +39,33 @@ export async function clearDirectoryContents(
   for await (const [name] of directory.entries()) {
     await directory.removeEntry(name, { recursive: true });
   }
+}
+
+export async function getDirectorySize(
+  directory: FileSystemDirectoryHandle,
+): Promise<number> {
+  let size = 0;
+  for await (const [, entry] of directory.entries()) {
+    size +=
+      entry.kind === 'file'
+        ? (await entry.getFile()).size
+        : await getDirectorySize(entry);
+  }
+  return size;
+}
+
+export async function getStoredDataUsage(): Promise<StoredDataUsage> {
+  const estimate = await navigator.storage?.estimate?.();
+  let opfsBytes = 0;
+  if (typeof navigator.storage?.getDirectory === 'function') {
+    opfsBytes = await getDirectorySize(await navigator.storage.getDirectory());
+  }
+  const totalBytes = Math.max(estimate?.usage ?? 0, opfsBytes);
+  return {
+    totalBytes,
+    opfsBytes,
+    recordBytes: Math.max(0, totalBytes - opfsBytes),
+  };
 }
 
 export async function clearStoredFiles(): Promise<void> {

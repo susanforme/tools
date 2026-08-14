@@ -4,7 +4,7 @@ export type EditorAsset = {
   id: string;
   storageName: string;
   name: string;
-  kind: 'video' | 'audio';
+  kind: 'video' | 'audio' | 'subtitle' | 'font';
   mimeType: string;
   size: number;
   duration: number;
@@ -15,7 +15,8 @@ export type EditorAsset = {
 export type TimelineClip = {
   id: string;
   assetId: string;
-  kind: EditorAsset['kind'];
+  kind: 'video' | 'audio';
+  trackId?: string;
   offset: number;
   sourceStart: number;
   duration: number;
@@ -23,19 +24,51 @@ export type TimelineClip = {
   hidden?: boolean;
 };
 
+export type EditorTrack = {
+  id: string;
+  kind: 'video' | 'audio' | 'subtitle';
+  name: string;
+  muted: boolean;
+  hidden: boolean;
+  locked: boolean;
+};
+
+export type EditorSubtitleCue = {
+  id: string;
+  trackId: string;
+  start: number;
+  end: number;
+  text: string;
+};
+
+export type EditorSubtitleStyle = {
+  fontFamily: string;
+  fontSize: number;
+  color: string;
+  fontAssetId: string | null;
+};
+
 export type EditorTimeline = {
   assets: EditorAsset[];
   clips: TimelineClip[];
+  tracks: EditorTrack[];
+  subtitles: EditorSubtitleCue[];
+  subtitleStyle: EditorSubtitleStyle;
 };
 
 export type EditorExportSettings = {
-  resolution: 'source' | '720p' | '1080p';
-  fps: 24 | 30 | 60;
+  resolution: 'source' | '720p' | '1080p' | 'custom';
+  width: number;
+  height: number;
+  fps: number;
   quality: 'compact' | 'balanced' | 'high';
+  format: 'mp4' | 'webm' | 'mov' | 'mkv' | 'avi' | 'ts';
+  videoBitrateKbps: number;
+  audioBitrateKbps: number;
 };
 
 export type EditorProjectState = EditorTimeline & {
-  version: 2;
+  version: 3;
   name: string;
   playhead: number;
   zoom: number;
@@ -65,6 +98,12 @@ export type EditorWorkerRequest =
       timeline: EditorTimeline;
       fileName: string;
       output: EditorExportConfig;
+    }
+  | {
+      id: string;
+      type: 'normalize-video';
+      sessionId: string;
+      storageName: string;
     };
 
 type EditorWorkerCommand = EditorWorkerRequest extends infer Request
@@ -78,7 +117,8 @@ export type EditorWorkerResult =
       type: 'thumbnails';
       manifest: Array<{ name: string; ts: number }>;
     }
-  | { type: 'export'; storageName: string };
+  | { type: 'export'; storageName: string }
+  | { type: 'normalize-video'; storageName: string };
 
 export type EditorWorkerResponse =
   | { id: string; type: 'progress'; progress: number }
@@ -87,9 +127,23 @@ export type EditorWorkerResponse =
 
 export const DEFAULT_EXPORT_SETTINGS: EditorExportSettings = {
   resolution: 'source',
+  width: 1920,
+  height: 1080,
   fps: 30,
   quality: 'balanced',
+  format: 'mp4',
+  videoBitrateKbps: 6_000,
+  audioBitrateKbps: 192,
 };
+
+export const DEFAULT_SUBTITLE_STYLE: EditorSubtitleStyle = {
+  fontFamily: 'sans-serif',
+  fontSize: 42,
+  color: '#ffffff',
+  fontAssetId: null,
+};
+
+export const DEFAULT_AUDIO_TRACK_COUNT = 3;
 
 type PendingEditorWork = {
   resolve: (result: EditorWorkerResult) => void;
@@ -150,9 +204,45 @@ function runEditorWorker(
 export function isWebAvCompatibleFile(file: File): boolean {
   return (
     file.type.startsWith('audio/') ||
-    file.type === 'video/mp4' ||
-    file.name.toLowerCase().endsWith('.mp4')
+    file.type.startsWith('video/') ||
+    /\.(3gp|asf|avi|divx|dv|flv|m2ts|m4v|mkv|mov|mp4|mpeg|mpg|mts|mxf|ogv|rm|rmvb|ts|vob|webm|wmv)$/i.test(
+      file.name,
+    ) ||
+    /\.(srt|vtt|ttf|otf|woff2?)$/i.test(file.name)
   );
+}
+
+export function getEditorAssetKind(file: File): EditorAsset['kind'] {
+  if (file.type.startsWith('audio/')) return 'audio';
+  if (/\.(srt|vtt)$/i.test(file.name)) return 'subtitle';
+  if (/\.(ttf|otf|woff2?)$/i.test(file.name)) return 'font';
+  return 'video';
+}
+
+export function createEditorTrack(
+  kind: EditorTrack['kind'],
+  index: number,
+): EditorTrack {
+  return {
+    id: crypto.randomUUID(),
+    kind,
+    name: `${kind === 'video' ? 'V' : kind === 'audio' ? 'A' : 'S'}${index}`,
+    muted: false,
+    hidden: false,
+    locked: false,
+  };
+}
+
+export function ensureDefaultAudioTracks(tracks: EditorTrack[]): EditorTrack[] {
+  const audioTrackCount = tracks.filter(({ kind }) => kind === 'audio').length;
+  if (audioTrackCount >= DEFAULT_AUDIO_TRACK_COUNT) return tracks;
+  return [
+    ...tracks,
+    ...Array.from(
+      { length: DEFAULT_AUDIO_TRACK_COUNT - audioTrackCount },
+      (_, index) => createEditorTrack('audio', audioTrackCount + index + 1),
+    ),
+  ];
 }
 
 export function timelineDuration(clips: TimelineClip[]): number {
@@ -167,6 +257,36 @@ export function moveTimelineClip(
   offset: number,
 ): TimelineClip {
   return { ...clip, offset: Math.max(0, Math.round(offset * 20) / 20) };
+}
+
+export function snapTimelineClip(
+  clip: TimelineClip,
+  offset: number,
+  clips: TimelineClip[],
+  pixelsPerSecond: number,
+  playhead: number,
+): { offset: number; guide: number | null } {
+  const targets = [
+    0,
+    playhead,
+    ...clips
+      .filter(({ id }) => id !== clip.id)
+      .flatMap((item) => [item.offset, item.offset + item.duration]),
+  ];
+  const threshold = 8 / pixelsPerSecond;
+  const edges = [offset, offset + clip.duration];
+  let best: { distance: number; offset: number; guide: number } | null = null;
+  for (const edge of edges) {
+    for (const target of targets) {
+      const distance = Math.abs(target - edge);
+      if (distance <= threshold && (!best || distance < best.distance)) {
+        best = { distance, offset: offset + target - edge, guide: target };
+      }
+    }
+  }
+  return best
+    ? { offset: Math.max(0, best.offset), guide: best.guide }
+    : { offset, guide: null };
 }
 
 export function duplicateTimelineClip(
@@ -203,9 +323,19 @@ async function getSessionDirectory(
   return editor.getDirectoryHandle(sessionId, { create: true });
 }
 
+export async function getEditorOutputHandle(
+  sessionId: string,
+  fileName: string,
+): Promise<FileSystemFileHandle> {
+  const safeName = fileName.replace(/[\\/:*?"<>|]/g, '-').trim() || 'video';
+  return (await getSessionDirectory(sessionId)).getFileHandle(safeName, {
+    create: true,
+  });
+}
+
 async function probeMedia(
   file: File,
-  kind: EditorAsset['kind'],
+  kind: 'video' | 'audio',
 ): Promise<{ duration: number; width: number; height: number }> {
   const url = URL.createObjectURL(file);
   const media = document.createElement(kind === 'video' ? 'video' : 'audio');
@@ -236,30 +366,67 @@ export async function storeEditorAsset(
   source: File,
 ): Promise<EditorAsset> {
   if (!isWebAvCompatibleFile(source)) throw new Error('UNSUPPORTED_MEDIA');
-  const kind = source.type.startsWith('audio/') ? 'audio' : 'video';
+  const kind = getEditorAssetKind(source);
   const directory = await getSessionDirectory(sessionId);
   const extension = source.name.match(/\.[a-z0-9]+$/i)?.[0] ?? '';
-  const storageName = `${crypto.randomUUID()}${extension}`;
-  const handle = await directory.getFileHandle(storageName, { create: true });
+  const originalStorageName = `${crypto.randomUUID()}${extension}`;
+  const handle = await directory.getFileHandle(originalStorageName, {
+    create: true,
+  });
   const writable = await handle.createWritable();
   try {
     await source.stream().pipeTo(writable);
   } catch (cause) {
     await writable.abort().catch(() => undefined);
-    await directory.removeEntry(storageName).catch(() => undefined);
+    await directory.removeEntry(originalStorageName).catch(() => undefined);
     throw cause;
   }
-  const stored = await handle.getFile();
-  const metadata = await probeMedia(stored, kind);
-  return {
-    id: crypto.randomUUID(),
-    storageName,
-    name: source.name,
-    kind,
-    mimeType: source.type || stored.type,
-    size: stored.size,
-    ...metadata,
-  };
+  let storageName = originalStorageName;
+  try {
+    if (kind === 'video') {
+      try {
+        const result = await runEditorWorker({
+          type: 'normalize-video',
+          sessionId,
+          storageName: originalStorageName,
+        });
+        if (result.type !== 'normalize-video') {
+          throw new Error('VIDEO_NORMALIZATION_FAILED');
+        }
+        storageName = result.storageName;
+      } catch {
+        const { convertVideoToEditorMp4 } = await import('./ffmpeg-export');
+        storageName = `${crypto.randomUUID()}.mp4`;
+        const target = await directory.getFileHandle(storageName, {
+          create: true,
+        });
+        await convertVideoToEditorMp4(await handle.getFile(), target);
+      }
+      if (storageName !== originalStorageName) {
+        await directory.removeEntry(originalStorageName).catch(() => undefined);
+      }
+    }
+    const stored = await (await directory.getFileHandle(storageName)).getFile();
+    const metadata =
+      kind === 'video' || kind === 'audio'
+        ? await probeMedia(stored, kind)
+        : { duration: 0, width: 0, height: 0 };
+    return {
+      id: crypto.randomUUID(),
+      storageName,
+      name: source.name,
+      kind,
+      mimeType: kind === 'video' ? 'video/mp4' : source.type || stored.type,
+      size: stored.size,
+      ...metadata,
+    };
+  } catch (cause) {
+    await directory.removeEntry(originalStorageName).catch(() => undefined);
+    if (storageName !== originalStorageName) {
+      await directory.removeEntry(storageName).catch(() => undefined);
+    }
+    throw cause;
+  }
 }
 
 export async function readEditorAsset(
@@ -436,23 +603,62 @@ export function isEditorProjectState(
   if (!value || typeof value !== 'object') return false;
   const project = value as Record<string, unknown>;
   return (
-    project.version === 2 &&
+    project.version === 3 &&
     isEditorProjectData(project) &&
-    isExportSettings(project.exportSettings)
+    isExportSettings(project.exportSettings) &&
+    Array.isArray(project.tracks) &&
+    project.tracks.every(isEditorTrack) &&
+    Array.isArray(project.subtitles) &&
+    project.subtitles.every(isSubtitleCue) &&
+    isSubtitleStyle(project.subtitleStyle)
   );
 }
 
 export function normalizeEditorProjectState(
   value: unknown,
 ): EditorProjectState | null {
-  if (isEditorProjectState(value)) return value;
+  if (isEditorProjectState(value)) {
+    return { ...value, tracks: ensureDefaultAudioTracks(value.tracks) };
+  }
   if (!value || typeof value !== 'object') return null;
   const project = value as Record<string, unknown>;
-  if (project.version !== 1 || !isEditorProjectData(project)) return null;
+  if (
+    project.version === 3 &&
+    isEditorProjectData(project) &&
+    Array.isArray(project.tracks) &&
+    project.tracks.every(isEditorTrack) &&
+    Array.isArray(project.subtitles) &&
+    project.subtitles.every(isSubtitleCue) &&
+    isSubtitleStyle(project.subtitleStyle)
+  ) {
+    return {
+      ...(project as Omit<EditorProjectState, 'exportSettings'>),
+      tracks: ensureDefaultAudioTracks(project.tracks),
+      exportSettings: normalizeExportSettings(project.exportSettings),
+    };
+  }
+  if (
+    (project.version !== 1 && project.version !== 2) ||
+    !isEditorProjectData(project)
+  )
+    return null;
+  const legacyClips = project.clips as TimelineClip[];
+  const videoTrack = createEditorTrack('video', 1);
+  const audioTrack = createEditorTrack('audio', 1);
   return {
-    ...(project as Omit<EditorProjectState, 'version' | 'exportSettings'>),
-    version: 2,
-    exportSettings: DEFAULT_EXPORT_SETTINGS,
+    ...(project as Omit<
+      EditorProjectState,
+      'version' | 'exportSettings' | 'tracks' | 'subtitles' | 'subtitleStyle'
+    >),
+    version: 3,
+    clips: legacyClips.map((clip) => ({
+      ...clip,
+      trackId: clip.kind === 'video' ? videoTrack.id : audioTrack.id,
+    })),
+    tracks: ensureDefaultAudioTracks([videoTrack, audioTrack]),
+    subtitles: [],
+    subtitleStyle: DEFAULT_SUBTITLE_STYLE,
+    exportSettings: normalizeExportSettings(project.exportSettings),
   };
 }
 
@@ -474,12 +680,46 @@ function isExportSettings(value: unknown): value is EditorExportSettings {
   return (
     (settings.resolution === 'source' ||
       settings.resolution === '720p' ||
-      settings.resolution === '1080p') &&
-    (settings.fps === 24 || settings.fps === 30 || settings.fps === 60) &&
+      settings.resolution === '1080p' ||
+      settings.resolution === 'custom') &&
+    typeof settings.width === 'number' &&
+    typeof settings.height === 'number' &&
+    typeof settings.fps === 'number' &&
+    settings.fps > 0 &&
     (settings.quality === 'compact' ||
       settings.quality === 'balanced' ||
-      settings.quality === 'high')
+      settings.quality === 'high') &&
+    (settings.format === 'mp4' ||
+      settings.format === 'webm' ||
+      settings.format === 'mov' ||
+      settings.format === 'mkv' ||
+      settings.format === 'avi' ||
+      settings.format === 'ts') &&
+    typeof settings.videoBitrateKbps === 'number' &&
+    typeof settings.audioBitrateKbps === 'number'
   );
+}
+
+function normalizeExportSettings(value: unknown): EditorExportSettings {
+  if (isExportSettings(value)) return value;
+  if (!value || typeof value !== 'object') return DEFAULT_EXPORT_SETTINGS;
+  const legacy = value as Record<string, unknown>;
+  if (legacy.format === 'gif') {
+    const migrated = { ...legacy, format: 'mp4' };
+    if (isExportSettings(migrated)) return migrated;
+  }
+  return {
+    ...DEFAULT_EXPORT_SETTINGS,
+    resolution:
+      legacy.resolution === '720p' || legacy.resolution === '1080p'
+        ? legacy.resolution
+        : 'source',
+    fps: typeof legacy.fps === 'number' && legacy.fps > 0 ? legacy.fps : 30,
+    quality:
+      legacy.quality === 'compact' || legacy.quality === 'high'
+        ? legacy.quality
+        : 'balanced',
+  };
 }
 
 function isEditorAsset(value: unknown): value is EditorAsset {
@@ -489,12 +729,53 @@ function isEditorAsset(value: unknown): value is EditorAsset {
     typeof asset.id === 'string' &&
     typeof asset.storageName === 'string' &&
     typeof asset.name === 'string' &&
-    (asset.kind === 'video' || asset.kind === 'audio') &&
+    (asset.kind === 'video' ||
+      asset.kind === 'audio' ||
+      asset.kind === 'subtitle' ||
+      asset.kind === 'font') &&
     typeof asset.mimeType === 'string' &&
     typeof asset.size === 'number' &&
     typeof asset.duration === 'number' &&
     typeof asset.width === 'number' &&
     typeof asset.height === 'number'
+  );
+}
+
+function isEditorTrack(value: unknown): value is EditorTrack {
+  if (!value || typeof value !== 'object') return false;
+  const track = value as Record<string, unknown>;
+  return (
+    typeof track.id === 'string' &&
+    (track.kind === 'video' ||
+      track.kind === 'audio' ||
+      track.kind === 'subtitle') &&
+    typeof track.name === 'string' &&
+    typeof track.muted === 'boolean' &&
+    typeof track.hidden === 'boolean' &&
+    typeof track.locked === 'boolean'
+  );
+}
+
+function isSubtitleCue(value: unknown): value is EditorSubtitleCue {
+  if (!value || typeof value !== 'object') return false;
+  const cue = value as Record<string, unknown>;
+  return (
+    typeof cue.id === 'string' &&
+    typeof cue.trackId === 'string' &&
+    typeof cue.start === 'number' &&
+    typeof cue.end === 'number' &&
+    typeof cue.text === 'string'
+  );
+}
+
+function isSubtitleStyle(value: unknown): value is EditorSubtitleStyle {
+  if (!value || typeof value !== 'object') return false;
+  const style = value as Record<string, unknown>;
+  return (
+    typeof style.fontFamily === 'string' &&
+    typeof style.fontSize === 'number' &&
+    typeof style.color === 'string' &&
+    (style.fontAssetId === null || typeof style.fontAssetId === 'string')
   );
 }
 
@@ -517,6 +798,14 @@ export function resolveExportConfig(
   asset: EditorAsset,
   settings: EditorExportSettings,
 ): EditorExportConfig {
+  if (settings.resolution === 'custom') {
+    return {
+      width: Math.max(2, Math.round(settings.width / 2) * 2),
+      height: Math.max(2, Math.round(settings.height / 2) * 2),
+      fps: settings.fps,
+      bitrate: settings.videoBitrateKbps * 1_000,
+    };
+  }
   const maxEdge = settings.resolution === '720p' ? 1280 : 1920;
   const scale =
     settings.resolution === 'source'
@@ -524,22 +813,11 @@ export function resolveExportConfig(
       : Math.min(1, maxEdge / Math.max(asset.width, asset.height));
   const width = Math.max(2, Math.round((asset.width * scale) / 2) * 2);
   const height = Math.max(2, Math.round((asset.height * scale) / 2) * 2);
-  const bitsPerPixel =
-    settings.quality === 'compact'
-      ? 0.06
-      : settings.quality === 'high'
-        ? 0.16
-        : 0.1;
   return {
     width,
     height,
     fps: settings.fps,
-    bitrate: Math.round(
-      Math.max(
-        1_000_000,
-        Math.min(30_000_000, width * height * settings.fps * bitsPerPixel),
-      ),
-    ),
+    bitrate: settings.videoBitrateKbps * 1_000,
   };
 }
 

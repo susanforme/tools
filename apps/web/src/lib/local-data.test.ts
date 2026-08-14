@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest';
-import { clearDirectoryContents } from './local-data';
+import { clearDirectoryContents, getDirectorySize } from './local-data';
 
 it('removes every stored file and folder', async () => {
   const removeEntry = vi.fn(async () => undefined);
@@ -20,4 +20,29 @@ it('removes every stored file and folder', async () => {
   expect(removeEntry).toHaveBeenCalledWith('video-results', {
     recursive: true,
   });
+});
+
+it('totals files nested in OPFS directories', async () => {
+  const directory = {
+    async *entries() {
+      yield [
+        'video.mp4',
+        { kind: 'file', getFile: async () => ({ size: 12 }) },
+      ];
+      yield [
+        'thumbnails',
+        {
+          kind: 'directory',
+          async *entries() {
+            yield [
+              'frame.jpg',
+              { kind: 'file', getFile: async () => ({ size: 3 }) },
+            ];
+          },
+        },
+      ];
+    },
+  } as unknown as FileSystemDirectoryHandle;
+
+  await expect(getDirectorySize(directory)).resolves.toBe(15);
 });

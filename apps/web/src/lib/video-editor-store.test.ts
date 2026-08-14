@@ -9,6 +9,12 @@ describe('video editor history', () => {
     useVideoEditorStore.getState().hydrateProject(EMPTY_EDITOR_PROJECT);
   });
 
+  it('starts with three audio tracks', () => {
+    expect(
+      EMPTY_EDITOR_PROJECT.tracks.filter(({ kind }) => kind === 'audio'),
+    ).toHaveLength(3);
+  });
+
   it('tracks edits but ignores playhead updates', () => {
     const store = useVideoEditorStore.getState();
     store.setProject((project) => ({ ...project, name: 'Cut 1' }));

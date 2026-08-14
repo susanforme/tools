@@ -2,14 +2,22 @@ import { create } from 'zustand';
 import { temporal } from 'zundo';
 import {
   DEFAULT_EXPORT_SETTINGS,
+  DEFAULT_SUBTITLE_STYLE,
+  createEditorTrack,
+  ensureDefaultAudioTracks,
   type EditorProjectState,
 } from './webav-editor';
 
+const DEFAULT_VIDEO_TRACK = createEditorTrack('video', 1);
+
 export const EMPTY_EDITOR_PROJECT: EditorProjectState = {
-  version: 2,
+  version: 3,
   name: 'Untitled video',
   assets: [],
   clips: [],
+  tracks: ensureDefaultAudioTracks([DEFAULT_VIDEO_TRACK]),
+  subtitles: [],
+  subtitleStyle: DEFAULT_SUBTITLE_STYLE,
   playhead: 0,
   zoom: 50,
   exportSettings: DEFAULT_EXPORT_SETTINGS,

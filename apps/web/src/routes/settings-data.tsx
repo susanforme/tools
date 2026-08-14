@@ -9,7 +9,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { resetFavorites } from '@/hooks/useFavorites';
-import { clearStoredFiles, clearStoredRecords } from '@/lib/local-data';
+import {
+  clearStoredFiles,
+  clearStoredRecords,
+  getStoredDataUsage,
+  type StoredDataUsage,
+} from '@/lib/local-data';
+import { formatMediaBytes } from '@/lib/media-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   CheckCircle2,
@@ -18,7 +24,7 @@ import {
   LoaderCircle,
   Trash2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import {
@@ -40,6 +46,13 @@ function SettingsDataPage() {
   const [clearing, setClearing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [usage, setUsage] = useState<StoredDataUsage | null>(null);
+
+  useEffect(() => {
+    void getStoredDataUsage()
+      .then(setUsage)
+      .catch(() => setUsage(null));
+  }, []);
 
   const clearData = async () => {
     if (!target) return;
@@ -52,6 +65,7 @@ function SettingsDataPage() {
         resetFavorites();
       }
       if (target !== 'records') await clearStoredFiles();
+      setUsage(await getStoredDataUsage());
       setSuccess(true);
       setTarget(null);
     } catch {
@@ -66,12 +80,14 @@ function SettingsDataPage() {
       target: 'records' as const,
       title: t('settingsData.recordsTitle'),
       action: t('settingsData.clearRecords'),
+      bytes: usage?.recordBytes,
       icon: ListX,
     },
     {
       target: 'files' as const,
       title: t('settingsData.filesTitle'),
       action: t('settingsData.clearFiles'),
+      bytes: usage?.opfsBytes,
       icon: FileX2,
     },
   ];
@@ -104,10 +120,19 @@ function SettingsDataPage() {
                 key={card.target}
                 className="flex flex-col gap-3 border-b px-4 py-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
               >
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <card.icon className="size-5" />
-                  {card.title}
-                </CardTitle>
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <card.icon className="size-5" />
+                    {card.title}
+                  </CardTitle>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {card.bytes === undefined
+                      ? t('settingsData.calculating')
+                      : t('settingsData.used', {
+                          size: formatMediaBytes(card.bytes),
+                        })}
+                  </p>
+                </div>
                 <Button
                   size="sm"
                   variant="outline"
@@ -126,6 +151,13 @@ function SettingsDataPage() {
               <Trash2 className="size-5" />
               {t('settingsData.allTitle')}
             </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {usage
+                ? t('settingsData.totalUsed', {
+                    size: formatMediaBytes(usage.totalBytes),
+                  })
+                : t('settingsData.calculating')}
+            </p>
           </CardHeader>
           <CardContent>
             <Button variant="destructive" onClick={() => setTarget('all')}>

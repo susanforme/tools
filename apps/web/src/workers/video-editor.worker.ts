@@ -29,6 +29,82 @@ async function readAsset(
   return (await directory.getFileHandle(asset.storageName)).getFile();
 }
 
+async function normalizeVideo(
+  request: Extract<EditorWorkerRequest, { type: 'normalize-video' }>,
+): Promise<void> {
+  const directory = await getSessionDirectory(request.sessionId);
+  const source = await (
+    await directory.getFileHandle(request.storageName)
+  ).getFile();
+  const {
+    ALL_FORMATS,
+    BlobSource,
+    Conversion,
+    Input,
+    Mp4OutputFormat,
+    Output,
+    StreamTarget,
+  } = await import('mediabunny');
+  const input = new Input({
+    formats: ALL_FORMATS,
+    source: new BlobSource(source),
+  });
+  try {
+    if (!(await input.canRead())) throw new Error('UNSUPPORTED_CONTAINER');
+    const video = await input.getPrimaryVideoTrack();
+    const audio = await input.getPrimaryAudioTrack();
+    if (!video) throw new Error('VIDEO_REQUIRED');
+    if (!(await video.canDecode()) || (audio && !(await audio.canDecode()))) {
+      throw new Error('WEBCODECS_UNSUPPORTED');
+    }
+    if (/\.mp4$/i.test(request.storageName)) {
+      postDone(request.id, {
+        type: 'normalize-video',
+        storageName: request.storageName,
+      });
+      return;
+    }
+
+    const storageName = `${crypto.randomUUID()}.mp4`;
+    const handle = await directory.getFileHandle(storageName, { create: true });
+    const writable = await handle.createWritable();
+    const output = new Output({
+      format: new Mp4OutputFormat(),
+      target: new StreamTarget(
+        writable as unknown as WritableStream<StreamTargetChunk>,
+        { chunked: true },
+      ),
+    });
+    try {
+      const conversion = await Conversion.init({
+        input,
+        output,
+        tracks: 'primary',
+        video: { codec: 'avc', keyFrameInterval: 2 },
+        audio: { codec: 'aac' },
+        tags: {},
+        showWarnings: false,
+      });
+      if (!conversion.isValid) throw new Error('VIDEO_CONVERSION_UNAVAILABLE');
+      conversion.onProgress = (progress) =>
+        context.postMessage({
+          id: request.id,
+          type: 'progress',
+          progress,
+        } satisfies EditorWorkerResponse);
+      await conversion.execute();
+      postDone(request.id, { type: 'normalize-video', storageName });
+    } catch (cause) {
+      await output.cancel().catch(() => undefined);
+      await writable.abort().catch(() => undefined);
+      await directory.removeEntry(storageName).catch(() => undefined);
+      throw cause;
+    }
+  } finally {
+    input.dispose();
+  }
+}
+
 async function readThumbnailManifest(
   directory: FileSystemDirectoryHandle,
 ): Promise<Array<{ name: string; ts: number }> | null> {
@@ -228,7 +304,7 @@ function timelineDuration(clips: TimelineClip[]): number {
 async function exportTimeline(
   request: Extract<EditorWorkerRequest, { type: 'export' }>,
 ): Promise<void> {
-  const { Combinator, MP4Clip, OffscreenSprite } =
+  const { Combinator, EmbedSubtitlesClip, MP4Clip, OffscreenSprite } =
     await import('@webav/av-cliper');
   const supported = await Combinator.isSupported({
     width: request.output.width,
@@ -256,7 +332,10 @@ async function exportTimeline(
   });
   try {
     for (const item of request.timeline.clips) {
-      if (item.kind === 'audio' && item.muted) continue;
+      const track = request.timeline.tracks.find(
+        ({ id }) => id === item.trackId,
+      );
+      if (item.kind === 'audio' && (item.muted || track?.muted)) continue;
       const asset = request.timeline.assets.find(
         ({ id }) => id === item.assetId,
       );
@@ -274,7 +353,7 @@ async function exportTimeline(
       }
 
       const source = new MP4Clip(stored.stream(), {
-        audio: item.muted ? false : true,
+        audio: item.muted || track?.muted ? false : true,
       });
       await source.ready;
       const clip = await trimClip(
@@ -294,12 +373,57 @@ async function exportTimeline(
         sprite.rect.x = (request.output.width - sprite.rect.w) / 2;
         sprite.rect.y = (request.output.height - sprite.rect.h) / 2;
       }
-      if (item.kind === 'audio' || item.hidden) sprite.opacity = 0;
+      if (item.kind === 'audio' || item.hidden || track?.hidden) {
+        sprite.opacity = 0;
+      }
+      sprite.zIndex = Math.max(
+        0,
+        request.timeline.tracks.findIndex(({ id }) => id === item.trackId),
+      );
       sprite.time = {
         offset: item.offset * VIDEO_EDITOR_CONFIG.microsecondsPerSecond,
         duration: item.duration * VIDEO_EDITOR_CONFIG.microsecondsPerSecond,
       };
       await combinator.addSprite(sprite);
+    }
+
+    const subtitleTracks = request.timeline.tracks.filter(
+      (track) => track.kind === 'subtitle' && !track.hidden,
+    );
+    if (subtitleTracks.length > 0 && request.timeline.subtitles.length > 0) {
+      const style = request.timeline.subtitleStyle;
+      const fontAsset = style.fontAssetId
+        ? request.timeline.assets.find(({ id }) => id === style.fontAssetId)
+        : null;
+      if (fontAsset && 'FontFace' in context && 'fonts' in context) {
+        const fontFile = await readAsset(directory, fontAsset);
+        const font = new FontFace(
+          style.fontFamily,
+          await fontFile.arrayBuffer(),
+        );
+        await font.load();
+        (context.fonts as FontFaceSet).add(font);
+      }
+      for (const track of subtitleTracks) {
+        const cues = request.timeline.subtitles
+          .filter((cue) => cue.trackId === track.id)
+          .map((cue) => ({
+            start: cue.start * VIDEO_EDITOR_CONFIG.microsecondsPerSecond,
+            end: cue.end * VIDEO_EDITOR_CONFIG.microsecondsPerSecond,
+            text: cue.text,
+          }));
+        if (cues.length === 0) continue;
+        const subtitleClip = new EmbedSubtitlesClip(cues, {
+          videoWidth: request.output.width,
+          videoHeight: request.output.height,
+          fontFamily: style.fontFamily,
+          fontSize: style.fontSize,
+          color: style.color,
+        });
+        const subtitleSprite = new OffscreenSprite(subtitleClip);
+        subtitleSprite.zIndex = request.timeline.tracks.length + 1;
+        await combinator.addSprite(subtitleSprite);
+      }
     }
 
     const storageName = `${request.fileName.replace(/[\\/:*?"<>|]/g, '-').trim() || 'video'}.mp4`;
@@ -336,6 +460,7 @@ function postDone(
 
 async function handle(request: EditorWorkerRequest): Promise<void> {
   if (request.type === 'thumbnails') return generateThumbnails(request);
+  if (request.type === 'normalize-video') return normalizeVideo(request);
   return exportTimeline(request);
 }
 

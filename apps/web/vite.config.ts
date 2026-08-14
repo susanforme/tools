@@ -7,6 +7,11 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import wasm from 'vite-plugin-wasm';
 
+const crossOriginIsolationHeaders = {
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+};
+
 const config = defineConfig({
   // logLevel: 'warn',
   resolve: {
@@ -63,9 +68,13 @@ const config = defineConfig({
     wasm(),
   ],
   server: {
+    headers: crossOriginIsolationHeaders,
     strictPort: true,
     host: '0.0.0.0',
     port: Number(process.env.PORT) || 5173,
+  },
+  preview: {
+    headers: crossOriginIsolationHeaders,
   },
 });
 

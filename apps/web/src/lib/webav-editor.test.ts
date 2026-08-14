@@ -1,5 +1,7 @@
 import { expect, test } from 'vitest';
 import {
+  DEFAULT_EXPORT_SETTINGS,
+  DEFAULT_SUBTITLE_STYLE,
   duplicateTimelineClip,
   extractTimelineAudio,
   isEditorProjectState,
@@ -7,36 +9,86 @@ import {
   moveTimelineClip,
   normalizeEditorProjectState,
   resolveExportConfig,
+  snapTimelineClip,
   timelineDuration,
 } from './webav-editor';
 
 test('validates persisted OPFS editor state before restoring it', () => {
   expect(
     isEditorProjectState({
-      version: 2,
+      version: 3,
       name: 'Draft',
       playhead: 1,
       zoom: 50,
       assets: [],
       clips: [],
+      tracks: [],
+      subtitles: [],
+      subtitleStyle: DEFAULT_SUBTITLE_STYLE,
       exportSettings: {
-        resolution: 'source',
-        fps: 30,
-        quality: 'balanced',
+        ...DEFAULT_EXPORT_SETTINGS,
+        format: 'webm',
       },
     }),
   ).toBe(true);
+  expect(isEditorProjectState({ version: 3, assets: 'broken' })).toBe(false);
+
   expect(
     normalizeEditorProjectState({
-      version: 1,
-      name: 'Old draft',
+      version: 3,
+      name: 'GIF draft',
       playhead: 0,
       zoom: 50,
       assets: [],
       clips: [],
-    })?.exportSettings,
-  ).toEqual({ resolution: 'source', fps: 30, quality: 'balanced' });
-  expect(isEditorProjectState({ version: 2, assets: 'broken' })).toBe(false);
+      tracks: [],
+      subtitles: [],
+      subtitleStyle: DEFAULT_SUBTITLE_STYLE,
+      exportSettings: { ...DEFAULT_EXPORT_SETTINGS, format: 'gif' },
+    })?.exportSettings.format,
+  ).toBe('mp4');
+});
+
+test('migrates legacy projects to tracks and expanded export settings', () => {
+  const migrated = normalizeEditorProjectState({
+    version: 2,
+    name: 'Old draft',
+    playhead: 0,
+    zoom: 50,
+    assets: [],
+    clips: [
+      {
+        id: 'video-clip',
+        assetId: 'video',
+        kind: 'video',
+        offset: 0,
+        sourceStart: 0,
+        duration: 4,
+      },
+    ],
+    exportSettings: {
+      resolution: '720p',
+      fps: 24,
+      quality: 'high',
+    },
+  });
+
+  expect(migrated).toMatchObject({
+    version: 3,
+    subtitles: [],
+    subtitleStyle: DEFAULT_SUBTITLE_STYLE,
+    exportSettings: {
+      ...DEFAULT_EXPORT_SETTINGS,
+      resolution: '720p',
+      fps: 24,
+      quality: 'high',
+    },
+  });
+  const videoTrack = migrated?.tracks.find(({ kind }) => kind === 'video');
+  expect(migrated?.clips[0]?.trackId).toBe(videoTrack?.id);
+  expect(migrated?.tracks.filter(({ kind }) => kind === 'audio')).toHaveLength(
+    3,
+  );
 });
 
 test('maps export presets to an even WebCodecs configuration', () => {
@@ -53,14 +105,15 @@ test('maps export presets to an even WebCodecs configuration', () => {
   };
   expect(
     resolveExportConfig(asset, {
+      ...DEFAULT_EXPORT_SETTINGS,
       resolution: '1080p',
       fps: 30,
       quality: 'balanced',
     }),
-  ).toEqual({ width: 1920, height: 1080, fps: 30, bitrate: 6_220_800 });
+  ).toEqual({ width: 1920, height: 1080, fps: 30, bitrate: 6_000_000 });
 });
 
-test('accepts MP4 files for WebAV MP4Clip', () => {
+test('accepts videos that can be normalized for WebAV MP4Clip', () => {
   expect(
     isWebAvCompatibleFile(new File([''], 'clip.mp4', { type: 'video/mp4' })),
   ).toBe(true);
@@ -69,7 +122,12 @@ test('accepts MP4 files for WebAV MP4Clip', () => {
   ).toBe(true);
   expect(
     isWebAvCompatibleFile(new File([''], 'clip.webm', { type: 'video/webm' })),
-  ).toBe(false);
+  ).toBe(true);
+  expect(
+    isWebAvCompatibleFile(
+      new File([''], 'clip.mkv', { type: 'application/octet-stream' }),
+    ),
+  ).toBe(true);
 });
 
 test('moves clips on a multi-track timeline without negative offsets', () => {
@@ -84,6 +142,26 @@ test('moves clips on a multi-track timeline without negative offsets', () => {
   expect(moveTimelineClip(clip, 1.234).offset).toBe(1.25);
   expect(moveTimelineClip(clip, -2).offset).toBe(0);
   expect(timelineDuration([clip, { ...clip, id: 'two', offset: 6 }])).toBe(10);
+});
+
+test('snaps clip edges to nearby timeline targets', () => {
+  const clip = {
+    id: 'moving',
+    assetId: 'asset',
+    kind: 'video' as const,
+    offset: 0,
+    sourceStart: 0,
+    duration: 2,
+  };
+  const clips = [clip, { ...clip, id: 'previous', offset: 0, duration: 5 }];
+
+  const snapped = snapTimelineClip(clip, 5.06, clips, 100, 8);
+  expect(snapped.offset).toBeCloseTo(5);
+  expect(snapped.guide).toBe(5);
+  expect(snapTimelineClip(clip, 5.2, clips, 100, 8)).toEqual({
+    offset: 5.2,
+    guide: null,
+  });
 });
 
 test('copies clips and extracts audio without duplicating the source asset', () => {
