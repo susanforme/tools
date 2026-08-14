@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { devtools } from '@tanstack/devtools-vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import viteReact from '@vitejs/plugin-react';
+import { esmExternalRequirePlugin } from 'rolldown/plugins';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig, type Plugin, type PluginOption } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -41,26 +42,26 @@ const CDN_MODULE_VERSIONS = {
   'wasm-webp': '0.1.0',
 } as const;
 
-const REACT_IMPORT_MAP = {
-  react: `https://esm.sh/react@${CDN_MODULE_VERSIONS.react}`,
-  'react/': `https://esm.sh/react@${CDN_MODULE_VERSIONS.react}/`,
-  'react-dom': `https://esm.sh/react-dom@${CDN_MODULE_VERSIONS['react-dom']}?external=react`,
-  'react-dom/client': `https://esm.sh/react-dom@${CDN_MODULE_VERSIONS['react-dom']}/client?external=react`,
-} as const;
+const CDN_EXTERNAL_NAMES_PATTERN = Object.keys(CDN_MODULE_VERSIONS)
+  .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  .join('|');
+const CDN_EXTERNAL_PATTERN = new RegExp(
+  `^(?:${CDN_EXTERNAL_NAMES_PATTERN})(?:/|$)`,
+);
 
 function cdnModuleUrl(
   source: string,
   packageName: keyof typeof CDN_MODULE_VERSIONS,
 ): string {
   const path = `${packageName}@${CDN_MODULE_VERSIONS[packageName]}${source.slice(packageName.length)}`;
-  if (packageName === 'react') return `https://esm.sh/${path}`;
-  if (packageName === 'react-dom') {
-    return `https://esm.sh/${path}?external=react`;
-  }
-  if (packageName === '@tanstack/react-router') {
-    return `https://esm.sh/${path}?bundle&external=react,react-dom`;
-  }
-  return `https://esm.sh/${path}?bundle`;
+  return `https://cdn.jsdelivr.net/npm/${path}/+esm`;
+}
+
+function cdnExternalPath(source: string): string {
+  const packageName = Object.keys(CDN_MODULE_VERSIONS).find(
+    (name) => source === name || source.startsWith(`${name}/`),
+  ) as keyof typeof CDN_MODULE_VERSIONS | undefined;
+  return packageName ? cdnModuleUrl(source, packageName) : source;
 }
 
 function cdnExternals(): Plugin {
@@ -74,22 +75,25 @@ function cdnExternals(): Plugin {
       ) as keyof typeof CDN_MODULE_VERSIONS | undefined;
       if (!packageName) return null;
       return {
-        id: cdnModuleUrl(source, packageName),
+        id: source,
         external: true,
       };
     },
-    transformIndexHtml() {
-      return [
-        {
-          tag: 'script',
-          attrs: { type: 'importmap' },
-          children: JSON.stringify({ imports: REACT_IMPORT_MAP }),
-          injectTo: 'head-prepend',
-        },
-      ];
+    writeBundle(_, bundle) {
+      for (const output of Object.values(bundle)) {
+        if (output.type !== 'chunk') continue;
+        if (/require\(\s*["']https:\/\/cdn\.jsdelivr/.test(output.code)) {
+          this.error(`${output.fileName} requires a CDN module at runtime`);
+        }
+      }
     },
   };
 }
+
+const externalRequirePlugin = () =>
+  esmExternalRequirePlugin({
+    external: [CDN_EXTERNAL_PATTERN],
+  });
 
 const config = defineConfig(async () => ({
   // logLevel: 'warn',
@@ -99,7 +103,13 @@ const config = defineConfig(async () => ({
   optimizeDeps: {
     exclude: ['@sqlite.org/sqlite-wasm'],
   },
+  build: {
+    rolldownOptions: {
+      output: { paths: cdnExternalPath },
+    },
+  },
   plugins: [
+    externalRequirePlugin(),
     cdnExternals(),
     Icons({ compiler: 'jsx', jsx: 'react' }),
 
@@ -168,7 +178,10 @@ const config = defineConfig(async () => ({
   },
   worker: {
     format: 'es' as const,
-    plugins: () => [cdnExternals()],
+    plugins: () => [externalRequirePlugin(), cdnExternals()],
+    rolldownOptions: {
+      output: { paths: cdnExternalPath },
+    },
   },
 }));
 
