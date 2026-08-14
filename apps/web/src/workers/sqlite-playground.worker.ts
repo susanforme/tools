@@ -8,6 +8,7 @@ import {
   type SqliteWorkerRequest,
   type SqliteWorkerResponse,
 } from '../lib/sqlite-playground';
+import { importRuntimeModule, loadRuntimeWasm } from '../lib/runtime-assets';
 
 const DATABASE_FILE = '/practice.sqlite3';
 const MAX_RESULT_ROWS = 500;
@@ -161,8 +162,13 @@ async function initialize(): Promise<SqliteInitResult> {
       scope.sqlite3ApiConfig = {
         disable: { vfs: { opfs: true, 'opfs-wl': true } },
       };
-      const module = await import('@sqlite.org/sqlite-wasm');
-      sqlite3 = await module.default();
+      const module = await importRuntimeModule<{
+        default(options: { wasmBinary: ArrayBuffer }): Promise<Sqlite3>;
+      }>('sqliteGlue');
+      const initialize = module.default;
+      sqlite3 = await initialize({
+        wasmBinary: await loadRuntimeWasm('sqliteWasm'),
+      });
       await openDatabase();
       seedDatabase();
       return {

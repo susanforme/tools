@@ -1,5 +1,6 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { CssSpecificityPanel } from '@/components/tool-expansion-panels';
+import { loadSass } from '@/lib/sass-runtime';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -120,7 +121,7 @@ function CssPage() {
     scss.setError(null);
     scss.setLoading(true);
     try {
-      const { compileStringAsync } = await import('sass');
+      const { compileStringAsync } = await loadSass();
       const result = await compileStringAsync(scss.input, {
         style: 'expanded',
       });

@@ -85,6 +85,14 @@ export interface ScreenRecording {
   videoBitsPerSecond?: number;
 }
 
+export interface BinaryCacheEntry {
+  key: string;
+  sourceUrl: string;
+  mimeType: string;
+  data: Blob;
+  createdAt: number;
+}
+
 // ─── 数据库 ────────────────────────────────────────────────────────────────
 
 class AppDB extends Dexie {
@@ -93,6 +101,7 @@ class AppDB extends Dexie {
   favorites!: Table<Favorite>;
   fontCache!: Table<CachedFont>;
   screenRecordings!: Table<ScreenRecording>;
+  binaryCache!: Table<BinaryCacheEntry>;
 
   constructor() {
     super('tools-app');
@@ -136,6 +145,14 @@ class AppDB extends Dexie {
       favorites: '++id, &toolPath, addedAt, sortOrder',
       fontCache: 'id',
       screenRecordings: 'id, createdAt',
+    });
+    this.version(6).stores({
+      history: '++id, tool, createdAt',
+      preferences: 'tool',
+      favorites: '++id, &toolPath, addedAt, sortOrder',
+      fontCache: 'id',
+      screenRecordings: 'id, createdAt',
+      binaryCache: 'key, createdAt',
     });
   }
 }

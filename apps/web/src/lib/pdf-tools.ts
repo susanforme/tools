@@ -1,5 +1,5 @@
-import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import { parsePageSelection } from './pdf-pages';
+import { loadRuntimeAssetUrl } from './runtime-assets';
 
 export type ExtractedPdfImage = { blob: Blob; name: string };
 
@@ -166,7 +166,10 @@ export async function extractPdfImages(
   file: File,
 ): Promise<ExtractedPdfImage[]> {
   const pdfjs = await import('pdfjs-dist');
-  pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+  pdfjs.GlobalWorkerOptions.workerSrc = await loadRuntimeAssetUrl(
+    'pdfWorker',
+    'text/javascript',
+  );
   const loading = pdfjs.getDocument({ data: await file.arrayBuffer() });
   const document = await loading.promise;
   const images: ExtractedPdfImage[] = [];

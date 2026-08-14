@@ -11,6 +11,12 @@ import {
 import { parseHexPattern } from '@/lib/binary-inspector';
 import { base64ToBytes } from '@/lib/developer-tools';
 import {
+  importNetworkRuntimeModule,
+  importRuntimeModule,
+  loadRuntimeAssetUrl,
+  loadRuntimeWasm,
+} from '@/lib/runtime-assets';
+import {
   analyzeHttpCache,
   analyzeHttpLogs,
   checksums,
@@ -813,11 +819,35 @@ async function gzip(bytes: Uint8Array): Promise<Uint8Array> {
 let zstdReady: Promise<typeof import('@bokuweb/zstd-wasm')> | null = null;
 
 function loadZstd() {
-  zstdReady ??= import('@bokuweb/zstd-wasm').then(async (module) => {
-    await module.init();
+  zstdReady ??= importNetworkRuntimeModule<typeof import('@bokuweb/zstd-wasm')>(
+    'zstdModule',
+  ).then(async (module) => {
+    const url = await loadRuntimeAssetUrl('zstdWasm', 'application/wasm');
+    const initialize = module.init as unknown as (
+      path: string,
+    ) => Promise<void>;
+    await initialize(url);
     return module;
   });
   return zstdReady;
+}
+
+type BrotliRuntime = {
+  default(input: ArrayBuffer): Promise<unknown>;
+  compress(input: Uint8Array): Uint8Array;
+};
+
+let brotliReady: Promise<BrotliRuntime> | null = null;
+
+function loadBrotli() {
+  brotliReady ??= Promise.all([
+    importRuntimeModule<BrotliRuntime>('brotliGlue'),
+    loadRuntimeWasm('brotliWasm'),
+  ]).then(async ([module, bytes]) => {
+    await module.default(bytes);
+    return module;
+  });
+  return brotliReady;
 }
 
 export function CompressionBenchmarkPanel() {
@@ -830,10 +860,7 @@ export function CompressionBenchmarkPanel() {
     setError(null);
     try {
       const bytes = source ?? new TextEncoder().encode(input);
-      const [brotli, zstd] = await Promise.all([
-        import('brotli-wasm').then((module) => module.default),
-        loadZstd(),
-      ]);
+      const [brotli, zstd] = await Promise.all([loadBrotli(), loadZstd()]);
       const entries = [
         ['Gzip', await gzip(bytes)],
         ['Brotli', brotli.compress(bytes)],

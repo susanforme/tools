@@ -1,21 +1,34 @@
 import { loader } from '@monaco-editor/react';
-import * as monaco from 'monaco-editor';
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
-import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
-import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import {
+  loadRuntimeAssetUrl,
+  MONACO_VS_CDN_BASE,
+  type RuntimeAssetName,
+} from './runtime-assets';
 
-self.MonacoEnvironment = {
-  getWorker(_workerId: string, label: string) {
-    if (label === 'json') return new JsonWorker();
-    if (label === 'css' || label === 'scss' || label === 'less')
-      return new CssWorker();
-    if (label === 'html' || label === 'handlebars' || label === 'razor')
-      return new HtmlWorker();
-    if (label === 'typescript' || label === 'javascript') return new TsWorker();
-    return new EditorWorker();
+function workerAsset(label: string): RuntimeAssetName {
+  if (label === 'json') return 'monacoJsonWorker';
+  if (label === 'css' || label === 'scss' || label === 'less')
+    return 'monacoCssWorker';
+  if (label === 'html' || label === 'handlebars' || label === 'razor')
+    return 'monacoHtmlWorker';
+  if (label === 'typescript' || label === 'javascript') return 'monacoTsWorker';
+  return 'monacoEditorWorker';
+}
+
+const environment: NonNullable<typeof self.MonacoEnvironment> = {
+  async getWorker(_workerId: string, label: string) {
+    const url = await loadRuntimeAssetUrl(
+      workerAsset(label),
+      'text/javascript',
+    );
+    return new Worker(url, { name: `monaco-${label}` });
   },
 };
 
-loader.config({ monaco });
+loader.config({ paths: { vs: MONACO_VS_CDN_BASE } });
+void loader.init().then(
+  () => {
+    self.MonacoEnvironment = environment;
+  },
+  () => undefined,
+);

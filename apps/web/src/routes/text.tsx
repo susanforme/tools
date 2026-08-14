@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { importRuntimeModule } from '@/lib/runtime-assets';
 import {
   AsciiArtPanel,
   LoremPanel,
@@ -635,7 +636,9 @@ function ZhTab() {
     setError(null);
     setLoading(true);
     try {
-      const OpenCC = await import('opencc-js');
+      const OpenCC = await importRuntimeModule<typeof import('opencc-js')>(
+        direction === 's2t' ? 'openccCn2t' : 'openccT2cn',
+      );
       const converter = OpenCC.Converter(
         direction === 's2t'
           ? { from: 'cn', to: 'tw' }

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import createSevenZip from '7z-wasm';
 import { getArchiveAdapter } from './archive-adapters';
 
 const SOURCE = [
@@ -16,7 +17,10 @@ const SOURCE = [
 
 describe.each(['zip', '7z'] as const)('%s archive adapter', (format) => {
   it('keeps nested paths and empty folders', async () => {
-    const adapter = getArchiveAdapter(format);
+    const adapter = getArchiveAdapter(
+      format,
+      format === '7z' ? createSevenZip : undefined,
+    );
     const compressed = await adapter.compress(SOURCE);
     const files = await adapter.decompress(compressed, `archive.${format}`);
 

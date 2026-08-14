@@ -8,6 +8,7 @@ import {
   type JsonGraphNode,
 } from '@/lib/community-tools';
 import { bytesToBase64 } from '@/lib/developer-tools';
+import { importRuntimeModule, loadRuntimeWasm } from '@/lib/runtime-assets';
 import { Download, LoaderCircle, Play } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +41,45 @@ function downloadBlob(blob: Blob, name: string) {
   anchor.download = name;
   anchor.click();
   URL.revokeObjectURL(url);
+}
+
+type JqHandle = {
+  json<T = unknown>(input: object, query: string): T[];
+  raw(
+    input: object,
+    query: string,
+    flags: string[],
+  ): {
+    exitCode: number;
+    stderr: string;
+    stdout: string;
+  };
+};
+
+type JqGlue = {
+  makeLoadJq(platform: {
+    defaultBuilder(): never;
+    fromURL(): never;
+  }): (options: { wasmBinary: ArrayBuffer }) => Promise<JqHandle>;
+};
+
+let jqReady: Promise<JqHandle> | null = null;
+
+function loadJq() {
+  jqReady ??= Promise.all([
+    importRuntimeModule<JqGlue>('jqGlue'),
+    loadRuntimeWasm('jqWasm'),
+  ]).then(([module, wasmBinary]) =>
+    module.makeLoadJq({
+      defaultBuilder: () => {
+        throw new Error('JQ_WASM_REQUIRED');
+      },
+      fromURL: () => {
+        throw new Error('JQ_WASM_REQUIRED');
+      },
+    })({ wasmBinary }),
+  );
+  return jqReady;
 }
 
 async function svgPngBlob(svg: string): Promise<Blob> {
@@ -98,13 +138,13 @@ export function JqPanel() {
     setError(null);
     try {
       const parsed = JSON.parse(input) as object;
-      const jq = await import('jq-wasm');
+      const jq = await loadJq();
       if (mode === 'raw') {
-        const result = await jq.raw(parsed, query, ['-r']);
+        const result = jq.raw(parsed, query, ['-r']);
         if (result.exitCode !== 0) throw new Error(result.stderr.trim());
         setOutput(result.stdout.trimEnd());
       } else {
-        const result = await jq.json(parsed, query);
+        const result = jq.json(parsed, query);
         setOutput(
           result.map((value) => JSON.stringify(value, null, 2)).join('\n'),
         );

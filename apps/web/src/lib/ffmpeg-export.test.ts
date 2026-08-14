@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildFfmpegExportArgs,
+  getFfmpegCoreAssetUrl,
   supportsFfmpegMultiThread,
 } from './ffmpeg-export';
 
@@ -9,6 +10,15 @@ describe('buildFfmpegExportArgs', () => {
     expect(supportsFfmpegMultiThread(true, true)).toBe(true);
     expect(supportsFfmpegMultiThread(false, true)).toBe(false);
     expect(supportsFfmpegMultiThread(true, false)).toBe(false);
+  });
+
+  it('loads version-pinned FFmpeg cores from the CDN', () => {
+    expect(getFfmpegCoreAssetUrl(true, 'ffmpeg-core.wasm')).toBe(
+      'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd/ffmpeg-core.wasm',
+    );
+    expect(getFfmpegCoreAssetUrl(false, 'ffmpeg-core.js')).toBe(
+      'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js',
+    );
   });
 
   it('builds a constrained WebM export command', () => {

@@ -1,9 +1,16 @@
-import ffmpegCoreURL from '@ffmpeg/core?url';
-import ffmpegWasmURL from '@ffmpeg/core/wasm?url';
-import ffmpegMtCoreURL from '@ffmpeg/core-mt?url';
-import ffmpegMtWasmURL from '@ffmpeg/core-mt/wasm?url';
-import ffmpegMtWorkerURL from '@ffmpeg/core-mt/worker?url';
 import type { FFmpeg, FFFSType } from '@ffmpeg/ffmpeg';
+import { loadCachedCdnAssetUrl } from './cdn-asset-cache';
+
+const FFMPEG_CORE_VERSION = '0.12.10';
+const FFMPEG_CDN_ROOT = 'https://cdn.jsdelivr.net/npm';
+
+export function getFfmpegCoreAssetUrl(
+  multiThread: boolean,
+  fileName: string,
+): string {
+  const packageName = multiThread ? 'core-mt' : 'core';
+  return `${FFMPEG_CDN_ROOT}/@ffmpeg/${packageName}@${FFMPEG_CORE_VERSION}/dist/umd/${fileName}`;
+}
 
 export const FFMPEG_EXPORT_FORMATS = [
   'mp4',
@@ -31,12 +38,39 @@ export interface FfmpegExportOptions {
 let ffmpeg: FFmpeg | null = null;
 let loading: Promise<FFmpeg> | null = null;
 let exporting = false;
+const ffmpegAssetUrls = new Set<string>();
 
 export function supportsFfmpegMultiThread(
   isolated = globalThis.crossOriginIsolated,
   hasSharedArrayBuffer = typeof SharedArrayBuffer !== 'undefined',
 ): boolean {
   return isolated === true && hasSharedArrayBuffer;
+}
+
+async function loadFfmpegCoreUrls(multiThread: boolean): Promise<{
+  coreURL: string;
+  wasmURL: string;
+  workerURL?: string;
+}> {
+  const [coreURL, wasmURL, workerURL] = await Promise.all([
+    loadCachedCdnAssetUrl(
+      getFfmpegCoreAssetUrl(multiThread, 'ffmpeg-core.js'),
+      'text/javascript',
+    ),
+    loadCachedCdnAssetUrl(
+      getFfmpegCoreAssetUrl(multiThread, 'ffmpeg-core.wasm'),
+      'application/wasm',
+    ),
+    multiThread
+      ? loadCachedCdnAssetUrl(
+          getFfmpegCoreAssetUrl(true, 'ffmpeg-core.worker.js'),
+          'text/javascript',
+        )
+      : Promise.resolve(undefined),
+  ]);
+  ffmpegAssetUrls.add(coreURL).add(wasmURL);
+  if (workerURL) ffmpegAssetUrls.add(workerURL);
+  return workerURL ? { coreURL, wasmURL, workerURL } : { coreURL, wasmURL };
 }
 
 function positiveInteger(value: number | undefined, label: string): void {
@@ -118,11 +152,7 @@ async function getFfmpeg(): Promise<FFmpeg> {
       const instance = new FFmpeg();
       ffmpeg = instance;
       try {
-        await instance.load({
-          coreURL: ffmpegMtCoreURL,
-          wasmURL: ffmpegMtWasmURL,
-          workerURL: ffmpegMtWorkerURL,
-        });
+        await instance.load(await loadFfmpegCoreUrls(true));
         return instance;
       } catch {
         instance.terminate();
@@ -131,7 +161,7 @@ async function getFfmpeg(): Promise<FFmpeg> {
     }
     const fallback = new FFmpeg();
     ffmpeg = fallback;
-    await fallback.load({ coreURL: ffmpegCoreURL, wasmURL: ffmpegWasmURL });
+    await fallback.load(await loadFfmpegCoreUrls(false));
     return fallback;
   });
   try {
@@ -149,6 +179,8 @@ export function disposeFfmpegExporter(): void {
   ffmpeg?.terminate();
   ffmpeg = null;
   loading = null;
+  for (const url of ffmpegAssetUrls) URL.revokeObjectURL(url);
+  ffmpegAssetUrls.clear();
 }
 
 export async function exportWithFfmpeg(

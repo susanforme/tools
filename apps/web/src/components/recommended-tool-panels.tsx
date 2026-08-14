@@ -19,6 +19,7 @@ import {
 } from '@/hooks/useQueryParams';
 import { sha256 } from '@/lib/batch-files';
 import { downloadBlob, downloadBytes } from '@/lib/download';
+import { importNetworkRuntimeModule } from '@/lib/runtime-assets';
 import {
   generateLorem,
   inspectPdfSignatures,
@@ -338,7 +339,9 @@ export function XsdPanel() {
     let validator: XsdValidator | null = null;
     try {
       const { ParseOption, XmlDocument, XsdValidator } =
-        await import('libxml2-wasm');
+        await importNetworkRuntimeModule<typeof import('libxml2-wasm')>(
+          'libxml2Module',
+        );
       const options = {
         option: ParseOption.XML_PARSE_NONET | ParseOption.XML_PARSE_NO_XXE,
       };

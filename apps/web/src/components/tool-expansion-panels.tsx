@@ -1,4 +1,5 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { importRuntimeModule } from '@/lib/runtime-assets';
 import {
   buildGraphqlRequest,
   compareCssSelectors,
@@ -300,7 +301,10 @@ export function BarcodePanel() {
     setLoading(true);
     setError(null);
     try {
-      const bwip = await import('@bwip-js/browser');
+      const bwip =
+        await importRuntimeModule<typeof import('@bwip-js/browser')>(
+          'bwipModule',
+        );
       bwip.toCanvas(canvasRef.current, {
         bcid: type,
         text,

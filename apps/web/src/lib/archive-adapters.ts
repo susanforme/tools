@@ -4,7 +4,8 @@ import {
   MAX_EXTRACTED_BYTES,
   type ArchiveFormat,
 } from './archive';
-import type { FileSystem } from '7z-wasm';
+import type { FileSystem, SevenZipModuleFactory } from '7z-wasm';
+import { importRuntimeModule, loadRuntimeWasm } from './runtime-assets';
 
 type AdapterFile = {
   data: Uint8Array;
@@ -298,11 +299,22 @@ class SevenZipArchiveAdapter implements ArchiveAdapter {
   readonly format = '7z';
   readonly supportsMultipleFiles = true;
 
+  constructor(private readonly factory?: SevenZipModuleFactory) {}
+
   async createModule(logs: string[]) {
-    const { default: createSevenZip } = await import('7z-wasm');
+    const createSevenZip =
+      this.factory ??
+      (
+        await importRuntimeModule<{ default: SevenZipModuleFactory }>(
+          'sevenZipGlue',
+        )
+      ).default;
     return createSevenZip({
       print: (line) => logs.push(line),
       printErr: (line) => logs.push(line),
+      ...(this.factory
+        ? {}
+        : { wasmBinary: await loadRuntimeWasm('sevenZipWasm') }),
     });
   }
 
@@ -389,6 +401,12 @@ const ADAPTERS: Record<ArchiveFormat, ArchiveAdapter> = {
   '7z': new SevenZipArchiveAdapter(),
 };
 
-export function getArchiveAdapter(format: ArchiveFormat): ArchiveAdapter {
+export function getArchiveAdapter(
+  format: ArchiveFormat,
+  sevenZipFactory?: SevenZipModuleFactory,
+): ArchiveAdapter {
+  if (format === '7z' && sevenZipFactory) {
+    return new SevenZipArchiveAdapter(sevenZipFactory);
+  }
   return ADAPTERS[format];
 }
