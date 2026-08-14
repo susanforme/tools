@@ -1,4 +1,8 @@
+import { loadCachedCdnAsset } from './cdn-asset-cache';
+
 // 行为与诗文数据参考 holynova/gushi_namer@2b478c5485e2f6995c86fc6c2e976feedeef5147。
+const POETRY_CDN_BASE =
+  'https://cdn.jsdelivr.net/gh/holynova/gushi_namer@2b478c5485e2f6995c86fc6c2e976feedeef5147/public/json';
 export const POETRY_BOOKS = [
   { id: 'shijing', name: '诗经' },
   { id: 'chuci', name: '楚辞' },
@@ -103,7 +107,9 @@ export function generatePoetryNames(passages: PoetryPassage[]): PoetryName[] {
 export async function loadPoetryBook(
   bookId: PoetryBookId,
 ): Promise<PoetryPassage[]> {
-  const response = await fetch(`/gushi-namer/${bookId}.json`);
-  if (!response.ok) throw new Error(`Failed to load ${bookId}`);
-  return (await response.json()) as PoetryPassage[];
+  const source = await loadCachedCdnAsset(
+    `${POETRY_CDN_BASE}/${bookId}.json`,
+    'application/json',
+  );
+  return JSON.parse(await source.text()) as PoetryPassage[];
 }

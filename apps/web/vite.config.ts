@@ -3,7 +3,7 @@ import { devtools } from '@tanstack/devtools-vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import viteReact from '@vitejs/plugin-react';
 import Icons from 'unplugin-icons/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin, type PluginOption } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import wasm from 'vite-plugin-wasm';
 
@@ -12,7 +12,86 @@ const crossOriginIsolationHeaders = {
   'Cross-Origin-Opener-Policy': 'same-origin',
 };
 
-const config = defineConfig({
+const CDN_MODULE_VERSIONS = {
+  '@faker-js/faker': '10.5.0',
+  '@peculiar/x509': '2.0.0',
+  '@tanstack/react-router': '1.161.3',
+  '@webav/av-cliper': '1.2.8',
+  ajv: '8.20.0',
+  asn1js: '3.0.10',
+  'cron-parser': '5.7.0',
+  'crypto-js': '4.2.0',
+  dexie: '4.3.0',
+  exifr: '7.1.3',
+  figlet: '1.11.4',
+  fontkit: '2.0.4',
+  jsqr: '1.4.0',
+  'libphonenumber-js': '1.13.10',
+  mediabunny: '1.52.3',
+  mermaid: '11.16.1',
+  'pdf-lib': '1.17.1',
+  'pdfjs-dist': '6.2.108',
+  'postal-mime': '2.7.6',
+  prettier: '3.8.1',
+  react: '19.2.4',
+  'react-dom': '19.2.4',
+  'sql-formatter': '15.7.2',
+  svgo: '4.0.2',
+  terser: '5.46.0',
+  'wasm-webp': '0.1.0',
+} as const;
+
+const REACT_IMPORT_MAP = {
+  react: `https://esm.sh/react@${CDN_MODULE_VERSIONS.react}`,
+  'react/': `https://esm.sh/react@${CDN_MODULE_VERSIONS.react}/`,
+  'react-dom': `https://esm.sh/react-dom@${CDN_MODULE_VERSIONS['react-dom']}?external=react`,
+  'react-dom/client': `https://esm.sh/react-dom@${CDN_MODULE_VERSIONS['react-dom']}/client?external=react`,
+} as const;
+
+function cdnModuleUrl(
+  source: string,
+  packageName: keyof typeof CDN_MODULE_VERSIONS,
+): string {
+  const path = `${packageName}@${CDN_MODULE_VERSIONS[packageName]}${source.slice(packageName.length)}`;
+  if (packageName === 'react') return `https://esm.sh/${path}`;
+  if (packageName === 'react-dom') {
+    return `https://esm.sh/${path}?external=react`;
+  }
+  if (packageName === '@tanstack/react-router') {
+    return `https://esm.sh/${path}?bundle&external=react,react-dom`;
+  }
+  return `https://esm.sh/${path}?bundle`;
+}
+
+function cdnExternals(): Plugin {
+  return {
+    name: 'cdn-externals',
+    apply: 'build',
+    enforce: 'pre',
+    resolveId(source) {
+      const packageName = Object.keys(CDN_MODULE_VERSIONS).find(
+        (name) => source === name || source.startsWith(`${name}/`),
+      ) as keyof typeof CDN_MODULE_VERSIONS | undefined;
+      if (!packageName) return null;
+      return {
+        id: cdnModuleUrl(source, packageName),
+        external: true,
+      };
+    },
+    transformIndexHtml() {
+      return [
+        {
+          tag: 'script',
+          attrs: { type: 'importmap' },
+          children: JSON.stringify({ imports: REACT_IMPORT_MAP }),
+          injectTo: 'head-prepend',
+        },
+      ];
+    },
+  };
+}
+
+const config = defineConfig(async () => ({
   // logLevel: 'warn',
   resolve: {
     tsconfigPaths: true,
@@ -21,6 +100,7 @@ const config = defineConfig({
     exclude: ['@sqlite.org/sqlite-wasm'],
   },
   plugins: [
+    cdnExternals(),
     Icons({ compiler: 'jsx', jsx: 'react' }),
 
     VitePWA({
@@ -66,6 +146,16 @@ const config = defineConfig({
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     viteReact(),
     wasm(),
+    ...(process.env.ANALYZE
+      ? [
+          (await import('rollup-plugin-visualizer')).visualizer({
+            filename: 'dist/bundle-analysis.html',
+            template: 'treemap',
+            gzipSize: true,
+            brotliSize: true,
+          }) as PluginOption,
+        ]
+      : []),
   ],
   server: {
     headers: crossOriginIsolationHeaders,
@@ -76,6 +166,10 @@ const config = defineConfig({
   preview: {
     headers: crossOriginIsolationHeaders,
   },
-});
+  worker: {
+    format: 'es' as const,
+    plugins: () => [cdnExternals()],
+  },
+}));
 
 export default config;
