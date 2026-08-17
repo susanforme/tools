@@ -385,7 +385,24 @@ function VideoEditorPage() {
               )
             : playhead;
         const clip = createTimelineClip(asset, offset, track.id);
-        nextClips.push(clip);
+        const analysis =
+          asset.kind === 'video'
+            ? await analyzeEditorAsset(sessionId, asset).catch(() => null)
+            : null;
+        if (analysis?.audio) {
+          const extracted = extractTimelineAudio(clip);
+          let audioTrack = nextTracks.find((item) => item.kind === 'audio');
+          if (!audioTrack) {
+            audioTrack = createEditorTrack('audio', 1);
+            nextTracks.push(audioTrack);
+          }
+          nextClips.push(extracted.video, {
+            ...extracted.audio,
+            trackId: audioTrack.id,
+          });
+        } else {
+          nextClips.push(clip);
+        }
         setSelectedClipId(clip.id);
         if (
           asset.kind === 'video' &&
@@ -2425,7 +2442,7 @@ function Timeline({
               }}
             >
               <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-blue-600" />
-              <span className="absolute left-1/2 top-5 size-3 -translate-x-1/2 rotate-45 rounded-sm bg-blue-600" />
+              <span className="absolute left-1/2 top-0 size-3 -translate-x-1/2 rotate-45 rounded-sm bg-blue-600" />
             </div>
           </div>
         </div>
