@@ -428,13 +428,39 @@ async function exportTimeline(
 
     const storageName = `${request.fileName.replace(/[\\/:*?"<>|]/g, '-').trim() || 'video'}.mp4`;
     const handle = await directory.getFileHandle(storageName, { create: true });
-    await combinator
+    const reader = combinator
       .output({
         maxTime:
           timelineDuration(request.timeline.clips) *
           VIDEO_EDITOR_CONFIG.microsecondsPerSecond,
       })
-      .pipeTo(await handle.createWritable());
+      .getReader();
+    const access = await handle.createSyncAccessHandle();
+    let offset = 0;
+    try {
+      access.truncate(0);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        let chunkOffset = 0;
+        while (chunkOffset < value.byteLength) {
+          const written = access.write(value.subarray(chunkOffset), {
+            at: offset + chunkOffset,
+          });
+          if (written === 0) throw new Error('OPFS_WRITE_FAILED');
+          chunkOffset += written;
+        }
+        offset += value.byteLength;
+      }
+      access.truncate(offset);
+      access.flush();
+    } catch (cause) {
+      await reader.cancel(cause).catch(() => undefined);
+      throw cause;
+    } finally {
+      reader.releaseLock();
+      access.close();
+    }
     postDone(request.id, { type: 'export', storageName });
   } finally {
     stopProgress();
