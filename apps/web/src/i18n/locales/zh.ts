@@ -1011,6 +1011,13 @@ const zh = {
       name: '视频名称',
       dismiss: '关闭提示',
       save: '保存',
+      clearProject: '清空当前项目',
+      clearProjectTitle: '清空当前项目？',
+      clearProjectDescription:
+        '素材、时间线、字幕及自动保存数据将从当前浏览器删除，此操作无法撤销。',
+      clearProjectAction: '清空项目',
+      clearProjectError: '项目清空失败，请重试。',
+      cancel: '取消',
       movePanel: '拖拽移动面板',
       inspector: '属性',
       timeline: '时间线',

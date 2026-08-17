@@ -1031,6 +1031,13 @@ const en = {
       name: 'Video name',
       dismiss: 'Dismiss message',
       save: 'Save',
+      clearProject: 'Clear current project',
+      clearProjectTitle: 'Clear current project?',
+      clearProjectDescription:
+        'Media, timeline, subtitles, and autosaved data will be deleted from this browser. This cannot be undone.',
+      clearProjectAction: 'Clear project',
+      clearProjectError: 'Could not clear the project. Try again.',
+      cancel: 'Cancel',
       movePanel: 'Drag to move panel',
       inspector: 'Inspector',
       timeline: 'Timeline',

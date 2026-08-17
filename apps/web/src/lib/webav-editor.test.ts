@@ -1,5 +1,6 @@
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import {
+  clearEditorProject,
   DEFAULT_EXPORT_SETTINGS,
   DEFAULT_SUBTITLE_STYLE,
   duplicateTimelineClip,
@@ -12,6 +13,22 @@ import {
   snapTimelineClip,
   timelineDuration,
 } from './webav-editor';
+
+test('clears only the current editor session directory', async () => {
+  const removeEntry = vi.fn().mockResolvedValue(undefined);
+  vi.stubGlobal('navigator', {
+    storage: {
+      getDirectory: async () => ({
+        getDirectoryHandle: async () => ({ removeEntry }),
+      }),
+    },
+  });
+
+  await clearEditorProject('current');
+
+  expect(removeEntry).toHaveBeenCalledWith('current', { recursive: true });
+  vi.unstubAllGlobals();
+});
 
 test('validates persisted OPFS editor state before restoring it', () => {
   expect(

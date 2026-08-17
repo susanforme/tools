@@ -343,6 +343,19 @@ export async function removeEditorOutput(
     .catch(() => undefined);
 }
 
+export async function clearEditorProject(sessionId: string): Promise<void> {
+  const root = await navigator.storage.getDirectory();
+  try {
+    const editor = await root.getDirectoryHandle(
+      VIDEO_EDITOR_CONFIG.rootDirectory,
+    );
+    await editor.removeEntry(sessionId, { recursive: true });
+  } catch (cause) {
+    if (cause instanceof DOMException && cause.name === 'NotFoundError') return;
+    throw cause;
+  }
+}
+
 async function probeMedia(
   file: File,
   kind: 'video' | 'audio',

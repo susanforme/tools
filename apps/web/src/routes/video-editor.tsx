@@ -8,6 +8,15 @@ import {
   ContextMenuShortcut,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -44,8 +53,12 @@ import {
   type VideoEditorPanelId,
   type VideoEditorPreferences,
 } from '@/lib/video-editor-preferences';
-import { useVideoEditorStore } from '@/lib/video-editor-store';
 import {
+  EMPTY_EDITOR_PROJECT,
+  useVideoEditorStore,
+} from '@/lib/video-editor-store';
+import {
+  clearEditorProject,
   duplicateTimelineClip,
   createEditorTrack,
   exportEditorTimeline,
@@ -159,6 +172,8 @@ function VideoEditorPage() {
   const [timelineTool, setTimelineTool] = useState<TimelineTool>('select');
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [clearProjectOpen, setClearProjectOpen] = useState(false);
+  const [clearingProject, setClearingProject] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -262,22 +277,22 @@ function VideoEditorPage() {
   }, [preferences]);
 
   useEffect(() => {
-    if (!hydrated || playing) return;
+    if (!hydrated || playing || clearingProject) return;
     const timer = window.setTimeout(() => {
       void saveEditorProject(sessionId, project).catch(() =>
         setError(t('videoEditor.opencut.saveError')),
       );
     }, 50);
     return () => window.clearTimeout(timer);
-  }, [hydrated, playing, project, sessionId, t]);
+  }, [clearingProject, hydrated, playing, project, sessionId, t]);
 
   useEffect(() => {
-    if (!hydrated || !playing) return;
+    if (!hydrated || !playing || clearingProject) return;
     const timer = window.setInterval(() => {
       void saveEditorProject(sessionId, useVideoEditorStore.getState().project);
     }, 1_000);
     return () => window.clearInterval(timer);
-  }, [hydrated, playing, sessionId]);
+  }, [clearingProject, hydrated, playing, sessionId]);
 
   usePreviewSource(sessionId, activeVideo, assets, setVideoSource);
 
@@ -698,6 +713,26 @@ function VideoEditorPage() {
     }
   };
 
+  const clearCurrentProject = async () => {
+    setClearingProject(true);
+    setError(null);
+    try {
+      await clearEditorProject(sessionId);
+      disposeFfmpegExporter();
+      hydrateProject(structuredClone(EMPTY_EDITOR_PROJECT));
+      setSelectedClipId(null);
+      setSelectedAssetId(null);
+      setRevealedAssetId(null);
+      setVideoSource(null);
+      setPlaying(false);
+      setClearProjectOpen(false);
+    } catch {
+      setError(t('videoEditor.opencut.clearProjectError'));
+    } finally {
+      setClearingProject(false);
+    }
+  };
+
   if (!hydrated) {
     return (
       <div className="grid h-[100dvh] place-items-center bg-[#f5f6f8]">
@@ -811,12 +846,45 @@ function VideoEditorPage() {
         setName={(nextName) =>
           setProject((current) => ({ ...current, name: nextName }))
         }
-        loading={loading}
+        loading={loading || clearingProject}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onClearProject={() => setClearProjectOpen(true)}
         onSave={() => void saveEditorProject(sessionId, project)}
         onExport={() => void exportVideo()}
       />
+      <Dialog
+        open={clearProjectOpen}
+        onOpenChange={(open) => {
+          if (!clearingProject) setClearProjectOpen(open);
+        }}
+      >
+        <DialogContent showCloseButton={!clearingProject}>
+          <DialogHeader>
+            <DialogTitle>
+              {t('videoEditor.opencut.clearProjectTitle')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('videoEditor.opencut.clearProjectDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" disabled={clearingProject}>
+                {t('videoEditor.opencut.cancel')}
+              </Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              disabled={clearingProject}
+              onClick={() => void clearCurrentProject()}
+            >
+              {clearingProject && <LoaderCircle className="animate-spin" />}
+              {t('videoEditor.opencut.clearProjectAction')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {error && (
         <div className="flex shrink-0 items-center justify-between border-b border-red-200 bg-red-50 px-4 py-2 text-xs text-red-700">
           {error}
@@ -1040,6 +1108,7 @@ function EditorHeader({
   loading,
   theme,
   onToggleTheme,
+  onClearProject,
   onSave,
   onExport,
 }: {
@@ -1048,6 +1117,7 @@ function EditorHeader({
   loading: boolean;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  onClearProject: () => void;
   onSave: () => void;
   onExport: () => void;
 }) {
@@ -1086,6 +1156,17 @@ function EditorHeader({
           title={t('settingsPreferences.theme')}
         >
           {theme === 'dark' ? <Sun /> : <Moon />}
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          disabled={loading}
+          onClick={onClearProject}
+          title={t('videoEditor.opencut.clearProject')}
+          aria-label={t('videoEditor.opencut.clearProject')}
+          className="text-zinc-500 hover:bg-red-50 hover:text-red-600 dark:text-zinc-400 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+        >
+          <Trash2 />
         </Button>
         <Button size="sm" disabled={loading} onClick={onExport}>
           {loading ? <LoaderCircle className="animate-spin" /> : <Download />}
