@@ -94,6 +94,7 @@ import {
   EyeOff,
   Film,
   GripVertical,
+  Link2,
   Lock,
   LoaderCircle,
   Magnet,
@@ -141,6 +142,7 @@ export const Route = createFileRoute('/video-editor')({
 });
 
 type EditorPanel = 'assets' | 'subtitles' | 'settings';
+type AssetAddMode = 'both' | 'video' | 'audio';
 type TimelineTool = 'select' | 'razor';
 type PreviewFit = 'fit' | 'fill' | 'actual';
 type PreviewSource = { url: string; clip: TimelineClip };
@@ -170,6 +172,7 @@ function VideoEditorPage() {
   const [revealedAssetId, setRevealedAssetId] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [timelineTool, setTimelineTool] = useState<TimelineTool>('select');
+  const [linkedSelection, setLinkedSelection] = useState(true);
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [clearProjectOpen, setClearProjectOpen] = useState(false);
@@ -433,27 +436,85 @@ function VideoEditorPage() {
     }
   };
 
-  const addAssetAgain = (asset: EditorAsset) => {
+  const addAssetAgain = async (
+    asset: EditorAsset,
+    mode: AssetAddMode = 'both',
+  ) => {
     if (asset.kind !== 'video' && asset.kind !== 'audio') return;
-    const track = tracks.find((item) => item.kind === asset.kind);
-    if (!track) return;
+    if (asset.kind === 'audio' && mode === 'video') return;
+    const analysis =
+      asset.kind === 'video' && mode !== 'video'
+        ? await analyzeEditorAsset(sessionId, asset).catch(() => null)
+        : null;
+    if (asset.kind === 'video' && mode === 'audio' && !analysis?.audio) return;
+    const current = useVideoEditorStore.getState().project;
+    const nextTracks = [...current.tracks];
+    const targetKind = mode === 'audio' ? 'audio' : asset.kind;
+    const track =
+      nextTracks.find((item) => item.kind === targetKind) ??
+      createEditorTrack(
+        targetKind,
+        nextTracks.filter((item) => item.kind === targetKind).length + 1,
+      );
+    if (!nextTracks.includes(track)) nextTracks.push(track);
     const offset =
-      asset.kind === 'video'
-        ? timelineDuration(clips.filter((clip) => clip.kind === 'video'))
-        : playhead;
+      asset.kind === 'video' && mode !== 'audio'
+        ? timelineDuration(
+            current.clips.filter((clip) => clip.kind === 'video'),
+          )
+        : current.playhead;
     const clip = createTimelineClip(asset, offset, track.id);
-    setProject((current) => ({
-      ...current,
-      clips: [...current.clips, clip],
-    }));
-    setSelectedClipId(clip.id);
+    const nextClips = [...current.clips];
+    let selectedId = clip.id;
+    if (mode === 'audio' && asset.kind === 'video') {
+      const { audio } = extractTimelineAudio(clip);
+      nextClips.push({ ...audio, trackId: track.id });
+      selectedId = audio.id;
+    } else if (mode === 'both' && analysis?.audio) {
+      const extracted = extractTimelineAudio(clip);
+      const audioTrack =
+        nextTracks.find((item) => item.kind === 'audio') ??
+        createEditorTrack('audio', 1);
+      if (!nextTracks.includes(audioTrack)) nextTracks.push(audioTrack);
+      nextClips.push(extracted.video, {
+        ...extracted.audio,
+        trackId: audioTrack.id,
+      });
+    } else {
+      nextClips.push(clip);
+    }
+    setProject({ ...current, tracks: nextTracks, clips: nextClips });
+    setSelectedClipId(selectedId);
   };
 
-  const updateClip = (next: TimelineClip) => {
-    setProject((current) => ({
-      ...current,
-      clips: current.clips.map((clip) => (clip.id === next.id ? next : clip)),
-    }));
+  const updateClip = (next: TimelineClip, updateLinked = false) => {
+    setProject((current) => {
+      const previous = current.clips.find(({ id }) => id === next.id);
+      if (!updateLinked || !previous?.linkGroupId) {
+        return {
+          ...current,
+          clips: current.clips.map((clip) =>
+            clip.id === next.id ? next : clip,
+          ),
+        };
+      }
+      const offsetDelta = next.offset - previous.offset;
+      const sourceStartDelta = next.sourceStart - previous.sourceStart;
+      const durationDelta = next.duration - previous.duration;
+      return {
+        ...current,
+        clips: current.clips.map((clip) => {
+          if (clip.id === next.id) return next;
+          if (clip.linkGroupId !== previous.linkGroupId) return clip;
+          return {
+            ...clip,
+            offset: Math.max(0, clip.offset + offsetDelta),
+            sourceStart: Math.max(0, clip.sourceStart + sourceStartDelta),
+            duration: Math.max(0.05, clip.duration + durationDelta),
+          };
+        }),
+      };
+    });
   };
 
   const deleteClip = (clipId: string) => {
@@ -464,7 +525,7 @@ function VideoEditorPage() {
     if (selectedClipId === clipId) setSelectedClipId(null);
   };
 
-  const splitClip = (clipId: string, at: number) => {
+  const splitClip = (clipId: string, at: number, independent = false) => {
     const clip = clips.find(({ id }) => id === clipId);
     if (
       !clip ||
@@ -472,24 +533,43 @@ function VideoEditorPage() {
       at >= clip.offset + clip.duration - 0.05
     )
       return;
-    const leftDuration = at - clip.offset;
-    const right = {
-      ...clip,
-      id: crypto.randomUUID(),
-      offset: at,
-      sourceStart: clip.sourceStart + leftDuration,
-      duration: clip.duration - leftDuration,
-    };
-    setProject((current) => ({
-      ...current,
-      clips: [
-        ...current.clips.map((clip) =>
-          clip.id === clipId ? { ...clip, duration: leftDuration } : clip,
-        ),
-        right,
-      ],
-    }));
-    setSelectedClipId(right.id);
+    const targets =
+      linkedSelection && !independent && clip.linkGroupId
+        ? clips.filter(
+            (item) =>
+              item.linkGroupId === clip.linkGroupId &&
+              at > item.offset + 0.05 &&
+              at < item.offset + item.duration - 0.05,
+          )
+        : [clip];
+    const targetIds = new Set(targets.map(({ id }) => id));
+    const leftGroupId = targets.length > 1 ? crypto.randomUUID() : undefined;
+    const rightGroupId = targets.length > 1 ? crypto.randomUUID() : undefined;
+    let selectedRightId = '';
+    setProject((current) => {
+      const rightClips: TimelineClip[] = [];
+      const nextClips = current.clips.map((item) => {
+        if (!targetIds.has(item.id)) return item;
+        const leftDuration = at - item.offset;
+        const right = {
+          ...item,
+          id: crypto.randomUUID(),
+          offset: at,
+          sourceStart: item.sourceStart + leftDuration,
+          duration: item.duration - leftDuration,
+          linkGroupId: rightGroupId ?? item.linkGroupId,
+        };
+        if (item.id === clipId) selectedRightId = right.id;
+        rightClips.push(right);
+        return {
+          ...item,
+          duration: leftDuration,
+          linkGroupId: leftGroupId ?? item.linkGroupId,
+        };
+      });
+      return { ...current, clips: [...nextClips, ...rightClips] };
+    });
+    setSelectedClipId(selectedRightId);
   };
 
   const duplicateClip = (clipId: string) => {
@@ -986,6 +1066,7 @@ function VideoEditorPage() {
             subtitles={project.subtitles}
             duration={duration}
             playhead={playhead}
+            fps={project.exportSettings.fps}
             zoom={zoom}
             setZoom={(nextZoom) =>
               setProject((current) => ({ ...current, zoom: nextZoom }), false)
@@ -1002,6 +1083,10 @@ function VideoEditorPage() {
               )
             }
             onChangeClip={updateClip}
+            linkedSelection={linkedSelection}
+            onToggleLinkedSelection={() =>
+              setLinkedSelection((current) => !current)
+            }
             tool={timelineTool}
             setTool={setTimelineTool}
             canUndo={canUndo}
@@ -1266,7 +1351,7 @@ function AssetPanel({
   onSelect: (assetId: string) => void;
   onAssetDragStart: (kind: 'video' | 'audio') => void;
   onAssetDragEnd: () => void;
-  onAdd: (asset: EditorAsset) => void;
+  onAdd: (asset: EditorAsset, mode?: AssetAddMode) => void;
   onChangeSubtitleStyle: (style: EditorSubtitleStyle) => void;
   onChangeExportSettings: (settings: EditorExportSettings) => void;
 }) {
@@ -1428,6 +1513,19 @@ function AssetPanel({
                       <Plus />
                       {t('videoEditor.opencut.addToTimeline')}
                     </ContextMenuItem>
+                    {asset.kind === 'video' && (
+                      <>
+                        <ContextMenuSeparator />
+                        <ContextMenuItem onSelect={() => onAdd(asset, 'video')}>
+                          <Film />
+                          {t('videoEditor.opencut.addVideoOnly')}
+                        </ContextMenuItem>
+                        <ContextMenuItem onSelect={() => onAdd(asset, 'audio')}>
+                          <Music2 />
+                          {t('videoEditor.opencut.addAudioOnly')}
+                        </ContextMenuItem>
+                      </>
+                    )}
                   </ContextMenuContent>
                 </ContextMenu>
               ))}
@@ -1991,12 +2089,15 @@ function Timeline({
   subtitles,
   duration,
   playhead,
+  fps,
   zoom,
   setZoom,
   selectedClipId,
   setSelectedClipId,
   setPlayhead,
   onChangeClip,
+  linkedSelection,
+  onToggleLinkedSelection,
   tool,
   setTool,
   canUndo,
@@ -2034,19 +2135,22 @@ function Timeline({
   }>;
   duration: number;
   playhead: number;
+  fps: number;
   zoom: number;
   setZoom: (zoom: number) => void;
   selectedClipId: string | null;
   setSelectedClipId: (id: string) => void;
   setPlayhead: (time: number) => void;
-  onChangeClip: (clip: TimelineClip) => void;
+  onChangeClip: (clip: TimelineClip, updateLinked?: boolean) => void;
+  linkedSelection: boolean;
+  onToggleLinkedSelection: () => void;
   tool: TimelineTool;
   setTool: (tool: TimelineTool) => void;
   canUndo: boolean;
   canRedo: boolean;
   onUndo: () => void;
   onRedo: () => void;
-  onSplit: (clipId: string, at: number) => void;
+  onSplit: (clipId: string, at: number, independent?: boolean) => void;
   onDuplicate: (clipId: string) => void;
   onCopy: (clipId: string) => void;
   onToggleMuted: (clipId: string) => void;
@@ -2069,29 +2173,51 @@ function Timeline({
 }) {
   const { t } = useTranslation();
   const pixelsPerSecond = 24 + zoom * 1.5;
-  const contentWidth = Math.max(900, duration * pixelsPerSecond + 120);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [viewportWidth, setViewportWidth] = useState(900);
+  const contentWidth = Math.max(
+    900,
+    duration * pixelsPerSecond + viewportWidth,
+  );
   const seeking = useRef(false);
   const [snapGuide, setSnapGuide] = useState<number | null>(null);
+  const [targetTrackId, setTargetTrackId] = useState<string | null>(null);
+  const selectedLinkGroupId = linkedSelection
+    ? clips.find(({ id }) => id === selectedClipId)?.linkGroupId
+    : undefined;
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(() =>
+      setViewportWidth(element.clientWidth),
+    );
+    observer.observe(element);
+    setViewportWidth(element.clientWidth);
+    return () => observer.disconnect();
+  }, []);
   const seekFromPointer = (event: ReactPointerEvent<HTMLElement>) => {
     const rect = contentRef.current?.getBoundingClientRect();
     if (!rect) return;
-    setPlayhead(
-      Math.max(
-        0,
-        Math.min(duration, (event.clientX - rect.left) / pixelsPerSecond),
-      ),
+    const time = Math.max(
+      0,
+      Math.min(duration, (event.clientX - rect.left) / pixelsPerSecond),
     );
+    setPlayhead(Math.min(duration, Math.max(0, Math.round(time * fps) / fps)));
   };
   const dropTime = (clientX: number) => {
     const rect = contentRef.current?.getBoundingClientRect();
-    return rect ? Math.max(0, (clientX - rect.left) / pixelsPerSecond) : 0;
+    return rect
+      ? Math.max(
+          0,
+          Math.round(((clientX - rect.left) / pixelsPerSecond) * fps) / fps,
+        )
+      : 0;
   };
   const trackIcon = (track: EditorTrack) => {
-    if (track.kind === 'video') return <Film className="size-3.5" />;
-    if (track.kind === 'audio') return <Music2 className="size-3.5" />;
-    return <Captions className="size-3.5" />;
+    if (track.kind === 'video') return <Film className="size-3.5 shrink-0" />;
+    if (track.kind === 'audio') return <Music2 className="size-3.5 shrink-0" />;
+    return <Captions className="size-3.5 shrink-0" />;
   };
   return (
     <section className="h-full min-h-0 border-t border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-950">
@@ -2148,18 +2274,12 @@ function Timeline({
             <Magnet className="size-4" />
           </button>
           <button
-            title={t('videoEditor.opencut.addVideoTrack')}
-            onClick={() => onAddTrack('video')}
-            className="grid size-7 place-items-center rounded text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            title={t('videoEditor.opencut.linkedSelection')}
+            aria-pressed={linkedSelection}
+            onClick={onToggleLinkedSelection}
+            className={`grid size-7 place-items-center rounded ${linkedSelection ? 'bg-blue-100 text-blue-600 dark:bg-blue-950' : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800'}`}
           >
-            <Film className="size-4" />
-          </button>
-          <button
-            title={t('videoEditor.opencut.addAudioTrack')}
-            onClick={() => onAddTrack('audio')}
-            className="grid size-7 place-items-center rounded text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-          >
-            <Music2 className="size-4" />
+            <Link2 className="size-4" />
           </button>
         </div>
         <span className="text-xs font-medium">
@@ -2173,74 +2293,108 @@ function Timeline({
           onValueChange={(value) => setZoom(value[0] ?? 50)}
         />
       </div>
-      <div className="grid h-[calc(100%-2.5rem)] min-h-0 grid-cols-[112px_minmax(0,1fr)]">
-        <div className="overflow-hidden border-r border-zinc-200 bg-zinc-50 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-          <div className="h-7 border-b border-zinc-200 dark:border-zinc-700" />
-          {tracks.map((track) => (
-            <div
-              key={track.id}
-              className="mb-0.5 flex h-14 items-center gap-1 bg-white px-2 dark:bg-zinc-950"
-            >
-              <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate font-medium">
-                {trackIcon(track)}
-                {track.name}
-              </span>
-              <button
-                title={
-                  track.kind === 'audio'
-                    ? t('videoEditor.opencut.trackMute')
-                    : t('videoEditor.opencut.trackVisibility')
-                }
-                aria-pressed={
-                  track.kind === 'audio' ? track.muted : track.hidden
-                }
-                onClick={() =>
-                  onChangeTrack(
-                    track.kind === 'audio'
-                      ? { ...track, muted: !track.muted }
-                      : { ...track, hidden: !track.hidden },
-                  )
-                }
-                className="grid size-6 place-items-center rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
-              >
-                {track.kind === 'audio' ? (
-                  track.muted ? (
-                    <VolumeX className="size-3.5" />
-                  ) : (
-                    <Volume2 className="size-3.5" />
-                  )
-                ) : track.hidden ? (
-                  <EyeOff className="size-3.5" />
-                ) : (
-                  <Eye className="size-3.5" />
-                )}
-              </button>
-              <button
-                title={t('videoEditor.opencut.trackLock')}
-                aria-pressed={track.locked}
-                onClick={() =>
-                  onChangeTrack({ ...track, locked: !track.locked })
-                }
-                className={`grid size-6 place-items-center rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 ${track.locked ? 'text-blue-600' : ''}`}
-              >
-                <Lock className="size-3.5" />
-              </button>
+      <div className="grid h-[calc(100%-2.5rem)] min-h-0 grid-cols-[144px_minmax(0,1fr)]">
+        <ContextMenu>
+          <ContextMenuTrigger asChild>
+            <div className="overflow-hidden border-r border-zinc-200 bg-zinc-50 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+              <div className="flex h-7 items-center justify-center gap-1 border-b border-zinc-200 dark:border-zinc-700">
+                <button
+                  title={t('videoEditor.opencut.addVideoTrack')}
+                  aria-label={t('videoEditor.opencut.addVideoTrack')}
+                  onClick={() => onAddTrack('video')}
+                  className="flex h-6 items-center gap-0.5 rounded px-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
+                  <Film className="size-3.5" />
+                  <Plus className="size-2.5" />
+                </button>
+                <button
+                  title={t('videoEditor.opencut.addAudioTrack')}
+                  aria-label={t('videoEditor.opencut.addAudioTrack')}
+                  onClick={() => onAddTrack('audio')}
+                  className="flex h-6 items-center gap-0.5 rounded px-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
+                  <Music2 className="size-3.5" />
+                  <Plus className="size-2.5" />
+                </button>
+              </div>
+              {tracks.map((track) => (
+                <div
+                  key={track.id}
+                  className="mb-0.5 flex h-14 items-center gap-1 bg-white px-2 dark:bg-zinc-950"
+                >
+                  <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate font-medium">
+                    {trackIcon(track)}
+                    {track.name}
+                  </span>
+                  <button
+                    title={
+                      track.kind === 'audio'
+                        ? t('videoEditor.opencut.trackMute')
+                        : t('videoEditor.opencut.trackVisibility')
+                    }
+                    aria-pressed={
+                      track.kind === 'audio' ? track.muted : track.hidden
+                    }
+                    onClick={() =>
+                      onChangeTrack(
+                        track.kind === 'audio'
+                          ? { ...track, muted: !track.muted }
+                          : { ...track, hidden: !track.hidden },
+                      )
+                    }
+                    className="grid size-6 place-items-center rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  >
+                    {track.kind === 'audio' ? (
+                      track.muted ? (
+                        <VolumeX className="size-3.5" />
+                      ) : (
+                        <Volume2 className="size-3.5" />
+                      )
+                    ) : track.hidden ? (
+                      <EyeOff className="size-3.5" />
+                    ) : (
+                      <Eye className="size-3.5" />
+                    )}
+                  </button>
+                  <button
+                    title={t('videoEditor.opencut.trackLock')}
+                    aria-pressed={track.locked}
+                    onClick={() =>
+                      onChangeTrack({ ...track, locked: !track.locked })
+                    }
+                    className={`grid size-6 place-items-center rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 ${track.locked ? 'text-blue-600' : ''}`}
+                  >
+                    <Lock className="size-3.5" />
+                  </button>
+                </div>
+              ))}
+              {draggedAssetKind && (
+                <button
+                  onClick={() => onAddTrack(draggedAssetKind)}
+                  className="mb-0.5 flex h-7 w-full items-center justify-center gap-1 border-y border-dashed border-zinc-300 text-[10px] text-zinc-400 hover:text-zinc-700 dark:border-zinc-700 dark:hover:text-zinc-200"
+                >
+                  <Plus className="size-3" />
+                  {draggedAssetKind === 'video'
+                    ? t('videoEditor.opencut.addVideoTrack')
+                    : t('videoEditor.opencut.addAudioTrack')}
+                </button>
+              )}
             </div>
-          ))}
-          {draggedAssetKind && (
-            <button
-              onClick={() => onAddTrack(draggedAssetKind)}
-              className="mb-0.5 flex h-7 w-full items-center justify-center gap-1 border-y border-dashed border-zinc-300 text-[10px] text-zinc-400 hover:text-zinc-700 dark:border-zinc-700 dark:hover:text-zinc-200"
-            >
-              <Plus className="size-3" />
-              {draggedAssetKind === 'video'
-                ? t('videoEditor.opencut.addVideoTrack')
-                : t('videoEditor.opencut.addAudioTrack')}
-            </button>
-          )}
-        </div>
+          </ContextMenuTrigger>
+          <ContextMenuContent className="z-[100]">
+            <ContextMenuItem onSelect={() => onAddTrack('video')}>
+              <Film />
+              {t('videoEditor.opencut.addVideoTrack')}
+            </ContextMenuItem>
+            <ContextMenuItem onSelect={() => onAddTrack('audio')}>
+              <Music2 />
+              {t('videoEditor.opencut.addAudioTrack')}
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
         <div
           ref={scrollRef}
+          data-timeline-scroll
           className="overflow-auto bg-zinc-50 dark:bg-zinc-900"
           onWheel={(event) => {
             if (event.deltaY === 0) return;
@@ -2249,7 +2403,7 @@ function Timeline({
             if (!scroller) return;
             const nextZoom = Math.max(
               0,
-              Math.min(100, zoom - Math.sign(event.deltaY) * 5),
+              Math.min(100, Math.round((zoom - event.deltaY * 0.08) * 10) / 10),
             );
             const nextPixelsPerSecond = 24 + nextZoom * 1.5;
             const anchorX =
@@ -2270,7 +2424,7 @@ function Timeline({
             className="relative min-h-full min-w-full bg-zinc-50 dark:bg-zinc-900"
             style={{
               width: contentWidth,
-              minHeight: 28 + tracks.length * 58 + (draggedAssetKind ? 29 : 0),
+              minHeight: `max(100%, ${28 + tracks.length * 58 + (draggedAssetKind ? 29 : 0)}px)`,
             }}
           >
             <div
@@ -2305,7 +2459,7 @@ function Timeline({
                 data-track-id={track.id}
                 data-track-kind={track.kind}
                 data-track-locked={track.locked ? 'true' : 'false'}
-                className="relative mb-0.5 h-14 bg-white dark:bg-zinc-950"
+                className={`relative mb-0.5 h-14 bg-white transition-colors dark:bg-zinc-950 ${targetTrackId === track.id ? 'bg-blue-50 ring-2 ring-inset ring-blue-400 dark:bg-blue-950/40' : ''}`}
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={(event) => {
                   event.preventDefault();
@@ -2370,15 +2524,26 @@ function Timeline({
                             thumbnails={thumbnails[clip.assetId] ?? []}
                             pixelsPerSecond={pixelsPerSecond}
                             tool={tool}
-                            selected={selectedClipId === clip.id}
+                            selected={
+                              selectedClipId === clip.id ||
+                              Boolean(
+                                selectedLinkGroupId &&
+                                clip.linkGroupId === selectedLinkGroupId,
+                              )
+                            }
                             locked={track.locked}
                             snapping={snapping}
                             allClips={clips}
                             playhead={playhead}
+                            fps={fps}
+                            linkedSelection={linkedSelection}
                             onSnapGuide={setSnapGuide}
+                            onTargetTrack={setTargetTrackId}
                             onSelect={() => setSelectedClipId(clip.id)}
                             onSeek={setPlayhead}
-                            onSplit={(at) => onSplit(clip.id, at)}
+                            onSplit={(at, independent) =>
+                              onSplit(clip.id, at, independent)
+                            }
                             onDuplicate={() => onDuplicate(clip.id)}
                             onCopy={() => onCopy(clip.id)}
                             onToggleMuted={() => onToggleMuted(clip.id)}
@@ -2442,7 +2607,7 @@ function Timeline({
               }}
             >
               <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-blue-600" />
-              <span className="absolute left-1/2 top-0 size-3 -translate-x-1/2 rotate-45 rounded-sm bg-blue-600" />
+              <span className="absolute left-1/2 top-0.5 size-3 -translate-x-1/2 rounded-full bg-blue-600" />
             </div>
           </div>
         </div>
@@ -2463,7 +2628,10 @@ function TimelineClipView({
   snapping,
   allClips,
   playhead,
+  fps,
+  linkedSelection,
   onSnapGuide,
+  onTargetTrack,
   onSelect,
   onSeek,
   onSplit,
@@ -2488,10 +2656,13 @@ function TimelineClipView({
   snapping: boolean;
   allClips: TimelineClip[];
   playhead: number;
+  fps: number;
+  linkedSelection: boolean;
   onSnapGuide: (time: number | null) => void;
+  onTargetTrack: (trackId: string | null) => void;
   onSelect: () => void;
   onSeek: (time: number) => void;
-  onSplit: (time: number) => void;
+  onSplit: (time: number, independent?: boolean) => void;
   onDuplicate: () => void;
   onCopy: () => void;
   onToggleMuted: () => void;
@@ -2500,7 +2671,7 @@ function TimelineClipView({
   onRevealMedia: () => void;
   onReplaceMedia: () => void;
   onDelete: () => void;
-  onChange: (clip: TimelineClip) => void;
+  onChange: (clip: TimelineClip, updateLinked?: boolean) => void;
 }) {
   const { t } = useTranslation();
   const contextTime = useRef(clip.offset);
@@ -2510,11 +2681,30 @@ function TimelineClipView({
     mode: 'move' | 'left' | 'right';
     x: number;
     y: number;
+    scrollLeft: number;
     clip: TimelineClip;
     current: TimelineClip;
+    moved: boolean;
+    independent: boolean;
+    targetTrackId: string | null;
   } | null>(null);
   const displayedClip = draft ?? clip;
   const width = Math.max(12, displayedClip.duration * pixelsPerSecond);
+  const frameDuration = 1 / Math.max(1, fps);
+  const roundToFrame = (time: number) => Math.round(time * fps) / fps;
+  const findTargetTrack = (clientY: number) =>
+    Array.from(
+      document.querySelectorAll<HTMLElement>(
+        `[data-track-kind="${clip.kind}"]`,
+      ),
+    ).find((candidate) => {
+      const bounds = candidate.getBoundingClientRect();
+      return (
+        clientY >= bounds.top &&
+        clientY <= bounds.bottom &&
+        candidate.dataset.trackLocked !== 'true'
+      );
+    }) ?? null;
   const startDrag = (
     event: ReactPointerEvent<HTMLDivElement>,
     mode: 'move' | 'left' | 'right',
@@ -2532,27 +2722,64 @@ function TimelineClipView({
       );
       onSeek(at);
       onSelect();
-      onSplit(at);
+      onSplit(at, event.altKey || event.shiftKey || !linkedSelection);
       return;
     }
     event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.closest<HTMLElement>('[data-timeline-clip]')?.focus();
+    const scroller = event.currentTarget.closest<HTMLElement>(
+      '[data-timeline-scroll]',
+    );
     drag.current = {
       mode,
       x: event.clientX,
       y: event.clientY,
+      scrollLeft: scroller?.scrollLeft ?? 0,
       clip,
       current: clip,
+      moved: false,
+      independent:
+        !linkedSelection || event.altKey || (mode !== 'move' && event.shiftKey),
+      targetTrackId: null,
     };
     setDragOffsetY(0);
     onSelect();
   };
   const move = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!drag.current) return;
-    const delta = (event.clientX - drag.current.x) / pixelsPerSecond;
+    const horizontalDistance = event.clientX - drag.current.x;
+    const verticalDistance = event.clientY - drag.current.y;
+    if (
+      !drag.current.moved &&
+      Math.hypot(horizontalDistance, verticalDistance) < 4
+    )
+      return;
+    drag.current.moved = true;
+    drag.current.independent =
+      !linkedSelection ||
+      event.altKey ||
+      (drag.current.mode !== 'move' && event.shiftKey);
+    const scroller = event.currentTarget.closest<HTMLElement>(
+      '[data-timeline-scroll]',
+    );
+    if (scroller) {
+      const bounds = scroller.getBoundingClientRect();
+      const edge = 48;
+      if (event.clientX < bounds.left + edge) scroller.scrollLeft -= 12;
+      else if (event.clientX > bounds.right - edge) scroller.scrollLeft += 12;
+    }
+    const delta = roundToFrame(
+      (horizontalDistance +
+        ((scroller?.scrollLeft ?? 0) - drag.current.scrollLeft)) /
+        pixelsPerSecond,
+    );
     const initial = drag.current.clip;
     let next: TimelineClip;
     if (drag.current.mode === 'move') {
-      setDragOffsetY(event.clientY - drag.current.y);
+      setDragOffsetY(verticalDistance);
+      const targetTrack = findTargetTrack(event.clientY);
+      drag.current.targetTrackId = targetTrack?.dataset.trackId ?? null;
+      onTargetTrack(drag.current.targetTrackId);
       const desiredOffset = Math.max(0, initial.offset + delta);
       if (snapping && !event.altKey) {
         const snapped = snapTimelineClip(
@@ -2562,70 +2789,119 @@ function TimelineClipView({
           pixelsPerSecond,
           playhead,
         );
-        next = moveTimelineClip(initial, snapped.offset);
+        next = moveTimelineClip(initial, snapped.offset, fps);
         onSnapGuide(snapped.guide);
       } else {
-        next = moveTimelineClip(initial, desiredOffset);
+        next = moveTimelineClip(initial, desiredOffset, fps);
         onSnapGuide(null);
       }
     } else if (drag.current.mode === 'left') {
-      const change = Math.max(
+      let change = Math.max(
         -initial.sourceStart,
-        Math.min(delta, initial.duration - 0.05),
+        -initial.offset,
+        Math.min(delta, initial.duration - frameDuration),
+      );
+      if (snapping && !event.altKey) {
+        const desiredEdge = initial.offset + change;
+        const snapped = snapTimelineClip(
+          { ...initial, offset: desiredEdge, duration: 0 },
+          desiredEdge,
+          allClips,
+          pixelsPerSecond,
+          playhead,
+        );
+        if (snapped.guide !== null) {
+          change = roundToFrame(snapped.offset - initial.offset);
+        }
+        onSnapGuide(snapped.guide);
+      } else {
+        onSnapGuide(null);
+      }
+      change = Math.max(
+        -initial.sourceStart,
+        -initial.offset,
+        Math.min(change, initial.duration - frameDuration),
       );
       next = {
         ...initial,
-        offset: Math.max(0, initial.offset + change),
+        offset: initial.offset + change,
         sourceStart: initial.sourceStart + change,
         duration: initial.duration - change,
       };
     } else {
+      let duration = Math.max(
+        frameDuration,
+        Math.min(
+          initial.duration + delta,
+          asset.duration - initial.sourceStart,
+        ),
+      );
+      if (snapping && !event.altKey) {
+        const desiredEdge = initial.offset + duration;
+        const snapped = snapTimelineClip(
+          { ...initial, offset: desiredEdge, duration: 0 },
+          desiredEdge,
+          allClips,
+          pixelsPerSecond,
+          playhead,
+        );
+        if (snapped.guide !== null) {
+          duration = roundToFrame(
+            Math.max(
+              frameDuration,
+              Math.min(
+                snapped.offset - initial.offset,
+                asset.duration - initial.sourceStart,
+              ),
+            ),
+          );
+        }
+        onSnapGuide(snapped.guide);
+      } else {
+        onSnapGuide(null);
+      }
       next = {
         ...initial,
-        duration: Math.max(
-          0.05,
-          Math.min(
-            initial.duration + delta,
-            asset.duration - initial.sourceStart,
-          ),
-        ),
+        duration,
       };
     }
     drag.current.current = next;
     setDraft(next);
   };
   const finishDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (drag.current) {
-      const row = Array.from(
-        document.querySelectorAll<HTMLElement>(
-          `[data-track-kind="${clip.kind}"]`,
-        ),
-      ).find((candidate) => {
-        const bounds = candidate.getBoundingClientRect();
-        return event.clientY >= bounds.top && event.clientY <= bounds.bottom;
-      });
-      const nextTrackId = row?.dataset.trackId;
-      const nextTrackKind = row?.dataset.trackKind;
-      onChange({
-        ...drag.current.current,
-        trackId:
-          nextTrackId &&
-          nextTrackKind === clip.kind &&
-          row.dataset.trackLocked !== 'true'
-            ? nextTrackId
-            : drag.current.current.trackId,
-      });
+    if (drag.current?.moved) {
+      const nextTrackId = drag.current.targetTrackId;
+      const independent =
+        drag.current.independent ||
+        event.altKey ||
+        (drag.current.mode !== 'move' && event.shiftKey);
+      onChange(
+        {
+          ...drag.current.current,
+          trackId: nextTrackId ?? drag.current.current.trackId,
+        },
+        linkedSelection && !independent,
+      );
     }
     drag.current = null;
     setDraft(null);
     setDragOffsetY(0);
     onSnapGuide(null);
+    onTargetTrack(null);
+  };
+  const cancelDrag = () => {
+    drag.current = null;
+    setDraft(null);
+    setDragOffsetY(0);
+    onSnapGuide(null);
+    onTargetTrack(null);
   };
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
         <div
-          className={`absolute inset-y-1 flex min-w-3 select-none items-center overflow-hidden rounded text-xs text-white shadow-sm ${tool === 'select' ? 'cursor-grab active:cursor-grabbing' : ''} ${clip.kind === 'video' ? 'bg-blue-500' : 'bg-violet-500'} ${clip.hidden ? 'opacity-55' : ''} ${selected ? 'ring-2 ring-zinc-900 ring-offset-1' : ''}`}
+          data-timeline-clip
+          className={`group absolute inset-y-1 flex min-w-3 touch-none select-none items-center overflow-visible rounded text-xs text-white shadow-sm ${tool === 'select' ? 'cursor-grab active:cursor-grabbing' : ''} ${clip.kind === 'video' ? 'bg-blue-500' : 'bg-violet-500'} ${clip.hidden ? 'opacity-55' : ''} ${selected ? 'ring-2 ring-zinc-900 ring-offset-1' : ''}`}
           role="button"
           tabIndex={0}
           aria-label={asset.name}
@@ -2653,15 +2929,15 @@ function TimelineClipView({
           onPointerDown={(event) => startDrag(event, 'move')}
           onPointerMove={move}
           onPointerUp={finishDrag}
-          onPointerCancel={finishDrag}
+          onPointerCancel={cancelDrag}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') cancelDrag();
+          }}
         >
           {tool === 'select' && (
             <div
-              className="absolute inset-y-0 left-0 z-10 w-2 cursor-ew-resize bg-white/35"
+              className="absolute inset-y-0 left-0 z-10 w-3 cursor-ew-resize rounded-l bg-white/45"
               onPointerDown={(event) => startDrag(event, 'left')}
-              onPointerMove={move}
-              onPointerUp={finishDrag}
-              onPointerCancel={finishDrag}
             />
           )}
           {clip.kind === 'video' && thumbnails.length > 0 ? (
@@ -2688,12 +2964,17 @@ function TimelineClipView({
           )}
           {tool === 'select' && (
             <div
-              className="absolute inset-y-0 right-0 z-10 w-2 cursor-ew-resize bg-white/35"
+              className="absolute inset-y-0 right-0 z-10 w-3 cursor-ew-resize rounded-r bg-white/45"
               onPointerDown={(event) => startDrag(event, 'right')}
-              onPointerMove={move}
-              onPointerUp={finishDrag}
-              onPointerCancel={finishDrag}
             />
+          )}
+          {draft && (
+            <span className="pointer-events-none absolute -top-7 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-[10px] text-white shadow">
+              {formatTimecode(
+                drag.current?.mode === 'move' ? draft.offset : draft.duration,
+                Math.max(1, Math.round(fps)),
+              )}
+            </span>
           )}
         </div>
       </ContextMenuTrigger>

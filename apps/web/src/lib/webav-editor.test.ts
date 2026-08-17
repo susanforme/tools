@@ -82,6 +82,14 @@ test('migrates legacy projects to tracks and expanded export settings', () => {
         sourceStart: 0,
         duration: 4,
       },
+      {
+        id: 'audio-clip',
+        assetId: 'video',
+        kind: 'audio',
+        offset: 0,
+        sourceStart: 0,
+        duration: 4,
+      },
     ],
     exportSettings: {
       resolution: '720p',
@@ -103,6 +111,7 @@ test('migrates legacy projects to tracks and expanded export settings', () => {
   });
   const videoTrack = migrated?.tracks.find(({ kind }) => kind === 'video');
   expect(migrated?.clips[0]?.trackId).toBe(videoTrack?.id);
+  expect(migrated?.clips[0]?.linkGroupId).toBe(migrated?.clips[1]?.linkGroupId);
   expect(migrated?.tracks.filter(({ kind }) => kind === 'audio')).toHaveLength(
     3,
   );
@@ -157,6 +166,7 @@ test('moves clips on a multi-track timeline without negative offsets', () => {
     duration: 4,
   };
   expect(moveTimelineClip(clip, 1.234).offset).toBe(1.25);
+  expect(moveTimelineClip(clip, 1.2, 24).offset).toBeCloseTo(29 / 24);
   expect(moveTimelineClip(clip, -2).offset).toBe(0);
   expect(timelineDuration([clip, { ...clip, id: 'two', offset: 6 }])).toBe(10);
 });
@@ -179,6 +189,16 @@ test('snaps clip edges to nearby timeline targets', () => {
     offset: 5.2,
     guide: null,
   });
+  const linked = { ...clip, offset: 10, linkGroupId: 'av' };
+  expect(
+    snapTimelineClip(
+      linked,
+      10.04,
+      [linked, { ...linked, id: 'audio', kind: 'audio' }],
+      100,
+      0,
+    ),
+  ).toEqual({ offset: 10.04, guide: null });
 });
 
 test('copies clips and extracts audio without duplicating the source asset', () => {
@@ -195,7 +215,9 @@ test('copies clips and extracts audio without duplicating the source asset', () 
 
   expect(duplicate).toMatchObject({ assetId: 'asset', offset: 6 });
   expect(duplicate.id).not.toBe(clip.id);
+  expect(duplicate.linkGroupId).toBeUndefined();
   expect(extracted.video.muted).toBe(true);
+  expect(extracted.video.linkGroupId).toBe(extracted.audio.linkGroupId);
   expect(extracted.audio).toMatchObject({
     assetId: 'asset',
     kind: 'audio',

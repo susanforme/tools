@@ -22,6 +22,7 @@ export type TimelineClip = {
   duration: number;
   muted?: boolean;
   hidden?: boolean;
+  linkGroupId?: string;
 };
 
 export type EditorTrack = {
@@ -255,8 +256,12 @@ export function timelineDuration(clips: TimelineClip[]): number {
 export function moveTimelineClip(
   clip: TimelineClip,
   offset: number,
+  fps = 20,
 ): TimelineClip {
-  return { ...clip, offset: Math.max(0, Math.round(offset * 20) / 20) };
+  return {
+    ...clip,
+    offset: Math.max(0, Math.round(offset * fps) / fps),
+  };
 }
 
 export function snapTimelineClip(
@@ -270,7 +275,11 @@ export function snapTimelineClip(
     0,
     playhead,
     ...clips
-      .filter(({ id }) => id !== clip.id)
+      .filter(
+        (item) =>
+          item.id !== clip.id &&
+          (!clip.linkGroupId || item.linkGroupId !== clip.linkGroupId),
+      )
       .flatMap((item) => [item.offset, item.offset + item.duration]),
   ];
   const threshold = 8 / pixelsPerSecond;
@@ -293,21 +302,23 @@ export function duplicateTimelineClip(
   clip: TimelineClip,
   offset = clip.offset + clip.duration,
 ): TimelineClip {
-  return { ...clip, id: crypto.randomUUID(), offset };
+  return { ...clip, id: crypto.randomUUID(), offset, linkGroupId: undefined };
 }
 
 export function extractTimelineAudio(clip: TimelineClip): {
   video: TimelineClip;
   audio: TimelineClip;
 } {
+  const linkGroupId = clip.linkGroupId ?? crypto.randomUUID();
   return {
-    video: { ...clip, muted: true },
+    video: { ...clip, muted: true, linkGroupId },
     audio: {
       ...clip,
       id: crypto.randomUUID(),
       kind: 'audio',
       muted: false,
       hidden: false,
+      linkGroupId,
     },
   };
 }
@@ -641,7 +652,11 @@ export function normalizeEditorProjectState(
   value: unknown,
 ): EditorProjectState | null {
   if (isEditorProjectState(value)) {
-    return { ...value, tracks: ensureDefaultAudioTracks(value.tracks) };
+    return {
+      ...value,
+      clips: ensureLinkedAvClips(value.clips),
+      tracks: ensureDefaultAudioTracks(value.tracks),
+    };
   }
   if (!value || typeof value !== 'object') return null;
   const project = value as Record<string, unknown>;
@@ -656,6 +671,7 @@ export function normalizeEditorProjectState(
   ) {
     return {
       ...(project as Omit<EditorProjectState, 'exportSettings'>),
+      clips: ensureLinkedAvClips(project.clips as TimelineClip[]),
       tracks: ensureDefaultAudioTracks(project.tracks),
       exportSettings: normalizeExportSettings(project.exportSettings),
     };
@@ -674,15 +690,38 @@ export function normalizeEditorProjectState(
       'version' | 'exportSettings' | 'tracks' | 'subtitles' | 'subtitleStyle'
     >),
     version: 3,
-    clips: legacyClips.map((clip) => ({
-      ...clip,
-      trackId: clip.kind === 'video' ? videoTrack.id : audioTrack.id,
-    })),
+    clips: ensureLinkedAvClips(
+      legacyClips.map((clip) => ({
+        ...clip,
+        trackId: clip.kind === 'video' ? videoTrack.id : audioTrack.id,
+      })),
+    ),
     tracks: ensureDefaultAudioTracks([videoTrack, audioTrack]),
     subtitles: [],
     subtitleStyle: DEFAULT_SUBTITLE_STYLE,
     exportSettings: normalizeExportSettings(project.exportSettings),
   };
+}
+
+function ensureLinkedAvClips(clips: TimelineClip[]): TimelineClip[] {
+  const next = clips.map((clip) => ({ ...clip }));
+  for (const video of next) {
+    if (video.kind !== 'video' || video.linkGroupId) continue;
+    const audio = next.find(
+      (clip) =>
+        clip.kind === 'audio' &&
+        !clip.linkGroupId &&
+        clip.assetId === video.assetId &&
+        clip.offset === video.offset &&
+        clip.sourceStart === video.sourceStart &&
+        clip.duration === video.duration,
+    );
+    if (!audio) continue;
+    const linkGroupId = crypto.randomUUID();
+    video.linkGroupId = linkGroupId;
+    audio.linkGroupId = linkGroupId;
+  }
+  return next;
 }
 
 function isEditorProjectData(project: Record<string, unknown>): boolean {
@@ -813,7 +852,8 @@ function isTimelineClip(value: unknown): value is TimelineClip {
     typeof clip.sourceStart === 'number' &&
     typeof clip.duration === 'number' &&
     (clip.muted === undefined || typeof clip.muted === 'boolean') &&
-    (clip.hidden === undefined || typeof clip.hidden === 'boolean')
+    (clip.hidden === undefined || typeof clip.hidden === 'boolean') &&
+    (clip.linkGroupId === undefined || typeof clip.linkGroupId === 'string')
   );
 }
 
