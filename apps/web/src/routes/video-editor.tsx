@@ -679,7 +679,6 @@ function VideoEditorPage() {
       document.body.append(anchor);
       anchor.click();
       anchor.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1_000);
     } catch (cause) {
       console.error('Video export failed', cause);
       setError(t('videoEditor.opencut.exportError'));
