@@ -45,7 +45,7 @@ describe('buildFfmpegExportArgs', () => {
       '-b:a',
       '128k',
       '-c:v',
-      'libvpx-vp9',
+      'libvpx',
       '-deadline',
       'realtime',
       '-cpu-used',

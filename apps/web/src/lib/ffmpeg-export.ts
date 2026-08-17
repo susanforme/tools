@@ -114,7 +114,7 @@ export function buildFfmpegExportArgs(
   if (options.format === 'webm') {
     args.push(
       '-c:v',
-      'libvpx-vp9',
+      'libvpx',
       '-deadline',
       'realtime',
       '-cpu-used',
@@ -183,6 +183,74 @@ export function disposeFfmpegExporter(): void {
   ffmpegAssetUrls.clear();
 }
 
+async function exportWebm(
+  source: File,
+  target: FileSystemFileHandle,
+  options: FfmpegExportOptions,
+): Promise<File> {
+  const {
+    ALL_FORMATS,
+    BlobSource,
+    Conversion,
+    Input,
+    Output,
+    Quality,
+    StreamTarget,
+    WebMOutputFormat,
+  } = await import('mediabunny');
+  const writable = await target.createWritable();
+  const input = new Input({
+    formats: ALL_FORMATS,
+    source: new BlobSource(source),
+  });
+  let conversion: Awaited<ReturnType<typeof Conversion.init>> | null = null;
+  const abort = () => void conversion?.cancel();
+  options.signal?.addEventListener('abort', abort, { once: true });
+  try {
+    const output = new Output({
+      format: new WebMOutputFormat(),
+      target: new StreamTarget(writable, { chunked: true }),
+    });
+    conversion = await Conversion.init({
+      input,
+      output,
+      tracks: 'primary',
+      video: {
+        codec: 'vp8',
+        width: options.width,
+        height: options.height,
+        fit: 'contain',
+        frameRate: options.fps,
+        quality: options.videoBitrateKbps
+          ? new Quality({ bitrate: options.videoBitrateKbps * 1_000 })
+          : undefined,
+        forceTranscode: true,
+      },
+      audio: {
+        codec: 'opus',
+        quality: options.audioBitrateKbps
+          ? new Quality({ bitrate: options.audioBitrateKbps * 1_000 })
+          : undefined,
+        forceTranscode: true,
+      },
+      showWarnings: false,
+    });
+    if (!conversion.isValid) throw new Error('WebM 转换不可用');
+    conversion.onProgress = (progress: number) =>
+      options.onProgress?.(progress);
+    if (options.signal?.aborted) throw options.signal.reason;
+    await conversion.execute();
+    options.onProgress?.(1);
+    return await target.getFile();
+  } catch (cause) {
+    await writable.abort(cause).catch(() => undefined);
+    throw cause;
+  } finally {
+    options.signal?.removeEventListener('abort', abort);
+    input.dispose();
+  }
+}
+
 export async function exportWithFfmpeg(
   source: File,
   target: FileSystemFileHandle,
@@ -191,6 +259,13 @@ export async function exportWithFfmpeg(
   if (exporting) throw new Error('已有导出任务正在运行');
   if (options.signal?.aborted) throw options.signal.reason;
   exporting = true;
+  if (options.format === 'webm') {
+    try {
+      return await exportWebm(source, target, options);
+    } finally {
+      exporting = false;
+    }
+  }
   const mountPoint = `/input-${crypto.randomUUID()}`;
   const inputName = `source${source.name.match(/\.[a-z0-9]+$/i)?.[0] ?? ''}`;
   const outputPath = `/output-${crypto.randomUUID()}.${options.format}`;

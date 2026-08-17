@@ -1403,7 +1403,7 @@ function ExportSettings({
         value={value.format}
         options={[
           ['mp4', 'MP4 · H.264 / AAC'],
-          ['webm', 'WebM · VP9 / Opus'],
+          ['webm', 'WebM · VP8 / Opus'],
           ['mov', 'MOV · H.264 / AAC'],
           ['mkv', 'MKV · H.264 / AAC'],
           ['avi', 'AVI · MPEG-4 / MP3'],
