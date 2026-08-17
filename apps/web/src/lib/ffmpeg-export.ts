@@ -102,7 +102,16 @@ export function buildFfmpegExportArgs(
   }
   if (options.fps !== undefined) filters.push(`fps=${options.fps}`);
 
-  const args = ['-i', inputPath, '-map', '0:v:0?', '-map', '0:a:0?'];
+  const args = [
+    '-i',
+    inputPath,
+    '-map',
+    '0:v:0?',
+    '-map',
+    '0:a:0?',
+    '-threads',
+    '4',
+  ];
   if (filters.length > 0) args.push('-vf', filters.join(','));
   if (options.videoBitrateKbps !== undefined) {
     args.push('-b:v', `${options.videoBitrateKbps}k`);
@@ -123,7 +132,7 @@ export function buildFfmpegExportArgs(
       'libopus',
     );
   } else if (options.format === 'avi') {
-    args.push('-c:v', 'mpeg4', '-q:v', '5', '-c:a', 'libmp3lame');
+    args.push('-c:v', 'mpeg4', '-c:a', 'libmp3lame');
   } else {
     args.push(
       '-c:v',
@@ -279,7 +288,13 @@ export async function exportWithFfmpeg(
     if (options.signal?.aborted) throw options.signal.reason;
     const progress = ({ progress }: { progress: number }) =>
       options.onProgress?.(Math.min(0.95, Math.max(0, progress) * 0.95));
+    const logs: string[] = [];
+    const log = ({ message }: { message: string }) => {
+      logs.push(message);
+      if (logs.length > 20) logs.shift();
+    };
     instance.on('progress', progress);
+    instance.on('log', log);
     try {
       await instance.createDir(mountPoint);
       await instance.mount(
@@ -296,7 +311,11 @@ export async function exportWithFfmpeg(
         options.timeoutMs ?? -1,
         { signal: options.signal },
       );
-      if (exitCode !== 0) throw new Error(`FFmpeg 导出失败（${exitCode}）`);
+      if (exitCode !== 0) {
+        throw new Error(
+          `FFmpeg 导出失败（${exitCode}）：${logs.slice(-3).join(' ')}`,
+        );
+      }
       const data = await instance.readFile(outputPath, undefined, {
         signal: options.signal,
       });
@@ -313,6 +332,7 @@ export async function exportWithFfmpeg(
       return target.getFile();
     } finally {
       instance.off('progress', progress);
+      instance.off('log', log);
     }
   } finally {
     options.signal?.removeEventListener('abort', abort);

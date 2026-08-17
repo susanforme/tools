@@ -38,6 +38,8 @@ describe('buildFfmpegExportArgs', () => {
       '0:v:0?',
       '-map',
       '0:a:0?',
+      '-threads',
+      '4',
       '-vf',
       'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=30',
       '-b:v',
@@ -66,10 +68,30 @@ describe('buildFfmpegExportArgs', () => {
   });
 
   it('uses container-compatible codecs for AVI', () => {
-    expect(
-      buildFfmpegExportArgs('/input.mp4', '/output.avi', {
-        format: 'avi',
-      }),
-    ).toEqual(expect.arrayContaining(['-c:v', 'mpeg4', '-c:a', 'libmp3lame']));
+    const args = buildFfmpegExportArgs('/input.mp4', '/output.avi', {
+      format: 'avi',
+      videoBitrateKbps: 6_000,
+    });
+    expect(args).toEqual(
+      expect.arrayContaining([
+        '-b:v',
+        '6000k',
+        '-threads',
+        '4',
+        '-c:v',
+        'mpeg4',
+        '-c:a',
+        'libmp3lame',
+      ]),
+    );
+    expect(args).not.toContain('-q:v');
+  });
+
+  it('limits every FFmpeg export to four threads', () => {
+    for (const format of ['mp4', 'mov', 'mkv', 'avi', 'ts'] as const) {
+      expect(
+        buildFfmpegExportArgs('/input.mp4', `/output.${format}`, { format }),
+      ).toEqual(expect.arrayContaining(['-threads', '4']));
+    }
   });
 });
