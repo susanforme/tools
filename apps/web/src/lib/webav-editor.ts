@@ -333,6 +333,16 @@ export async function getEditorOutputHandle(
   });
 }
 
+export async function removeEditorOutput(
+  sessionId: string,
+  fileName: string,
+): Promise<void> {
+  const safeName = fileName.replace(/[\\/:*?"<>|]/g, '-').trim() || 'video';
+  await (await getSessionDirectory(sessionId))
+    .removeEntry(safeName)
+    .catch(() => undefined);
+}
+
 async function probeMedia(
   file: File,
   kind: 'video' | 'audio',

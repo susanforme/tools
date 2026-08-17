@@ -292,6 +292,7 @@ export async function exportWithFfmpeg(
     const log = ({ message }: { message: string }) => {
       logs.push(message);
       if (logs.length > 20) logs.shift();
+      console.info('[FFmpeg]', message);
     };
     instance.on('progress', progress);
     instance.on('log', log);

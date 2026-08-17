@@ -315,6 +315,8 @@ async function exportTimeline(
 
   const directory = await getSessionDirectory(request.sessionId);
   const temporaryAudio = new Map<string, { file: File; storageName: string }>();
+  let outputStorageName: string | null = null;
+  let outputCompleted = false;
   const combinator = new Combinator({
     ...request.output,
     bgColor: '#000',
@@ -427,6 +429,7 @@ async function exportTimeline(
     }
 
     const storageName = `${request.fileName.replace(/[\\/:*?"<>|]/g, '-').trim() || 'video'}.mp4`;
+    outputStorageName = storageName;
     const handle = await directory.getFileHandle(storageName, { create: true });
     const reader = combinator
       .output({
@@ -462,6 +465,7 @@ async function exportTimeline(
       access.close();
     }
     postDone(request.id, { type: 'export', storageName });
+    outputCompleted = true;
   } finally {
     stopProgress();
     combinator.destroy();
@@ -470,6 +474,9 @@ async function exportTimeline(
         directory.removeEntry(storageName).catch(() => undefined),
       ),
     );
+    if (outputStorageName && !outputCompleted) {
+      await directory.removeEntry(outputStorageName).catch(() => undefined);
+    }
   }
 }
 

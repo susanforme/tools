@@ -24,7 +24,12 @@ import {
 } from '@/components/ui/resizable';
 import { useTheme } from '@/hooks/use-theme';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
-import { exportWithFfmpeg, type FfmpegExportFormat } from '@/lib/ffmpeg-export';
+import { downloadBlob } from '@/lib/download';
+import {
+  disposeFfmpegExporter,
+  exportWithFfmpeg,
+  type FfmpegExportFormat,
+} from '@/lib/ffmpeg-export';
 import { formatMediaBytes, formatMediaTime } from '@/lib/media-tools';
 import { parseSubtitles } from '@/lib/subtitles';
 import {
@@ -52,6 +57,7 @@ import {
   loadEditorThumbnails,
   moveTimelineClip,
   readEditorAsset,
+  removeEditorOutput,
   resolveExportConfig,
   saveEditorProject,
   snapTimelineClip,
@@ -158,6 +164,7 @@ function VideoEditorPage() {
   const [hydrated, setHydrated] = useState(false);
   const [videoSource, setVideoSource] = useState<PreviewSource | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const exportingRef = useRef(false);
   const clipboardClip = useRef<TimelineClip | null>(null);
   const replaceClipId = useRef<string | null>(null);
   const replaceInputRef = useRef<HTMLInputElement | null>(null);
@@ -629,7 +636,9 @@ function VideoEditorPage() {
   }, [clips, playhead, selectedClipId]);
 
   const exportVideo = async () => {
-    if (clips.length === 0) return;
+    if (clips.length === 0 || exportingRef.current) return;
+    exportingRef.current = true;
+    const temporaryOutputs: string[] = [];
     setLoading(true);
     setExporting(true);
     setProgress(0);
@@ -648,41 +657,42 @@ function VideoEditorPage() {
         project.exportSettings,
         (value) => setProgress(value * 0.75),
       );
+      temporaryOutputs.push(output.name);
       const settings = project.exportSettings;
       const firstVideo = assets.find(({ kind }) => kind === 'video');
       if (!firstVideo) throw new Error('VIDEO_REQUIRED');
       const resolved = resolveExportConfig(firstVideo, settings);
-      const finalOutput =
-        settings.format === 'mp4'
-          ? output
-          : await exportWithFfmpeg(
-              output,
-              await getEditorOutputHandle(
-                sessionId,
-                `${name}.${settings.format}`,
-              ),
-              {
-                format: settings.format as FfmpegExportFormat,
-                width: resolved.width,
-                height: resolved.height,
-                fps: resolved.fps,
-                videoBitrateKbps: settings.videoBitrateKbps,
-                audioBitrateKbps: settings.audioBitrateKbps,
-                onProgress: (value) => setProgress(0.75 + value * 0.25),
-              },
-            );
+      let finalOutput = output;
+      if (settings.format !== 'mp4') {
+        const finalName = `${name}.${settings.format}`;
+        temporaryOutputs.push(finalName);
+        finalOutput = await exportWithFfmpeg(
+          output,
+          await getEditorOutputHandle(sessionId, finalName),
+          {
+            format: settings.format as FfmpegExportFormat,
+            width: resolved.width,
+            height: resolved.height,
+            fps: resolved.fps,
+            videoBitrateKbps: settings.videoBitrateKbps,
+            audioBitrateKbps: settings.audioBitrateKbps,
+            onProgress: (value) => setProgress(0.75 + value * 0.25),
+          },
+        );
+      }
       setProgress(1);
-      const url = URL.createObjectURL(finalOutput);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = finalOutput.name;
-      document.body.append(anchor);
-      anchor.click();
-      anchor.remove();
+      downloadBlob(finalOutput, finalOutput.name);
     } catch (cause) {
       console.error('Video export failed', cause);
       setError(t('videoEditor.opencut.exportError'));
     } finally {
+      await Promise.all(
+        temporaryOutputs.map((fileName) =>
+          removeEditorOutput(sessionId, fileName),
+        ),
+      );
+      disposeFfmpegExporter();
+      exportingRef.current = false;
       setLoading(false);
       setExporting(false);
     }
