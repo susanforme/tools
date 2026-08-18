@@ -1,5 +1,6 @@
 import './i18n';
 import './styles.css';
+import './lib/monaco-environment';
 
 import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';

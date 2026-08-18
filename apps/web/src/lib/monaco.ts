@@ -1,34 +1,20 @@
 import { loader } from '@monaco-editor/react';
-import {
-  loadRuntimeAssetUrl,
-  MONACO_VS_CDN_BASE,
-  type RuntimeAssetName,
-} from './runtime-assets';
+import { MONACO_VS_CDN_BASE } from './runtime-assets';
+import { MONACO_ENVIRONMENT } from './monaco-environment';
 
-function workerAsset(label: string): RuntimeAssetName {
-  if (label === 'json') return 'monacoJsonWorker';
-  if (label === 'css' || label === 'scss' || label === 'less')
-    return 'monacoCssWorker';
-  if (label === 'html' || label === 'handlebars' || label === 'razor')
-    return 'monacoHtmlWorker';
-  if (label === 'typescript' || label === 'javascript') return 'monacoTsWorker';
-  return 'monacoEditorWorker';
+let monacoPromise: Promise<typeof import('monaco-editor')> | null = null;
+
+export function loadMonaco(): Promise<typeof import('monaco-editor')> {
+  if (!monacoPromise) {
+    monacoPromise = import('monaco-editor').then((monaco) => {
+      loader.config({ monaco, paths: { vs: MONACO_VS_CDN_BASE } });
+      return loader.init().then(() => {
+        if (typeof self !== 'undefined') {
+          self.MonacoEnvironment = MONACO_ENVIRONMENT;
+        }
+        return monaco;
+      });
+    });
+  }
+  return monacoPromise;
 }
-
-const environment: NonNullable<typeof self.MonacoEnvironment> = {
-  async getWorker(_workerId: string, label: string) {
-    const url = await loadRuntimeAssetUrl(
-      workerAsset(label),
-      'text/javascript',
-    );
-    return new Worker(url, { name: `monaco-${label}` });
-  },
-};
-
-loader.config({ paths: { vs: MONACO_VS_CDN_BASE } });
-void loader.init().then(
-  () => {
-    self.MonacoEnvironment = environment;
-  },
-  () => undefined,
-);

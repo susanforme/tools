@@ -5,12 +5,12 @@ import { markdownToToc, renderMarkdown } from '@/lib/markdown';
 import Editor from '@monaco-editor/react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Eraser, WandSparkles } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Textarea } from '../components/ui/textarea';
-import '../lib/monaco';
+import { loadMonaco } from '../lib/monaco';
 
 export const Route = createFileRoute('/markdown')({ component: MarkdownPage });
 
@@ -55,6 +55,17 @@ function MarkdownPage() {
     StringParam,
     'markdown',
   );
+  const [monacoReady, setMonacoReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void loadMonaco().then(() => {
+      if (active) setMonacoReady(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const preview = useMemo(() => {
     try {
@@ -120,19 +131,23 @@ function MarkdownPage() {
             <div className="border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">
               {t('markdown.source')}
             </div>
-            <Editor
-              height="620px"
-              language="markdown"
-              value={input}
-              onChange={(value) => setInput(value ?? '')}
-              theme={theme === 'dark' ? 'vs-dark' : 'light'}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                scrollBeyondLastLine: false,
-                wordWrap: 'on',
-              }}
-            />
+            {monacoReady ? (
+              <Editor
+                height="620px"
+                language="markdown"
+                value={input}
+                onChange={(value) => setInput(value ?? '')}
+                theme={theme === 'dark' ? 'vs-dark' : 'light'}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  scrollBeyondLastLine: false,
+                  wordWrap: 'on',
+                }}
+              />
+            ) : (
+              <div className="min-h-[620px] bg-muted/20" />
+            )}
           </section>
           <Textarea
             readOnly
@@ -196,21 +211,25 @@ function MarkdownPage() {
                 <div className="border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">
                   {t('markdown.source')}
                 </div>
-                <Editor
-                  height="620px"
-                  language="markdown"
-                  value={input}
-                  onChange={(value) => setInput(value ?? '')}
-                  theme={theme === 'dark' ? 'vs-dark' : 'light'}
-                  options={{
-                    minimap: { enabled: false },
-                    fontSize: 14,
-                    lineNumbersMinChars: 3,
-                    scrollBeyondLastLine: false,
-                    wordWrap: 'on',
-                    padding: { top: 14, bottom: 14 },
-                  }}
-                />
+                {monacoReady ? (
+                  <Editor
+                    height="620px"
+                    language="markdown"
+                    value={input}
+                    onChange={(value) => setInput(value ?? '')}
+                    theme={theme === 'dark' ? 'vs-dark' : 'light'}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbersMinChars: 3,
+                      scrollBeyondLastLine: false,
+                      wordWrap: 'on',
+                      padding: { top: 14, bottom: 14 },
+                    }}
+                  />
+                ) : (
+                  <div className="min-h-[620px] bg-muted/20" />
+                )}
               </section>
             )}
 

@@ -9,7 +9,7 @@ import { formatJson, summarizeDiff } from '@/lib/diff';
 import { DiffEditor, type DiffOnMount } from '@monaco-editor/react';
 import { createFileRoute } from '@tanstack/react-router';
 import { ArrowLeftRight, Braces, Columns2, Rows3, Trash2 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select';
-import '../lib/monaco';
+import { loadMonaco } from '../lib/monaco';
 
 export const Route = createFileRoute('/diff')({ component: DiffPage });
 
@@ -62,6 +62,17 @@ function DiffPage() {
   const [modified, setModified] = useState('');
   const [stats, setStats] = useState({ added: 0, removed: 0 });
   const [error, setError] = useState<string | null>(null);
+  const [monacoReady, setMonacoReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void loadMonaco().then(() => {
+      if (active) setMonacoReady(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const language = isDiffLanguage(query.language)
     ? query.language
@@ -200,27 +211,31 @@ function DiffPage() {
           <div className="px-3 py-2 border-r">{t('diff.original')}</div>
           <div className="px-3 py-2">{t('diff.modified')}</div>
         </div>
-        <DiffEditor
-          height="620px"
-          language={language}
-          original={original}
-          modified={modified}
-          theme={theme === 'dark' ? 'vs-dark' : 'light'}
-          onMount={handleMount}
-          loading={t('diff.loading')}
-          options={{
-            originalEditable: true,
-            renderSideBySide: view === 'side-by-side',
-            useInlineViewWhenSpaceIsLimited: true,
-            ignoreTrimWhitespace: ignoreWhitespace,
-            automaticLayout: true,
-            minimap: { enabled: false },
-            fontSize: 13,
-            wordWrap: 'on',
-            diffWordWrap: 'on',
-            scrollBeyondLastLine: false,
-          }}
-        />
+        {monacoReady ? (
+          <DiffEditor
+            height="620px"
+            language={language}
+            original={original}
+            modified={modified}
+            theme={theme === 'dark' ? 'vs-dark' : 'light'}
+            onMount={handleMount}
+            loading={t('diff.loading')}
+            options={{
+              originalEditable: true,
+              renderSideBySide: view === 'side-by-side',
+              useInlineViewWhenSpaceIsLimited: true,
+              ignoreTrimWhitespace: ignoreWhitespace,
+              automaticLayout: true,
+              minimap: { enabled: false },
+              fontSize: 13,
+              wordWrap: 'on',
+              diffWordWrap: 'on',
+              scrollBeyondLastLine: false,
+            }}
+          />
+        ) : (
+          <div className="min-h-[620px] bg-muted/20" />
+        )}
       </div>
     </div>
   );

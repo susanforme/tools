@@ -3,8 +3,9 @@ import { cn } from '@/lib/utils';
 import Editor from '@monaco-editor/react';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import '../lib/monaco';
+import { loadMonaco } from '../lib/monaco';
 import { Button } from './ui/button';
 
 type MonacoTextEditorProps = {
@@ -29,6 +30,17 @@ export function MonacoTextEditor({
   const { t } = useTranslation();
   const { theme } = useTheme();
   const [copied, setCopied] = useState(false);
+  const [monacoReady, setMonacoReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void loadMonaco().then(() => {
+      if (active) setMonacoReady(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function copy() {
     if (!value) return;
@@ -61,25 +73,29 @@ export function MonacoTextEditor({
         )}
       </div>
       <div className="overflow-hidden rounded-md border border-input">
-        <Editor
-          height={height}
-          language={language}
-          value={value}
-          onChange={readOnly ? undefined : (next) => onChange?.(next ?? '')}
-          theme={theme === 'dark' ? 'vs-dark' : 'light'}
-          options={{
-            ariaLabel: label,
-            minimap: { enabled: false },
-            fontSize: 13,
-            lineNumbers: 'on',
-            wordWrap: 'on',
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            tabSize: 2,
-            renderLineHighlight: 'all',
-            readOnly,
-          }}
-        />
+        {monacoReady ? (
+          <Editor
+            height={height}
+            language={language}
+            value={value}
+            onChange={readOnly ? undefined : (next) => onChange?.(next ?? '')}
+            theme={theme === 'dark' ? 'vs-dark' : 'light'}
+            options={{
+              ariaLabel: label,
+              minimap: { enabled: false },
+              fontSize: 13,
+              lineNumbers: 'on',
+              wordWrap: 'on',
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              tabSize: 2,
+              renderLineHighlight: 'all',
+              readOnly,
+            }}
+          />
+        ) : (
+          <div className="min-h-80 bg-muted/20" aria-label={label} />
+        )}
       </div>
     </div>
   );

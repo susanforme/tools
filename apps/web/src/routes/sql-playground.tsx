@@ -16,6 +16,13 @@ import {
   RotateCcw,
   Table2,
 } from 'lucide-react';
+import { languages } from 'monaco-editor';
+import {
+  defaultCompletionService,
+  LanguageIdEnum,
+  setupLanguageFeatures,
+  type CompletionService,
+} from 'monaco-sql-languages';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '../components/ui/badge';
@@ -27,7 +34,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select';
-import '../lib/monaco';
+import { loadMonaco } from '../lib/monaco';
+import '../lib/monaco-environment';
+import 'monaco-sql-languages/esm/languages/generic/generic.contribution';
 
 export const Route = createFileRoute('/sql-playground')({
   component: SqlPlaygroundPage,
@@ -59,6 +68,55 @@ SELECT * FROM ranked WHERE salary_rank <= 3;`,
 type SampleName = keyof typeof SAMPLE_QUERIES;
 type Status = 'loading' | 'ready' | 'error';
 
+const sqlSchemaStore: { current: SqliteSchemaObject[] } = { current: [] };
+
+const sqlCompletionService: CompletionService = async (
+  model,
+  position,
+  context,
+  suggestions,
+  entities,
+  snippets,
+) => {
+  const builtInSuggestionsResult = await defaultCompletionService(
+    model,
+    position,
+    context,
+    suggestions,
+    entities,
+    snippets,
+  );
+  const builtInSuggestions = Array.isArray(builtInSuggestionsResult)
+    ? builtInSuggestionsResult
+    : builtInSuggestionsResult.suggestions;
+  const schemaSuggestions = sqlSchemaStore.current.flatMap((object) => [
+    {
+      label: object.name,
+      kind:
+        object.type === 'view'
+          ? languages.CompletionItemKind.Struct
+          : languages.CompletionItemKind.Class,
+      detail: object.type,
+    },
+    ...object.columns.map((column) => ({
+      label: `${object.name}.${column.name}`,
+      kind: languages.CompletionItemKind.Field,
+      detail: `${column.type || 'ANY'} · ${object.name}`,
+      insertText: column.name,
+    })),
+  ]);
+  return [...builtInSuggestions, ...schemaSuggestions];
+};
+
+setupLanguageFeatures(LanguageIdEnum.GENERIC, {
+  completionItems: {
+    enable: true,
+    triggerCharacters: ['.', ' '],
+    completionService: sqlCompletionService,
+  },
+  diagnostics: false,
+});
+
 function SqlPlaygroundPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -68,10 +126,22 @@ function SqlPlaygroundPage() {
   const [storage, setStorage] = useState<SqliteStorageMode>('memory');
   const [version, setVersion] = useState('');
   const [schema, setSchema] = useState<SqliteSchemaObject[]>([]);
+  sqlSchemaStore.current = schema;
   const [sql, setSql] = useState<string>(SAMPLE_QUERIES.aggregate);
   const [result, setResult] = useState<SqliteExecutionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
+  const [monacoReady, setMonacoReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void loadMonaco().then(() => {
+      if (active) setMonacoReady(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     let disposed = false;
@@ -269,22 +339,28 @@ function SqlPlaygroundPage() {
 
         <main className="min-w-0 space-y-4">
           <section className="overflow-hidden rounded-lg border bg-card">
-            <Editor
-              height="320px"
-              language="sql"
-              value={sql}
-              onChange={(value) => setSql(value ?? '')}
-              onMount={mountEditor}
-              theme={theme === 'dark' ? 'vs-dark' : 'light'}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbersMinChars: 3,
-                scrollBeyondLastLine: false,
-                wordWrap: 'on',
-                padding: { top: 14, bottom: 14 },
-              }}
-            />
+            {monacoReady ? (
+              <Editor
+                height="320px"
+                language={LanguageIdEnum.GENERIC}
+                value={sql}
+                onChange={(value) => setSql(value ?? '')}
+                onMount={mountEditor}
+                theme={theme === 'dark' ? 'vs-dark' : 'light'}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbersMinChars: 3,
+                  scrollBeyondLastLine: false,
+                  wordWrap: 'on',
+                  quickSuggestions: true,
+                  suggestOnTriggerCharacters: true,
+                  padding: { top: 14, bottom: 14 },
+                }}
+              />
+            ) : (
+              <div className="min-h-80 bg-muted/20" aria-label="SQL" />
+            )}
           </section>
           <ResultPanel result={result} />
         </main>
