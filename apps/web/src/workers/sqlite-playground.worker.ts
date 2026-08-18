@@ -8,7 +8,11 @@ import {
   type SqliteWorkerRequest,
   type SqliteWorkerResponse,
 } from '../lib/sqlite-playground';
-import { importRuntimeModule, loadRuntimeWasm } from '../lib/runtime-assets';
+import {
+  importRuntimeModule,
+  loadRuntimeWasm,
+  RUNTIME_ASSET_URLS,
+} from '../lib/runtime-assets';
 
 const DATABASE_FILE = '/practice.sqlite3';
 const MAX_RESULT_ROWS = 500;
@@ -163,10 +167,14 @@ async function initialize(): Promise<SqliteInitResult> {
         disable: { vfs: { opfs: true, 'opfs-wl': true } },
       };
       const module = await importRuntimeModule<{
-        default(options: { wasmBinary: ArrayBuffer }): Promise<Sqlite3>;
+        default(options: {
+          locateFile: () => string;
+          wasmBinary: ArrayBuffer;
+        }): Promise<Sqlite3>;
       }>('sqliteGlue');
       const initialize = module.default;
       sqlite3 = await initialize({
+        locateFile: () => RUNTIME_ASSET_URLS.sqliteWasm,
         wasmBinary: await loadRuntimeWasm('sqliteWasm'),
       });
       await openDatabase();
