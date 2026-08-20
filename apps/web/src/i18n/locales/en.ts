@@ -422,6 +422,8 @@ const en = {
   },
   pdfToolkit: {
     title: 'PDF Toolkit',
+    subtitle: 'Drop a PDF into one workspace to preview, edit, and process it',
+    edit: 'Edit text',
     merge: 'Merge',
     split: 'Split',
     organize: 'Reorder and rotate',
@@ -430,6 +432,18 @@ const en = {
     metadata: 'Clean metadata',
     signature: 'Signature inspector',
     drop: 'Drop PDF files or click to select',
+    replace: 'Replace file',
+    pages: 'pages',
+    page: 'Page {{number}}',
+    password: 'PDF password',
+    unlock: 'Open PDF',
+    invalidPassword: 'Incorrect PDF password, please try again',
+    forceRead: 'Force read without password',
+    forceReadPreview:
+      'Structure loaded; preview and text editing still need the correct password',
+    editText: 'Edit PDF text',
+    editHint:
+      'Click text on the page to edit it. Export masks the original and writes the replacement text.',
     order: 'Page order (for example 3,1,2 or 1-3)',
     rotation: 'Clockwise rotation',
     watermarkText: 'Watermark text',
@@ -1390,7 +1404,7 @@ const en = {
       },
       pdfToolkit: {
         title: 'PDF Toolkit',
-        desc: 'Merge, split, reorder, rotate, watermark, and clean PDFs',
+        desc: 'Preview, edit text, merge, split, reorder, watermark, and clean PDFs',
         tagPages: 'Page tools',
         tagMetadata: 'Images / metadata',
       },
