@@ -10,7 +10,7 @@ import {
   mergeGitignore,
 } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../components/ui/input';
 import {
@@ -31,7 +31,15 @@ type Mode =
   | 'version'
   | 'range'
   | 'editorconfig'
-  | 'package';
+  | 'package'
+  | 'match'
+  | 'lockfile';
+const PathRuleDebuggerPanel = lazy(
+  () => import('../components/path-rule-debugger-panel'),
+);
+const LockfileDiffPanel = lazy(
+  () => import('../components/lockfile-diff-panel'),
+);
 const COMMIT_TYPES = [
   'feat',
   'fix',
@@ -142,6 +150,10 @@ function GitToolPage() {
           <TabsTrigger value="range">SemVer Range</TabsTrigger>
           <TabsTrigger value="editorconfig">.editorconfig</TabsTrigger>
           <TabsTrigger value="package">package.json</TabsTrigger>
+          <TabsTrigger value="lockfile">{t('lockfileDiff.title')}</TabsTrigger>
+          <TabsTrigger value="match">
+            {t('developerExpansion.ruleTitle')}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
       {mode === 'ignore' && (
@@ -250,7 +262,19 @@ function GitToolPage() {
           />
         </div>
       )}
-      {mode !== 'range' && (
+      {mode === 'lockfile' && (
+        <Suspense fallback={<p role="status">{t('lockfileDiff.running')}</p>}>
+          <LockfileDiffPanel />
+        </Suspense>
+      )}
+      {mode === 'match' && (
+        <Suspense
+          fallback={<p role="status">{t('developerExpansion.running')}</p>}
+        >
+          <PathRuleDebuggerPanel />
+        </Suspense>
+      )}
+      {mode !== 'range' && mode !== 'lockfile' && mode !== 'match' && (
         <Textarea
           readOnly
           value={output}

@@ -1,7 +1,7 @@
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { MarkupQueryPanel } from '@/components/protocol-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CodePanel } from '../components/code-panel';
 import { Button } from '../components/ui/button';
@@ -15,6 +15,14 @@ import {
 export const Route = createFileRoute('/html')({
   component: HtmlPage,
 });
+
+const SelectorVisualPanel = lazy(
+  () => import('@/components/selector-visual-panel'),
+);
+
+const HtmlAccessibilityPanel = lazy(
+  () => import('@/components/html-accessibility-panel'),
+);
 
 const DEFAULT_HTML = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -53,7 +61,7 @@ function useHtmlTool(initialInput = '') {
   };
 }
 
-type TabType = 'format' | 'minify' | 'query';
+type TabType = 'format' | 'minify' | 'query' | 'accessibility' | 'visual';
 
 function HtmlPage() {
   const { t } = useTranslation();
@@ -107,10 +115,16 @@ function HtmlPage() {
           setTab(v as TabType);
         }}
       >
-        <TabsList>
+        <TabsList className="max-w-full flex-wrap group-data-[orientation=horizontal]/tabs:h-auto">
           <TabsTrigger value="format">{t('html.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('html.tabMinify')}</TabsTrigger>
           <TabsTrigger value="query">CSS Selector / XPath</TabsTrigger>
+          <TabsTrigger value="visual">
+            {t('communityVisual.selector.title')}
+          </TabsTrigger>
+          <TabsTrigger value="accessibility">
+            {t('htmlAccessibility.tab')}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-4 mt-4">
@@ -158,8 +172,28 @@ function HtmlPage() {
             language="html"
           />
         </TabsContent>
+        <TabsContent value="visual" className="mt-4">
+          {tab === 'visual' && (
+            <Suspense
+              fallback={<p role="status">{t('communityVisual.loading')}</p>}
+            >
+              <SelectorVisualPanel />
+            </Suspense>
+          )}
+        </TabsContent>
         <TabsContent value="query" className="mt-4">
           <MarkupQueryPanel />
+        </TabsContent>
+        <TabsContent value="accessibility" className="mt-4">
+          <Suspense
+            fallback={
+              <p className="text-sm text-muted-foreground">
+                {t('htmlAccessibility.loading')}
+              </p>
+            }
+          >
+            <HtmlAccessibilityPanel />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

@@ -1,5 +1,78 @@
+import { communityProtocolsZh } from './community-protocols';
+import { communitySchemaZh } from './community-schema';
+import { communityPerformanceZh } from './community-performance';
+import { communityVisualZh } from './community-visual';
+import { expansionObservabilityZh } from './expansion-observability';
+import { expansionDeveloperZh } from './expansion-developer';
+import { expansionFormatsZh } from './expansion-formats';
+import { expansionGeoZh } from './expansion-geo';
+import { reportTokensZh } from './report-tokens';
+import { reportSarifZh } from './report-sarif';
+import { reportTestsZh } from './report-tests';
+import { reportCalendarZh } from './report-calendar';
+import { workflowProfileZh } from './workflow-profile';
+import { workflowAccessibilityZh } from './workflow-accessibility';
+import { workflowDataZh } from './workflow-data';
+import { workflowGraphqlZh } from './workflow-graphql';
+import { zh as inspectionData } from './inspection-data';
+import { zh as inspectionFiles } from './inspection-files';
+import { zh as inspectionLogs } from './inspection-logs';
+import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...communityProtocolsZh,
+  ...communitySchemaZh,
+  ...communityPerformanceZh,
+  ...communityVisualZh,
+  ...expansionObservabilityZh,
+  ...expansionDeveloperZh,
+  ...expansionFormatsZh,
+  ...expansionGeoZh,
+  ...reportCalendarZh,
+  ...reportTestsZh,
+  ...reportSarifZh,
+  ...reportTokensZh,
+
+  ...workflowGraphqlZh,
+  ...workflowDataZh,
+  ...workflowAccessibilityZh,
+  ...workflowProfileZh,
+
+  ...inspectionData,
+  ...inspectionFiles,
+  ...inspectionLogs,
+  ...inspectionMcp,
   nav: {
+    communityHeap: '堆内存快照对比',
+    communityTrace: 'Chrome Trace 时间线',
+    communityNetlog: 'NetLog 网络日志',
+    communityPlaywright: 'Playwright Trace 查看',
+    communityAsyncapi: 'AsyncAPI 查看与校验',
+    communityCel: 'CEL 表达式调试',
+    communitySpdx: 'SPDX 表达式',
+    communityMqtt: 'MQTT 报文解析',
+    communityFeed: 'RSS / Atom 查看',
+    communityModel: 'glTF / GLB 模型检查',
+    communityCapabilities: '浏览器图形与编解码能力',
+    lighthouseReport: 'Lighthouse 报告对比',
+    otelViewer: 'OpenTelemetry 链路查看',
+    rrwebPlayer: 'rrweb 本地回放',
+    sbomViewer: 'SBOM 清单查看与对比',
+    browserCompat: '浏览器兼容性检查',
+    geojson: 'GeoJSON 地理数据',
+
+    testReport: '测试报告',
+    designTokens: 'Design Tokens',
+    sarifViewer: 'SARIF 扫描报告',
+    graphqlDiff: 'GraphQL Schema 对比',
+    cpuProfile: 'CPU 性能报告',
+    i18nChecker: '翻译文件校验',
+    tableDiff: '表格对比',
+    dataRedactor: '文本与 JSON 脱敏',
+    logExplorer: '日志文件分析',
+    parquetViewer: 'Parquet 查看器',
+    mcpTrace: 'MCP 记录查看',
+    ocr: '图片与 PDF 文字识别',
+
     json: 'JSON',
     html: 'HTML',
     css: 'CSS / SCSS',
@@ -1202,6 +1275,119 @@ const zh = {
     groupDeveloper: '开发辅助',
     developerSubtitle: 'Schema · API · Cron · Mock · Git · 构建分析',
     tools: {
+      communityHeap: {
+        title: '堆内存快照对比',
+        desc: '对象、引用与两份快照的内存变化',
+      },
+      communityTrace: {
+        title: 'Chrome Trace 时间线',
+        desc: '线程、事件与长任务时间线',
+      },
+      communityNetlog: {
+        title: 'NetLog 网络日志',
+        desc: '网络事件、Source 关联与错误',
+      },
+      communityPlaywright: {
+        title: 'Playwright Trace 查看',
+        desc: '离线查看操作、网络与截图',
+      },
+      communityAsyncapi: {
+        title: 'AsyncAPI 查看与校验',
+        desc: '频道、消息与接口规范校验',
+      },
+      communityCel: { title: 'CEL 表达式调试', desc: '规则求值与变量绑定' },
+      communitySpdx: {
+        title: 'SPDX 表达式',
+        desc: '许可证表达式、组合树与例外',
+      },
+      communityMqtt: {
+        title: 'MQTT 报文解析',
+        desc: '离线解析 MQTT 3.1.1 / 5 报文',
+      },
+      communityFeed: {
+        title: 'RSS / Atom 查看',
+        desc: '订阅元数据、条目与格式检查',
+      },
+      communityModel: {
+        title: 'glTF / GLB 模型检查',
+        desc: '模型预览、网格与材质统计',
+      },
+      communityCapabilities: {
+        title: '浏览器图形与编解码能力',
+        desc: 'WebGPU 与 WebCodecs 能力检测',
+      },
+      lighthouseReport: {
+        title: 'Lighthouse 报告对比',
+        desc: '对比性能指标、评分与审计问题',
+      },
+      otelViewer: {
+        title: 'OpenTelemetry 链路查看',
+        desc: '查看 OTLP Span 瀑布图、父子关系和属性',
+      },
+      rrwebPlayer: {
+        title: 'rrweb 本地回放',
+        desc: '回放事件录制，查看时间轴与事件详情',
+      },
+      sbomViewer: {
+        title: 'SBOM 清单查看与对比',
+        desc: '检查组件、许可证、依赖与版本变化',
+      },
+      browserCompat: {
+        title: '浏览器兼容性检查',
+        desc: '查询目标浏览器、覆盖率与特性支持',
+      },
+      geojson: {
+        title: 'GeoJSON 地理数据',
+        desc: '预览点线面、检查坐标并编辑要素属性',
+      },
+      testReport: {
+        title: '测试报告',
+        desc: '查看与对比 JUnit 测试结果和 LCOV 覆盖率',
+      },
+      designTokens: {
+        title: 'Design Tokens',
+        desc: '校验设计变量、检查引用并导出 CSS 变量',
+      },
+      sarifViewer: {
+        title: 'SARIF 扫描报告',
+        desc: '筛选扫描结果、查看问题位置和修复建议',
+      },
+      graphqlDiff: {
+        title: 'GraphQL Schema 对比',
+        desc: '对比 SDL 或 introspection，检查破坏性变更',
+      },
+      cpuProfile: {
+        title: 'CPU 性能报告',
+        desc: '查看火焰图、函数耗时和调用路径',
+      },
+      i18nChecker: {
+        title: '翻译文件校验',
+        desc: '翻译文件校验与 ICU 文案调试',
+      },
+      tableDiff: {
+        title: '表格对比',
+        desc: '按主键比较 CSV 和 JSON 数据变化',
+      },
+      dataRedactor: {
+        title: '文本与 JSON 脱敏',
+        desc: '预览并替换文本和 JSON 中的敏感内容',
+      },
+      logExplorer: {
+        title: '日志文件分析',
+        desc: '筛选日志、聚合错误并导出选中记录',
+      },
+      parquetViewer: {
+        title: 'Parquet 查看器',
+        desc: '查看字段、筛选预览数据并导出 CSV',
+      },
+      mcpTrace: {
+        title: 'MCP 记录查看',
+        desc: '配对请求与返回，查看耗时和错误',
+      },
+      ocr: {
+        title: '图片与 PDF 文字识别',
+        desc: '识别图片和扫描 PDF 中的文字',
+      },
       oauth: {
         title: 'OAuth / OIDC 调试器',
         desc: '生成 PKCE 授权参数并解析回调',
@@ -1246,7 +1432,7 @@ const zh = {
       },
       hexInspector: {
         title: '二进制 / Hex 查看器',
-        desc: '查看字节、魔数、字符串与数值',
+        desc: '查看字节，处理 Protobuf、Avro 与 WebAssembly',
         tagHex: 'Hex / MIME',
         tagEndian: '大小端',
       },
@@ -1276,7 +1462,7 @@ const zh = {
       },
       svgToolkit: {
         title: 'SVG 工具箱',
-        desc: '优化、转换并生成 SVG Sprite',
+        desc: '优化、转换、Sprite 与 Path 编辑',
         tagOptimize: '优化 / JSX',
         tagSprite: 'Data URI / Sprite',
       },
@@ -1365,8 +1551,9 @@ const zh = {
         tagSitemap: 'sitemap.xml',
       },
       gitTool: {
+        tagLockfile: '锁文件对比',
         title: 'Git 工具',
-        desc: '合并忽略规则、提交信息、版本比较与 EditorConfig 模板',
+        desc: '测试 Glob / Gitignore、比较依赖与生成提交信息',
         tagIgnore: '.gitignore / 模板',
         tagCommit: 'Commit / EditorConfig',
       },
@@ -1396,7 +1583,7 @@ const zh = {
       },
       imagePalette: {
         title: '图片取色与调色板',
-        desc: '提取主色并生成 CSS 与 Tailwind 配置',
+        desc: '提取主色、生成调色板与图片占位符',
         tagPalette: '主色提取',
         tagCss: 'CSS / Tailwind',
       },
@@ -1480,9 +1667,9 @@ const zh = {
       },
       icsGenerator: {
         title: '日历事件生成',
-        desc: '填写事件并下载 ICS 日历文件',
+        desc: '生成 ICS、展开重复日期并检查时区和夏令时',
         tagIcs: 'ICS',
-        tagCalendar: '日历事件',
+        tagCalendar: '重复规则 / 时区',
       },
       randomPicker: {
         title: '随机分组与抽签',
@@ -1604,15 +1791,16 @@ const zh = {
       },
       json: {
         title: 'JSON 工具',
-        desc: '格式化、Schema、jq 查询与关系图可视化',
+        desc: '格式化、Schema、JSON-LD、JSON Logic 与 jq / JSONata',
         tagFormat: '格式化',
         tagSchema: 'Schema / 类型',
         tagPath: 'JSONPath / Patch',
-        tagQuery: 'jq / 关系图',
+        tagQuery: 'jq / JSONata',
       },
       html: {
         title: 'HTML 工具',
-        desc: 'HTML 代码格式化与压缩',
+        desc: '格式化、压缩、选择器预览与无障碍检查',
+        tagAccessibility: '无障碍检查',
         tagFormat: '格式化',
         tagMinify: '压缩',
       },
@@ -1625,7 +1813,7 @@ const zh = {
       },
       js: {
         title: 'JavaScript 工具',
-        desc: 'JS 格式化、压缩、混淆与浏览器沙箱',
+        desc: 'JS / TS 语法树、格式化、压缩与实时预览',
         tagFormat: '格式化',
         tagMinify: '压缩',
         tagObfuscate: '混淆',
@@ -1648,7 +1836,7 @@ const zh = {
       },
       sql: {
         title: 'SQL 工具',
-        desc: 'SQL 语句格式化与美化，支持多种方言',
+        desc: '格式化、执行计划、表依赖与 ER 图',
         tagFormat: '格式化',
         tagMinify: '压缩',
       },
@@ -3277,6 +3465,7 @@ const zh = {
     imagePrompt: '选择 PNG、JPEG 或 WebP 图片进行模拟',
     convert: '转换',
     sandboxPreview: '浏览器沙箱预览',
+    livePreview: '实时预览',
     consoleEmpty: '运行后在此显示控制台输出',
     vision: {
       protanopia: '红色盲',

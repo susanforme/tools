@@ -1,5 +1,4 @@
 import { FileDropzone } from '@/components/file-dropzone';
-import { ProtobufPanel } from '@/components/extra-tool-panels';
 import { CodePanel } from '@/components/code-panel';
 import { MonacoTextEditor } from '@/components/monaco-editor';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import {
+  StringParam,
+  useQueryParam,
+  useQueryParams,
+} from '@/hooks/useQueryParams';
 import {
   detectBinaryFormat,
   extractAsciiStrings,
@@ -26,7 +29,7 @@ import {
 import { base64ToBytes, bytesToBase64 } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { Binary } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/hex-inspector')({
@@ -34,17 +37,22 @@ export const Route = createFileRoute('/hex-inspector')({
 });
 type ValueType = 'uint16' | 'uint32' | 'int32' | 'float32' | 'float64';
 const PAGE_SIZE = 64 * 1024;
+const ProtobufWorkbench = lazy(
+  () => import('../components/protobuf-workbench'),
+);
+const AvroPanel = lazy(() => import('../components/avro-panel'));
+const WasmPanel = lazy(() => import('../components/wasm-panel'));
 
 function HexInspectorPage() {
   const { t } = useTranslation();
-  const [endian, setEndian] = useQueryParam<'little' | 'big'>(
-    'endian',
-    StringParam,
-    'little',
-  );
-  const [tab, setTab] = useQueryParam<
-    'inspect' | 'mime' | 'codec' | 'protobuf'
-  >('tab', StringParam, 'inspect');
+  const [query, setQuery] = useQueryParams<{ endian: string; tab: string }>({
+    endian: StringParam,
+    tab: StringParam,
+  });
+  const endian = query.endian === 'big' ? 'big' : 'little';
+  const tab = query.tab ?? 'inspect';
+  const setEndian = (endian: string): void => setQuery({ endian });
+  const setTab = (tab: string): void => setQuery({ tab });
   const [mimeQuery, setMimeQuery] = useState('json');
   const [bytes, setBytes] = useState<Uint8Array | null>(null);
   const [name, setName] = useState('');
@@ -114,23 +122,30 @@ function HexInspectorPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('hexInspector.title')}</h1>
-      <Tabs
-        value={tab}
-        onValueChange={(value) =>
-          setTab(value as 'inspect' | 'mime' | 'codec' | 'protobuf')
-        }
-      >
-        <TabsList>
+      <Tabs value={tab} onValueChange={(value) => setTab(value)}>
+        <TabsList className="flex h-auto flex-wrap gap-1 group-data-[orientation=horizontal]/tabs:h-auto [&_[data-slot=tabs-trigger]]:h-9">
           <TabsTrigger value="inspect">
             {t('hexInspector.tabInspect')}
           </TabsTrigger>
           <TabsTrigger value="mime">{t('hexInspector.tabMime')}</TabsTrigger>
           <TabsTrigger value="codec">MessagePack / CBOR</TabsTrigger>
           <TabsTrigger value="protobuf">Protobuf</TabsTrigger>
+          <TabsTrigger value="avro">Avro</TabsTrigger>
+          <TabsTrigger value="wasm">WASM / WAT</TabsTrigger>
         </TabsList>
       </Tabs>
-      {tab === 'protobuf' ? (
-        <ProtobufPanel />
+      {tab === 'avro' ? (
+        <Suspense fallback={<p role="status">{t('formats.running')}</p>}>
+          <AvroPanel />
+        </Suspense>
+      ) : tab === 'wasm' ? (
+        <Suspense fallback={<p role="status">{t('formats.running')}</p>}>
+          <WasmPanel />
+        </Suspense>
+      ) : tab === 'protobuf' ? (
+        <Suspense fallback={<p>{t('formats.running')}</p>}>
+          <ProtobufWorkbench />
+        </Suspense>
       ) : tab === 'codec' ? (
         <BinaryCodecPanel />
       ) : tab === 'mime' ? (

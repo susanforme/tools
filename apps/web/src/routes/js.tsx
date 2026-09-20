@@ -2,7 +2,7 @@ import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { WebSandboxPanel } from '@/components/community-tool-panels';
 import { EventInspectorPanel } from '@/components/recommended-tool-panels';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CodePanel } from '../components/code-panel';
 import { Button } from '../components/ui/button';
@@ -15,7 +15,8 @@ import {
 
 export const Route = createFileRoute('/js')({ component: JsPage });
 
-type TabType = 'format' | 'minify' | 'obfuscate' | 'sandbox' | 'events';
+type TabType = 'format' | 'minify' | 'obfuscate' | 'sandbox' | 'events' | 'ast';
+const AstExplorerPanel = lazy(() => import('../components/ast-explorer-panel'));
 
 function useTool(initialInput = '') {
   const [input, setInput] = useState(initialInput);
@@ -139,13 +140,16 @@ function JsPage() {
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabType)}>
-        <TabsList>
+        <TabsList className="h-auto flex-wrap gap-1">
           <TabsTrigger value="format">{t('js.tabFormat')}</TabsTrigger>
           <TabsTrigger value="minify">{t('js.tabMinify')}</TabsTrigger>
           <TabsTrigger value="obfuscate">{t('js.tabObfuscate')}</TabsTrigger>
           <TabsTrigger value="sandbox">{t('js.tabSandbox')}</TabsTrigger>
           <TabsTrigger value="events">
             {t('recommended.eventInspector')}
+          </TabsTrigger>
+          <TabsTrigger value="ast">
+            {t('developerExpansion.astTitle')}
           </TabsTrigger>
         </TabsList>
 
@@ -208,6 +212,15 @@ function JsPage() {
         </TabsContent>
         <TabsContent value="events" className="mt-4">
           <EventInspectorPanel />
+        </TabsContent>
+        <TabsContent value="ast" className="mt-4">
+          {tab === 'ast' && (
+            <Suspense
+              fallback={<p role="status">{t('developerExpansion.running')}</p>}
+            >
+              <AstExplorerPanel />
+            </Suspense>
+          )}
         </TabsContent>
       </Tabs>
     </div>

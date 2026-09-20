@@ -1,5 +1,78 @@
+import { communityProtocolsEn } from './community-protocols';
+import { communitySchemaEn } from './community-schema';
+import { communityPerformanceEn } from './community-performance';
+import { communityVisualEn } from './community-visual';
+import { expansionObservabilityEn } from './expansion-observability';
+import { expansionDeveloperEn } from './expansion-developer';
+import { expansionFormatsEn } from './expansion-formats';
+import { expansionGeoEn } from './expansion-geo';
+import { reportTokensEn } from './report-tokens';
+import { reportSarifEn } from './report-sarif';
+import { reportTestsEn } from './report-tests';
+import { reportCalendarEn } from './report-calendar';
+import { workflowProfileEn } from './workflow-profile';
+import { workflowAccessibilityEn } from './workflow-accessibility';
+import { workflowDataEn } from './workflow-data';
+import { workflowGraphqlEn } from './workflow-graphql';
+import { en as inspectionData } from './inspection-data';
+import { en as inspectionFiles } from './inspection-files';
+import { en as inspectionLogs } from './inspection-logs';
+import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...communityProtocolsEn,
+  ...communitySchemaEn,
+  ...communityPerformanceEn,
+  ...communityVisualEn,
+  ...expansionObservabilityEn,
+  ...expansionDeveloperEn,
+  ...expansionFormatsEn,
+  ...expansionGeoEn,
+  ...reportCalendarEn,
+  ...reportTestsEn,
+  ...reportSarifEn,
+  ...reportTokensEn,
+
+  ...workflowGraphqlEn,
+  ...workflowDataEn,
+  ...workflowAccessibilityEn,
+  ...workflowProfileEn,
+
+  ...inspectionData,
+  ...inspectionFiles,
+  ...inspectionLogs,
+  ...inspectionMcp,
   nav: {
+    communityHeap: 'Heap snapshot comparison',
+    communityTrace: 'Chrome trace timeline',
+    communityNetlog: 'NetLog viewer',
+    communityPlaywright: 'Playwright trace viewer',
+    communityAsyncapi: 'AsyncAPI inspector',
+    communityCel: 'CEL expression debugger',
+    communitySpdx: 'SPDX expressions',
+    communityMqtt: 'MQTT packet inspector',
+    communityFeed: 'RSS / Atom inspector',
+    communityModel: 'glTF / GLB inspector',
+    communityCapabilities: 'Browser graphics and codecs',
+    lighthouseReport: 'Lighthouse report comparison',
+    otelViewer: 'OpenTelemetry trace viewer',
+    rrwebPlayer: 'rrweb local replay',
+    sbomViewer: 'SBOM viewer and comparison',
+    browserCompat: 'Browser compatibility',
+    geojson: 'GeoJSON tools',
+
+    testReport: 'Test reports',
+    designTokens: 'Design Tokens',
+    sarifViewer: 'SARIF scan reports',
+    graphqlDiff: 'GraphQL schema diff',
+    cpuProfile: 'CPU profile viewer',
+    i18nChecker: 'Translation checker',
+    tableDiff: 'Table diff',
+    dataRedactor: 'Text and JSON redactor',
+    logExplorer: 'Log explorer',
+    parquetViewer: 'Parquet viewer',
+    mcpTrace: 'MCP trace viewer',
+    ocr: 'Image and PDF OCR',
+
     json: 'JSON',
     html: 'HTML',
     css: 'CSS / SCSS',
@@ -1228,6 +1301,122 @@ const en = {
     groupDeveloper: 'Developer helpers',
     developerSubtitle: 'Schema · API · Cron · Mock · Git · Bundle analysis',
     tools: {
+      communityHeap: {
+        title: 'Heap snapshot comparison',
+        desc: 'Inspect objects, references, and snapshot differences',
+      },
+      communityTrace: {
+        title: 'Chrome trace timeline',
+        desc: 'Threads, events, and long-task timelines',
+      },
+      communityNetlog: {
+        title: 'NetLog viewer',
+        desc: 'Network events, source links, and errors',
+      },
+      communityPlaywright: {
+        title: 'Playwright trace viewer',
+        desc: 'Inspect recorded actions, network, and screenshots',
+      },
+      communityAsyncapi: {
+        title: 'AsyncAPI inspector',
+        desc: 'Channels, messages, and specification diagnostics',
+      },
+      communityCel: {
+        title: 'CEL expression debugger',
+        desc: 'Evaluate rules with variable bindings',
+      },
+      communitySpdx: {
+        title: 'SPDX expressions',
+        desc: 'License expression trees and exceptions',
+      },
+      communityMqtt: {
+        title: 'MQTT packet inspector',
+        desc: 'Inspect MQTT 3.1.1 / 5 packets offline',
+      },
+      communityFeed: {
+        title: 'RSS / Atom inspector',
+        desc: 'Feed metadata, entries, and validation',
+      },
+      communityModel: {
+        title: 'glTF / GLB inspector',
+        desc: 'Model previews, meshes, and materials',
+      },
+      communityCapabilities: {
+        title: 'Browser graphics and codecs',
+        desc: 'Detect WebGPU and WebCodecs capabilities',
+      },
+      lighthouseReport: {
+        title: 'Lighthouse report comparison',
+        desc: 'Compare performance metrics, scores and audit findings',
+      },
+      otelViewer: {
+        title: 'OpenTelemetry trace viewer',
+        desc: 'Inspect OTLP span waterfalls, relationships and attributes',
+      },
+      rrwebPlayer: {
+        title: 'rrweb local replay',
+        desc: 'Replay recordings and inspect timelines and events',
+      },
+      sbomViewer: {
+        title: 'SBOM viewer and comparison',
+        desc: 'Inspect components, licenses, dependencies and version changes',
+      },
+      browserCompat: {
+        title: 'Browser compatibility',
+        desc: 'Inspect target browsers, coverage and feature support',
+      },
+      geojson: {
+        title: 'GeoJSON tools',
+        desc: 'Preview geometries, inspect coordinates and edit feature properties',
+      },
+      testReport: {
+        title: 'Test reports',
+        desc: 'Inspect and compare JUnit results and LCOV coverage',
+      },
+      designTokens: {
+        title: 'Design Tokens',
+        desc: 'Validate design tokens, inspect references and export CSS variables',
+      },
+      sarifViewer: {
+        title: 'SARIF scan reports',
+        desc: 'Filter scan findings and inspect locations and suggested fixes',
+      },
+      graphqlDiff: {
+        title: 'GraphQL schema diff',
+        desc: 'Compare SDL or introspection and detect breaking changes',
+      },
+      cpuProfile: {
+        title: 'CPU profile viewer',
+        desc: 'Explore flame graphs, function timings and call paths',
+      },
+      i18nChecker: {
+        title: 'Translation checker',
+        desc: 'Check translation files and debug ICU messages',
+      },
+      tableDiff: {
+        title: 'Table diff',
+        desc: 'Compare CSV and JSON records by key',
+      },
+      dataRedactor: {
+        title: 'Text and JSON redactor',
+        desc: 'Review and replace sensitive text and JSON values',
+      },
+      logExplorer: {
+        title: 'Log explorer',
+        desc: 'Filter logs, group errors and export selected records',
+      },
+      parquetViewer: {
+        title: 'Parquet viewer',
+        desc: 'Inspect fields, filter preview rows and export CSV',
+      },
+      mcpTrace: {
+        title: 'MCP trace viewer',
+        desc: 'Match requests and responses, inspect duration and errors',
+      },
+      ocr: {
+        title: 'Image and PDF OCR',
+        desc: 'Recognize text in images and scanned PDFs',
+      },
       oauth: {
         title: 'OAuth / OIDC Debugger',
         desc: 'Generate PKCE authorization parameters and parse callbacks',
@@ -1272,7 +1461,7 @@ const en = {
       },
       hexInspector: {
         title: 'Binary / Hex Inspector',
-        desc: 'Inspect bytes, signatures, strings, and values',
+        desc: 'Inspect bytes and work with Protobuf, Avro and WebAssembly',
         tagHex: 'Hex / MIME',
         tagEndian: 'Endianness',
       },
@@ -1302,7 +1491,7 @@ const en = {
       },
       svgToolkit: {
         title: 'SVG Toolkit',
-        desc: 'Optimize, convert, and build SVG sprites',
+        desc: 'Optimize, convert, build sprites, and edit paths',
         tagOptimize: 'Optimize / JSX',
         tagSprite: 'Data URI / Sprite',
       },
@@ -1391,8 +1580,9 @@ const en = {
         tagSitemap: 'sitemap.xml',
       },
       gitTool: {
+        tagLockfile: 'Lockfile diff',
         title: 'Git Tool',
-        desc: 'Merge ignore rules, commits, version compare, and EditorConfig templates',
+        desc: 'Test Glob / Gitignore rules, compare dependencies and prepare commits',
         tagIgnore: '.gitignore / templates',
         tagCommit: 'Commit / EditorConfig',
       },
@@ -1422,7 +1612,7 @@ const en = {
       },
       imagePalette: {
         title: 'Image Palette',
-        desc: 'Extract colors and generate CSS and Tailwind values',
+        desc: 'Extract palettes and generate image placeholders',
         tagPalette: 'Color extraction',
         tagCss: 'CSS / Tailwind',
       },
@@ -1506,9 +1696,9 @@ const en = {
       },
       icsGenerator: {
         title: 'Calendar event generator',
-        desc: 'Create and download an ICS calendar event',
+        desc: 'Create ICS events, expand recurrences and inspect time zones and DST',
         tagIcs: 'ICS',
-        tagCalendar: 'Calendar event',
+        tagCalendar: 'Recurrence / time zones',
       },
       randomPicker: {
         title: 'Random groups and draw',
@@ -1597,15 +1787,16 @@ const en = {
       },
       json: {
         title: 'JSON Tools',
-        desc: 'Format, schemas, jq queries, and relationship graphs',
+        desc: 'Format, schemas, JSON-LD, JSON Logic and jq / JSONata',
         tagFormat: 'Format',
         tagSchema: 'Schema / Types',
         tagPath: 'JSONPath / Patch',
-        tagQuery: 'jq / graph',
+        tagQuery: 'jq / JSONata',
       },
       html: {
         title: 'HTML Tools',
-        desc: 'Format and minify HTML code',
+        desc: 'Format, minify, preview selectors, and check accessibility',
+        tagAccessibility: 'Accessibility',
         tagFormat: 'Format',
         tagMinify: 'Minify',
       },
@@ -1618,7 +1809,7 @@ const en = {
       },
       js: {
         title: 'JavaScript Tools',
-        desc: 'Format, minify, obfuscate, and run browser snippets',
+        desc: 'Inspect JS / TS syntax trees, format, minify and preview code',
         tagFormat: 'Format',
         tagMinify: 'Minify',
         tagObfuscate: 'Obfuscate',
@@ -1641,7 +1832,7 @@ const en = {
       },
       sql: {
         title: 'SQL Tools',
-        desc: 'Format and beautify SQL with multi-dialect support',
+        desc: 'Formatting, execution plans, table dependencies, and ER diagrams',
         tagFormat: 'Format',
         tagMinify: 'Minify',
       },
@@ -3317,6 +3508,7 @@ const en = {
     imagePrompt: 'Choose a PNG, JPEG, or WebP image to simulate',
     convert: 'Convert',
     sandboxPreview: 'Browser sandbox preview',
+    livePreview: 'Live preview',
     consoleEmpty: 'Console output appears here after running',
     vision: {
       protanopia: 'Protanopia',

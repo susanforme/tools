@@ -11,13 +11,14 @@ import {
 } from '@/lib/svg-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { FileCode2, LoaderCircle } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/svg-toolkit')({
   component: SvgToolkitPage,
 });
-type Mode = 'optimize' | 'data-uri' | 'react' | 'sprite';
+const SvgPathPanel = lazy(() => import('@/components/svg-path-panel'));
+type Mode = 'optimize' | 'data-uri' | 'react' | 'sprite' | 'path';
 type SvgFile = { name: string; source: string };
 
 const SAMPLE =
@@ -78,43 +79,58 @@ function SvgToolkitPage() {
     <div className="mx-auto max-w-7xl space-y-4 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('svgToolkit.title')}</h1>
       <Tabs value={mode} onValueChange={(value) => setMode(value as Mode)}>
-        <TabsList className="flex h-auto flex-wrap">
+        <TabsList className="flex flex-wrap group-data-[orientation=horizontal]/tabs:h-auto">
           <TabsTrigger value="optimize">{t('svgToolkit.optimize')}</TabsTrigger>
           <TabsTrigger value="data-uri">Data URI</TabsTrigger>
           <TabsTrigger value="react">React JSX</TabsTrigger>
           <TabsTrigger value="sprite">Sprite</TabsTrigger>
+          <TabsTrigger value="path">
+            {t('communityVisual.path.title')}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
-      <FileDropzone
-        accept=".svg,image/svg+xml"
-        multiple
-        onFiles={(items) => void importFiles(items.map((item) => item.file))}
-        className="flex min-h-24 items-center justify-center rounded-xl p-4 text-center"
-      >
-        <div>
-          <FileCode2 className="mx-auto mb-2 h-7 w-7 text-muted-foreground" />
-          {t('svgToolkit.drop')}
-        </div>
-      </FileDropzone>
-      <div className="flex items-center justify-between gap-3">
-        <Button disabled={loading} onClick={() => void run()}>
-          {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
-          {t('svgToolkit.run')}
-        </Button>
-        <img
-          src={preview}
-          alt={t('svgToolkit.preview')}
-          className="h-20 w-20 rounded-lg border bg-white object-contain p-2"
-        />
-      </div>
-      <CodePanel
-        input={input}
-        output={output}
-        onInputChange={setInput}
-        error={error}
-        language="xml"
-        outputLanguage={mode === 'react' ? 'typescript' : 'xml'}
-      />
+      {mode === 'path' ? (
+        <Suspense
+          fallback={<p role="status">{t('communityVisual.loading')}</p>}
+        >
+          <SvgPathPanel />
+        </Suspense>
+      ) : (
+        <>
+          <FileDropzone
+            accept=".svg,image/svg+xml"
+            multiple
+            onFiles={(items) =>
+              void importFiles(items.map((item) => item.file))
+            }
+            className="flex min-h-24 items-center justify-center rounded-xl p-4 text-center"
+          >
+            <div>
+              <FileCode2 className="mx-auto mb-2 h-7 w-7 text-muted-foreground" />
+              {t('svgToolkit.drop')}
+            </div>
+          </FileDropzone>
+          <div className="flex items-center justify-between gap-3">
+            <Button disabled={loading} onClick={() => void run()}>
+              {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
+              {t('svgToolkit.run')}
+            </Button>
+            <img
+              src={preview}
+              alt={t('svgToolkit.preview')}
+              className="h-20 w-20 rounded-lg border bg-white object-contain p-2"
+            />
+          </div>
+          <CodePanel
+            input={input}
+            output={output}
+            onInputChange={setInput}
+            error={error}
+            language="xml"
+            outputLanguage={mode === 'react' ? 'typescript' : 'xml'}
+          />
+        </>
+      )}
     </div>
   );
 }

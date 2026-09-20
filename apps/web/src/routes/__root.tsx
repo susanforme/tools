@@ -161,12 +161,14 @@ const formatterNavItems: NavItem[] = [
     icon: <Braces className="w-4 h-4 text-amber-500" />,
     labelKey: 'nav.json',
     keywords:
-      'json format minify schema typescript zod interface jsonpath jq graph visualize ndjson patch 格式化 类型 关系图',
+      'json jsonld jsonlogic JSON-LD JSONLogic format minify schema typescript zod interface jsonpath jq jsonata transform aggregate graph visualize ndjson patch 格式化 类型 关系图 规则',
   },
   {
     to: '/html',
     icon: <FileCode className="w-4 h-4 text-blue-500" />,
     labelKey: 'nav.html',
+    keywords:
+      'html css selector xpath visual accessibility axe aria a11y 选择器 可视化 无障碍 检查',
   },
   {
     to: '/css',
@@ -178,7 +180,7 @@ const formatterNavItems: NavItem[] = [
     icon: <FileCode2 className="w-4 h-4 text-yellow-500" />,
     labelKey: 'nav.js',
     keywords:
-      'javascript html css sandbox playground event inspector keyboard pointer clipboard 沙箱 运行 预览 事件 检查器',
+      'javascript typescript ast babel 语法树 html css sandbox playground live preview event inspector keyboard pointer clipboard 沙箱 在线编程 运行 实时预览 事件 检查器',
   },
   {
     to: '/xml',
@@ -198,6 +200,8 @@ const formatterNavItems: NavItem[] = [
     to: '/sql',
     icon: <Database className="w-4 h-4 text-cyan-500" />,
     labelKey: 'nav.sql',
+    keywords:
+      'sql explain postgres postgresql mysql ddl er dependencies plan 表依赖 关系图 执行计划',
   },
   {
     to: '/sql-playground',
@@ -249,7 +253,8 @@ const cryptoNavItems: NavItem[] = [
     to: '/certificate-tool',
     icon: <KeyRound className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.certificateTool',
-    keywords: 'x509 pem jwk csr certificate 证书 公钥 域名 有效期 转换',
+    keywords:
+      'x509 pem jwk csr certificate ssh openssh fingerprint 证书 公钥 指纹 域名 有效期 转换',
   },
   {
     to: '/hash',
@@ -444,6 +449,12 @@ const textNavItems: NavItem[] = [
 
 const frontendNavItems: NavItem[] = [
   {
+    to: '/design-tokens',
+    icon: <Palette className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.designTokens',
+    keywords: 'design tokens dtcg css variables 设计 变量 令牌',
+  },
+  {
     to: '/gradient-studio',
     icon: <Palette className="h-4 w-4 text-fuchsia-500" />,
     labelKey: 'nav.gradientStudio',
@@ -453,7 +464,7 @@ const frontendNavItems: NavItem[] = [
     to: '/svg-toolkit',
     icon: <FileCode2 className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.svgToolkit',
-    keywords: 'svg optimize data uri react jsx sprite',
+    keywords: 'svg path optimize data uri react jsx sprite 路径 编辑 测量',
   },
   {
     to: '/font',
@@ -534,7 +545,8 @@ const frontendNavItems: NavItem[] = [
     to: '/image-palette',
     icon: <Palette className="h-4 w-4 text-fuchsia-500" />,
     labelKey: 'nav.imagePalette',
-    keywords: '图片 取色 调色板 palette color tailwind css contrast',
+    keywords:
+      '图片 取色 调色板 占位符 placeholder thumbhash blurhash palette color tailwind css contrast',
   },
   {
     to: '/id-photo',
@@ -580,6 +592,180 @@ const designNavItems = frontendNavItems.filter(
 );
 const developerToolNavItems: NavItem[] = [
   {
+    to: '/heap-snapshot',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityHeap',
+    keywords: 'heap snapshot memory 内存 泄漏 对比',
+  },
+  {
+    to: '/chrome-trace',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityTrace',
+    keywords: 'chrome trace performance timeline 长任务 线程',
+  },
+  {
+    to: '/netlog-viewer',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityNetlog',
+    keywords: 'chrome netlog dns socket 网络 日志',
+  },
+  {
+    to: '/playwright-trace',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityPlaywright',
+    keywords: 'playwright trace zip test 测试 截图',
+  },
+  {
+    to: '/asyncapi',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityAsyncapi',
+    keywords: 'asyncapi schema event 消息 事件',
+  },
+  {
+    to: '/cel',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityCel',
+    keywords: 'cel expression rule 表达式 规则',
+  },
+  {
+    to: '/spdx-expression',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communitySpdx',
+    keywords: 'spdx license expression 许可证',
+  },
+  {
+    to: '/mqtt-packet',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityMqtt',
+    keywords: 'mqtt packet binary 报文 协议',
+  },
+  {
+    to: '/feed-inspector',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityFeed',
+    keywords: 'rss atom feed 订阅',
+  },
+  {
+    to: '/gltf-inspector',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityModel',
+    keywords: 'gltf glb 3d model 模型 三维',
+  },
+  {
+    to: '/browser-capabilities',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.communityCapabilities',
+    keywords: 'webgpu webcodecs codec gpu 编解码 能力',
+  },
+  {
+    to: '/lighthouse-report',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.lighthouseReport',
+    keywords: 'lighthouse lcp cls tbt performance 性能 报告 对比',
+  },
+  {
+    to: '/otel-viewer',
+    icon: <Network className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.otelViewer',
+    keywords: 'opentelemetry otlp span trace waterfall 链路 瀑布图',
+  },
+  {
+    to: '/rrweb-player',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.rrwebPlayer',
+    keywords: 'rrweb replay session recording 回放 录制',
+  },
+  {
+    to: '/sbom-viewer',
+    icon: <ShieldAlert className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.sbomViewer',
+    keywords: 'sbom cyclonedx spdx dependency license 组件 依赖 许可证',
+  },
+  {
+    to: '/browser-compat',
+    icon: <Globe className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.browserCompat',
+    keywords:
+      'browserslist caniuse compatibility browser css webapi 兼容 浏览器 支持',
+  },
+  {
+    to: '/geojson',
+    icon: <Globe className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.geojson',
+    keywords: 'geojson geometry map coordinate 地理 坐标 地图',
+  },
+
+  {
+    to: '/test-report',
+    icon: <FileText className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.testReport',
+    keywords: 'junit lcov coverage test report 测试 报告 覆盖率',
+  },
+
+  {
+    to: '/sarif-viewer',
+    icon: <ShieldAlert className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.sarifViewer',
+    keywords: 'sarif security scan static findings 扫描 静态 检查 报告',
+  },
+  {
+    to: '/graphql-diff',
+    icon: <Network className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.graphqlDiff',
+    keywords: 'graphql schema sdl introspection breaking diff 对比 破坏性',
+  },
+  {
+    to: '/cpu-profile',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'nav.cpuProfile',
+    keywords:
+      'cpu profile cpuprofile flamegraph performance 性能 火焰图 调用栈',
+  },
+  {
+    to: '/i18n-checker',
+    icon: <Globe className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.i18nChecker',
+    keywords:
+      'icu plural messageformat i18n translation locale placeholder 翻译 校验 多语言 复数',
+  },
+  {
+    to: '/table-diff',
+    icon: <Table className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.tableDiff',
+    keywords: 'csv json diff key sku 表格 主键 对比',
+  },
+  {
+    to: '/data-redactor',
+    icon: <ShieldAlert className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.dataRedactor',
+    keywords: 'redact pii secret token 脱敏 隐私',
+  },
+  {
+    to: '/log-explorer',
+    icon: <Activity className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.logExplorer',
+    keywords: 'log jsonl ndjson error 日志 筛选',
+  },
+  {
+    to: '/parquet-viewer',
+    icon: <Database className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.parquetViewer',
+    keywords: 'parquet arrow schema data 数据 列式',
+  },
+  {
+    to: '/mcp-trace',
+    icon: <Network className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.mcpTrace',
+    keywords: 'mcp jsonrpc trace replay agent 记录 调用',
+  },
+  {
+    to: '/ocr',
+    icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+    labelKey: 'nav.ocr',
+    keywords: 'ocr image pdf text scan 文字 识别 扫描',
+  },
+
+  {
     to: '/trace-context',
     icon: <Network className="h-4 w-4 text-sky-500" />,
     labelKey: 'nav.traceContext',
@@ -601,7 +787,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/hex-inspector',
     icon: <Binary className="h-4 w-4 text-lime-500" />,
     labelKey: 'nav.hexInspector',
-    keywords: 'hex binary mime magic bytes endian strings 二进制 十六进制',
+    keywords:
+      'hex binary mime magic bytes endian strings avro wasm wat webassembly protobuf 二进制 十六进制',
   },
   {
     to: '/docker-compose',
@@ -675,7 +862,7 @@ const developerToolNavItems: NavItem[] = [
     icon: <Code2 className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.gitTool',
     keywords:
-      'gitignore conventional commit semver version git package.json dependencies dependency diff 依赖 对比',
+      'glob pattern matching 匹配 gitignore conventional commit semver version git package.json dependencies dependency diff lockfile bun.lock pnpm-lock.yaml package-lock.json 锁文件 依赖 对比',
   },
   {
     to: '/bundle-inspector',
@@ -807,7 +994,8 @@ const lifeNavItems: NavItem[] = [
     to: '/ics-generator',
     icon: <FileText className="h-4 w-4 text-indigo-500" />,
     labelKey: 'nav.icsGenerator',
-    keywords: 'ics rrule calendar event inspect validate 日历 事件 检查',
+    keywords:
+      'ics rrule calendar event inspect validate recurrence exdate timezone dst 日历 事件 检查 重复 时区 夏令时',
   },
   {
     to: '/random-picker',
@@ -1473,7 +1661,7 @@ function RootContent() {
             ]}
           />
         )}
-      {!immersive && <Toaster />}
+        {!immersive && <Toaster />}
       </div>
     </QueryClientProvider>
   );

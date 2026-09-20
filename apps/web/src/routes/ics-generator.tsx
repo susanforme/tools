@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createIcsEvent, inspectIcs } from '@/lib/life-calculators';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/ics-generator')({
@@ -24,7 +24,10 @@ RRULE:FREQ=WEEKLY;COUNT=4
 END:VEVENT
 END:VCALENDAR`;
 
-type Tab = 'generate' | 'inspect';
+type Tab = 'generate' | 'inspect' | 'recurrence';
+const CalendarRecurrencePanel = lazy(
+  () => import('@/components/calendar-recurrence-panel'),
+);
 
 function IcsGeneratorPage() {
   const { t } = useTranslation();
@@ -80,14 +83,23 @@ function IcsGeneratorPage() {
     <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('icsGenerator.title')}</h1>
       <Tabs value={tab} onValueChange={(value) => setTab(value as Tab)}>
-        <TabsList>
+        <TabsList className="max-w-full flex-wrap group-data-[orientation=horizontal]/tabs:h-auto">
           <TabsTrigger value="generate">
             {t('icsGenerator.generate')}
           </TabsTrigger>
           <TabsTrigger value="inspect">{t('icsGenerator.inspect')}</TabsTrigger>
+          <TabsTrigger value="recurrence">
+            {t('calendarRecurrence.tab')}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
-      {tab === 'generate' ? (
+      {tab === 'recurrence' ? (
+        <Suspense
+          fallback={<p role="status">{t('calendarRecurrence.loading')}</p>}
+        >
+          <CalendarRecurrencePanel />
+        </Suspense>
+      ) : tab === 'generate' ? (
         <>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label={t('icsGenerator.eventTitle')}>

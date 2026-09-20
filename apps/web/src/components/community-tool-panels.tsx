@@ -797,6 +797,17 @@ export function WebSandboxPanel() {
   const [source, setSource] = useState(() =>
     createSandboxDocument({ html, css, javascript, channel }),
   );
+  const [runId, setRunId] = useState(0);
+
+  useEffect(() => {
+    const nextSource = createSandboxDocument({ html, css, javascript, channel });
+    if (nextSource === source) return;
+    const timer = window.setTimeout(() => {
+      setLogs([]);
+      setSource(nextSource);
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [html, css, javascript, channel, source]);
 
   useEffect(() => {
     const receive = (event: MessageEvent<unknown>) => {
@@ -826,6 +837,7 @@ export function WebSandboxPanel() {
   const run = () => {
     setLogs([]);
     setSource(createSandboxDocument({ html, css, javascript, channel }));
+    setRunId((current) => current + 1);
   };
 
   const value = file === 'html' ? html : file === 'css' ? css : javascript;
@@ -848,6 +860,9 @@ export function WebSandboxPanel() {
         <Button onClick={run}>
           <Play /> {t('communityTools.run')}
         </Button>
+        <span className="text-sm text-muted-foreground">
+          {t('communityTools.livePreview')}
+        </span>
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <MonacoTextEditor
@@ -859,6 +874,7 @@ export function WebSandboxPanel() {
         />
         <div className="grid h-[560px] grid-rows-[1fr_10rem] overflow-hidden rounded-xl border">
           <iframe
+            key={runId}
             ref={iframeRef}
             title={t('communityTools.sandboxPreview')}
             sandbox="allow-scripts"

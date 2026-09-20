@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { devtools } from '@tanstack/devtools-vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import viteReact from '@vitejs/plugin-react';
+import { fileURLToPath } from 'node:url';
 import { esmExternalRequirePlugin } from 'rolldown/plugins';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig, type Plugin, type PluginOption } from 'vite';
@@ -14,18 +15,37 @@ const crossOriginIsolationHeaders = {
 };
 
 const CDN_MODULE_VERSIONS = {
+  '@babel/parser': '8.0.5',
+  '@asyncapi/parser': '3.6.3',
+  '@bufbuild/cel': '0.6.1',
+  'node-sql-parser': '5.4.0',
+  'intl-messageformat': '12.1.0',
+  protobufjs: '8.8.0',
+  long: '5.3.2',
+  'mqtt-packet': '9.0.2',
+  three: '0.186.0',
+  thumbhash: '0.1.1',
+  blurhash: '2.0.5',
+  svgpath: '2.6.0',
   '@faker-js/faker': '10.5.0',
   '@peculiar/x509': '2.0.0',
   '@tanstack/react-router': '1.161.3',
   '@webav/av-cliper': '1.2.8',
   ajv: '8.20.0',
+  avsc: '5.7.9',
   asn1js: '3.0.10',
+  browserslist: '4.29.0',
+  'caniuse-lite': '1.0.30001810',
+  buffer: '6.0.3',
   'cron-parser': '5.7.0',
   'crypto-js': '4.2.0',
   dexie: '4.3.0',
   exifr: '7.1.3',
   figlet: '1.11.4',
   fontkit: '2.0.4',
+  jsonld: '9.0.0',
+  'json-logic-js': '2.0.5',
+  leaflet: '1.9.4',
   jsqr: '1.4.0',
   'libphonenumber-js': '1.13.10',
   mediabunny: '1.52.3',
@@ -39,6 +59,7 @@ const CDN_MODULE_VERSIONS = {
   'sql-formatter': '15.7.2',
   svgo: '4.0.2',
   terser: '5.46.0',
+  wabt: '1.0.39',
   'wasm-webp': '0.1.0',
 } as const;
 
@@ -46,7 +67,7 @@ const CDN_EXTERNAL_NAMES_PATTERN = Object.keys(CDN_MODULE_VERSIONS)
   .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
   .join('|');
 const CDN_EXTERNAL_PATTERN = new RegExp(
-  `^(?:${CDN_EXTERNAL_NAMES_PATTERN})(?:/|$)`,
+  `^(?!.*(?:\\.css$|\\?))(?:${CDN_EXTERNAL_NAMES_PATTERN})(?:/|$)`,
 );
 
 const REACT_CDN_BASE = `https://cdn.jsdelivr.net/npm/react@${CDN_MODULE_VERSIONS.react}`;
@@ -65,7 +86,13 @@ function cdnModuleUrl(
   source: string,
   packageName: keyof typeof CDN_MODULE_VERSIONS,
 ): string {
-  const path = `${packageName}@${CDN_MODULE_VERSIONS[packageName]}${source.slice(packageName.length)}`;
+  const path = `${packageName}@${CDN_MODULE_VERSIONS[packageName]}${source
+    .slice(packageName.length)
+    .replace(
+      /^\/addons\//,
+      packageName === 'three' ? '/examples/jsm/' : '/addons/',
+    )
+    .replace(/\/$/, '')}`;
   return `https://cdn.jsdelivr.net/npm/${path}/+esm`;
 }
 
@@ -82,6 +109,8 @@ function cdnExternals(): Plugin {
     apply: 'build',
     enforce: 'pre',
     resolveId(source) {
+      // CSS 等资源交给 Vite；它们不是可导入的 CDN JavaScript 模块。
+      if (source.includes('?') || source.endsWith('.css')) return null;
       const packageName = Object.keys(CDN_MODULE_VERSIONS).find(
         (name) => source === name || source.startsWith(`${name}/`),
       ) as keyof typeof CDN_MODULE_VERSIONS | undefined;
@@ -112,6 +141,35 @@ function cdnExternals(): Plugin {
   };
 }
 
+// 回放引擎需要作为可信脚本文本装入隔离 iframe，生产仅在用户打开时请求 CDN。
+function replayCdnAssets(): Plugin {
+  const assets = ['rrweb/dist/rrweb.umd.cjs', 'rrweb/dist/style.css'];
+  const prefix = '\0rrweb-cdn-text:';
+  let production = false;
+  return {
+    name: 'rrweb-cdn-assets',
+    enforce: 'pre',
+    configResolved(config) {
+      production = config.command === 'build';
+    },
+    resolveId(source) {
+      if (!source.endsWith('?raw') || !assets.includes(source.slice(0, -4)))
+        return null;
+      const asset = source.slice(0, -4);
+      return production
+        ? prefix + asset + '.mjs'
+        : fileURLToPath(
+            new URL(`../../node_modules/${asset}`, import.meta.url),
+          ) + '?raw';
+    },
+    load(id) {
+      if (!id.startsWith(prefix)) return null;
+      const url = `https://cdn.jsdelivr.net/npm/rrweb@2.1.4/${id.slice(prefix.length, -4).slice('rrweb/'.length)}`;
+      return `const response = await fetch(${JSON.stringify(url)}); if (!response.ok) throw new Error('REPLAY_ASSET'); export default await response.text();`;
+    },
+  };
+}
+
 const externalRequirePlugin = () =>
   esmExternalRequirePlugin({
     external: [CDN_EXTERNAL_PATTERN],
@@ -119,8 +177,13 @@ const externalRequirePlugin = () =>
 
 const config = defineConfig(async () => ({
   // logLevel: 'warn',
+  define: { 'process.env.NODE_DEBUG': JSON.stringify('') },
   resolve: {
     tsconfigPaths: true,
+    alias: [
+      { find: /^buffer$/, replacement: 'buffer/' },
+      { find: /^util$/, replacement: 'util/' },
+    ],
   },
   optimizeDeps: {
     exclude: ['@sqlite.org/sqlite-wasm'],
@@ -131,6 +194,7 @@ const config = defineConfig(async () => ({
     },
   },
   plugins: [
+    replayCdnAssets(),
     externalRequirePlugin(),
     cdnExternals(),
     Icons({ compiler: 'jsx', jsx: 'react' }),

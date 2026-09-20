@@ -18,7 +18,7 @@ import { jsonToNdjson, ndjsonToJson } from '@/lib/json-data-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import type { AnySchema } from 'ajv';
 import { CheckCircle2 } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CodePanel } from '../components/code-panel';
 import { Button } from '../components/ui/button';
@@ -51,7 +51,10 @@ type Tab =
   | 'example'
   | 'jcs'
   | 'jq'
-  | 'graph';
+  | 'graph'
+  | 'jsonata'
+  | 'jsonld'
+  | 'logic';
 type Indent = '2' | '4' | 'tab';
 type SchemaMode = 'infer' | 'validate' | 'types';
 type SchemaSource = 'json' | 'schema';
@@ -60,6 +63,10 @@ type Direction = 'encode' | 'decode';
 type PatchMode = 'generate' | 'apply';
 type PathResult = 'value' | 'pointer';
 type OnSuccessCallback = (input: string, output: string) => void;
+
+const JsonataPanel = lazy(() => import('../components/jsonata-panel'));
+const JsonLdPanel = lazy(() => import('../components/jsonld-panel'));
+const JsonLogicPanel = lazy(() => import('../components/json-logic-panel'));
 
 const DEFAULT_JSON = `{
   "name": "Alice",
@@ -87,7 +94,10 @@ function JsonPage() {
     <div className="mx-auto max-w-7xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('json.title')}</h1>
       <Tabs value={tab} onValueChange={(value) => setTab(value as Tab)}>
-        <TabsList variant="line" className="flex h-auto flex-wrap gap-1">
+        <TabsList
+          variant="line"
+          className="flex h-auto flex-wrap gap-1 group-data-[orientation=horizontal]/tabs:h-auto [&_[data-slot=tabs-trigger]]:h-9"
+        >
           <TabsTrigger value="format">{t('json.tabFormat')}</TabsTrigger>
           <TabsTrigger value="tree">{t('json.tabTree')}</TabsTrigger>
           <TabsTrigger value="schema">{t('json.tabSchema')}</TabsTrigger>
@@ -100,6 +110,9 @@ function JsonPage() {
           <TabsTrigger value="jcs">JCS</TabsTrigger>
           <TabsTrigger value="jq">jq</TabsTrigger>
           <TabsTrigger value="graph">{t('json.tabGraph')}</TabsTrigger>
+          <TabsTrigger value="jsonata">JSONata</TabsTrigger>
+          <TabsTrigger value="jsonld">JSON-LD</TabsTrigger>
+          <TabsTrigger value="logic">JSON Logic</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === 'format' && <FormatPanel />}
@@ -112,6 +125,21 @@ function JsonPage() {
       {tab === 'jcs' && <JcsPanel />}
       {tab === 'jq' && <JqPanel />}
       {tab === 'graph' && <JsonGraphPanel />}
+      {tab === 'jsonld' && (
+        <Suspense fallback={<p role="status">{t('formats.running')}</p>}>
+          <JsonLdPanel />
+        </Suspense>
+      )}
+      {tab === 'logic' && (
+        <Suspense fallback={<p role="status">{t('formats.running')}</p>}>
+          <JsonLogicPanel />
+        </Suspense>
+      )}
+      {tab === 'jsonata' && (
+        <Suspense fallback={<p role="status">{t('jsonata.running')}</p>}>
+          <JsonataPanel />
+        </Suspense>
+      )}
     </div>
   );
 }
@@ -451,7 +479,10 @@ function SchemaPanel() {
             value={activeMode}
             onValueChange={(value) => setMode(value as SchemaMode)}
           >
-            <TabsList variant="line" className="flex h-auto flex-wrap gap-1">
+            <TabsList
+              variant="line"
+              className="flex h-auto flex-wrap gap-1 group-data-[orientation=horizontal]/tabs:h-auto [&_[data-slot=tabs-trigger]]:h-9"
+            >
               <TabsTrigger value="infer">{t('json.schemaInfer')}</TabsTrigger>
               <TabsTrigger value="validate">
                 {t('json.schemaValidate')}

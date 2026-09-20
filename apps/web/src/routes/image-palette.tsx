@@ -4,7 +4,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { extractPalette, type PaletteColor } from '@/lib/image-palette';
 import { createFileRoute } from '@tanstack/react-router';
 import { Copy, ImageIcon } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+const ImagePlaceholderPanel = lazy(
+  () => import('@/components/image-placeholder-panel'),
+);
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/image-palette')({
@@ -13,6 +18,7 @@ export const Route = createFileRoute('/image-palette')({
 
 function ImagePalettePage() {
   const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<string>('tab', StringParam, 'palette');
   const [preview, setPreview] = useState('');
   const [colors, setColors] = useState<PaletteColor[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -50,53 +56,74 @@ function ImagePalettePage() {
   return (
     <div className="mx-auto max-w-5xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('imagePalette.title')}</h1>
-      <FileDropzone
-        accept="image/*"
-        onFiles={(files) => files[0] && void load(files[0].file)}
-        className="flex min-h-40 items-center justify-center rounded-xl p-6 text-center"
-      >
-        {preview ? (
-          <img
-            src={preview}
-            alt=""
-            className="max-h-56 rounded-lg object-contain"
-          />
-        ) : (
-          <div>
-            <ImageIcon className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
-            {t('imagePalette.drop')}
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList>
+          <TabsTrigger value="palette">{t('imagePalette.title')}</TabsTrigger>
+          <TabsTrigger value="placeholder">
+            {t('communityVisual.placeholder.title')}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === 'placeholder' ? (
+        <Suspense
+          fallback={<p role="status">{t('communityVisual.loading')}</p>}
+        >
+          <ImagePlaceholderPanel />
+        </Suspense>
+      ) : (
+        <>
+          <FileDropzone
+            accept="image/*"
+            onFiles={(files) => files[0] && void load(files[0].file)}
+            className="flex min-h-40 items-center justify-center rounded-xl p-6 text-center"
+          >
+            {preview ? (
+              <img
+                src={preview}
+                alt=""
+                className="max-h-56 rounded-lg object-contain"
+              />
+            ) : (
+              <div>
+                <ImageIcon className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
+                {t('imagePalette.drop')}
+              </div>
+            )}
+          </FileDropzone>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {colors.map((color) => (
+              <div
+                key={color.hex}
+                className="overflow-hidden rounded-xl border"
+              >
+                <input
+                  type="color"
+                  aria-label={color.hex}
+                  className="block h-20 w-full cursor-pointer border-0 p-0"
+                  value={color.hex}
+                  readOnly
+                />
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between p-3 text-sm"
+                  onClick={() => void navigator.clipboard.writeText(color.hex)}
+                >
+                  <span>{color.hex}</span>
+                  <span className="text-muted-foreground">
+                    {color.contrast.toFixed(2)}:1
+                  </span>
+                </button>
+              </div>
+            ))}
           </div>
-        )}
-      </FileDropzone>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {colors.map((color) => (
-          <div key={color.hex} className="overflow-hidden rounded-xl border">
-            <input
-              type="color"
-              aria-label={color.hex}
-              className="block h-20 w-full cursor-pointer border-0 p-0"
-              value={color.hex}
-              readOnly
-            />
-            <button
-              type="button"
-              className="flex w-full items-center justify-between p-3 text-sm"
-              onClick={() => void navigator.clipboard.writeText(color.hex)}
-            >
-              <span>{color.hex}</span>
-              <span className="text-muted-foreground">
-                {color.contrast.toFixed(2)}:1
-              </span>
-            </button>
-          </div>
-        ))}
-      </div>
-      {error && <div className="text-sm text-destructive">{error}</div>}
-      {!!colors.length && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <CodeOutput title="CSS" value={css} />
-          <CodeOutput title="Tailwind" value={tailwind} />
-        </div>
+          {error && <div className="text-sm text-destructive">{error}</div>}
+          {!!colors.length && (
+            <div className="grid gap-4 md:grid-cols-2">
+              <CodeOutput title="CSS" value={css} />
+              <CodeOutput title="Tailwind" value={tailwind} />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

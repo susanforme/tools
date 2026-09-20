@@ -1,8 +1,5 @@
 import { FileDropzone } from '@/components/file-dropzone';
-import {
-  CertificateChainPanel,
-  SshKeyPanel,
-} from '@/components/extra-tool-panels';
+import { CertificateChainPanel } from '@/components/extra-tool-panels';
 import { KeyPairMatchPanel } from '@/components/protocol-tool-panels';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,13 +28,14 @@ import {
 } from '@/lib/jwk';
 import { createFileRoute } from '@tanstack/react-router';
 import { FileKey, LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/certificate-tool')({
   component: CertificateToolPage,
 });
 
+const OpenSshPanel = lazy(() => import('../components/open-ssh-panel'));
 function CertificateToolPage() {
   const { t } = useTranslation();
   const [tab, setTab] = useQueryParam<
@@ -87,7 +85,7 @@ function CertificateToolPage() {
           )
         }
       >
-        <TabsList>
+        <TabsList className="flex h-auto flex-wrap gap-1 group-data-[orientation=horizontal]/tabs:h-auto [&_[data-slot=tabs-trigger]]:h-9">
           <TabsTrigger value="inspect">
             {t('certificateTool.tabInspect')}
           </TabsTrigger>
@@ -159,7 +157,9 @@ function CertificateToolPage() {
       ) : tab === 'asn1' ? (
         <Asn1Panel />
       ) : tab === 'ssh' ? (
-        <SshKeyPanel />
+        <Suspense fallback={<p>{t('formats.running')}</p>}>
+          <OpenSshPanel />
+        </Suspense>
       ) : tab === 'chain' ? (
         <CertificateChainPanel />
       ) : (
