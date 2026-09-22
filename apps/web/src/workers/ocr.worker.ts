@@ -15,7 +15,7 @@ self.onmessage = async (
       ]);
       engine = await createWorker(event.data.language, 1, {
         workerPath: new URL(workerPath, self.location.href).href,
-        workerBlobURL: false,
+        workerBlobURL: import.meta.env.PROD,
         logger: (message) =>
           self.postMessage({
             progress:

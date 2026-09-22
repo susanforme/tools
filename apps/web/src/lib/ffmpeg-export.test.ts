@@ -1,11 +1,51 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import * as cdnAssets from './cdn-asset-cache';
 import {
   buildFfmpegExportArgs,
+  disposeFfmpegExporter,
+  exportWithFfmpeg,
   getFfmpegCoreAssetUrl,
   supportsFfmpegMultiThread,
 } from './ffmpeg-export';
 
 describe('buildFfmpegExportArgs', () => {
+  it('uses and releases a same-origin worker entry for CDN imports', async () => {
+    const load = vi.fn().mockRejectedValue(new Error('CORE_FAILED'));
+    vi.doMock('@ffmpeg/ffmpeg', () => ({
+      FFmpeg: class {
+        load = load;
+        terminate() {}
+      },
+    }));
+    vi.stubEnv('PROD', true);
+    vi.stubGlobal('crossOriginIsolated', false);
+    vi.spyOn(cdnAssets, 'loadCachedCdnAssetUrl').mockResolvedValue('blob:core');
+    const createUrl = vi.spyOn(URL, 'createObjectURL');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL');
+    try {
+      await expect(
+        exportWithFfmpeg(
+          new File([], 'source.mp4'),
+          {} as FileSystemFileHandle,
+          { format: 'mp4' },
+        ),
+      ).rejects.toThrow('CORE_FAILED');
+      const workerUrl = load.mock.calls[0][0].classWorkerURL as string;
+      expect(workerUrl).toMatch(/^blob:/);
+      expect(await (createUrl.mock.calls[0][0] as Blob).text()).toBe(
+        "import 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/esm/worker.js';",
+      );
+      disposeFfmpegExporter();
+      expect(revokeUrl).toHaveBeenCalledWith(workerUrl);
+    } finally {
+      disposeFfmpegExporter();
+      vi.doUnmock('@ffmpeg/ffmpeg');
+      vi.unstubAllEnvs();
+      vi.unstubAllGlobals();
+      vi.restoreAllMocks();
+    }
+  });
+
   it('prefers multi-thread only in a cross-origin isolated environment', () => {
     expect(supportsFfmpegMultiThread(true, true)).toBe(true);
     expect(supportsFfmpegMultiThread(false, true)).toBe(false);

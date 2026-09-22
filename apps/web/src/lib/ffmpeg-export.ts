@@ -2,6 +2,7 @@ import type { FFmpeg, FFFSType } from '@ffmpeg/ffmpeg';
 import { loadCachedCdnAssetUrl } from './cdn-asset-cache';
 
 const FFMPEG_CORE_VERSION = '0.12.10';
+const FFMPEG_VERSION = '0.12.15';
 const FFMPEG_CDN_ROOT = 'https://cdn.jsdelivr.net/npm';
 
 export function getFfmpegCoreAssetUrl(
@@ -157,11 +158,26 @@ async function getFfmpeg(): Promise<FFmpeg> {
   if (ffmpeg?.loaded) return ffmpeg;
   if (loading) return loading;
   loading = import('@ffmpeg/ffmpeg').then(async ({ FFmpeg }) => {
+    // CDN 模块不能直接创建跨域 Worker，用同源 Blob 入口保留其相对导入。
+    const classWorkerURL = import.meta.env.PROD
+      ? URL.createObjectURL(
+          new Blob(
+            [
+              `import '${FFMPEG_CDN_ROOT}/@ffmpeg/ffmpeg@${FFMPEG_VERSION}/dist/esm/worker.js';`,
+            ],
+            { type: 'text/javascript' },
+          ),
+        )
+      : undefined;
+    if (classWorkerURL) ffmpegAssetUrls.add(classWorkerURL);
     if (supportsFfmpegMultiThread()) {
       const instance = new FFmpeg();
       ffmpeg = instance;
       try {
-        await instance.load(await loadFfmpegCoreUrls(true));
+        await instance.load({
+          ...(await loadFfmpegCoreUrls(true)),
+          classWorkerURL,
+        });
         return instance;
       } catch {
         instance.terminate();
@@ -170,7 +186,10 @@ async function getFfmpeg(): Promise<FFmpeg> {
     }
     const fallback = new FFmpeg();
     ffmpeg = fallback;
-    await fallback.load(await loadFfmpegCoreUrls(false));
+    await fallback.load({
+      ...(await loadFfmpegCoreUrls(false)),
+      classWorkerURL,
+    });
     return fallback;
   });
   try {
