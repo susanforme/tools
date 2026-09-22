@@ -1,3 +1,7 @@
+import { personalToolsEn } from './personal-tools';
+import { organizerToolsEn } from './organizer-tools';
+import { creativeToolsEn } from './creative-tools';
+import { studyToolsEn } from './study-tools';
 import { learningReadingEn } from './learning-reading-tools';
 import { imageDocumentToolsEn } from './image-document-tools';
 import { shoppingMusicToolsEn } from './shopping-music-tools';
@@ -32,6 +36,10 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...personalToolsEn,
+  ...organizerToolsEn,
+  ...creativeToolsEn,
+  ...studyToolsEn,
   ...learningReadingEn,
   ...imageDocumentToolsEn,
   ...shoppingMusicToolsEn,

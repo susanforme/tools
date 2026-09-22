@@ -159,6 +159,7 @@
         "pdf-lib": "1.17.1",
         "pdfjs-dist": "6.2.108",
         "picomatch": "^4.0.7",
+        "pinyin-pro": "3.29.4",
         "plist": "^5.0.0",
         "portless": "^0.4.2",
         "postal-mime": "2.7.6",
@@ -173,6 +174,7 @@
         "react-dom": "19.2.4",
         "react-i18next": "^16.5.4",
         "reflect-metadata": "^0.2.2",
+        "relationship.js": "1.2.9",
         "rolldown": "1.2.2",
         "rollup-plugin-visualizer": "^7.0.1",
         "rrweb": "^2.1.4",
@@ -2514,6 +2516,8 @@
 
     "picomatch": ["picomatch@4.0.7", "", {}, "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="],
 
+    "pinyin-pro": ["pinyin-pro@3.29.4", "", {}, "sha512-SPXpDT2cHEy+d26V1RXYMlVzXN42hotFAak1fzyWPi4o2dKXb61UqD4pzxDJHwk6gbv8vQ6EfErd+hYX0Qhzug=="],
+
     "pkce-challenge": ["pkce-challenge@5.0.1", "", {}, "sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ=="],
 
     "pkg-types": ["pkg-types@2.3.0", "", { "dependencies": { "confbox": "^0.2.2", "exsolve": "^1.0.7", "pathe": "^2.0.3" } }, "sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig=="],
@@ -2633,6 +2637,8 @@
     "regjsgen": ["regjsgen@0.8.0", "", {}, "sha512-RvwtGe3d7LvWiDQXeQw8p5asZUmfU1G/l6WbUXeHta7Y2PEIvBTwH6E2EfmYUK8pxcxEdEmaomqyp0vZZ7C+3Q=="],
 
     "regjsparser": ["regjsparser@0.13.0", "", { "dependencies": { "jsesc": "~3.1.0" }, "bin": { "regjsparser": "bin/parser" } }, "sha512-NZQZdC5wOE/H3UT28fVGL+ikOZcEzfMGk/c3iN9UGxzWHMa1op7274oyiUVrAG4B2EuFhus8SvkaYnhvW92p9Q=="],
+
+    "relationship.js": ["relationship.js@1.2.9", "", {}, "sha512-pclNuxR3ZSL1dVuEtpJmpMcbkU387vooAHCbWxBlf0SZA4rcrKJRz0QwSGx/nZbh3firPMqT9YPU+CWU7bHlJA=="],
 
     "require-directory": ["require-directory@2.1.1", "", {}, "sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q=="],
 

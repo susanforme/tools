@@ -1,3 +1,7 @@
+import { personalToolsZh } from './personal-tools';
+import { organizerToolsZh } from './organizer-tools';
+import { creativeToolsZh } from './creative-tools';
+import { studyToolsZh } from './study-tools';
 import { learningReadingZh } from './learning-reading-tools';
 import { imageDocumentToolsZh } from './image-document-tools';
 import { shoppingMusicToolsZh } from './shopping-music-tools';
@@ -32,6 +36,10 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...personalToolsZh,
+  ...organizerToolsZh,
+  ...creativeToolsZh,
+  ...studyToolsZh,
   ...learningReadingZh,
   ...imageDocumentToolsZh,
   ...shoppingMusicToolsZh,
