@@ -19,6 +19,11 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import {
+  Gamepad2,
+  ScrollText,
+  Printer,
+  Timer,
+  Headphones,
   Activity,
   AlignLeft,
   AudioLines,
@@ -47,6 +52,7 @@ import {
   House,
   ImageIcon,
   Images,
+  Keyboard,
   KeyRound,
   Landmark,
   Layers,
@@ -1200,6 +1206,24 @@ const textTools = [
 
 const frontendTools = [
   {
+    to: '/image-collage' as const,
+    icon: <Images className="h-8 w-8 text-teal-500" />,
+    titleKey: 'imageCollage.title',
+    descKey: 'imageCollage.description',
+    tagKeys: [],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
+    to: '/document-scanner' as const,
+    icon: <FileText className="h-8 w-8 text-teal-500" />,
+    titleKey: 'documentScanner.title',
+    descKey: 'documentScanner.description',
+    tagKeys: [],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
+  {
     to: '/design-tokens' as const,
     icon: <Palette className="h-8 w-8 text-primary" />,
     titleKey: 'home.tools.designTokens.title',
@@ -1534,6 +1558,132 @@ const videoTools = [
 ];
 
 const lifeTools = [
+  {
+    to: '/typing-practice' as const,
+    icon: <Keyboard className="h-8 w-8 text-blue-500" />,
+    titleKey: 'typingPractice.title',
+    descKey: 'typingPractice.description',
+    tagKeys: [],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
+  {
+    to: '/printable-paper' as const,
+    icon: <Printer className="h-8 w-8 text-amber-500" />,
+    titleKey: 'printablePaper.title',
+    descKey: 'printablePaper.description',
+    tagKeys: [],
+    gradient: 'hover:bg-amber-50 dark:hover:bg-amber-950/20',
+    border: 'hover:border-amber-300 dark:hover:border-amber-700',
+  },
+  {
+    to: '/unit-price' as const,
+    icon: <Tag className="h-8 w-8 text-emerald-500" />,
+    titleKey: 'unitPrice.title',
+    descKey: 'unitPrice.description',
+    tagKeys: [],
+    gradient: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/20',
+    border: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+  },
+  {
+    to: '/metronome' as const,
+    icon: <AudioLines className="h-8 w-8 text-violet-500" />,
+    titleKey: 'metronome.title',
+    descKey: 'metronome.description',
+    tagKeys: [],
+    gradient: 'hover:bg-violet-50 dark:hover:bg-violet-950/20',
+    border: 'hover:border-violet-300 dark:hover:border-violet-700',
+  },
+  {
+    to: '/ebook-reader' as const,
+    icon: <FileText className="h-8 w-8 text-indigo-500" />,
+    titleKey: 'ebookReader.title',
+    descKey: 'ebookReader.description',
+    tagKeys: [],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/screen-test' as const,
+    icon: <MonitorSmartphone className="h-8 w-8 text-cyan-500" />,
+    titleKey: 'screenTest.title',
+    descKey: 'screenTest.description',
+    tagKeys: [],
+    gradient: 'hover:bg-cyan-50 dark:hover:bg-cyan-950/20',
+    border: 'hover:border-cyan-300 dark:hover:border-cyan-700',
+  },
+  {
+    to: '/gamepad-test' as const,
+    icon: <Gamepad2 className="h-8 w-8 text-purple-500" />,
+    titleKey: 'gamepad.title',
+    descKey: 'gamepad.description',
+    tagKeys: [],
+    gradient: 'hover:bg-purple-50 dark:hover:bg-purple-950/20',
+    border: 'hover:border-purple-300 dark:hover:border-purple-700',
+  },
+  {
+    to: '/teleprompter' as const,
+    icon: <ScrollText className="h-8 w-8 text-rose-500" />,
+    titleKey: 'teleprompter.title',
+    descKey: 'teleprompter.description',
+    tagKeys: [],
+    gradient: 'hover:bg-rose-50 dark:hover:bg-rose-950/20',
+    border: 'hover:border-rose-300 dark:hover:border-rose-700',
+  },
+  {
+    to: '/poster-print' as const,
+    icon: <Printer className="h-8 w-8 text-orange-500" />,
+    titleKey: 'posterPrint.title',
+    descKey: 'posterPrint.description',
+    tagKeys: [],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/ambient-sound' as const,
+    icon: <Wind className="h-8 w-8 text-sky-500" />,
+    titleKey: 'ambientSound.title',
+    descKey: 'ambientSound.description',
+    tagKeys: [],
+    gradient: 'hover:bg-sky-50 dark:hover:bg-sky-950/20',
+    border: 'hover:border-sky-300 dark:hover:border-sky-700',
+  },
+  {
+    to: '/focus-timer' as const,
+    icon: <Timer className="h-8 w-8 text-red-500" />,
+    titleKey: 'focusTimer.title',
+    descKey: 'focusTimer.description',
+    tagKeys: [],
+    gradient: 'hover:bg-red-50 dark:hover:bg-red-950/20',
+    border: 'hover:border-red-300 dark:hover:border-red-700',
+  },
+  {
+    to: '/screen-ruler' as const,
+    icon: <Ruler className="h-8 w-8 text-lime-500" />,
+    titleKey: 'screenRuler.title',
+    descKey: 'screenRuler.description',
+    tagKeys: [],
+    gradient: 'hover:bg-lime-50 dark:hover:bg-lime-950/20',
+    border: 'hover:border-lime-300 dark:hover:border-lime-700',
+  },
+  {
+    to: '/device-check' as const,
+    icon: <Headphones className="h-8 w-8 text-pink-500" />,
+    titleKey: 'deviceCheck.title',
+    descKey: 'deviceCheck.description',
+    tagKeys: [],
+    gradient: 'hover:bg-pink-50 dark:hover:bg-pink-950/20',
+    border: 'hover:border-pink-300 dark:hover:border-pink-700',
+  },
+  {
+    to: '/keyboard-mouse-test' as const,
+    icon: <Keyboard className="h-8 w-8 text-slate-500" />,
+    titleKey: 'inputTester.title',
+    descKey: 'inputTester.description',
+    tagKeys: ['inputTester.pressed', 'inputTester.tested'],
+    gradient: 'hover:bg-slate-50 dark:hover:bg-slate-950/20',
+    border: 'hover:border-slate-300 dark:hover:border-slate-700',
+  },
   {
     to: '/rmb-uppercase' as const,
     icon: <Wallet className="h-8 w-8 text-red-500" />,
@@ -2101,6 +2251,7 @@ function HomePageContent({
   const favoriteTools = displayOrder
     .map((path) => ALL_TOOLS.find((tool) => tool.to === path))
     .filter((tool): tool is (typeof ALL_TOOLS)[number] => tool !== undefined);
+  const hasFavorites = favoriteTools.length > 0;
 
   // 当前拖拽卡片的配置（给 DragOverlay 用）
   const activeTool = activeId ? ALL_TOOLS.find((t) => t.to === activeId) : null;
@@ -2179,7 +2330,11 @@ function HomePageContent({
               className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${category === value ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25' : 'bg-muted/70 text-muted-foreground hover:text-foreground'}`}
             >
               <Icon className="h-4 w-4" />
-              {t(labelKey)}
+              {t(
+                value === 'recommended' && hasFavorites
+                  ? 'home.groupFavorites'
+                  : labelKey,
+              )}
             </button>
           ))}
         </div>
@@ -2193,7 +2348,7 @@ function HomePageContent({
           />
         )}
 
-        {category === 'recommended' && (
+        {category === 'recommended' && !hasFavorites && (
           <section>
             <h2 className="mb-4 text-xl font-bold">{t('home.recommended')}</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -2221,8 +2376,10 @@ function HomePageContent({
         )}
 
         {/* 我的收藏（有收藏时才显示；ready 守卫已在 HomePage 完成） */}
-        {(category === 'favorites' || category === 'all') &&
-          favoriteTools.length > 0 && (
+        {(category === 'recommended' ||
+          category === 'favorites' ||
+          category === 'all') &&
+          hasFavorites && (
             <div>
               <div className="flex items-center gap-3 mb-5">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-400/10 text-yellow-500">
@@ -2537,6 +2694,8 @@ function HomePageContent({
                   (tool) =>
                     tool.to !== '/image' &&
                     tool.to !== '/image-compare' &&
+                    tool.to !== '/image-collage' &&
+                    tool.to !== '/document-scanner' &&
                     tool.to !== '/pwa-icons' &&
                     tool.to !== '/image-palette' &&
                     tool.to !== '/id-photo' &&
@@ -2580,6 +2739,8 @@ function HomePageContent({
                   (tool) =>
                     tool.to === '/image' ||
                     tool.to === '/image-compare' ||
+                    tool.to === '/image-collage' ||
+                    tool.to === '/document-scanner' ||
                     tool.to === '/pwa-icons' ||
                     tool.to === '/image-palette' ||
                     tool.to === '/id-photo' ||

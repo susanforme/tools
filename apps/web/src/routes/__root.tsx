@@ -17,6 +17,11 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import Fuse from 'fuse.js';
 import {
+  Gamepad2,
+  ScrollText,
+  Printer,
+  Timer,
+  Headphones,
   Activity,
   AudioLines,
   ArrowLeftRight,
@@ -47,6 +52,7 @@ import {
   House,
   ImageIcon,
   Images,
+  Keyboard,
   KeyRound,
   Landmark,
   Layers,
@@ -452,6 +458,18 @@ const textNavItems: NavItem[] = [
 
 const frontendNavItems: NavItem[] = [
   {
+    to: '/image-collage',
+    icon: <Images className="h-4 w-4 text-teal-500" />,
+    labelKey: 'imageCollage.title',
+    keywords: '长图 拼图 九宫格 合并 collage stitch grid',
+  },
+  {
+    to: '/document-scanner',
+    icon: <FileText className="h-4 w-4 text-teal-500" />,
+    labelKey: 'documentScanner.title',
+    keywords: '扫描 文档 透视 校正 证件 PDF scan document',
+  },
+  {
     to: '/design-tokens',
     icon: <Palette className="h-4 w-4 text-primary" />,
     labelKey: 'nav.designTokens',
@@ -575,6 +593,8 @@ const imageNavItems = frontendNavItems.filter(
   (item) =>
     item.to === '/image' ||
     item.to === '/image-compare' ||
+    item.to === '/image-collage' ||
+    item.to === '/document-scanner' ||
     item.to === '/pwa-icons' ||
     item.to === '/image-palette' ||
     item.to === '/id-photo' ||
@@ -586,6 +606,8 @@ const designNavItems = frontendNavItems.filter(
   (item) =>
     item.to !== '/image' &&
     item.to !== '/image-compare' &&
+    item.to !== '/image-collage' &&
+    item.to !== '/document-scanner' &&
     item.to !== '/pwa-icons' &&
     item.to !== '/image-palette' &&
     item.to !== '/id-photo' &&
@@ -990,6 +1012,36 @@ const videoNavItems: NavItem[] = [
 ];
 const lifeNavItems: NavItem[] = [
   {
+    to: '/typing-practice',
+    icon: <Keyboard className="h-4 w-4 text-blue-500" />,
+    labelKey: 'typingPractice.title',
+    keywords: '打字 练习 测速 中文 英文 typing practice wpm',
+  },
+  {
+    to: '/printable-paper',
+    icon: <Printer className="h-4 w-4 text-amber-500" />,
+    labelKey: 'printablePaper.title',
+    keywords: '打印 方格 点阵 田字格 字帖 康奈尔 paper handwriting',
+  },
+  {
+    to: '/unit-price',
+    icon: <Tag className="h-4 w-4 text-emerald-500" />,
+    labelKey: 'unitPrice.title',
+    keywords: '购物 单价 优惠 比价 买赠 price shopping discount',
+  },
+  {
+    to: '/metronome',
+    icon: <AudioLines className="h-4 w-4 text-violet-500" />,
+    labelKey: 'metronome.title',
+    keywords: '节拍器 音乐 节奏 拍号 BPM metronome tap tempo',
+  },
+  {
+    to: '/ebook-reader',
+    icon: <FileText className="h-4 w-4 text-indigo-500" />,
+    labelKey: 'ebookReader.title',
+    keywords: '阅读器 电子书 EPUB TXT 书签 ebook reader',
+  },
+  {
     to: '/rmb-uppercase',
     icon: <Wallet className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.rmbUppercase',
@@ -1110,6 +1162,63 @@ const lifeNavItems: NavItem[] = [
     icon: <Thermometer className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.temperature',
     keywords: '温度 摄氏 华氏 开尔文 celsius fahrenheit kelvin',
+  },
+  {
+    to: '/screen-test',
+    icon: <MonitorSmartphone className="h-4 w-4 text-cyan-500" />,
+    labelKey: 'screenTest.title',
+    keywords: '屏幕 坏点 漏光 灰阶 渐变 screen monitor dead pixel display',
+  },
+  {
+    to: '/gamepad-test',
+    icon: <Gamepad2 className="h-4 w-4 text-purple-500" />,
+    labelKey: 'gamepad.title',
+    keywords:
+      '手柄 游戏 摇杆 漂移 按键 xbox playstation nintendo gamepad controller drift',
+  },
+  {
+    to: '/teleprompter',
+    icon: <ScrollText className="h-4 w-4 text-rose-500" />,
+    labelKey: 'teleprompter.title',
+    keywords: '提词器 演讲 口播 镜像 teleprompter script speech',
+  },
+  {
+    to: '/poster-print',
+    icon: <Printer className="h-4 w-4 text-orange-500" />,
+    labelKey: 'posterPrint.title',
+    keywords: '海报 大图 分页 打印 A4 poster print tile paper',
+  },
+  {
+    to: '/ambient-sound',
+    icon: <Wind className="h-4 w-4 text-sky-500" />,
+    labelKey: 'ambientSound.title',
+    keywords: '白噪音 环境音 雨声 风声 咖啡馆 专注 ambient noise rain cafe',
+  },
+  {
+    to: '/focus-timer',
+    icon: <Timer className="h-4 w-4 text-red-500" />,
+    labelKey: 'focusTimer.title',
+    keywords: '番茄钟 计时器 倒计时 秒表 专注 做饭 timer stopwatch pomodoro',
+  },
+  {
+    to: '/screen-ruler',
+    icon: <Ruler className="h-4 w-4 text-lime-500" />,
+    labelKey: 'screenRuler.title',
+    keywords: '直尺 校准 厘米 英寸 ruler calibration inches cm',
+  },
+  {
+    to: '/device-check',
+    icon: <Headphones className="h-4 w-4 text-pink-500" />,
+    labelKey: 'deviceCheck.title',
+    keywords:
+      '开会 摄像头 麦克风 耳机 左右声道 试音 camera microphone audio meeting headphones',
+  },
+  {
+    to: '/keyboard-mouse-test',
+    icon: <Keyboard className="h-4 w-4 text-slate-500" />,
+    labelKey: 'nav.inputTester',
+    keywords:
+      '键盘 鼠标 灵敏 按键 检测 测试 keyboard mouse sensitivity input tester',
   },
   {
     to: '/unit-converter',

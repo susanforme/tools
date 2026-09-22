@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import {
@@ -21,10 +22,12 @@ export function NumberField({
   min?: number;
   step?: number | 'any';
 }) {
+  const id = useId();
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={id}>{label}</Label>
       <Input
+        id={id}
         type="number"
         min={min}
         step={step}
@@ -55,11 +58,12 @@ export function ChoiceField({
   options: Array<{ label: string; value: string }>;
   onChange: (value: string) => void;
 }) {
+  const id = useId();
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={id}>{label}</Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger id={id} className="w-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

@@ -1,3 +1,11 @@
+import { learningReadingEn } from './learning-reading-tools';
+import { imageDocumentToolsEn } from './image-document-tools';
+import { shoppingMusicToolsEn } from './shopping-music-tools';
+import { printablePaperEn } from './printable-paper';
+import { deviceCheckEn } from './device-check';
+import { displayToolsEn } from './display-tools';
+import { focusToolsEn } from './focus-tools';
+import { gamepadEn } from './gamepad';
 import { performanceImportEn } from '@/lib/performance-import-messages';
 import { communityNextEn } from './community-next';
 import { dataToolsEn } from '@/lib/data-tools-messages';
@@ -24,6 +32,54 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...learningReadingEn,
+  ...imageDocumentToolsEn,
+  ...shoppingMusicToolsEn,
+  ...printablePaperEn,
+  ...deviceCheckEn,
+  ...displayToolsEn,
+  ...focusToolsEn,
+  gamepad: gamepadEn,
+  inputTester: {
+    description: 'Check keyboard and mouse feedback and input activity',
+    title: 'Keyboard & mouse tester',
+    keyboard: 'Full keyboard · ANSI 104 keys',
+    mouse: 'Mouse test',
+    reset: 'Clear results',
+    listening: 'Listening',
+    paused: 'Paused',
+    instructions:
+      'Press keys, click or scroll to test immediately. Move inside the mouse area to see the trail. Leaving the page stops the test.',
+    surface: 'Keyboard and mouse testing surface',
+    mouseArea: 'Mouse testing area',
+    coverage: '{{count}} / {{total}} keys tested',
+    pressed: 'Pressed',
+    tested: 'Tested',
+    keyPresses: 'Key presses',
+    held: 'Currently held',
+    peak: 'Peak simultaneous keys',
+    repeats: 'Auto-repeat events',
+    lastKey: 'Last key',
+    holdTime: 'Hold duration',
+    keyboardLimit:
+      'Shows physical key positions. Fn and some system shortcuts may not reach the browser. Auto-repeat does not increase key presses.',
+    mouseHint: 'Click, scroll or move your mouse in this area',
+    verticalWheel: 'Vertical scroll events',
+    horizontalWheel: 'Horizontal scroll events',
+    position: 'Position',
+    doubleClicks: 'Left double-clicks',
+    clickInterval: 'Last same-button interval',
+    distance: 'Cursor travel',
+    mouseLimit:
+      'Results reflect browser events. Travel is in page pixels, not a measurement of true DPI, hardware latency or hardware faults.',
+    buttons: {
+      left: 'Left',
+      middle: 'Middle',
+      right: 'Right',
+      back: 'Back',
+      forward: 'Forward',
+    },
+  },
   ...performanceImportEn,
   communityNext: communityNextEn,
   dataTools: dataToolsEn,
@@ -52,6 +108,7 @@ const en = {
   ...inspectionLogs,
   ...inspectionMcp,
   nav: {
+    inputTester: 'Keyboard & mouse tester',
     communityHeap: 'Heap snapshot comparison',
     communityTrace: 'Chrome trace timeline',
     communityNetlog: 'NetLog viewer',

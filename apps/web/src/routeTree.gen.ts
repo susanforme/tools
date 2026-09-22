@@ -23,8 +23,10 @@ import { Route as UuidRouteImport } from './routes/uuid'
 import { Route as UserAgentRouteImport } from './routes/user-agent'
 import { Route as UrlEncodeRouteImport } from './routes/url-encode'
 import { Route as UnixPermissionsRouteImport } from './routes/unix-permissions'
+import { Route as UnitPriceRouteImport } from './routes/unit-price'
 import { Route as UnitConverterRouteImport } from './routes/unit-converter'
 import { Route as UnicodeRouteImport } from './routes/unicode'
+import { Route as TypingPracticeRouteImport } from './routes/typing-practice'
 import { Route as TravelCostRouteImport } from './routes/travel-cost'
 import { Route as TraceContextRouteImport } from './routes/trace-context'
 import { Route as TotpRouteImport } from './routes/totp'
@@ -32,6 +34,7 @@ import { Route as TextToSpeechRouteImport } from './routes/text-to-speech'
 import { Route as TextRouteImport } from './routes/text'
 import { Route as TestReportRouteImport } from './routes/test-report'
 import { Route as TemperatureRouteImport } from './routes/temperature'
+import { Route as TeleprompterRouteImport } from './routes/teleprompter'
 import { Route as TableDiffRouteImport } from './routes/table-diff'
 import { Route as TableConvertRouteImport } from './routes/table-convert'
 import { Route as SvgToolkitRouteImport } from './routes/svg-toolkit'
@@ -47,6 +50,8 @@ import { Route as SettingsPreferencesRouteImport } from './routes/settings-prefe
 import { Route as SettingsDataRouteImport } from './routes/settings-data'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SeoFilesRouteImport } from './routes/seo-files'
+import { Route as ScreenTestRouteImport } from './routes/screen-test'
+import { Route as ScreenRulerRouteImport } from './routes/screen-ruler'
 import { Route as ScreenRecorderRouteImport } from './routes/screen-recorder'
 import { Route as SbomViewerRouteImport } from './routes/sbom-viewer'
 import { Route as SarifViewerRouteImport } from './routes/sarif-viewer'
@@ -62,7 +67,9 @@ import { Route as RandomPickerRouteImport } from './routes/random-picker'
 import { Route as QrcodeRouteImport } from './routes/qrcode'
 import { Route as PwaIconsRouteImport } from './routes/pwa-icons'
 import { Route as PrometheusRouteImport } from './routes/prometheus'
+import { Route as PrintablePaperRouteImport } from './routes/printable-paper'
 import { Route as PprofRouteImport } from './routes/pprof'
+import { Route as PosterPrintRouteImport } from './routes/poster-print'
 import { Route as PlaywrightTraceRouteImport } from './routes/playwright-trace'
 import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as PdfToolkitRouteImport } from './routes/pdf-toolkit'
@@ -81,11 +88,13 @@ import { Route as NetlogViewerRouteImport } from './routes/netlog-viewer'
 import { Route as MqttPacketRouteImport } from './routes/mqtt-packet'
 import { Route as MortgageRouteImport } from './routes/mortgage'
 import { Route as MockDataRouteImport } from './routes/mock-data'
+import { Route as MetronomeRouteImport } from './routes/metronome'
 import { Route as McpTraceRouteImport } from './routes/mcp-trace'
 import { Route as MarkdownRouteImport } from './routes/markdown'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LogExplorerRouteImport } from './routes/log-explorer'
 import { Route as LighthouseReportRouteImport } from './routes/lighthouse-report'
+import { Route as KeyboardMouseTestRouteImport } from './routes/keyboard-mouse-test'
 import { Route as JwtRouteImport } from './routes/jwt'
 import { Route as JsonRouteImport } from './routes/json'
 import { Route as JsRouteImport } from './routes/js'
@@ -94,6 +103,7 @@ import { Route as IpLookupRouteImport } from './routes/ip-lookup'
 import { Route as ImagePrivacyRouteImport } from './routes/image-privacy'
 import { Route as ImagePaletteRouteImport } from './routes/image-palette'
 import { Route as ImageCompareRouteImport } from './routes/image-compare'
+import { Route as ImageCollageRouteImport } from './routes/image-collage'
 import { Route as ImageRouteImport } from './routes/image'
 import { Route as IdPhotoRouteImport } from './routes/id-photo'
 import { Route as IcsGeneratorRouteImport } from './routes/ics-generator'
@@ -116,15 +126,20 @@ import { Route as GltfInspectorRouteImport } from './routes/gltf-inspector'
 import { Route as GitToolRouteImport } from './routes/git-tool'
 import { Route as GeometryCalculatorRouteImport } from './routes/geometry-calculator'
 import { Route as GeojsonRouteImport } from './routes/geojson'
+import { Route as GamepadTestRouteImport } from './routes/gamepad-test'
 import { Route as FontRouteImport } from './routes/font'
+import { Route as FocusTimerRouteImport } from './routes/focus-timer'
 import { Route as FinanceCalculatorRouteImport } from './routes/finance-calculator'
 import { Route as FeedInspectorRouteImport } from './routes/feed-inspector'
 import { Route as EnvRouteImport } from './routes/env'
 import { Route as EmojiPickerRouteImport } from './routes/emoji-picker'
 import { Route as EmailHeadersRouteImport } from './routes/email-headers'
+import { Route as EbookReaderRouteImport } from './routes/ebook-reader'
+import { Route as DocumentScannerRouteImport } from './routes/document-scanner'
 import { Route as DockerComposeRouteImport } from './routes/docker-compose'
 import { Route as DnsRouteImport } from './routes/dns'
 import { Route as DiffRouteImport } from './routes/diff'
+import { Route as DeviceCheckRouteImport } from './routes/device-check'
 import { Route as DesignTokensRouteImport } from './routes/design-tokens'
 import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as DateCalculatorRouteImport } from './routes/date-calculator'
@@ -164,6 +179,7 @@ import { Route as AsyncapiRouteImport } from './routes/asyncapi'
 import { Route as AspectRatioRouteImport } from './routes/aspect-ratio'
 import { Route as ArrowViewerRouteImport } from './routes/arrow-viewer'
 import { Route as ArchiveRouteImport } from './routes/archive'
+import { Route as AmbientSoundRouteImport } from './routes/ambient-sound'
 import { Route as IndexRouteImport } from './routes/index'
 
 const YamlRoute = YamlRouteImport.update({
@@ -236,6 +252,11 @@ const UnixPermissionsRoute = UnixPermissionsRouteImport.update({
   path: '/unix-permissions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UnitPriceRoute = UnitPriceRouteImport.update({
+  id: '/unit-price',
+  path: '/unit-price',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UnitConverterRoute = UnitConverterRouteImport.update({
   id: '/unit-converter',
   path: '/unit-converter',
@@ -244,6 +265,11 @@ const UnitConverterRoute = UnitConverterRouteImport.update({
 const UnicodeRoute = UnicodeRouteImport.update({
   id: '/unicode',
   path: '/unicode',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TypingPracticeRoute = TypingPracticeRouteImport.update({
+  id: '/typing-practice',
+  path: '/typing-practice',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TravelCostRoute = TravelCostRouteImport.update({
@@ -279,6 +305,11 @@ const TestReportRoute = TestReportRouteImport.update({
 const TemperatureRoute = TemperatureRouteImport.update({
   id: '/temperature',
   path: '/temperature',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeleprompterRoute = TeleprompterRouteImport.update({
+  id: '/teleprompter',
+  path: '/teleprompter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TableDiffRoute = TableDiffRouteImport.update({
@@ -356,6 +387,16 @@ const SeoFilesRoute = SeoFilesRouteImport.update({
   path: '/seo-files',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScreenTestRoute = ScreenTestRouteImport.update({
+  id: '/screen-test',
+  path: '/screen-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScreenRulerRoute = ScreenRulerRouteImport.update({
+  id: '/screen-ruler',
+  path: '/screen-ruler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScreenRecorderRoute = ScreenRecorderRouteImport.update({
   id: '/screen-recorder',
   path: '/screen-recorder',
@@ -431,9 +472,19 @@ const PrometheusRoute = PrometheusRouteImport.update({
   path: '/prometheus',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrintablePaperRoute = PrintablePaperRouteImport.update({
+  id: '/printable-paper',
+  path: '/printable-paper',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PprofRoute = PprofRouteImport.update({
   id: '/pprof',
   path: '/pprof',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PosterPrintRoute = PosterPrintRouteImport.update({
+  id: '/poster-print',
+  path: '/poster-print',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlaywrightTraceRoute = PlaywrightTraceRouteImport.update({
@@ -526,6 +577,11 @@ const MockDataRoute = MockDataRouteImport.update({
   path: '/mock-data',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MetronomeRoute = MetronomeRouteImport.update({
+  id: '/metronome',
+  path: '/metronome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const McpTraceRoute = McpTraceRouteImport.update({
   id: '/mcp-trace',
   path: '/mcp-trace',
@@ -549,6 +605,11 @@ const LogExplorerRoute = LogExplorerRouteImport.update({
 const LighthouseReportRoute = LighthouseReportRouteImport.update({
   id: '/lighthouse-report',
   path: '/lighthouse-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KeyboardMouseTestRoute = KeyboardMouseTestRouteImport.update({
+  id: '/keyboard-mouse-test',
+  path: '/keyboard-mouse-test',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JwtRoute = JwtRouteImport.update({
@@ -589,6 +650,11 @@ const ImagePaletteRoute = ImagePaletteRouteImport.update({
 const ImageCompareRoute = ImageCompareRouteImport.update({
   id: '/image-compare',
   path: '/image-compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImageCollageRoute = ImageCollageRouteImport.update({
+  id: '/image-collage',
+  path: '/image-collage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImageRoute = ImageRouteImport.update({
@@ -701,9 +767,19 @@ const GeojsonRoute = GeojsonRouteImport.update({
   path: '/geojson',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamepadTestRoute = GamepadTestRouteImport.update({
+  id: '/gamepad-test',
+  path: '/gamepad-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FontRoute = FontRouteImport.update({
   id: '/font',
   path: '/font',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocusTimerRoute = FocusTimerRouteImport.update({
+  id: '/focus-timer',
+  path: '/focus-timer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinanceCalculatorRoute = FinanceCalculatorRouteImport.update({
@@ -731,6 +807,16 @@ const EmailHeadersRoute = EmailHeadersRouteImport.update({
   path: '/email-headers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EbookReaderRoute = EbookReaderRouteImport.update({
+  id: '/ebook-reader',
+  path: '/ebook-reader',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentScannerRoute = DocumentScannerRouteImport.update({
+  id: '/document-scanner',
+  path: '/document-scanner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DockerComposeRoute = DockerComposeRouteImport.update({
   id: '/docker-compose',
   path: '/docker-compose',
@@ -744,6 +830,11 @@ const DnsRoute = DnsRouteImport.update({
 const DiffRoute = DiffRouteImport.update({
   id: '/diff',
   path: '/diff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeviceCheckRoute = DeviceCheckRouteImport.update({
+  id: '/device-check',
+  path: '/device-check',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DesignTokensRoute = DesignTokensRouteImport.update({
@@ -941,6 +1032,11 @@ const ArchiveRoute = ArchiveRouteImport.update({
   path: '/archive',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AmbientSoundRoute = AmbientSoundRouteImport.update({
+  id: '/ambient-sound',
+  path: '/ambient-sound',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -949,6 +1045,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ambient-sound': typeof AmbientSoundRoute
   '/archive': typeof ArchiveRoute
   '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
@@ -988,15 +1085,20 @@ export interface FileRoutesByFullPath {
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/design-tokens': typeof DesignTokensRoute
+  '/device-check': typeof DeviceCheckRoute
   '/diff': typeof DiffRoute
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
+  '/document-scanner': typeof DocumentScannerRoute
+  '/ebook-reader': typeof EbookReaderRoute
   '/email-headers': typeof EmailHeadersRoute
   '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
   '/feed-inspector': typeof FeedInspectorRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
+  '/focus-timer': typeof FocusTimerRoute
   '/font': typeof FontRoute
+  '/gamepad-test': typeof GamepadTestRoute
   '/geojson': typeof GeojsonRoute
   '/geometry-calculator': typeof GeometryCalculatorRoute
   '/git-tool': typeof GitToolRoute
@@ -1019,6 +1121,7 @@ export interface FileRoutesByFullPath {
   '/ics-generator': typeof IcsGeneratorRoute
   '/id-photo': typeof IdPhotoRoute
   '/image': typeof ImageRoute
+  '/image-collage': typeof ImageCollageRoute
   '/image-compare': typeof ImageCompareRoute
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
@@ -1027,11 +1130,13 @@ export interface FileRoutesByFullPath {
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
+  '/keyboard-mouse-test': typeof KeyboardMouseTestRoute
   '/lighthouse-report': typeof LighthouseReportRoute
   '/log-explorer': typeof LogExplorerRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
   '/mcp-trace': typeof McpTraceRoute
+  '/metronome': typeof MetronomeRoute
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/mqtt-packet': typeof MqttPacketRoute
@@ -1050,7 +1155,9 @@ export interface FileRoutesByFullPath {
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/pipeline': typeof PipelineRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
+  '/poster-print': typeof PosterPrintRoute
   '/pprof': typeof PprofRoute
+  '/printable-paper': typeof PrintablePaperRoute
   '/prometheus': typeof PrometheusRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
@@ -1066,6 +1173,8 @@ export interface FileRoutesByFullPath {
   '/sarif-viewer': typeof SarifViewerRoute
   '/sbom-viewer': typeof SbomViewerRoute
   '/screen-recorder': typeof ScreenRecorderRoute
+  '/screen-ruler': typeof ScreenRulerRoute
+  '/screen-test': typeof ScreenTestRoute
   '/seo-files': typeof SeoFilesRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
@@ -1081,6 +1190,7 @@ export interface FileRoutesByFullPath {
   '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
   '/table-diff': typeof TableDiffRoute
+  '/teleprompter': typeof TeleprompterRoute
   '/temperature': typeof TemperatureRoute
   '/test-report': typeof TestReportRoute
   '/text': typeof TextRoute
@@ -1088,8 +1198,10 @@ export interface FileRoutesByFullPath {
   '/totp': typeof TotpRoute
   '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
+  '/typing-practice': typeof TypingPracticeRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
+  '/unit-price': typeof UnitPriceRoute
   '/unix-permissions': typeof UnixPermissionsRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -1107,6 +1219,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ambient-sound': typeof AmbientSoundRoute
   '/archive': typeof ArchiveRoute
   '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
@@ -1146,15 +1259,20 @@ export interface FileRoutesByTo {
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/design-tokens': typeof DesignTokensRoute
+  '/device-check': typeof DeviceCheckRoute
   '/diff': typeof DiffRoute
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
+  '/document-scanner': typeof DocumentScannerRoute
+  '/ebook-reader': typeof EbookReaderRoute
   '/email-headers': typeof EmailHeadersRoute
   '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
   '/feed-inspector': typeof FeedInspectorRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
+  '/focus-timer': typeof FocusTimerRoute
   '/font': typeof FontRoute
+  '/gamepad-test': typeof GamepadTestRoute
   '/geojson': typeof GeojsonRoute
   '/geometry-calculator': typeof GeometryCalculatorRoute
   '/git-tool': typeof GitToolRoute
@@ -1177,6 +1295,7 @@ export interface FileRoutesByTo {
   '/ics-generator': typeof IcsGeneratorRoute
   '/id-photo': typeof IdPhotoRoute
   '/image': typeof ImageRoute
+  '/image-collage': typeof ImageCollageRoute
   '/image-compare': typeof ImageCompareRoute
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
@@ -1185,11 +1304,13 @@ export interface FileRoutesByTo {
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
+  '/keyboard-mouse-test': typeof KeyboardMouseTestRoute
   '/lighthouse-report': typeof LighthouseReportRoute
   '/log-explorer': typeof LogExplorerRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
   '/mcp-trace': typeof McpTraceRoute
+  '/metronome': typeof MetronomeRoute
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/mqtt-packet': typeof MqttPacketRoute
@@ -1208,7 +1329,9 @@ export interface FileRoutesByTo {
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/pipeline': typeof PipelineRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
+  '/poster-print': typeof PosterPrintRoute
   '/pprof': typeof PprofRoute
+  '/printable-paper': typeof PrintablePaperRoute
   '/prometheus': typeof PrometheusRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
@@ -1224,6 +1347,8 @@ export interface FileRoutesByTo {
   '/sarif-viewer': typeof SarifViewerRoute
   '/sbom-viewer': typeof SbomViewerRoute
   '/screen-recorder': typeof ScreenRecorderRoute
+  '/screen-ruler': typeof ScreenRulerRoute
+  '/screen-test': typeof ScreenTestRoute
   '/seo-files': typeof SeoFilesRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
@@ -1239,6 +1364,7 @@ export interface FileRoutesByTo {
   '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
   '/table-diff': typeof TableDiffRoute
+  '/teleprompter': typeof TeleprompterRoute
   '/temperature': typeof TemperatureRoute
   '/test-report': typeof TestReportRoute
   '/text': typeof TextRoute
@@ -1246,8 +1372,10 @@ export interface FileRoutesByTo {
   '/totp': typeof TotpRoute
   '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
+  '/typing-practice': typeof TypingPracticeRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
+  '/unit-price': typeof UnitPriceRoute
   '/unix-permissions': typeof UnixPermissionsRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -1266,6 +1394,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ambient-sound': typeof AmbientSoundRoute
   '/archive': typeof ArchiveRoute
   '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
@@ -1305,15 +1434,20 @@ export interface FileRoutesById {
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
   '/design-tokens': typeof DesignTokensRoute
+  '/device-check': typeof DeviceCheckRoute
   '/diff': typeof DiffRoute
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
+  '/document-scanner': typeof DocumentScannerRoute
+  '/ebook-reader': typeof EbookReaderRoute
   '/email-headers': typeof EmailHeadersRoute
   '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
   '/feed-inspector': typeof FeedInspectorRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
+  '/focus-timer': typeof FocusTimerRoute
   '/font': typeof FontRoute
+  '/gamepad-test': typeof GamepadTestRoute
   '/geojson': typeof GeojsonRoute
   '/geometry-calculator': typeof GeometryCalculatorRoute
   '/git-tool': typeof GitToolRoute
@@ -1336,6 +1470,7 @@ export interface FileRoutesById {
   '/ics-generator': typeof IcsGeneratorRoute
   '/id-photo': typeof IdPhotoRoute
   '/image': typeof ImageRoute
+  '/image-collage': typeof ImageCollageRoute
   '/image-compare': typeof ImageCompareRoute
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
@@ -1344,11 +1479,13 @@ export interface FileRoutesById {
   '/js': typeof JsRoute
   '/json': typeof JsonRoute
   '/jwt': typeof JwtRoute
+  '/keyboard-mouse-test': typeof KeyboardMouseTestRoute
   '/lighthouse-report': typeof LighthouseReportRoute
   '/log-explorer': typeof LogExplorerRoute
   '/login': typeof LoginRoute
   '/markdown': typeof MarkdownRoute
   '/mcp-trace': typeof McpTraceRoute
+  '/metronome': typeof MetronomeRoute
   '/mock-data': typeof MockDataRoute
   '/mortgage': typeof MortgageRoute
   '/mqtt-packet': typeof MqttPacketRoute
@@ -1367,7 +1504,9 @@ export interface FileRoutesById {
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/pipeline': typeof PipelineRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
+  '/poster-print': typeof PosterPrintRoute
   '/pprof': typeof PprofRoute
+  '/printable-paper': typeof PrintablePaperRoute
   '/prometheus': typeof PrometheusRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
@@ -1383,6 +1522,8 @@ export interface FileRoutesById {
   '/sarif-viewer': typeof SarifViewerRoute
   '/sbom-viewer': typeof SbomViewerRoute
   '/screen-recorder': typeof ScreenRecorderRoute
+  '/screen-ruler': typeof ScreenRulerRoute
+  '/screen-test': typeof ScreenTestRoute
   '/seo-files': typeof SeoFilesRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
@@ -1398,6 +1539,7 @@ export interface FileRoutesById {
   '/svg-toolkit': typeof SvgToolkitRoute
   '/table-convert': typeof TableConvertRoute
   '/table-diff': typeof TableDiffRoute
+  '/teleprompter': typeof TeleprompterRoute
   '/temperature': typeof TemperatureRoute
   '/test-report': typeof TestReportRoute
   '/text': typeof TextRoute
@@ -1405,8 +1547,10 @@ export interface FileRoutesById {
   '/totp': typeof TotpRoute
   '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
+  '/typing-practice': typeof TypingPracticeRoute
   '/unicode': typeof UnicodeRoute
   '/unit-converter': typeof UnitConverterRoute
+  '/unit-price': typeof UnitPriceRoute
   '/unix-permissions': typeof UnixPermissionsRoute
   '/url-encode': typeof UrlEncodeRoute
   '/user-agent': typeof UserAgentRoute
@@ -1426,6 +1570,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ambient-sound'
     | '/archive'
     | '/arrow-viewer'
     | '/aspect-ratio'
@@ -1465,15 +1610,20 @@ export interface FileRouteTypes {
     | '/date-calculator'
     | '/datetime'
     | '/design-tokens'
+    | '/device-check'
     | '/diff'
     | '/dns'
     | '/docker-compose'
+    | '/document-scanner'
+    | '/ebook-reader'
     | '/email-headers'
     | '/emoji-picker'
     | '/env'
     | '/feed-inspector'
     | '/finance-calculator'
+    | '/focus-timer'
     | '/font'
+    | '/gamepad-test'
     | '/geojson'
     | '/geometry-calculator'
     | '/git-tool'
@@ -1496,6 +1646,7 @@ export interface FileRouteTypes {
     | '/ics-generator'
     | '/id-photo'
     | '/image'
+    | '/image-collage'
     | '/image-compare'
     | '/image-palette'
     | '/image-privacy'
@@ -1504,11 +1655,13 @@ export interface FileRouteTypes {
     | '/js'
     | '/json'
     | '/jwt'
+    | '/keyboard-mouse-test'
     | '/lighthouse-report'
     | '/log-explorer'
     | '/login'
     | '/markdown'
     | '/mcp-trace'
+    | '/metronome'
     | '/mock-data'
     | '/mortgage'
     | '/mqtt-packet'
@@ -1527,7 +1680,9 @@ export interface FileRouteTypes {
     | '/pdf-toolkit'
     | '/pipeline'
     | '/playwright-trace'
+    | '/poster-print'
     | '/pprof'
+    | '/printable-paper'
     | '/prometheus'
     | '/pwa-icons'
     | '/qrcode'
@@ -1543,6 +1698,8 @@ export interface FileRouteTypes {
     | '/sarif-viewer'
     | '/sbom-viewer'
     | '/screen-recorder'
+    | '/screen-ruler'
+    | '/screen-test'
     | '/seo-files'
     | '/settings'
     | '/settings-data'
@@ -1558,6 +1715,7 @@ export interface FileRouteTypes {
     | '/svg-toolkit'
     | '/table-convert'
     | '/table-diff'
+    | '/teleprompter'
     | '/temperature'
     | '/test-report'
     | '/text'
@@ -1565,8 +1723,10 @@ export interface FileRouteTypes {
     | '/totp'
     | '/trace-context'
     | '/travel-cost'
+    | '/typing-practice'
     | '/unicode'
     | '/unit-converter'
+    | '/unit-price'
     | '/unix-permissions'
     | '/url-encode'
     | '/user-agent'
@@ -1584,6 +1744,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ambient-sound'
     | '/archive'
     | '/arrow-viewer'
     | '/aspect-ratio'
@@ -1623,15 +1784,20 @@ export interface FileRouteTypes {
     | '/date-calculator'
     | '/datetime'
     | '/design-tokens'
+    | '/device-check'
     | '/diff'
     | '/dns'
     | '/docker-compose'
+    | '/document-scanner'
+    | '/ebook-reader'
     | '/email-headers'
     | '/emoji-picker'
     | '/env'
     | '/feed-inspector'
     | '/finance-calculator'
+    | '/focus-timer'
     | '/font'
+    | '/gamepad-test'
     | '/geojson'
     | '/geometry-calculator'
     | '/git-tool'
@@ -1654,6 +1820,7 @@ export interface FileRouteTypes {
     | '/ics-generator'
     | '/id-photo'
     | '/image'
+    | '/image-collage'
     | '/image-compare'
     | '/image-palette'
     | '/image-privacy'
@@ -1662,11 +1829,13 @@ export interface FileRouteTypes {
     | '/js'
     | '/json'
     | '/jwt'
+    | '/keyboard-mouse-test'
     | '/lighthouse-report'
     | '/log-explorer'
     | '/login'
     | '/markdown'
     | '/mcp-trace'
+    | '/metronome'
     | '/mock-data'
     | '/mortgage'
     | '/mqtt-packet'
@@ -1685,7 +1854,9 @@ export interface FileRouteTypes {
     | '/pdf-toolkit'
     | '/pipeline'
     | '/playwright-trace'
+    | '/poster-print'
     | '/pprof'
+    | '/printable-paper'
     | '/prometheus'
     | '/pwa-icons'
     | '/qrcode'
@@ -1701,6 +1872,8 @@ export interface FileRouteTypes {
     | '/sarif-viewer'
     | '/sbom-viewer'
     | '/screen-recorder'
+    | '/screen-ruler'
+    | '/screen-test'
     | '/seo-files'
     | '/settings'
     | '/settings-data'
@@ -1716,6 +1889,7 @@ export interface FileRouteTypes {
     | '/svg-toolkit'
     | '/table-convert'
     | '/table-diff'
+    | '/teleprompter'
     | '/temperature'
     | '/test-report'
     | '/text'
@@ -1723,8 +1897,10 @@ export interface FileRouteTypes {
     | '/totp'
     | '/trace-context'
     | '/travel-cost'
+    | '/typing-practice'
     | '/unicode'
     | '/unit-converter'
+    | '/unit-price'
     | '/unix-permissions'
     | '/url-encode'
     | '/user-agent'
@@ -1742,6 +1918,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/ambient-sound'
     | '/archive'
     | '/arrow-viewer'
     | '/aspect-ratio'
@@ -1781,15 +1958,20 @@ export interface FileRouteTypes {
     | '/date-calculator'
     | '/datetime'
     | '/design-tokens'
+    | '/device-check'
     | '/diff'
     | '/dns'
     | '/docker-compose'
+    | '/document-scanner'
+    | '/ebook-reader'
     | '/email-headers'
     | '/emoji-picker'
     | '/env'
     | '/feed-inspector'
     | '/finance-calculator'
+    | '/focus-timer'
     | '/font'
+    | '/gamepad-test'
     | '/geojson'
     | '/geometry-calculator'
     | '/git-tool'
@@ -1812,6 +1994,7 @@ export interface FileRouteTypes {
     | '/ics-generator'
     | '/id-photo'
     | '/image'
+    | '/image-collage'
     | '/image-compare'
     | '/image-palette'
     | '/image-privacy'
@@ -1820,11 +2003,13 @@ export interface FileRouteTypes {
     | '/js'
     | '/json'
     | '/jwt'
+    | '/keyboard-mouse-test'
     | '/lighthouse-report'
     | '/log-explorer'
     | '/login'
     | '/markdown'
     | '/mcp-trace'
+    | '/metronome'
     | '/mock-data'
     | '/mortgage'
     | '/mqtt-packet'
@@ -1843,7 +2028,9 @@ export interface FileRouteTypes {
     | '/pdf-toolkit'
     | '/pipeline'
     | '/playwright-trace'
+    | '/poster-print'
     | '/pprof'
+    | '/printable-paper'
     | '/prometheus'
     | '/pwa-icons'
     | '/qrcode'
@@ -1859,6 +2046,8 @@ export interface FileRouteTypes {
     | '/sarif-viewer'
     | '/sbom-viewer'
     | '/screen-recorder'
+    | '/screen-ruler'
+    | '/screen-test'
     | '/seo-files'
     | '/settings'
     | '/settings-data'
@@ -1874,6 +2063,7 @@ export interface FileRouteTypes {
     | '/svg-toolkit'
     | '/table-convert'
     | '/table-diff'
+    | '/teleprompter'
     | '/temperature'
     | '/test-report'
     | '/text'
@@ -1881,8 +2071,10 @@ export interface FileRouteTypes {
     | '/totp'
     | '/trace-context'
     | '/travel-cost'
+    | '/typing-practice'
     | '/unicode'
     | '/unit-converter'
+    | '/unit-price'
     | '/unix-permissions'
     | '/url-encode'
     | '/user-agent'
@@ -1901,6 +2093,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AmbientSoundRoute: typeof AmbientSoundRoute
   ArchiveRoute: typeof ArchiveRoute
   ArrowViewerRoute: typeof ArrowViewerRoute
   AspectRatioRoute: typeof AspectRatioRoute
@@ -1940,15 +2133,20 @@ export interface RootRouteChildren {
   DateCalculatorRoute: typeof DateCalculatorRoute
   DatetimeRoute: typeof DatetimeRoute
   DesignTokensRoute: typeof DesignTokensRoute
+  DeviceCheckRoute: typeof DeviceCheckRoute
   DiffRoute: typeof DiffRoute
   DnsRoute: typeof DnsRoute
   DockerComposeRoute: typeof DockerComposeRoute
+  DocumentScannerRoute: typeof DocumentScannerRoute
+  EbookReaderRoute: typeof EbookReaderRoute
   EmailHeadersRoute: typeof EmailHeadersRoute
   EmojiPickerRoute: typeof EmojiPickerRoute
   EnvRoute: typeof EnvRoute
   FeedInspectorRoute: typeof FeedInspectorRoute
   FinanceCalculatorRoute: typeof FinanceCalculatorRoute
+  FocusTimerRoute: typeof FocusTimerRoute
   FontRoute: typeof FontRoute
+  GamepadTestRoute: typeof GamepadTestRoute
   GeojsonRoute: typeof GeojsonRoute
   GeometryCalculatorRoute: typeof GeometryCalculatorRoute
   GitToolRoute: typeof GitToolRoute
@@ -1971,6 +2169,7 @@ export interface RootRouteChildren {
   IcsGeneratorRoute: typeof IcsGeneratorRoute
   IdPhotoRoute: typeof IdPhotoRoute
   ImageRoute: typeof ImageRoute
+  ImageCollageRoute: typeof ImageCollageRoute
   ImageCompareRoute: typeof ImageCompareRoute
   ImagePaletteRoute: typeof ImagePaletteRoute
   ImagePrivacyRoute: typeof ImagePrivacyRoute
@@ -1979,11 +2178,13 @@ export interface RootRouteChildren {
   JsRoute: typeof JsRoute
   JsonRoute: typeof JsonRoute
   JwtRoute: typeof JwtRoute
+  KeyboardMouseTestRoute: typeof KeyboardMouseTestRoute
   LighthouseReportRoute: typeof LighthouseReportRoute
   LogExplorerRoute: typeof LogExplorerRoute
   LoginRoute: typeof LoginRoute
   MarkdownRoute: typeof MarkdownRoute
   McpTraceRoute: typeof McpTraceRoute
+  MetronomeRoute: typeof MetronomeRoute
   MockDataRoute: typeof MockDataRoute
   MortgageRoute: typeof MortgageRoute
   MqttPacketRoute: typeof MqttPacketRoute
@@ -2002,7 +2203,9 @@ export interface RootRouteChildren {
   PdfToolkitRoute: typeof PdfToolkitRoute
   PipelineRoute: typeof PipelineRoute
   PlaywrightTraceRoute: typeof PlaywrightTraceRoute
+  PosterPrintRoute: typeof PosterPrintRoute
   PprofRoute: typeof PprofRoute
+  PrintablePaperRoute: typeof PrintablePaperRoute
   PrometheusRoute: typeof PrometheusRoute
   PwaIconsRoute: typeof PwaIconsRoute
   QrcodeRoute: typeof QrcodeRoute
@@ -2018,6 +2221,8 @@ export interface RootRouteChildren {
   SarifViewerRoute: typeof SarifViewerRoute
   SbomViewerRoute: typeof SbomViewerRoute
   ScreenRecorderRoute: typeof ScreenRecorderRoute
+  ScreenRulerRoute: typeof ScreenRulerRoute
+  ScreenTestRoute: typeof ScreenTestRoute
   SeoFilesRoute: typeof SeoFilesRoute
   SettingsRoute: typeof SettingsRoute
   SettingsDataRoute: typeof SettingsDataRoute
@@ -2033,6 +2238,7 @@ export interface RootRouteChildren {
   SvgToolkitRoute: typeof SvgToolkitRoute
   TableConvertRoute: typeof TableConvertRoute
   TableDiffRoute: typeof TableDiffRoute
+  TeleprompterRoute: typeof TeleprompterRoute
   TemperatureRoute: typeof TemperatureRoute
   TestReportRoute: typeof TestReportRoute
   TextRoute: typeof TextRoute
@@ -2040,8 +2246,10 @@ export interface RootRouteChildren {
   TotpRoute: typeof TotpRoute
   TraceContextRoute: typeof TraceContextRoute
   TravelCostRoute: typeof TravelCostRoute
+  TypingPracticeRoute: typeof TypingPracticeRoute
   UnicodeRoute: typeof UnicodeRoute
   UnitConverterRoute: typeof UnitConverterRoute
+  UnitPriceRoute: typeof UnitPriceRoute
   UnixPermissionsRoute: typeof UnixPermissionsRoute
   UrlEncodeRoute: typeof UrlEncodeRoute
   UserAgentRoute: typeof UserAgentRoute
@@ -2158,6 +2366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnixPermissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/unit-price': {
+      id: '/unit-price'
+      path: '/unit-price'
+      fullPath: '/unit-price'
+      preLoaderRoute: typeof UnitPriceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/unit-converter': {
       id: '/unit-converter'
       path: '/unit-converter'
@@ -2170,6 +2385,13 @@ declare module '@tanstack/react-router' {
       path: '/unicode'
       fullPath: '/unicode'
       preLoaderRoute: typeof UnicodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/typing-practice': {
+      id: '/typing-practice'
+      path: '/typing-practice'
+      fullPath: '/typing-practice'
+      preLoaderRoute: typeof TypingPracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/travel-cost': {
@@ -2219,6 +2441,13 @@ declare module '@tanstack/react-router' {
       path: '/temperature'
       fullPath: '/temperature'
       preLoaderRoute: typeof TemperatureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teleprompter': {
+      id: '/teleprompter'
+      path: '/teleprompter'
+      fullPath: '/teleprompter'
+      preLoaderRoute: typeof TeleprompterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/table-diff': {
@@ -2326,6 +2555,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SeoFilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/screen-test': {
+      id: '/screen-test'
+      path: '/screen-test'
+      fullPath: '/screen-test'
+      preLoaderRoute: typeof ScreenTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/screen-ruler': {
+      id: '/screen-ruler'
+      path: '/screen-ruler'
+      fullPath: '/screen-ruler'
+      preLoaderRoute: typeof ScreenRulerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/screen-recorder': {
       id: '/screen-recorder'
       path: '/screen-recorder'
@@ -2431,11 +2674,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrometheusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/printable-paper': {
+      id: '/printable-paper'
+      path: '/printable-paper'
+      fullPath: '/printable-paper'
+      preLoaderRoute: typeof PrintablePaperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pprof': {
       id: '/pprof'
       path: '/pprof'
       fullPath: '/pprof'
       preLoaderRoute: typeof PprofRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/poster-print': {
+      id: '/poster-print'
+      path: '/poster-print'
+      fullPath: '/poster-print'
+      preLoaderRoute: typeof PosterPrintRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/playwright-trace': {
@@ -2564,6 +2821,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MockDataRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/metronome': {
+      id: '/metronome'
+      path: '/metronome'
+      fullPath: '/metronome'
+      preLoaderRoute: typeof MetronomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mcp-trace': {
       id: '/mcp-trace'
       path: '/mcp-trace'
@@ -2597,6 +2861,13 @@ declare module '@tanstack/react-router' {
       path: '/lighthouse-report'
       fullPath: '/lighthouse-report'
       preLoaderRoute: typeof LighthouseReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/keyboard-mouse-test': {
+      id: '/keyboard-mouse-test'
+      path: '/keyboard-mouse-test'
+      fullPath: '/keyboard-mouse-test'
+      preLoaderRoute: typeof KeyboardMouseTestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jwt': {
@@ -2653,6 +2924,13 @@ declare module '@tanstack/react-router' {
       path: '/image-compare'
       fullPath: '/image-compare'
       preLoaderRoute: typeof ImageCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/image-collage': {
+      id: '/image-collage'
+      path: '/image-collage'
+      fullPath: '/image-collage'
+      preLoaderRoute: typeof ImageCollageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/image': {
@@ -2809,11 +3087,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeojsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gamepad-test': {
+      id: '/gamepad-test'
+      path: '/gamepad-test'
+      fullPath: '/gamepad-test'
+      preLoaderRoute: typeof GamepadTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/font': {
       id: '/font'
       path: '/font'
       fullPath: '/font'
       preLoaderRoute: typeof FontRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/focus-timer': {
+      id: '/focus-timer'
+      path: '/focus-timer'
+      fullPath: '/focus-timer'
+      preLoaderRoute: typeof FocusTimerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/finance-calculator': {
@@ -2851,6 +3143,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailHeadersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ebook-reader': {
+      id: '/ebook-reader'
+      path: '/ebook-reader'
+      fullPath: '/ebook-reader'
+      preLoaderRoute: typeof EbookReaderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/document-scanner': {
+      id: '/document-scanner'
+      path: '/document-scanner'
+      fullPath: '/document-scanner'
+      preLoaderRoute: typeof DocumentScannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docker-compose': {
       id: '/docker-compose'
       path: '/docker-compose'
@@ -2870,6 +3176,13 @@ declare module '@tanstack/react-router' {
       path: '/diff'
       fullPath: '/diff'
       preLoaderRoute: typeof DiffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/device-check': {
+      id: '/device-check'
+      path: '/device-check'
+      fullPath: '/device-check'
+      preLoaderRoute: typeof DeviceCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/design-tokens': {
@@ -3145,6 +3458,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ambient-sound': {
+      id: '/ambient-sound'
+      path: '/ambient-sound'
+      fullPath: '/ambient-sound'
+      preLoaderRoute: typeof AmbientSoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -3157,6 +3477,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AmbientSoundRoute: AmbientSoundRoute,
   ArchiveRoute: ArchiveRoute,
   ArrowViewerRoute: ArrowViewerRoute,
   AspectRatioRoute: AspectRatioRoute,
@@ -3196,15 +3517,20 @@ const rootRouteChildren: RootRouteChildren = {
   DateCalculatorRoute: DateCalculatorRoute,
   DatetimeRoute: DatetimeRoute,
   DesignTokensRoute: DesignTokensRoute,
+  DeviceCheckRoute: DeviceCheckRoute,
   DiffRoute: DiffRoute,
   DnsRoute: DnsRoute,
   DockerComposeRoute: DockerComposeRoute,
+  DocumentScannerRoute: DocumentScannerRoute,
+  EbookReaderRoute: EbookReaderRoute,
   EmailHeadersRoute: EmailHeadersRoute,
   EmojiPickerRoute: EmojiPickerRoute,
   EnvRoute: EnvRoute,
   FeedInspectorRoute: FeedInspectorRoute,
   FinanceCalculatorRoute: FinanceCalculatorRoute,
+  FocusTimerRoute: FocusTimerRoute,
   FontRoute: FontRoute,
+  GamepadTestRoute: GamepadTestRoute,
   GeojsonRoute: GeojsonRoute,
   GeometryCalculatorRoute: GeometryCalculatorRoute,
   GitToolRoute: GitToolRoute,
@@ -3227,6 +3553,7 @@ const rootRouteChildren: RootRouteChildren = {
   IcsGeneratorRoute: IcsGeneratorRoute,
   IdPhotoRoute: IdPhotoRoute,
   ImageRoute: ImageRoute,
+  ImageCollageRoute: ImageCollageRoute,
   ImageCompareRoute: ImageCompareRoute,
   ImagePaletteRoute: ImagePaletteRoute,
   ImagePrivacyRoute: ImagePrivacyRoute,
@@ -3235,11 +3562,13 @@ const rootRouteChildren: RootRouteChildren = {
   JsRoute: JsRoute,
   JsonRoute: JsonRoute,
   JwtRoute: JwtRoute,
+  KeyboardMouseTestRoute: KeyboardMouseTestRoute,
   LighthouseReportRoute: LighthouseReportRoute,
   LogExplorerRoute: LogExplorerRoute,
   LoginRoute: LoginRoute,
   MarkdownRoute: MarkdownRoute,
   McpTraceRoute: McpTraceRoute,
+  MetronomeRoute: MetronomeRoute,
   MockDataRoute: MockDataRoute,
   MortgageRoute: MortgageRoute,
   MqttPacketRoute: MqttPacketRoute,
@@ -3258,7 +3587,9 @@ const rootRouteChildren: RootRouteChildren = {
   PdfToolkitRoute: PdfToolkitRoute,
   PipelineRoute: PipelineRoute,
   PlaywrightTraceRoute: PlaywrightTraceRoute,
+  PosterPrintRoute: PosterPrintRoute,
   PprofRoute: PprofRoute,
+  PrintablePaperRoute: PrintablePaperRoute,
   PrometheusRoute: PrometheusRoute,
   PwaIconsRoute: PwaIconsRoute,
   QrcodeRoute: QrcodeRoute,
@@ -3274,6 +3605,8 @@ const rootRouteChildren: RootRouteChildren = {
   SarifViewerRoute: SarifViewerRoute,
   SbomViewerRoute: SbomViewerRoute,
   ScreenRecorderRoute: ScreenRecorderRoute,
+  ScreenRulerRoute: ScreenRulerRoute,
+  ScreenTestRoute: ScreenTestRoute,
   SeoFilesRoute: SeoFilesRoute,
   SettingsRoute: SettingsRoute,
   SettingsDataRoute: SettingsDataRoute,
@@ -3289,6 +3622,7 @@ const rootRouteChildren: RootRouteChildren = {
   SvgToolkitRoute: SvgToolkitRoute,
   TableConvertRoute: TableConvertRoute,
   TableDiffRoute: TableDiffRoute,
+  TeleprompterRoute: TeleprompterRoute,
   TemperatureRoute: TemperatureRoute,
   TestReportRoute: TestReportRoute,
   TextRoute: TextRoute,
@@ -3296,8 +3630,10 @@ const rootRouteChildren: RootRouteChildren = {
   TotpRoute: TotpRoute,
   TraceContextRoute: TraceContextRoute,
   TravelCostRoute: TravelCostRoute,
+  TypingPracticeRoute: TypingPracticeRoute,
   UnicodeRoute: UnicodeRoute,
   UnitConverterRoute: UnitConverterRoute,
+  UnitPriceRoute: UnitPriceRoute,
   UnixPermissionsRoute: UnixPermissionsRoute,
   UrlEncodeRoute: UrlEncodeRoute,
   UserAgentRoute: UserAgentRoute,

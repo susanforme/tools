@@ -1,3 +1,11 @@
+import { learningReadingZh } from './learning-reading-tools';
+import { imageDocumentToolsZh } from './image-document-tools';
+import { shoppingMusicToolsZh } from './shopping-music-tools';
+import { printablePaperZh } from './printable-paper';
+import { deviceCheckZh } from './device-check';
+import { displayToolsZh } from './display-tools';
+import { focusToolsZh } from './focus-tools';
+import { gamepadZh } from './gamepad';
 import { performanceImportZh } from '@/lib/performance-import-messages';
 import { communityNextZh } from './community-next';
 import { dataToolsZh } from '@/lib/data-tools-messages';
@@ -24,6 +32,54 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...learningReadingZh,
+  ...imageDocumentToolsZh,
+  ...shoppingMusicToolsZh,
+  ...printablePaperZh,
+  ...deviceCheckZh,
+  ...displayToolsZh,
+  ...focusToolsZh,
+  gamepad: gamepadZh,
+  inputTester: {
+    description: '查看键盘、鼠标按压反馈与输入记录',
+    title: '键盘与鼠标检测',
+    keyboard: '完整键盘 · ANSI 104 键',
+    mouse: '鼠标检测',
+    reset: '清空记录',
+    listening: '检测中',
+    paused: '已暂停',
+    instructions:
+      '直接按键、点击或滚动即可检测；在鼠标测试区内移动可查看轨迹。离开页面自动停止。',
+    surface: '键盘与鼠标测试区',
+    mouseArea: '鼠标测试区',
+    coverage: '已检测 {{count}} / {{total}} 键',
+    pressed: '正在按下',
+    tested: '已检测',
+    keyPresses: '按下次数',
+    held: '当前同时按下',
+    peak: '最多同时按下',
+    repeats: '长按重复事件',
+    lastKey: '最近按键',
+    holdTime: '按住时长',
+    keyboardLimit:
+      '按物理键位显示；Fn、部分系统快捷键可能无法被浏览器捕获。长按重复不计入按下次数。',
+    mouseHint: '在此区域点击、滚动或移动鼠标',
+    verticalWheel: '纵向滚动事件',
+    horizontalWheel: '横向滚动事件',
+    position: '当前位置',
+    doubleClicks: '左键双击次数',
+    clickInterval: '最近同键按下间隔',
+    distance: '光标移动距离',
+    mouseLimit:
+      '结果反映浏览器收到的事件；移动距离单位为页面像素，不能用于测量真实 DPI、硬件延迟或判定硬件故障。',
+    buttons: {
+      left: '左键',
+      middle: '中键',
+      right: '右键',
+      back: '后退键',
+      forward: '前进键',
+    },
+  },
   ...performanceImportZh,
   communityNext: communityNextZh,
   dataTools: dataToolsZh,
@@ -52,6 +108,7 @@ const zh = {
   ...inspectionLogs,
   ...inspectionMcp,
   nav: {
+    inputTester: '键盘与鼠标检测',
     communityHeap: '堆内存快照对比',
     communityTrace: 'Chrome Trace 时间线',
     communityNetlog: 'NetLog 网络日志',

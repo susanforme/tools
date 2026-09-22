@@ -1,0 +1,143 @@
+export const displayToolsZh = {
+  screenTest: {
+    title: '屏幕检测',
+    description: '检查屏幕坏点、漏光、灰阶与渐变色带',
+    pattern: '检测图案',
+    black: '纯黑',
+    white: '纯白',
+    red: '红色',
+    green: '绿色',
+    blue: '蓝色',
+    gray: '中灰',
+    grayscale: '16 阶灰阶',
+    gradient: '黑白渐变',
+    custom: '自定义颜色',
+    previous: '上一个图案',
+    next: '下一个图案',
+    fullscreen: '全屏检测',
+    preview: '检测画面，点击切换图案',
+    controls: '点击画面或按方向键切换图案；空格切换下一项；Esc 退出全屏。',
+    unsupported: '此浏览器不支持全屏，请使用浏览器全屏功能',
+    error: '全屏检测失败：{{msg}}',
+  },
+  screenRuler: {
+    title: '屏幕直尺',
+    description: '用已知尺寸校准后，在屏幕上测量厘米和英寸',
+    unit: '刻度单位',
+    cm: '厘米',
+    inch: '英寸',
+    reference: '校准物体的实际宽度（毫米）',
+    card: '标准银行卡宽 85.60 毫米。将实物贴近屏幕，调整两端刻线与实物边缘对齐。',
+    adjust: '调整校准线长度',
+    decrease: '缩短校准线',
+    increase: '加长校准线',
+    save: '对齐并保存校准',
+    calibrated: '已校准',
+    needsCalibration: '尚未校准，或屏幕／缩放已变化，请重新对齐。',
+    referenceLine: '实物校准线',
+    warning:
+      '更换显示器、调整系统缩放或浏览器缩放后请重新校准。同规格显示器可能无法自动区分；测量时保持当前缩放。',
+    saveError: '保存校准失败：浏览器无法保存设置，本次校准仍然有效。',
+  },
+  posterPrint: {
+    title: '大图分页打印',
+    description: '将图片按实际尺寸拆分为多张 A4，导出拼接打印 PDF',
+    upload: '选择或拖入 PNG、JPEG、WebP 图片（最大 20 MB）',
+    loading: '正在读取图片…',
+    width: '海报实际宽度（毫米）',
+    orientation: 'A4 方向',
+    portrait: '纵向',
+    landscape: '横向',
+    overlap: '拼接重叠（毫米）',
+    printHint:
+      '高度保持原图比例。每页留 10 毫米打印边距，带裁切标记与页码；打印时选择「实际大小 / 100%」，勿选择适合页面。按重叠区对齐拼接。',
+    summary:
+      '{{width}} × {{height}} 毫米 · {{columns}} 列 × {{rows}} 行 · 共 {{count}} 张 A4',
+    export: '导出打印 PDF',
+    exporting: '正在生成 PDF…',
+    preview: '海报分页与重叠区域预览',
+    invalidSize:
+      '宽高须为 10–5000 毫米，重叠须为 0–30 毫米，并选择有效纸张方向。',
+    tooManyPages: '最多导出 100 页，请缩小海报尺寸或调整方向。',
+    invalidImage: '请选择不超过 20 MB 的 PNG、JPEG 或 WebP 图片。',
+    imageTooLarge: '图片不能超过 4000 万像素，单边不能超过 16000 像素。',
+    canvasError: '浏览器无法处理此图片',
+    error: '图片打印处理失败：{{msg}}',
+  },
+};
+
+export const displayToolsEn = {
+  screenTest: {
+    title: 'Screen Test',
+    description:
+      'Check dead pixels, backlight bleed, grayscale and gradient banding',
+    pattern: 'Test pattern',
+    black: 'Black',
+    white: 'White',
+    red: 'Red',
+    green: 'Green',
+    blue: 'Blue',
+    gray: 'Mid gray',
+    grayscale: '16-step grayscale',
+    gradient: 'Black-to-white gradient',
+    custom: 'Custom color',
+    previous: 'Previous pattern',
+    next: 'Next pattern',
+    fullscreen: 'Test fullscreen',
+    preview: 'Test display; click to cycle patterns',
+    controls:
+      'Click the display or use arrow keys to change patterns; Space advances; Esc exits fullscreen.',
+    unsupported:
+      'Fullscreen is unavailable; use your browser fullscreen option',
+    error: 'Fullscreen test failed: {{msg}}',
+  },
+  screenRuler: {
+    title: 'Screen Ruler',
+    description:
+      'Calibrate with a known object to measure centimeters and inches',
+    unit: 'Ruler unit',
+    cm: 'Centimeters',
+    inch: 'Inches',
+    reference: 'Actual calibration object width (mm)',
+    card: 'A standard bank card is 85.60 mm wide. Hold it near the screen and adjust the endpoints to match its edges.',
+    adjust: 'Adjust calibration line',
+    decrease: 'Shorten calibration line',
+    increase: 'Lengthen calibration line',
+    save: 'Confirm alignment and save',
+    calibrated: 'Calibrated',
+    needsCalibration:
+      'Not calibrated, or screen / zoom changed. Align the reference again.',
+    referenceLine: 'Physical calibration line',
+    warning:
+      'Recalibrate after changing monitors, system scaling or browser zoom. Identical monitors may not be distinguished automatically. Keep the current zoom while measuring.',
+    saveError:
+      'Could not save calibration in this browser. It remains active for this session.',
+  },
+  posterPrint: {
+    title: 'Poster Print',
+    description:
+      'Tile an image across A4 sheets at its actual size and export a printable PDF',
+    upload: 'Choose or drop a PNG, JPEG or WebP image (up to 20 MB)',
+    loading: 'Reading image…',
+    width: 'Actual poster width (mm)',
+    orientation: 'A4 orientation',
+    portrait: 'Portrait',
+    landscape: 'Landscape',
+    overlap: 'Tile overlap (mm)',
+    printHint:
+      'Height follows the original aspect ratio. Sheets include 10 mm margins, crop marks and page numbers. Print at Actual size / 100%, without Fit to page. Align the repeated overlap to assemble.',
+    summary:
+      '{{width}} × {{height}} mm · {{columns}} columns × {{rows}} rows · {{count}} A4 sheets',
+    export: 'Export print PDF',
+    exporting: 'Generating PDF…',
+    preview: 'Poster tile and overlap preview',
+    invalidSize:
+      'Width and height must be 10–5000 mm, overlap 0–30 mm, and the paper orientation valid.',
+    tooManyPages:
+      'Maximum 100 pages. Reduce the poster size or change orientation.',
+    invalidImage: 'Choose a PNG, JPEG or WebP image up to 20 MB.',
+    imageTooLarge: 'Maximum 40 megapixels and 16000 pixels per side.',
+    canvasError: 'Your browser could not process this image',
+    error: 'Poster processing failed: {{msg}}',
+  },
+};
