@@ -1,0 +1,68 @@
+export const dataToolsZh = {
+  prometheusTitle: 'Prometheus / PromQL 检查器',
+  binaryTitle: 'BSON / Amazon Ion 转换',
+  arrowTitle: 'Arrow IPC / Feather 查看器',
+  hclTitle: 'HCL / Terraform 配置检查',
+  metrics: '指标文本',
+  processing: '处理中…',
+  inspect: '检查',
+  sample: '填入示例',
+  clear: '清空',
+  failed: '处理失败：{{message}}',
+  promqlLimit: '仅检查语法并展示语法树，不执行查询或类型检查。最多 100 KB。',
+  metricsLimit:
+    '最多 2 MB。支持经典指标样本；暂不支持 UTF-8 指标名称和原生直方图。',
+  encode: '文本 → 二进制 Base64',
+  decode: '二进制 Base64 → 文本',
+  binaryLimit: '最多 2 MB。BSON 使用规范 Extended JSON；Ion 保留类型与注解。',
+  binaryFile: '导入二进制文件',
+  fileLimit: '文件不能超过 2 MB',
+  convert: '转换',
+  downloadBinary: '下载二进制',
+  hclLimit:
+    '最多 200 KB。检查 HCL 语法、块结构与资源清单，不执行表达式或 Terraform 部署。',
+  arrowLimit:
+    '最多 50 MiB，预览与导出前 10000 行。支持未压缩 IPC 文件/流；不支持 Feather v1、LZ4/Zstd 压缩批次。大整数导出为字符串。',
+  arrowFile: '选择 Arrow IPC / Feather 文件',
+  arrowFileLimit: '文件不能超过 50 MiB',
+  arrowSummary: '共 {{rows}} 行，预览 {{loaded}} 行，{{batches}} 个批次',
+  schema: 'Schema 与批次',
+  export: '导出 {{format}}',
+  previous: '上一页',
+  next: '下一页',
+};
+export const dataToolsEn: Record<keyof typeof dataToolsZh, string> = {
+  prometheusTitle: 'Prometheus / PromQL inspector',
+  binaryTitle: 'BSON / Amazon Ion converter',
+  arrowTitle: 'Arrow IPC / Feather viewer',
+  hclTitle: 'HCL / Terraform inspector',
+  metrics: 'Metric text',
+  processing: 'Processing…',
+  inspect: 'Inspect',
+  sample: 'Load example',
+  clear: 'Clear',
+  failed: 'Processing failed: {{message}}',
+  promqlLimit:
+    'Syntax and syntax tree only; no query execution or type checking. Maximum 100 KB.',
+  metricsLimit:
+    'Maximum 2 MB. Classic metric samples only; UTF-8 metric names and native histograms are not supported.',
+  encode: 'Text → binary Base64',
+  decode: 'Binary Base64 → text',
+  binaryLimit:
+    'Maximum 2 MB. BSON uses canonical Extended JSON; Ion preserves types and annotations.',
+  binaryFile: 'Import binary file',
+  fileLimit: 'File must not exceed 2 MB',
+  convert: 'Convert',
+  downloadBinary: 'Download binary',
+  hclLimit:
+    'Maximum 200 KB. Inspect HCL syntax, blocks and inventory; no expression evaluation or Terraform deployment.',
+  arrowLimit:
+    'Maximum 50 MiB; preview and export the first 10000 rows. Uncompressed IPC files/streams only; Feather v1 and LZ4/Zstd batches are unsupported. Large integers export as strings.',
+  arrowFile: 'Choose Arrow IPC / Feather file',
+  arrowFileLimit: 'File must not exceed 50 MiB',
+  arrowSummary: '{{rows}} rows; {{loaded}} previewed; {{batches}} batches',
+  schema: 'Schema and batches',
+  export: 'Export {{format}}',
+  previous: 'Previous',
+  next: 'Next',
+};

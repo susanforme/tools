@@ -16,7 +16,7 @@ import {
   Plus,
   Trash2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import {
@@ -165,9 +165,13 @@ function CopyButton({ text }: { text: string }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+const TokenSecurityPanel = lazy(
+  () => import('../components/token-security-panel'),
+);
+
 function JwtPage() {
   const { t } = useTranslation();
-  const [mode, setMode] = useQueryParam<'jwt' | 'jwk'>(
+  const [mode, setMode] = useQueryParam<'jwt' | 'jwk' | 'jwe' | 'paseto'>(
     'mode',
     StringParam,
     'jwt',
@@ -177,14 +181,29 @@ function JwtPage() {
       <h1 className="text-2xl font-bold">{t('jwt.title')}</h1>
       <Tabs
         value={mode}
-        onValueChange={(value) => setMode(value as 'jwt' | 'jwk')}
+        onValueChange={(value) =>
+          setMode(value as 'jwt' | 'jwk' | 'jwe' | 'paseto')
+        }
       >
         <TabsList>
           <TabsTrigger value="jwt">JWT</TabsTrigger>
           <TabsTrigger value="jwk">JWK</TabsTrigger>
+          <TabsTrigger value="jwe">JWE</TabsTrigger>
+          <TabsTrigger value="paseto">PASETO v4</TabsTrigger>
         </TabsList>
       </Tabs>
-      {mode === 'jwt' ? <JwtCodecPage /> : <JwkPanel />}
+      {mode === 'jwt' ? (
+        <JwtCodecPage />
+      ) : mode === 'jwk' ? (
+        <JwkPanel />
+      ) : (
+        <Suspense fallback={<p>{t('formats.running')}</p>}>
+          <TokenSecurityPanel
+            key={mode}
+            kind={mode === 'paseto' ? 'paseto' : 'jwe'}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

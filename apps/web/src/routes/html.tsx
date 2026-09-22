@@ -24,6 +24,9 @@ const HtmlAccessibilityPanel = lazy(
   () => import('@/components/html-accessibility-panel'),
 );
 
+const PerformanceImportPanel = lazy(
+  () => import('../components/performance-import-panel'),
+);
 const DEFAULT_HTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -61,7 +64,13 @@ function useHtmlTool(initialInput = '') {
   };
 }
 
-type TabType = 'format' | 'minify' | 'query' | 'accessibility' | 'visual';
+type TabType =
+  | 'format'
+  | 'minify'
+  | 'query'
+  | 'accessibility'
+  | 'visual'
+  | 'ax-tree';
 
 function HtmlPage() {
   const { t } = useTranslation();
@@ -122,6 +131,9 @@ function HtmlPage() {
           <TabsTrigger value="visual">
             {t('communityVisual.selector.title')}
           </TabsTrigger>
+          <TabsTrigger value="ax-tree">
+            {t('performanceImport.axTitle')}
+          </TabsTrigger>
           <TabsTrigger value="accessibility">
             {t('htmlAccessibility.tab')}
           </TabsTrigger>
@@ -178,6 +190,15 @@ function HtmlPage() {
               fallback={<p role="status">{t('communityVisual.loading')}</p>}
             >
               <SelectorVisualPanel />
+            </Suspense>
+          )}
+        </TabsContent>
+        <TabsContent value="ax-tree">
+          {tab === 'ax-tree' && (
+            <Suspense
+              fallback={<p role="status">{t('performanceImport.loading')}</p>}
+            >
+              <PerformanceImportPanel kind="ax" />
             </Suspense>
           )}
         </TabsContent>

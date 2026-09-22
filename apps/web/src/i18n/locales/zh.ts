@@ -1,3 +1,8 @@
+import { performanceImportZh } from '@/lib/performance-import-messages';
+import { communityNextZh } from './community-next';
+import { dataToolsZh } from '@/lib/data-tools-messages';
+import { browserInspectionZh } from './browser-inspection';
+import { SECURITY_ZH } from '@/components/security-text';
 import { communityProtocolsZh } from './community-protocols';
 import { communitySchemaZh } from './community-schema';
 import { communityPerformanceZh } from './community-performance';
@@ -19,6 +24,11 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...performanceImportZh,
+  communityNext: communityNextZh,
+  dataTools: dataToolsZh,
+  browserInspection: browserInspectionZh,
+  securityWorkbench: SECURITY_ZH,
   ...communityProtocolsZh,
   ...communitySchemaZh,
   ...communityPerformanceZh,

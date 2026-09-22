@@ -168,12 +168,13 @@ const formatterNavItems: NavItem[] = [
     icon: <FileCode className="w-4 h-4 text-blue-500" />,
     labelKey: 'nav.html',
     keywords:
-      'html css selector xpath visual accessibility axe aria a11y 选择器 可视化 无障碍 检查',
+      'html css selector xpath visual accessibility axe aria a11y 选择器 可视化 无障碍 检查 ax tree accessibility 无障碍树',
   },
   {
     to: '/css',
     icon: <Paintbrush className="w-4 h-4 text-violet-500" />,
     labelKey: 'nav.css',
+    keywords: 'cascade layer 层叠',
   },
   {
     to: '/js',
@@ -254,7 +255,7 @@ const cryptoNavItems: NavItem[] = [
     icon: <KeyRound className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.certificateTool',
     keywords:
-      'x509 pem jwk csr certificate ssh openssh fingerprint 证书 公钥 指纹 域名 有效期 转换',
+      'x509 pem jwk csr certificate ssh openssh fingerprint 证书 公钥 指纹 域名 有效期 转换 pkcs12 pfx p12',
   },
   {
     to: '/hash',
@@ -280,7 +281,8 @@ const cryptoNavItems: NavItem[] = [
     to: '/jwt',
     icon: <Fingerprint className="w-4 h-4 text-purple-500" />,
     labelKey: 'nav.jwt',
-    keywords: 'jwt jwk pem signature verify public key 公钥 签名 验证',
+    keywords:
+      'jwt jwk pem signature verify public key 公钥 签名 验证 jwe paseto',
   },
   {
     to: '/uuid',
@@ -419,7 +421,8 @@ const textNavItems: NavItem[] = [
     to: '/diff',
     icon: <ArrowLeftRight className="w-4 h-4 text-orange-500" />,
     labelKey: 'nav.diff',
-    keywords: 'diff compare text json code difference comparison',
+    keywords:
+      'diff compare text json code difference comparison git patch unified 补丁',
   },
   {
     to: '/text',
@@ -591,6 +594,61 @@ const designNavItems = frontendNavItems.filter(
     item.to !== '/og-preview',
 );
 const developerToolNavItems: NavItem[] = [
+  {
+    to: '/chrome-coverage',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.chromeCoverage.title',
+    keywords: 'coverage unused js css 覆盖 未使用 体积',
+  },
+  {
+    to: '/react-profiler',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.reactProfiler.title',
+    keywords: 'react profiler commit 渲染 组件 性能',
+  },
+  {
+    to: '/pprof',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.pprof.title',
+    keywords: 'pprof golang cpu memory flamegraph 采样',
+  },
+  {
+    to: '/prometheus',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.prometheus.title',
+    keywords: 'prometheus openmetrics promql 指标 监控',
+  },
+  {
+    to: '/binary-data',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.binaryData.title',
+    keywords: 'bson ejson mongodb amazon ion 二进制',
+  },
+  {
+    to: '/arrow-viewer',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.arrowViewer.title',
+    keywords: 'arrow ipc feather 数据 列',
+  },
+  {
+    to: '/hcl-inspector',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.hclInspector.title',
+    keywords: 'hcl terraform syntax 资源 配置',
+  },
+  {
+    to: '/openpgp',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.openpgp.title',
+    keywords: 'openpgp pgp gpg 加密 签名',
+  },
+  {
+    to: '/pcap-viewer',
+    icon: <Activity className="h-4 w-4 text-primary" />,
+    labelKey: 'communityNext.pcapViewer.title',
+    keywords: 'pcap pcapng wireshark 抓包 协议',
+  },
+
   {
     to: '/heap-snapshot',
     icon: <Activity className="h-4 w-4 text-primary" />,
@@ -806,7 +864,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/email-headers',
     icon: <FileText className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.emailHeaders',
-    keywords: 'email mail header received spf dkim dmarc mime 邮件头',
+    keywords:
+      'email mail header received spf dkim dmarc mime 邮件头 dmarc aggregate 聚合报告',
   },
   {
     to: '/openapi',
@@ -843,7 +902,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/csp',
     icon: <ShieldAlert className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.cspTool',
-    keywords: 'content security policy csp header 安全策略',
+    keywords:
+      'content security policy csp header 安全策略 violation report 违规报告',
   },
   {
     to: '/unix-permissions',
@@ -862,7 +922,7 @@ const developerToolNavItems: NavItem[] = [
     icon: <Code2 className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.gitTool',
     keywords:
-      'glob pattern matching 匹配 gitignore conventional commit semver version git package.json dependencies dependency diff lockfile bun.lock pnpm-lock.yaml package-lock.json 锁文件 依赖 对比',
+      'glob pattern matching 匹配 gitignore conventional commit semver version git package.json dependencies dependency diff lockfile bun.lock pnpm-lock.yaml package-lock.json 锁文件 依赖 对比 editorconfig 匹配',
   },
   {
     to: '/bundle-inspector',

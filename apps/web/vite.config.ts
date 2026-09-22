@@ -15,6 +15,15 @@ const crossOriginIsolationHeaders = {
 };
 
 const CDN_MODULE_VERSIONS = {
+  '@prometheus-io/lezer-promql': '0.313.3',
+  'apache-arrow': '21.2.0',
+  bson: '7.3.3',
+  'ion-js': '5.2.1',
+  'web-tree-sitter': '0.27.0',
+  jose: '6.1.3',
+  'paseto-ts': '2.0.6',
+  openpgp: '6.3.1',
+  'node-forge': '1.4.0',
   '@babel/parser': '8.0.5',
   '@asyncapi/parser': '3.6.3',
   '@bufbuild/cel': '0.6.1',
@@ -86,6 +95,8 @@ function cdnModuleUrl(
   source: string,
   packageName: keyof typeof CDN_MODULE_VERSIONS,
 ): string {
+  if (source === 'openpgp')
+    return 'https://cdn.jsdelivr.net/npm/openpgp@6.3.1/dist/openpgp.min.mjs';
   const path = `${packageName}@${CDN_MODULE_VERSIONS[packageName]}${source
     .slice(packageName.length)
     .replace(
@@ -175,9 +186,29 @@ const externalRequirePlugin = () =>
     external: [CDN_EXTERNAL_PATTERN],
   });
 
-const config = defineConfig(async () => ({
+const config = defineConfig(async ({ command }) => ({
   // logLevel: 'warn',
-  define: { 'process.env.NODE_DEBUG': JSON.stringify('') },
+  define: {
+    'process.env.NODE_DEBUG': JSON.stringify(''),
+    // 大型 WASM 资源与 JS 一样固定版本；仅打开对应工具时请求。
+    __WIREGASM_ASSET_BASE__: JSON.stringify(
+      command === 'build'
+        ? 'https://cdn.jsdelivr.net/npm/@goodtools/wiregasm@1.9.1/dist/'
+        : '/@fs' +
+            fileURLToPath(
+              new URL(
+                '../../node_modules/@goodtools/wiregasm/dist/',
+                import.meta.url,
+              ),
+            ),
+    ),
+    __TREE_SITTER_WASM_URL__: JSON.stringify(
+      'https://cdn.jsdelivr.net/npm/web-tree-sitter@0.27.0/web-tree-sitter.wasm',
+    ),
+    __HCL_WASM_URL__: JSON.stringify(
+      'https://cdn.jsdelivr.net/npm/@tree-sitter-grammars/tree-sitter-hcl@1.2.0/tree-sitter-hcl.wasm',
+    ),
+  },
   resolve: {
     tsconfigPaths: true,
     alias: [

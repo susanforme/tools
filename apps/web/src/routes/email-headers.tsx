@@ -6,16 +6,17 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { parseEmailHeaders } from '@/lib/email-headers';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/email-headers')({
   component: EmailHeadersPage,
 });
 
+const DmarcReportPanel = lazy(() => import('../components/dmarc-report-panel'));
 function EmailHeadersPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useQueryParam<'headers' | 'mime' | 'policy'>(
+  const [tab, setTab] = useQueryParam<'headers' | 'mime' | 'policy' | 'dmarc'>(
     'tab',
     StringParam,
     'headers',
@@ -37,16 +38,23 @@ function EmailHeadersPage() {
       <Tabs
         value={tab}
         onValueChange={(value) =>
-          setTab(value as 'headers' | 'mime' | 'policy')
+          setTab(value as 'headers' | 'mime' | 'policy' | 'dmarc')
         }
       >
-        <TabsList>
+        <TabsList className="flex h-auto flex-wrap gap-1 group-data-[orientation=horizontal]/tabs:h-auto [&_[data-slot=tabs-trigger]]:h-9">
           <TabsTrigger value="headers">{t('emailHeaders.headers')}</TabsTrigger>
           <TabsTrigger value="mime">EML / MIME</TabsTrigger>
           <TabsTrigger value="policy">SPF / DMARC</TabsTrigger>
+          <TabsTrigger value="dmarc">
+            {t('securityWorkbench.dmarc', { defaultValue: 'DMARC 聚合报告' })}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
-      {tab === 'mime' ? (
+      {tab === 'dmarc' ? (
+        <Suspense fallback={<p>{t('formats.running')}</p>}>
+          <DmarcReportPanel />
+        </Suspense>
+      ) : tab === 'mime' ? (
         <MimeEmailPanel />
       ) : tab === 'policy' ? (
         <EmailPolicyPanel />

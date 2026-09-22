@@ -2,7 +2,7 @@ import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { CssSpecificityPanel } from '@/components/tool-expansion-panels';
 import { loadSass } from '@/lib/sass-runtime';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CodePanel } from '../components/code-panel';
 import { Button } from '../components/ui/button';
@@ -13,7 +13,8 @@ import {
   TabsTrigger,
 } from '../components/ui/tabs';
 
-type TabType = 'format' | 'minify' | 'scss' | 'specificity';
+const CssCascadePanel = lazy(() => import('@/components/css-cascade-panel'));
+type TabType = 'format' | 'minify' | 'scss' | 'specificity' | 'cascade';
 
 export const Route = createFileRoute('/css')({
   component: CssPage,
@@ -147,6 +148,9 @@ function CssPage() {
           <TabsTrigger value="specificity">
             {t('css.tabSpecificity')}
           </TabsTrigger>
+          <TabsTrigger value="cascade">
+            {t('browserInspection.cascade')}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="format" className="space-y-4 mt-4">
@@ -217,6 +221,11 @@ function CssPage() {
 
         <TabsContent value="specificity" className="mt-4">
           <CssSpecificityPanel />
+        </TabsContent>
+        <TabsContent value="cascade" className="mt-4">
+          <Suspense fallback={<p>{t('browserInspection.loading')}</p>}>
+            <CssCascadePanel />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

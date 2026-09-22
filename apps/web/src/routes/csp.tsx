@@ -3,7 +3,7 @@ import { PermissionsPolicyPanel } from '@/components/modern-web-tool-panels';
 import { ArrayParam, StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { inspectSecurityHeaders } from '@/lib/advanced-tools';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
@@ -11,6 +11,8 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 
 export const Route = createFileRoute('/csp')({ component: CspPage });
+const CspReportsPanel = lazy(() => import('@/components/csp-reports-panel'));
+type CspTab = 'generate' | 'analyze' | 'permissions' | 'reports';
 
 const DIRECTIVES = [
   ['default-src', "'self'"],
@@ -24,11 +26,7 @@ const DIRECTIVES = [
 
 function CspPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useQueryParam<'generate' | 'analyze' | 'permissions'>(
-    'tab',
-    StringParam,
-    'generate',
-  );
+  const [tab, setTab] = useQueryParam<CspTab>('tab', StringParam, 'generate');
   const [enabled, setEnabled] = useQueryParam(
     'directives',
     ArrayParam,
@@ -48,19 +46,21 @@ function CspPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('cspTool.title')}</h1>
-      <Tabs
-        value={tab}
-        onValueChange={(value) =>
-          setTab(value as 'generate' | 'analyze' | 'permissions')
-        }
-      >
-        <TabsList>
+      <Tabs value={tab} onValueChange={(value) => setTab(value as CspTab)}>
+        <TabsList className="h-auto flex-wrap">
           <TabsTrigger value="generate">{t('cspTool.tabGenerate')}</TabsTrigger>
           <TabsTrigger value="analyze">{t('cspTool.tabAnalyze')}</TabsTrigger>
           <TabsTrigger value="permissions">Permissions-Policy</TabsTrigger>
+          <TabsTrigger value="reports">
+            {t('browserInspection.cspReports')}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
-      {tab === 'permissions' ? (
+      {tab === 'reports' ? (
+        <Suspense fallback={<p>{t('browserInspection.loading')}</p>}>
+          <CspReportsPanel />
+        </Suspense>
+      ) : tab === 'permissions' ? (
         <PermissionsPolicyPanel />
       ) : tab === 'analyze' ? (
         <SecurityHeadersPanel />

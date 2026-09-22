@@ -36,10 +36,18 @@ export const Route = createFileRoute('/certificate-tool')({
 });
 
 const OpenSshPanel = lazy(() => import('../components/open-ssh-panel'));
+const Pkcs12Panel = lazy(() => import('../components/pkcs12-panel'));
 function CertificateToolPage() {
   const { t } = useTranslation();
   const [tab, setTab] = useQueryParam<
-    'inspect' | 'convert' | 'generate' | 'asn1' | 'ssh' | 'chain' | 'match'
+    | 'inspect'
+    | 'convert'
+    | 'generate'
+    | 'asn1'
+    | 'ssh'
+    | 'chain'
+    | 'match'
+    | 'pkcs12'
   >('tab', StringParam, 'inspect');
   const [input, setInput] = useState<string | ArrayBuffer>('');
   const [text, setText] = useState('');
@@ -81,7 +89,8 @@ function CertificateToolPage() {
               | 'asn1'
               | 'ssh'
               | 'chain'
-              | 'match',
+              | 'match'
+              | 'pkcs12',
           )
         }
       >
@@ -98,10 +107,15 @@ function CertificateToolPage() {
           <TabsTrigger value="chain">
             {t('certificateTool.tabChain')}
           </TabsTrigger>
+          <TabsTrigger value="pkcs12">PKCS#12 / PFX</TabsTrigger>
           <TabsTrigger value="match">{t('protocol.tabs.keyMatch')}</TabsTrigger>
         </TabsList>
       </Tabs>
-      {tab === 'inspect' ? (
+      {tab === 'pkcs12' ? (
+        <Suspense fallback={<p>{t('formats.running')}</p>}>
+          <Pkcs12Panel />
+        </Suspense>
+      ) : tab === 'inspect' ? (
         <>
           <FileDropzone
             accept=".pem,.crt,.cer,.csr,application/pkix-cert"

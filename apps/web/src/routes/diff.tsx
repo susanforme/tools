@@ -3,13 +3,14 @@ import {
   NumberParam,
   StringParam,
   useQueryParams,
+  useQueryParam,
   withDefault,
 } from '@/hooks/useQueryParams';
 import { formatJson, summarizeDiff } from '@/lib/diff';
 import { DiffEditor, type DiffOnMount } from '@monaco-editor/react';
 import { createFileRoute } from '@tanstack/react-router';
 import { ArrowLeftRight, Braces, Columns2, Rows3, Trash2 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
@@ -21,6 +22,9 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { loadMonaco } from '../lib/monaco';
+
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
+const GitPatchPanel = lazy(() => import('../components/git-patch-panel'));
 
 export const Route = createFileRoute('/diff')({ component: DiffPage });
 
@@ -55,6 +59,35 @@ function isDiffLanguage(value: string | undefined): value is DiffLanguage {
 }
 
 function DiffPage() {
+  const { t } = useTranslation();
+  const [mode, setMode] = useQueryParam<string>('mode', StringParam, 'text');
+  return (
+    <div>
+      <div className="mx-auto max-w-7xl px-4 pt-6">
+        <Tabs value={mode} onValueChange={setMode}>
+          <TabsList>
+            <TabsTrigger value="text">{t('diff.title')}</TabsTrigger>
+            <TabsTrigger value="patch">
+              {t('performanceImport.patchTitle')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+      {mode === 'patch' ? (
+        <div className="mx-auto max-w-7xl px-4 py-6">
+          <Suspense
+            fallback={<p role="status">{t('performanceImport.loading')}</p>}
+          >
+            <GitPatchPanel />
+          </Suspense>
+        </div>
+      ) : (
+        <TextDiffPage />
+      )}
+    </div>
+  );
+}
+function TextDiffPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const [query, setQuery] = useQueryParams<DiffQuery>(DIFF_QUERY_PARAMS);

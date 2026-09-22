@@ -30,6 +30,7 @@ type Mode =
   | 'commit'
   | 'version'
   | 'range'
+  | 'editorconfig-match'
   | 'editorconfig'
   | 'package'
   | 'match'
@@ -39,6 +40,9 @@ const PathRuleDebuggerPanel = lazy(
 );
 const LockfileDiffPanel = lazy(
   () => import('../components/lockfile-diff-panel'),
+);
+const EditorConfigMatchPanel = lazy(
+  () => import('../components/editorconfig-match-panel'),
 );
 const COMMIT_TYPES = [
   'feat',
@@ -149,6 +153,9 @@ function GitToolPage() {
           <TabsTrigger value="version">SemVer</TabsTrigger>
           <TabsTrigger value="range">SemVer Range</TabsTrigger>
           <TabsTrigger value="editorconfig">.editorconfig</TabsTrigger>
+          <TabsTrigger value="editorconfig-match">
+            {t('performanceImport.editorTitle')}
+          </TabsTrigger>
           <TabsTrigger value="package">package.json</TabsTrigger>
           <TabsTrigger value="lockfile">{t('lockfileDiff.title')}</TabsTrigger>
           <TabsTrigger value="match">
@@ -274,13 +281,23 @@ function GitToolPage() {
           <PathRuleDebuggerPanel />
         </Suspense>
       )}
-      {mode !== 'range' && mode !== 'lockfile' && mode !== 'match' && (
-        <Textarea
-          readOnly
-          value={output}
-          className="min-h-48 font-mono text-xs"
-        />
+      {mode === 'editorconfig-match' && (
+        <Suspense
+          fallback={<p role="status">{t('performanceImport.loading')}</p>}
+        >
+          <EditorConfigMatchPanel />
+        </Suspense>
       )}
+      {mode !== 'range' &&
+        mode !== 'lockfile' &&
+        mode !== 'match' &&
+        mode !== 'editorconfig-match' && (
+          <Textarea
+            readOnly
+            value={output}
+            className="min-h-48 font-mono text-xs"
+          />
+        )}
     </div>
   );
 }

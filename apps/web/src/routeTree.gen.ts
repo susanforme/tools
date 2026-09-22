@@ -57,16 +57,21 @@ import { Route as RmbUppercaseRouteImport } from './routes/rmb-uppercase'
 import { Route as RegexRouteImport } from './routes/regex'
 import { Route as RecipeScaleRouteImport } from './routes/recipe-scale'
 import { Route as RealtimeDebuggerRouteImport } from './routes/realtime-debugger'
+import { Route as ReactProfilerRouteImport } from './routes/react-profiler'
 import { Route as RandomPickerRouteImport } from './routes/random-picker'
 import { Route as QrcodeRouteImport } from './routes/qrcode'
 import { Route as PwaIconsRouteImport } from './routes/pwa-icons'
+import { Route as PrometheusRouteImport } from './routes/prometheus'
+import { Route as PprofRouteImport } from './routes/pprof'
 import { Route as PlaywrightTraceRouteImport } from './routes/playwright-trace'
 import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as PdfToolkitRouteImport } from './routes/pdf-toolkit'
+import { Route as PcapViewerRouteImport } from './routes/pcap-viewer'
 import { Route as PasswordRouteImport } from './routes/password'
 import { Route as ParquetViewerRouteImport } from './routes/parquet-viewer'
 import { Route as PaceCalculatorRouteImport } from './routes/pace-calculator'
 import { Route as OtelViewerRouteImport } from './routes/otel-viewer'
+import { Route as OpenpgpRouteImport } from './routes/openpgp'
 import { Route as OpenapiRouteImport } from './routes/openapi'
 import { Route as OgPreviewRouteImport } from './routes/og-preview'
 import { Route as OcrRouteImport } from './routes/ocr'
@@ -101,6 +106,7 @@ import { Route as HomeBudgetRouteImport } from './routes/home-budget'
 import { Route as HmacRouteImport } from './routes/hmac'
 import { Route as HexInspectorRouteImport } from './routes/hex-inspector'
 import { Route as HeapSnapshotRouteImport } from './routes/heap-snapshot'
+import { Route as HclInspectorRouteImport } from './routes/hcl-inspector'
 import { Route as HashRouteImport } from './routes/hash'
 import { Route as HarAnalyzerRouteImport } from './routes/har-analyzer'
 import { Route as GushiNamerRouteImport } from './routes/gushi-namer'
@@ -141,12 +147,14 @@ import { Route as ColorConverterRouteImport } from './routes/color-converter'
 import { Route as CipherRouteImport } from './routes/cipher'
 import { Route as CidrRouteImport } from './routes/cidr'
 import { Route as ChromeTraceRouteImport } from './routes/chrome-trace'
+import { Route as ChromeCoverageRouteImport } from './routes/chrome-coverage'
 import { Route as CertificateToolRouteImport } from './routes/certificate-tool'
 import { Route as CelRouteImport } from './routes/cel'
 import { Route as BundleInspectorRouteImport } from './routes/bundle-inspector'
 import { Route as BrowserCompatRouteImport } from './routes/browser-compat'
 import { Route as BrowserCapabilitiesRouteImport } from './routes/browser-capabilities'
 import { Route as BmiRouteImport } from './routes/bmi'
+import { Route as BinaryDataRouteImport } from './routes/binary-data'
 import { Route as BillSplitRouteImport } from './routes/bill-split'
 import { Route as BatchFilesRouteImport } from './routes/batch-files'
 import { Route as Base64RouteImport } from './routes/base64'
@@ -154,6 +162,7 @@ import { Route as AudioRecorderRouteImport } from './routes/audio-recorder'
 import { Route as AudioEditorRouteImport } from './routes/audio-editor'
 import { Route as AsyncapiRouteImport } from './routes/asyncapi'
 import { Route as AspectRatioRouteImport } from './routes/aspect-ratio'
+import { Route as ArrowViewerRouteImport } from './routes/arrow-viewer'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -397,6 +406,11 @@ const RealtimeDebuggerRoute = RealtimeDebuggerRouteImport.update({
   path: '/realtime-debugger',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReactProfilerRoute = ReactProfilerRouteImport.update({
+  id: '/react-profiler',
+  path: '/react-profiler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RandomPickerRoute = RandomPickerRouteImport.update({
   id: '/random-picker',
   path: '/random-picker',
@@ -412,6 +426,16 @@ const PwaIconsRoute = PwaIconsRouteImport.update({
   path: '/pwa-icons',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrometheusRoute = PrometheusRouteImport.update({
+  id: '/prometheus',
+  path: '/prometheus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PprofRoute = PprofRouteImport.update({
+  id: '/pprof',
+  path: '/pprof',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlaywrightTraceRoute = PlaywrightTraceRouteImport.update({
   id: '/playwright-trace',
   path: '/playwright-trace',
@@ -425,6 +449,11 @@ const PipelineRoute = PipelineRouteImport.update({
 const PdfToolkitRoute = PdfToolkitRouteImport.update({
   id: '/pdf-toolkit',
   path: '/pdf-toolkit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PcapViewerRoute = PcapViewerRouteImport.update({
+  id: '/pcap-viewer',
+  path: '/pcap-viewer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PasswordRoute = PasswordRouteImport.update({
@@ -445,6 +474,11 @@ const PaceCalculatorRoute = PaceCalculatorRouteImport.update({
 const OtelViewerRoute = OtelViewerRouteImport.update({
   id: '/otel-viewer',
   path: '/otel-viewer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpenpgpRoute = OpenpgpRouteImport.update({
+  id: '/openpgp',
+  path: '/openpgp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpenapiRoute = OpenapiRouteImport.update({
@@ -615,6 +649,11 @@ const HexInspectorRoute = HexInspectorRouteImport.update({
 const HeapSnapshotRoute = HeapSnapshotRouteImport.update({
   id: '/heap-snapshot',
   path: '/heap-snapshot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HclInspectorRoute = HclInspectorRouteImport.update({
+  id: '/hcl-inspector',
+  path: '/hcl-inspector',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HashRoute = HashRouteImport.update({
@@ -817,6 +856,11 @@ const ChromeTraceRoute = ChromeTraceRouteImport.update({
   path: '/chrome-trace',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChromeCoverageRoute = ChromeCoverageRouteImport.update({
+  id: '/chrome-coverage',
+  path: '/chrome-coverage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificateToolRoute = CertificateToolRouteImport.update({
   id: '/certificate-tool',
   path: '/certificate-tool',
@@ -845,6 +889,11 @@ const BrowserCapabilitiesRoute = BrowserCapabilitiesRouteImport.update({
 const BmiRoute = BmiRouteImport.update({
   id: '/bmi',
   path: '/bmi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BinaryDataRoute = BinaryDataRouteImport.update({
+  id: '/binary-data',
+  path: '/binary-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BillSplitRoute = BillSplitRouteImport.update({
@@ -882,6 +931,11 @@ const AspectRatioRoute = AspectRatioRouteImport.update({
   path: '/aspect-ratio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArrowViewerRoute = ArrowViewerRouteImport.update({
+  id: '/arrow-viewer',
+  path: '/arrow-viewer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
@@ -896,6 +950,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
   '/asyncapi': typeof AsyncapiRoute
   '/audio-editor': typeof AudioEditorRoute
@@ -903,12 +958,14 @@ export interface FileRoutesByFullPath {
   '/base64': typeof Base64Route
   '/batch-files': typeof BatchFilesRoute
   '/bill-split': typeof BillSplitRoute
+  '/binary-data': typeof BinaryDataRoute
   '/bmi': typeof BmiRoute
   '/browser-capabilities': typeof BrowserCapabilitiesRoute
   '/browser-compat': typeof BrowserCompatRoute
   '/bundle-inspector': typeof BundleInspectorRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/chrome-coverage': typeof ChromeCoverageRoute
   '/chrome-trace': typeof ChromeTraceRoute
   '/cidr': typeof CidrRoute
   '/cipher': typeof CipherRoute
@@ -949,6 +1006,7 @@ export interface FileRoutesByFullPath {
   '/gushi-namer': typeof GushiNamerRoute
   '/har-analyzer': typeof HarAnalyzerRoute
   '/hash': typeof HashRoute
+  '/hcl-inspector': typeof HclInspectorRoute
   '/heap-snapshot': typeof HeapSnapshotRoute
   '/hex-inspector': typeof HexInspectorRoute
   '/hmac': typeof HmacRoute
@@ -983,16 +1041,21 @@ export interface FileRoutesByFullPath {
   '/ocr': typeof OcrRoute
   '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
+  '/openpgp': typeof OpenpgpRoute
   '/otel-viewer': typeof OtelViewerRoute
   '/pace-calculator': typeof PaceCalculatorRoute
   '/parquet-viewer': typeof ParquetViewerRoute
   '/password': typeof PasswordRoute
+  '/pcap-viewer': typeof PcapViewerRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/pipeline': typeof PipelineRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
+  '/pprof': typeof PprofRoute
+  '/prometheus': typeof PrometheusRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
   '/random-picker': typeof RandomPickerRoute
+  '/react-profiler': typeof ReactProfilerRoute
   '/realtime-debugger': typeof RealtimeDebuggerRoute
   '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
@@ -1045,6 +1108,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
   '/asyncapi': typeof AsyncapiRoute
   '/audio-editor': typeof AudioEditorRoute
@@ -1052,12 +1116,14 @@ export interface FileRoutesByTo {
   '/base64': typeof Base64Route
   '/batch-files': typeof BatchFilesRoute
   '/bill-split': typeof BillSplitRoute
+  '/binary-data': typeof BinaryDataRoute
   '/bmi': typeof BmiRoute
   '/browser-capabilities': typeof BrowserCapabilitiesRoute
   '/browser-compat': typeof BrowserCompatRoute
   '/bundle-inspector': typeof BundleInspectorRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/chrome-coverage': typeof ChromeCoverageRoute
   '/chrome-trace': typeof ChromeTraceRoute
   '/cidr': typeof CidrRoute
   '/cipher': typeof CipherRoute
@@ -1098,6 +1164,7 @@ export interface FileRoutesByTo {
   '/gushi-namer': typeof GushiNamerRoute
   '/har-analyzer': typeof HarAnalyzerRoute
   '/hash': typeof HashRoute
+  '/hcl-inspector': typeof HclInspectorRoute
   '/heap-snapshot': typeof HeapSnapshotRoute
   '/hex-inspector': typeof HexInspectorRoute
   '/hmac': typeof HmacRoute
@@ -1132,16 +1199,21 @@ export interface FileRoutesByTo {
   '/ocr': typeof OcrRoute
   '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
+  '/openpgp': typeof OpenpgpRoute
   '/otel-viewer': typeof OtelViewerRoute
   '/pace-calculator': typeof PaceCalculatorRoute
   '/parquet-viewer': typeof ParquetViewerRoute
   '/password': typeof PasswordRoute
+  '/pcap-viewer': typeof PcapViewerRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/pipeline': typeof PipelineRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
+  '/pprof': typeof PprofRoute
+  '/prometheus': typeof PrometheusRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
   '/random-picker': typeof RandomPickerRoute
+  '/react-profiler': typeof ReactProfilerRoute
   '/realtime-debugger': typeof RealtimeDebuggerRoute
   '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
@@ -1195,6 +1267,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
+  '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
   '/asyncapi': typeof AsyncapiRoute
   '/audio-editor': typeof AudioEditorRoute
@@ -1202,12 +1275,14 @@ export interface FileRoutesById {
   '/base64': typeof Base64Route
   '/batch-files': typeof BatchFilesRoute
   '/bill-split': typeof BillSplitRoute
+  '/binary-data': typeof BinaryDataRoute
   '/bmi': typeof BmiRoute
   '/browser-capabilities': typeof BrowserCapabilitiesRoute
   '/browser-compat': typeof BrowserCompatRoute
   '/bundle-inspector': typeof BundleInspectorRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/chrome-coverage': typeof ChromeCoverageRoute
   '/chrome-trace': typeof ChromeTraceRoute
   '/cidr': typeof CidrRoute
   '/cipher': typeof CipherRoute
@@ -1248,6 +1323,7 @@ export interface FileRoutesById {
   '/gushi-namer': typeof GushiNamerRoute
   '/har-analyzer': typeof HarAnalyzerRoute
   '/hash': typeof HashRoute
+  '/hcl-inspector': typeof HclInspectorRoute
   '/heap-snapshot': typeof HeapSnapshotRoute
   '/hex-inspector': typeof HexInspectorRoute
   '/hmac': typeof HmacRoute
@@ -1282,16 +1358,21 @@ export interface FileRoutesById {
   '/ocr': typeof OcrRoute
   '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
+  '/openpgp': typeof OpenpgpRoute
   '/otel-viewer': typeof OtelViewerRoute
   '/pace-calculator': typeof PaceCalculatorRoute
   '/parquet-viewer': typeof ParquetViewerRoute
   '/password': typeof PasswordRoute
+  '/pcap-viewer': typeof PcapViewerRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/pipeline': typeof PipelineRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
+  '/pprof': typeof PprofRoute
+  '/prometheus': typeof PrometheusRoute
   '/pwa-icons': typeof PwaIconsRoute
   '/qrcode': typeof QrcodeRoute
   '/random-picker': typeof RandomPickerRoute
+  '/react-profiler': typeof ReactProfilerRoute
   '/realtime-debugger': typeof RealtimeDebuggerRoute
   '/recipe-scale': typeof RecipeScaleRoute
   '/regex': typeof RegexRoute
@@ -1346,6 +1427,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/archive'
+    | '/arrow-viewer'
     | '/aspect-ratio'
     | '/asyncapi'
     | '/audio-editor'
@@ -1353,12 +1435,14 @@ export interface FileRouteTypes {
     | '/base64'
     | '/batch-files'
     | '/bill-split'
+    | '/binary-data'
     | '/bmi'
     | '/browser-capabilities'
     | '/browser-compat'
     | '/bundle-inspector'
     | '/cel'
     | '/certificate-tool'
+    | '/chrome-coverage'
     | '/chrome-trace'
     | '/cidr'
     | '/cipher'
@@ -1399,6 +1483,7 @@ export interface FileRouteTypes {
     | '/gushi-namer'
     | '/har-analyzer'
     | '/hash'
+    | '/hcl-inspector'
     | '/heap-snapshot'
     | '/hex-inspector'
     | '/hmac'
@@ -1433,16 +1518,21 @@ export interface FileRouteTypes {
     | '/ocr'
     | '/og-preview'
     | '/openapi'
+    | '/openpgp'
     | '/otel-viewer'
     | '/pace-calculator'
     | '/parquet-viewer'
     | '/password'
+    | '/pcap-viewer'
     | '/pdf-toolkit'
     | '/pipeline'
     | '/playwright-trace'
+    | '/pprof'
+    | '/prometheus'
     | '/pwa-icons'
     | '/qrcode'
     | '/random-picker'
+    | '/react-profiler'
     | '/realtime-debugger'
     | '/recipe-scale'
     | '/regex'
@@ -1495,6 +1585,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/archive'
+    | '/arrow-viewer'
     | '/aspect-ratio'
     | '/asyncapi'
     | '/audio-editor'
@@ -1502,12 +1593,14 @@ export interface FileRouteTypes {
     | '/base64'
     | '/batch-files'
     | '/bill-split'
+    | '/binary-data'
     | '/bmi'
     | '/browser-capabilities'
     | '/browser-compat'
     | '/bundle-inspector'
     | '/cel'
     | '/certificate-tool'
+    | '/chrome-coverage'
     | '/chrome-trace'
     | '/cidr'
     | '/cipher'
@@ -1548,6 +1641,7 @@ export interface FileRouteTypes {
     | '/gushi-namer'
     | '/har-analyzer'
     | '/hash'
+    | '/hcl-inspector'
     | '/heap-snapshot'
     | '/hex-inspector'
     | '/hmac'
@@ -1582,16 +1676,21 @@ export interface FileRouteTypes {
     | '/ocr'
     | '/og-preview'
     | '/openapi'
+    | '/openpgp'
     | '/otel-viewer'
     | '/pace-calculator'
     | '/parquet-viewer'
     | '/password'
+    | '/pcap-viewer'
     | '/pdf-toolkit'
     | '/pipeline'
     | '/playwright-trace'
+    | '/pprof'
+    | '/prometheus'
     | '/pwa-icons'
     | '/qrcode'
     | '/random-picker'
+    | '/react-profiler'
     | '/realtime-debugger'
     | '/recipe-scale'
     | '/regex'
@@ -1644,6 +1743,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/archive'
+    | '/arrow-viewer'
     | '/aspect-ratio'
     | '/asyncapi'
     | '/audio-editor'
@@ -1651,12 +1751,14 @@ export interface FileRouteTypes {
     | '/base64'
     | '/batch-files'
     | '/bill-split'
+    | '/binary-data'
     | '/bmi'
     | '/browser-capabilities'
     | '/browser-compat'
     | '/bundle-inspector'
     | '/cel'
     | '/certificate-tool'
+    | '/chrome-coverage'
     | '/chrome-trace'
     | '/cidr'
     | '/cipher'
@@ -1697,6 +1799,7 @@ export interface FileRouteTypes {
     | '/gushi-namer'
     | '/har-analyzer'
     | '/hash'
+    | '/hcl-inspector'
     | '/heap-snapshot'
     | '/hex-inspector'
     | '/hmac'
@@ -1731,16 +1834,21 @@ export interface FileRouteTypes {
     | '/ocr'
     | '/og-preview'
     | '/openapi'
+    | '/openpgp'
     | '/otel-viewer'
     | '/pace-calculator'
     | '/parquet-viewer'
     | '/password'
+    | '/pcap-viewer'
     | '/pdf-toolkit'
     | '/pipeline'
     | '/playwright-trace'
+    | '/pprof'
+    | '/prometheus'
     | '/pwa-icons'
     | '/qrcode'
     | '/random-picker'
+    | '/react-profiler'
     | '/realtime-debugger'
     | '/recipe-scale'
     | '/regex'
@@ -1794,6 +1902,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArchiveRoute: typeof ArchiveRoute
+  ArrowViewerRoute: typeof ArrowViewerRoute
   AspectRatioRoute: typeof AspectRatioRoute
   AsyncapiRoute: typeof AsyncapiRoute
   AudioEditorRoute: typeof AudioEditorRoute
@@ -1801,12 +1910,14 @@ export interface RootRouteChildren {
   Base64Route: typeof Base64Route
   BatchFilesRoute: typeof BatchFilesRoute
   BillSplitRoute: typeof BillSplitRoute
+  BinaryDataRoute: typeof BinaryDataRoute
   BmiRoute: typeof BmiRoute
   BrowserCapabilitiesRoute: typeof BrowserCapabilitiesRoute
   BrowserCompatRoute: typeof BrowserCompatRoute
   BundleInspectorRoute: typeof BundleInspectorRoute
   CelRoute: typeof CelRoute
   CertificateToolRoute: typeof CertificateToolRoute
+  ChromeCoverageRoute: typeof ChromeCoverageRoute
   ChromeTraceRoute: typeof ChromeTraceRoute
   CidrRoute: typeof CidrRoute
   CipherRoute: typeof CipherRoute
@@ -1847,6 +1958,7 @@ export interface RootRouteChildren {
   GushiNamerRoute: typeof GushiNamerRoute
   HarAnalyzerRoute: typeof HarAnalyzerRoute
   HashRoute: typeof HashRoute
+  HclInspectorRoute: typeof HclInspectorRoute
   HeapSnapshotRoute: typeof HeapSnapshotRoute
   HexInspectorRoute: typeof HexInspectorRoute
   HmacRoute: typeof HmacRoute
@@ -1881,16 +1993,21 @@ export interface RootRouteChildren {
   OcrRoute: typeof OcrRoute
   OgPreviewRoute: typeof OgPreviewRoute
   OpenapiRoute: typeof OpenapiRoute
+  OpenpgpRoute: typeof OpenpgpRoute
   OtelViewerRoute: typeof OtelViewerRoute
   PaceCalculatorRoute: typeof PaceCalculatorRoute
   ParquetViewerRoute: typeof ParquetViewerRoute
   PasswordRoute: typeof PasswordRoute
+  PcapViewerRoute: typeof PcapViewerRoute
   PdfToolkitRoute: typeof PdfToolkitRoute
   PipelineRoute: typeof PipelineRoute
   PlaywrightTraceRoute: typeof PlaywrightTraceRoute
+  PprofRoute: typeof PprofRoute
+  PrometheusRoute: typeof PrometheusRoute
   PwaIconsRoute: typeof PwaIconsRoute
   QrcodeRoute: typeof QrcodeRoute
   RandomPickerRoute: typeof RandomPickerRoute
+  ReactProfilerRoute: typeof ReactProfilerRoute
   RealtimeDebuggerRoute: typeof RealtimeDebuggerRoute
   RecipeScaleRoute: typeof RecipeScaleRoute
   RegexRoute: typeof RegexRoute
@@ -2279,6 +2396,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RealtimeDebuggerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/react-profiler': {
+      id: '/react-profiler'
+      path: '/react-profiler'
+      fullPath: '/react-profiler'
+      preLoaderRoute: typeof ReactProfilerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/random-picker': {
       id: '/random-picker'
       path: '/random-picker'
@@ -2300,6 +2424,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PwaIconsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prometheus': {
+      id: '/prometheus'
+      path: '/prometheus'
+      fullPath: '/prometheus'
+      preLoaderRoute: typeof PrometheusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pprof': {
+      id: '/pprof'
+      path: '/pprof'
+      fullPath: '/pprof'
+      preLoaderRoute: typeof PprofRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/playwright-trace': {
       id: '/playwright-trace'
       path: '/playwright-trace'
@@ -2319,6 +2457,13 @@ declare module '@tanstack/react-router' {
       path: '/pdf-toolkit'
       fullPath: '/pdf-toolkit'
       preLoaderRoute: typeof PdfToolkitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pcap-viewer': {
+      id: '/pcap-viewer'
+      path: '/pcap-viewer'
+      fullPath: '/pcap-viewer'
+      preLoaderRoute: typeof PcapViewerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/password': {
@@ -2347,6 +2492,13 @@ declare module '@tanstack/react-router' {
       path: '/otel-viewer'
       fullPath: '/otel-viewer'
       preLoaderRoute: typeof OtelViewerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/openpgp': {
+      id: '/openpgp'
+      path: '/openpgp'
+      fullPath: '/openpgp'
+      preLoaderRoute: typeof OpenpgpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/openapi': {
@@ -2585,6 +2737,13 @@ declare module '@tanstack/react-router' {
       path: '/heap-snapshot'
       fullPath: '/heap-snapshot'
       preLoaderRoute: typeof HeapSnapshotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hcl-inspector': {
+      id: '/hcl-inspector'
+      path: '/hcl-inspector'
+      fullPath: '/hcl-inspector'
+      preLoaderRoute: typeof HclInspectorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hash': {
@@ -2867,6 +3026,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChromeTraceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chrome-coverage': {
+      id: '/chrome-coverage'
+      path: '/chrome-coverage'
+      fullPath: '/chrome-coverage'
+      preLoaderRoute: typeof ChromeCoverageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/certificate-tool': {
       id: '/certificate-tool'
       path: '/certificate-tool'
@@ -2907,6 +3073,13 @@ declare module '@tanstack/react-router' {
       path: '/bmi'
       fullPath: '/bmi'
       preLoaderRoute: typeof BmiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/binary-data': {
+      id: '/binary-data'
+      path: '/binary-data'
+      fullPath: '/binary-data'
+      preLoaderRoute: typeof BinaryDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bill-split': {
@@ -2958,6 +3131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AspectRatioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arrow-viewer': {
+      id: '/arrow-viewer'
+      path: '/arrow-viewer'
+      fullPath: '/arrow-viewer'
+      preLoaderRoute: typeof ArrowViewerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/archive': {
       id: '/archive'
       path: '/archive'
@@ -2978,6 +3158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArchiveRoute: ArchiveRoute,
+  ArrowViewerRoute: ArrowViewerRoute,
   AspectRatioRoute: AspectRatioRoute,
   AsyncapiRoute: AsyncapiRoute,
   AudioEditorRoute: AudioEditorRoute,
@@ -2985,12 +3166,14 @@ const rootRouteChildren: RootRouteChildren = {
   Base64Route: Base64Route,
   BatchFilesRoute: BatchFilesRoute,
   BillSplitRoute: BillSplitRoute,
+  BinaryDataRoute: BinaryDataRoute,
   BmiRoute: BmiRoute,
   BrowserCapabilitiesRoute: BrowserCapabilitiesRoute,
   BrowserCompatRoute: BrowserCompatRoute,
   BundleInspectorRoute: BundleInspectorRoute,
   CelRoute: CelRoute,
   CertificateToolRoute: CertificateToolRoute,
+  ChromeCoverageRoute: ChromeCoverageRoute,
   ChromeTraceRoute: ChromeTraceRoute,
   CidrRoute: CidrRoute,
   CipherRoute: CipherRoute,
@@ -3031,6 +3214,7 @@ const rootRouteChildren: RootRouteChildren = {
   GushiNamerRoute: GushiNamerRoute,
   HarAnalyzerRoute: HarAnalyzerRoute,
   HashRoute: HashRoute,
+  HclInspectorRoute: HclInspectorRoute,
   HeapSnapshotRoute: HeapSnapshotRoute,
   HexInspectorRoute: HexInspectorRoute,
   HmacRoute: HmacRoute,
@@ -3065,16 +3249,21 @@ const rootRouteChildren: RootRouteChildren = {
   OcrRoute: OcrRoute,
   OgPreviewRoute: OgPreviewRoute,
   OpenapiRoute: OpenapiRoute,
+  OpenpgpRoute: OpenpgpRoute,
   OtelViewerRoute: OtelViewerRoute,
   PaceCalculatorRoute: PaceCalculatorRoute,
   ParquetViewerRoute: ParquetViewerRoute,
   PasswordRoute: PasswordRoute,
+  PcapViewerRoute: PcapViewerRoute,
   PdfToolkitRoute: PdfToolkitRoute,
   PipelineRoute: PipelineRoute,
   PlaywrightTraceRoute: PlaywrightTraceRoute,
+  PprofRoute: PprofRoute,
+  PrometheusRoute: PrometheusRoute,
   PwaIconsRoute: PwaIconsRoute,
   QrcodeRoute: QrcodeRoute,
   RandomPickerRoute: RandomPickerRoute,
+  ReactProfilerRoute: ReactProfilerRoute,
   RealtimeDebuggerRoute: RealtimeDebuggerRoute,
   RecipeScaleRoute: RecipeScaleRoute,
   RegexRoute: RegexRoute,

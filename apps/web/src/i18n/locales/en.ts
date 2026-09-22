@@ -1,3 +1,8 @@
+import { performanceImportEn } from '@/lib/performance-import-messages';
+import { communityNextEn } from './community-next';
+import { dataToolsEn } from '@/lib/data-tools-messages';
+import { browserInspectionEn } from './browser-inspection';
+import { SECURITY_EN } from '@/components/security-text';
 import { communityProtocolsEn } from './community-protocols';
 import { communitySchemaEn } from './community-schema';
 import { communityPerformanceEn } from './community-performance';
@@ -19,6 +24,11 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...performanceImportEn,
+  communityNext: communityNextEn,
+  dataTools: dataToolsEn,
+  browserInspection: browserInspectionEn,
+  securityWorkbench: SECURITY_EN,
   ...communityProtocolsEn,
   ...communitySchemaEn,
   ...communityPerformanceEn,
