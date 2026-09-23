@@ -1,3 +1,4 @@
+import { MediaAudio } from '@/components/media-audio';
 import { FileDropzone } from '@/components/file-dropzone';
 import { MediaResult } from '@/components/media-result';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,7 @@ export const Route = createFileRoute('/audio-editor')({
   component: AudioEditorPage,
 });
 
-type AudioTab = 'trim' | 'merge';
+type AudioTab = 'trim' | 'merge' | 'repair';
 type Result = { url: string; fileName: string; mimeType: string; size: number };
 
 function AudioEditorPage() {
@@ -143,8 +144,12 @@ function AudioEditorPage() {
         <TabsList>
           <TabsTrigger value="trim">{t('audioEditor.trim')}</TabsTrigger>
           <TabsTrigger value="merge">{t('audioEditor.merge')}</TabsTrigger>
+          <TabsTrigger value="repair">
+            {t('batch3Media.audioRepair')}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
+      {tab === 'repair' && <MediaAudio />}
       {error && (
         <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
@@ -278,7 +283,7 @@ function AudioEditorPage() {
           value={progress}
         />
       )}
-      {result && <MediaResult {...result} />}
+      {tab !== 'repair' && result && <MediaResult {...result} />}
     </div>
   );
 }

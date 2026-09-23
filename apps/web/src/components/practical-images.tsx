@@ -1,3 +1,5 @@
+import { MediaPixels } from './media-pixels';
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -175,6 +177,28 @@ export function ImageVectorizer() {
   );
 }
 export function SpriteSheet() {
+  const { t } = useTranslation();
+  const [query, setQuery] = useQueryParams<{ studio: string }>({
+    studio: StringParam,
+  });
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-6 space-y-4">
+      <Tabs
+        value={query.studio ?? 'sheet'}
+        onValueChange={(studio) => setQuery({ studio })}
+      >
+        <TabsList>
+          <TabsTrigger value="sheet">
+            {t('studio20.tools.sprite-sheet.title')}
+          </TabsTrigger>
+          <TabsTrigger value="pixels">{t('batch3Media.pixels')}</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {query.studio === 'pixels' ? <MediaPixels /> : <SpriteSheetComposer />}
+    </div>
+  );
+}
+function SpriteSheetComposer() {
   const { t } = useTranslation(),
     images = useImageDocuments();
   const [query, setQuery] = useQueryParams<{

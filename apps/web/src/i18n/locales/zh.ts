@@ -1,3 +1,7 @@
+import { batch3AnalysisZh } from './batch3-analysis';
+import { batch3ProductivityZh } from './batch3-productivity';
+import { batch3MediaZh } from './batch3-media';
+import { batch3CalculatorsZh } from './batch3-calculators';
 import { practicalToolsZh } from './practical-tools';
 import { mathToolsZh } from './math-tools';
 import { personalToolsZh } from './personal-tools';
@@ -38,6 +42,10 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...batch3AnalysisZh,
+  ...batch3ProductivityZh,
+  ...batch3MediaZh,
+  ...batch3CalculatorsZh,
   ...practicalToolsZh,
   ...mathToolsZh,
   ...personalToolsZh,

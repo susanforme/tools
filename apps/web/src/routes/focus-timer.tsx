@@ -1,3 +1,4 @@
+import { IntervalTimer } from '@/components/interval-timer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -242,7 +243,9 @@ function FocusTimerPage() {
     rest: number;
     sound: string;
   }>(PARAMS);
-  const tab = ['countdown', 'pomodoro', 'stopwatch'].includes(query.tab ?? '')
+  const tab = ['countdown', 'pomodoro', 'stopwatch', 'interval'].includes(
+    query.tab ?? '',
+  )
     ? query.tab!
     : 'countdown';
   const minutes = boundedNumber(query.minutes, 5, 1 / 60, 1440);
@@ -416,7 +419,7 @@ function FocusTimerPage() {
         </Button>
       </div>
       <Tabs value={tab} onValueChange={(value) => setQuery({ tab: value })}>
-        <TabsList>
+        <TabsList className="h-auto flex-wrap">
           <TabsTrigger value="countdown">
             {t('focusTimer.countdown')}
           </TabsTrigger>
@@ -424,6 +427,7 @@ function FocusTimerPage() {
           <TabsTrigger value="stopwatch">
             {t('focusTimer.stopwatch')}
           </TabsTrigger>
+          <TabsTrigger value="interval">{t('batch3Calc.interval')}</TabsTrigger>
         </TabsList>
         <TabsContent
           value="countdown"
@@ -556,6 +560,13 @@ function FocusTimerPage() {
           className="data-[state=inactive]:hidden"
         >
           <Stopwatch />
+        </TabsContent>
+        <TabsContent
+          value="interval"
+          forceMount
+          className="data-[state=inactive]:hidden"
+        >
+          <IntervalTimer onStart={prepareSound} onComplete={complete} />
         </TabsContent>
       </Tabs>
       <p role="status" className="text-sm text-primary">

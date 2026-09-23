@@ -1,7 +1,10 @@
+import { MediaFont } from '@/components/media-font';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   NumberParam,
   StringParam,
   useQueryParams,
+  useQueryParam,
   withDefault,
 } from '@/hooks/useQueryParams';
 import {
@@ -46,6 +49,23 @@ const FONT_QUERY_PARAMS = {
 };
 
 function FontPage() {
+  const { t } = useTranslation();
+  const [tab, setTab] = useQueryParam<string>('tab', StringParam, 'inspect');
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-6 space-y-4">
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList>
+          <TabsTrigger value="inspect">{t('fontTool.title')}</TabsTrigger>
+          <TabsTrigger value="layout">
+            {t('batch3Media.typesetting')}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === 'layout' ? <MediaFont /> : <FontInspector />}
+    </div>
+  );
+}
+function FontInspector() {
   const { t } = useTranslation();
   const workerRef = useRef<Worker | null>(null);
   const fontFaceRef = useRef<FontFace | null>(null);

@@ -1,3 +1,4 @@
+import { type ModelMeasurement } from '@/lib/media-model';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { parseModelDocument } from '@/lib/gltf-inspector';
@@ -18,12 +19,16 @@ export default function GltfScene({
   wireframe,
   play,
   onStats,
+  scale = 1,
+  onMeasure,
 }: {
   files: File[];
   main: string;
   wireframe: boolean;
   play: boolean;
   onStats: (stats: ModelStats | null) => void;
+  scale?: number;
+  onMeasure?: (measurement: ModelMeasurement | null) => void;
 }) {
   const { t } = useTranslation();
   const host = useRef<HTMLDivElement>(null);
@@ -35,17 +40,22 @@ export default function GltfScene({
   useEffect(() => {
     let disposed = false;
     let cleanup = () => {};
+    let measureWorker: Worker | null = null;
+    let measureTimeout: ReturnType<typeof setTimeout> | null = null;
     setError(null);
     onStats(null);
+    onMeasure?.(null);
     async function init() {
       const objectUrls: string[] = [];
       try {
         const file = files.find((f) => f.name === main);
         if (!file) throw new Error('INVALID');
-        const doc = parseModelDocument(
-          await file.arrayBuffer(),
-          /\.glb$/i.test(main),
-        );
+        const buffer = await file.arrayBuffer();
+        const doc = /\.(glb|gltf)$/i.test(main)
+          ? parseModelDocument(buffer, /\.glb$/i.test(main))
+          : null;
+        if (!Number.isFinite(scale) || scale <= 0 || scale > 1000000)
+          throw new Error('INVALID');
         const [THREE, { GLTFLoader }, { OrbitControls }] = await Promise.all([
           import('three'),
           import('three/addons/loaders/GLTFLoader.js'),
@@ -66,7 +76,37 @@ export default function GltfScene({
           objectUrls.push(blob);
           return blob;
         });
-        const gltf = await new GLTFLoader(manager).parseAsync(doc.data, '');
+        let gltf: {
+          scene: Object3D;
+          animations: import('three').AnimationClip[];
+        };
+        if (doc) gltf = await new GLTFLoader(manager).parseAsync(doc.data, '');
+        else if (/\.stl$/i.test(main)) {
+          const { STLLoader } =
+            await import('three/addons/loaders/STLLoader.js');
+          const geometry = new STLLoader().parse(buffer);
+          gltf = {
+            scene: new THREE.Mesh(
+              geometry,
+              new THREE.MeshStandardMaterial({
+                color: 0x8b9cf5,
+                side: THREE.DoubleSide,
+              }),
+            ),
+            animations: [],
+          };
+        } else if (/\.obj$/i.test(main)) {
+          const { OBJLoader } =
+            await import('three/addons/loaders/OBJLoader.js');
+          gltf = {
+            scene: new OBJLoader(manager).parse(
+              new TextDecoder().decode(buffer),
+            ),
+            animations: [],
+          };
+        } else throw new Error('UNSUPPORTED');
+        gltf.scene.scale.multiplyScalar(scale);
+        gltf.scene.updateMatrixWorld(true);
         const textures = new Set<Texture>();
         const materials = new Set<Material>();
         const stats: ModelStats = {
@@ -198,6 +238,53 @@ export default function GltfScene({
           renderer.forceContextLoss();
           renderer.domElement.remove();
         };
+        // 拓扑检查独立运行，避免阻塞模型旋转。
+        if (stats.triangles <= 300000) {
+          const triangles: number[] = [];
+          const vertex = new THREE.Vector3();
+          gltf.scene.traverse((object) => {
+            const mesh = object as Mesh;
+            if (!mesh.isMesh) return;
+            const positions = mesh.geometry.getAttribute('position');
+            if (!positions) return;
+            const index = mesh.geometry.index;
+            for (let i = 0; i < (index?.count ?? positions.count); i++) {
+              vertex
+                .fromBufferAttribute(positions, index ? index.getX(i) : i)
+                .applyMatrix4(mesh.matrixWorld);
+              triangles.push(vertex.x, vertex.y, vertex.z);
+            }
+          });
+          if (triangles.length) {
+            measureWorker = new Worker(
+              new URL('../workers/media-model.worker.ts', import.meta.url),
+              { type: 'module' },
+            );
+            measureWorker.onmessage = (
+              event: MessageEvent<{
+                result?: ModelMeasurement;
+                error?: string;
+              }>,
+            ) => {
+              if (!disposed) {
+                if (event.data.result) onMeasure?.(event.data.result);
+                else setError(event.data.error ?? 'INVALID');
+              }
+              measureWorker?.terminate();
+              if (measureTimeout) clearTimeout(measureTimeout);
+            };
+            measureWorker.onerror = () => {
+              if (!disposed) setError('INVALID');
+              measureWorker?.terminate();
+              if (measureTimeout) clearTimeout(measureTimeout);
+            };
+            measureTimeout = setTimeout(() => {
+              measureWorker?.terminate();
+              if (!disposed) setError('LIMIT');
+            }, 30000);
+            measureWorker.postMessage(triangles);
+          }
+        }
         stats.materials = materials.size;
         stats.textures = textures.size;
         onStats(stats);
@@ -211,8 +298,10 @@ export default function GltfScene({
     return () => {
       disposed = true;
       cleanup();
+      measureWorker?.terminate();
+      if (measureTimeout) clearTimeout(measureTimeout);
     };
-  }, [files, main, onStats]);
+  }, [files, main, onStats, scale, onMeasure]);
   const message = error?.startsWith('MISSING:')
     ? t('communityVisual.model.missing', { name: error.slice(8) })
     : error === 'WEBGL'

@@ -1,86 +1,687 @@
 import { escapeHtml } from './practical-outline';
 
 export const PRODUCTIVITY_LIMIT = 2000;
-function record(value: unknown): value is Record<string, unknown> { return typeof value === 'object' && value !== null && !Array.isArray(value); }
-function short(value: unknown, max = 200): value is string { return typeof value === 'string' && value.length <= max; }
-export function validDay(value: string): boolean { return /^\d{4}-\d{2}-\d{2}$/.test(value) && value >= '1900-01-01' && value <= '2200-12-31' && new Date(value + 'T00:00:00Z').toISOString().slice(0,10) === value; }
-export type ProjectTask = { id: string; name: string; start: string; end: string; status: 'todo'|'doing'|'done'; milestone: boolean; dependencies: string[] };
+function record(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+function short(value: unknown, max = 200): value is string {
+  return typeof value === 'string' && value.length <= max;
+}
+// 备份读取上限为 2 MB，预留信封与元数据空间。
+function backupFits(value: unknown): boolean {
+  try {
+    return (
+      new TextEncoder().encode(JSON.stringify(value)).byteLength <= 1_900_000
+    );
+  } catch {
+    return false;
+  }
+}
+export function validDay(value: string): boolean {
+  return (
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    value >= '1900-01-01' &&
+    value <= '2200-12-31' &&
+    Number.isFinite(Date.parse(value + 'T00:00:00Z')) &&
+    new Date(value + 'T00:00:00Z').toISOString().slice(0, 10) === value
+  );
+}
+export type ProjectTask = {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  status: 'todo' | 'doing' | 'done';
+  milestone: boolean;
+  dependencies: string[];
+};
 export function validateProject(value: unknown): value is ProjectTask[] {
-  if (!Array.isArray(value) || value.length > 200 || !value.every((x: unknown) => record(x) && short(x.id) && !!x.id && short(x.name) && !!x.name.trim() && short(x.start) && validDay(x.start) && short(x.end) && validDay(x.end) && x.start <= x.end && ['todo','doing','done'].includes(String(x.status)) && typeof x.milestone === 'boolean' && (!x.milestone || x.start === x.end) && Array.isArray(x.dependencies) && x.dependencies.length <= 200 && x.dependencies.every((s:unknown) => short(s)))) return false;
+  if (
+    !Array.isArray(value) ||
+    !backupFits(value) ||
+    value.length > 200 ||
+    !value.every(
+      (x: unknown) =>
+        record(x) &&
+        short(x.id) &&
+        !!x.id &&
+        short(x.name) &&
+        !!x.name.trim() &&
+        short(x.start) &&
+        validDay(x.start) &&
+        short(x.end) &&
+        validDay(x.end) &&
+        x.start <= x.end &&
+        ['todo', 'doing', 'done'].includes(String(x.status)) &&
+        typeof x.milestone === 'boolean' &&
+        (!x.milestone || x.start === x.end) &&
+        Array.isArray(x.dependencies) &&
+        x.dependencies.length <= 200 &&
+        x.dependencies.every((s: unknown) => short(s)),
+    )
+  )
+    return false;
   const tasks = value as ProjectTask[];
-  const map = new Map(tasks.map(x => [x.id,x]));
+  const map = new Map(tasks.map((x) => [x.id, x]));
   if (map.size !== tasks.length) return false;
-  const visiting = new Set<string>(), done = new Set<string>();
-  function visit(id:string):boolean { if(visiting.has(id)) return false; if(done.has(id)) return true; const task=map.get(id); if(!task) return false; visiting.add(id); for(const dep of task.dependencies) if(!visit(dep)) return false; visiting.delete(id); done.add(id); return true; }
-  if (!tasks.every(task => visit(task.id))) return false;
-  return !tasks.length || Math.max(...tasks.map(x=>Date.parse(x.end))) - Math.min(...tasks.map(x=>Date.parse(x.start))) <= 3660*86400000;
+  const visiting = new Set<string>(),
+    done = new Set<string>();
+  function visit(id: string): boolean {
+    if (visiting.has(id)) return false;
+    if (done.has(id)) return true;
+    const task = map.get(id);
+    if (!task) return false;
+    visiting.add(id);
+    for (const dep of task.dependencies) if (!visit(dep)) return false;
+    visiting.delete(id);
+    done.add(id);
+    return true;
+  }
+  if (!tasks.every((task) => visit(task.id))) return false;
+  return (
+    !tasks.length ||
+    Math.max(...tasks.map((x) => Date.parse(x.end))) -
+      Math.min(...tasks.map((x) => Date.parse(x.start))) <=
+      3660 * 86400000
+  );
 }
-export const FIELD_TYPES = ['text','textarea','email','number','date','checkbox','dropdown'] as const;
-export type FormField = { id:string; label:string; type:typeof FIELD_TYPES[number]; required:boolean; options:string[]; condition:string; equals:string };
-export type FormDesign = { title:string; fields:FormField[] };
-export function validateForm(value:unknown): value is FormDesign {
-  if(!record(value) || !short(value.title) || !Array.isArray(value.fields) || value.fields.length>50) return false;
+export const FIELD_TYPES = [
+  'text',
+  'textarea',
+  'email',
+  'number',
+  'date',
+  'checkbox',
+  'dropdown',
+] as const;
+export type FormField = {
+  id: string;
+  label: string;
+  type: (typeof FIELD_TYPES)[number];
+  required: boolean;
+  options: string[];
+  condition: string;
+  equals: string;
+};
+export type FormDesign = { title: string; fields: FormField[] };
+export function validateForm(value: unknown): value is FormDesign {
+  if (
+    !record(value) ||
+    !backupFits(value) ||
+    !short(value.title) ||
+    !Array.isArray(value.fields) ||
+    value.fields.length > 50
+  )
+    return false;
   const seen = new Set<string>();
-  return value.fields.every((x:unknown)=> { if(!record(x)||!short(x.id)||!/^[a-zA-Z0-9_-]{1,80}$/.test(x.id)||seen.has(x.id)||!short(x.label)||!x.label.trim()||!FIELD_TYPES.includes(x.type as FormField['type'])||typeof x.required!=='boolean'||!Array.isArray(x.options)||x.options.length>50||!x.options.every((o:unknown)=>short(o)&&!!o.trim())||new Set(x.options).size!==x.options.length||!short(x.condition)||!short(x.equals)|| (x.condition && !seen.has(x.condition)) || (x.type==='dropdown'&&!x.options.length)) return false; seen.add(x.id); return true; });
+  return value.fields.every((x: unknown) => {
+    if (
+      !record(x) ||
+      !short(x.id) ||
+      !/^[a-zA-Z0-9_-]{1,80}$/.test(x.id) ||
+      ['__proto__', 'constructor', 'prototype'].includes(x.id) ||
+      seen.has(x.id) ||
+      !short(x.label) ||
+      !x.label.trim() ||
+      !FIELD_TYPES.includes(x.type as FormField['type']) ||
+      typeof x.required !== 'boolean' ||
+      !Array.isArray(x.options) ||
+      x.options.length > 50 ||
+      !x.options.every((o: unknown) => short(o) && !!o.trim()) ||
+      new Set(x.options).size !== x.options.length ||
+      !short(x.condition) ||
+      !short(x.equals) ||
+      (x.condition && !seen.has(x.condition)) ||
+      (x.type === 'dropdown' && !x.options.length)
+    )
+      return false;
+    seen.add(x.id);
+    return true;
+  });
 }
-export type FormAnswers = Record<string,string>;
-export function visibleFields(fields:FormField[], answers:FormAnswers):FormField[] { const visible = new Set<string>(); return fields.filter(field=>{ const show=!field.condition || (visible.has(field.condition)&&(answers[field.condition]??'')===field.equals); if(show)visible.add(field.id); return show; }); }
-export function formAnswers(design:FormDesign, answers:FormAnswers):Array<{id:string;label:string;value:string}> {
-  if(!validateForm(design)) throw new Error('invalid');
-  return visibleFields(design.fields,answers).map(field=>{const value=answers[field.id]??''; if(value.length>10000 || (field.required && (!value.trim() || (field.type==='checkbox'&&value!=='true'))) || (value && field.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) || (value&&field.type==='number'&&!Number.isFinite(Number(value))) || (value&&field.type==='date'&&!validDay(value)) || (value&&field.type==='dropdown'&&!field.options.includes(value)) || (value&&field.type==='checkbox'&&!['true','false'].includes(value))) throw new Error('requiredError'); return {id:field.id,label:field.label,value}; });
+export type FormAnswers = Record<string, string>;
+export function visibleFields(
+  fields: FormField[],
+  answers: FormAnswers,
+): FormField[] {
+  const visible = new Set<string>();
+  return fields.filter((field) => {
+    const show =
+      !field.condition ||
+      (visible.has(field.condition) &&
+        (answers[field.condition] ??
+          (fields.find((item) => item.id === field.condition)?.type ===
+          'checkbox'
+            ? 'false'
+            : '')) === field.equals);
+    if (show) visible.add(field.id);
+    return show;
+  });
 }
-export function exportFormHtml(design:FormDesign, submitLabel:string, invalidLabel:string, lang:string):string {
-  if(!validateForm(design))throw new Error('invalid');
-  const serialized=JSON.stringify(design).replaceAll('<','\\u003c').replaceAll('\u2028','\\u2028').replaceAll('\u2029','\\u2029');
+export function formAnswers(
+  design: FormDesign,
+  answers: FormAnswers,
+): Array<{ id: string; label: string; value: string }> {
+  if (!validateForm(design)) throw new Error('invalid');
+  return visibleFields(design.fields, answers).map((field) => {
+    const value =
+      answers[field.id] ?? (field.type === 'checkbox' ? 'false' : '');
+    if (
+      value.length > 10000 ||
+      (field.required &&
+        (!value.trim() || (field.type === 'checkbox' && value !== 'true'))) ||
+      (value &&
+        field.type === 'email' &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) ||
+      (value && field.type === 'number' && !Number.isFinite(Number(value))) ||
+      (value && field.type === 'date' && !validDay(value)) ||
+      (value && field.type === 'dropdown' && !field.options.includes(value)) ||
+      (value && field.type === 'checkbox' && !['true', 'false'].includes(value))
+    )
+      throw new Error('requiredError');
+    return { id: field.id, label: field.label, value };
+  });
+}
+export function exportFormHtml(
+  design: FormDesign,
+  submitLabel: string,
+  invalidLabel: string,
+  lang: string,
+): string {
+  if (!validateForm(design)) throw new Error('invalid');
+  const serialized = JSON.stringify(design)
+    .replaceAll('<', '\\u003c')
+    .replaceAll('\u2028', '\\u2028')
+    .replaceAll('\u2029', '\\u2029');
   // 导出文件只含固定脚本；所有用户值用 textContent / value 写入。
-  return `<!doctype html><html lang="${lang==='zh'?'zh-CN':'en'}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; form-action 'none'; connect-src 'none'"><title>${escapeHtml(design.title)}</title><style>body{font:16px system-ui;max-width:720px;margin:40px auto;padding:16px}label{display:block;margin:20px 0}input,textarea,select,button{font:inherit;box-sizing:border-box;padding:10px;max-width:100%}input:not([type=checkbox]),textarea,select{display:block;width:100%;margin-top:8px}button{cursor:pointer}[hidden]{display:none!important}#error{color:#b91c1c}</style><h1>${escapeHtml(design.title)}</h1><form id="form"><button type="submit">${escapeHtml(submitLabel)}</button></form><p id="error" role="alert"></p><script>
+  return `<!doctype html><html lang="${lang === 'zh' ? 'zh-CN' : 'en'}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; form-action 'none'; connect-src 'none'"><title>${escapeHtml(design.title)}</title><style>body{font:16px system-ui;max-width:720px;margin:40px auto;padding:16px}label{display:block;margin:20px 0}input,textarea,select,button{font:inherit;box-sizing:border-box;padding:10px;max-width:100%}input:not([type=checkbox]),textarea,select{display:block;width:100%;margin-top:8px}button{cursor:pointer}[hidden]{display:none!important}#error{color:#b91c1c}</style><h1>${escapeHtml(design.title)}</h1><form id="form"><button type="submit">${escapeHtml(submitLabel)}</button></form><p id="error" role="alert"></p><script>
 const design=${serialized};const form=document.getElementById('form');const controls=new Map();const labels=new Map();
 for(const f of design.fields){const label=document.createElement('label');label.textContent=f.label+(f.required?' *':'');const input=document.createElement(f.type==='textarea'?'textarea':f.type==='dropdown'?'select':'input');if(f.type==='dropdown'){for(const v of ['',...f.options]){const o=document.createElement('option');o.value=v;o.textContent=v;input.append(o)}}else if(f.type!=='textarea'){input.type=f.type}input.name=f.id;input.required=f.required;if(f.type==='number')input.step='any';if(f.type==='date'){input.min='1900-01-01';input.max='2200-12-31'}if('maxLength'in input)input.maxLength=10000;label.append(input);form.insertBefore(label,form.lastElementChild);controls.set(f.id,input);labels.set(f.id,label)}
-function value(id){const c=controls.get(id);return c.type==='checkbox'?String(c.checked):c.value}function update(){const visible=new Set();for(const f of design.fields){const show=!f.condition||(visible.has(f.condition)&&value(f.condition)===f.equals);labels.get(f.id).hidden=!show;controls.get(f.id).disabled=!show;if(show)visible.add(f.id)}}form.addEventListener('input',update);form.addEventListener('change',update);update();form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const answers=design.fields.filter(f=>!controls.get(f.id).disabled).map(f=>({id:f.id,label:f.label,value:value(f.id)}));if(answers.some(a=>{const f=design.fields.find(f=>f.id===a.id);return f.required&&!a.value.trim()||f.type==='email'&&a.value&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(a.value)})){document.getElementById('error').textContent=${JSON.stringify(invalidLabel).replaceAll('<','\\u003c')};return}document.getElementById('error').textContent='';const blob=new Blob([JSON.stringify({title:design.title,answers},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='answers.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+function value(id){const c=controls.get(id);return c.type==='checkbox'?String(c.checked):c.value}function update(){const visible=new Set();for(const f of design.fields){const show=!f.condition||(visible.has(f.condition)&&value(f.condition)===f.equals);labels.get(f.id).hidden=!show;controls.get(f.id).disabled=!show;if(show)visible.add(f.id)}}form.addEventListener('input',update);form.addEventListener('change',update);update();form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const answers=design.fields.filter(f=>!controls.get(f.id).disabled).map(f=>({id:f.id,label:f.label,value:value(f.id)}));if(answers.some(a=>{const f=design.fields.find(f=>f.id===a.id);return f.required&&!a.value.trim()||f.type==='email'&&a.value&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(a.value)})){document.getElementById('error').textContent=${JSON.stringify(invalidLabel).replaceAll('<', '\\u003c')};return}document.getElementById('error').textContent='';const blob=new Blob([JSON.stringify({title:design.title,answers},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='answers.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
 </script></html>`;
 }
-export type DocumentLine = {id:string;name:string;quantity:string;price:string;unit:string};
-export type DocumentData = {number:string;date:string;issuer:string;recipient:string;note:string;lines:DocumentLine[]};
-export function decimalCents(value:string):number { if(!/^\d{1,7}(?:\.\d{1,2})?$/.test(value))throw new Error('invalid'); const [whole,fraction='']=value.split('.');return Number(whole)*100+Number(fraction.padEnd(2,'0')); }
-export function documentTotals(lines:DocumentLine[],tax:string):{lines:number[];subtotal:number;tax:number;total:number} { const rate=decimalCents(tax); if(rate>10000 || lines.length>100)throw new Error('invalid'); const amounts=lines.map(line=>Math.round(decimalCents(line.quantity)*decimalCents(line.price)/100));const subtotal=amounts.reduce((sum,n)=>sum+n,0);const taxAmount=Math.round(subtotal*rate/10000); if(!Number.isSafeInteger(subtotal)||!Number.isSafeInteger(subtotal+taxAmount))throw new Error('invalid');return {lines:amounts,subtotal,tax:taxAmount,total:subtotal+taxAmount}; }
-export function validateDocument(value:unknown):value is DocumentData { return record(value)&&short(value.number)&&short(value.date)&&validDay(value.date)&&short(value.issuer,2000)&&short(value.recipient,2000)&&short(value.note,3000)&&Array.isArray(value.lines)&&value.lines.length<=100&&new Set(value.lines.map((x:unknown)=>record(x)?x.id:'')).size===value.lines.length&&value.lines.every((x:unknown)=>record(x)&&short(x.id)&&short(x.name,300)&&short(x.unit,30)&&short(x.quantity,20)&&short(x.price,20)); }
+export type DocumentLine = {
+  id: string;
+  name: string;
+  quantity: string;
+  price: string;
+  unit: string;
+};
+export type DocumentData = {
+  number: string;
+  date: string;
+  issuer: string;
+  recipient: string;
+  note: string;
+  lines: DocumentLine[];
+};
+export function decimalCents(value: string): number {
+  if (!/^\d{1,7}(?:\.\d{1,2})?$/.test(value)) throw new Error('invalid');
+  const [whole, fraction = ''] = value.split('.');
+  return Number(whole) * 100 + Number(fraction.padEnd(2, '0'));
+}
+export function documentTotals(
+  lines: DocumentLine[],
+  tax: string,
+): { lines: number[]; subtotal: number; tax: number; total: number } {
+  const rate = decimalCents(tax);
+  if (rate > 10000 || lines.length > 100) throw new Error('invalid');
+  const amounts = lines.map(
+    (line) =>
+      (BigInt(decimalCents(line.quantity)) * BigInt(decimalCents(line.price)) +
+        50n) /
+      100n,
+  );
+  const subtotal = amounts.reduce((sum, n) => sum + n, 0n);
+  const taxAmount = (subtotal * BigInt(rate) + 5000n) / 10000n;
+  if (subtotal + taxAmount > BigInt(Number.MAX_SAFE_INTEGER))
+    throw new Error('invalid');
+  return {
+    lines: amounts.map(Number),
+    subtotal: Number(subtotal),
+    tax: Number(taxAmount),
+    total: Number(subtotal + taxAmount),
+  };
+}
+export function validateDocument(value: unknown): value is DocumentData {
+  return (
+    record(value) &&
+    backupFits(value) &&
+    short(value.number) &&
+    short(value.date) &&
+    validDay(value.date) &&
+    short(value.issuer, 2000) &&
+    short(value.recipient, 2000) &&
+    short(value.note, 3000) &&
+    Array.isArray(value.lines) &&
+    value.lines.length <= 100 &&
+    new Set(value.lines.map((x: unknown) => (record(x) ? x.id : ''))).size ===
+      value.lines.length &&
+    value.lines.every(
+      (x: unknown) =>
+        record(x) &&
+        short(x.id) &&
+        short(x.name, 300) &&
+        short(x.unit, 30) &&
+        short(x.quantity, 20) &&
+        short(x.price, 20),
+    )
+  );
+}
 
-export type Contact = {id:string;name:string;email:string;phone:string;company:string;notes:string};
-export const CONTACT_FIELDS = ['name','email','phone','company','notes'] as const;
-export function validateContacts(value:unknown):value is Contact[] {return Array.isArray(value)&&value.length<=PRODUCTIVITY_LIMIT&&new Set(value.map((x:unknown)=>record(x)?x.id:'')).size===value.length&&value.every((x:unknown)=>record(x)&&short(x.id)&&!!x.id&&CONTACT_FIELDS.every(key=>short(x[key],10000)));}
-const vcEscape=(value:string)=>value.replaceAll('\\','\\\\').replaceAll('\r\n','\n').replaceAll('\r','\n').replaceAll('\n','\\n').replaceAll(';','\\;').replaceAll(',','\\,');
-const vcUnescape=(value:string)=>value.replace(/\\([nN,;\\])/g,(_,c:string)=>c.toLowerCase()==='n'?'\n':c);
-export function parseVcard(text:string):Contact[] {
- if(text.length>2_000_000)throw new Error('invalidFile');
- const lines=text.replace(/^\uFEFF/,'').replace(/\r\n[ \t]|\n[ \t]/g,'').split(/\r?\n/);const contacts:Contact[]=[];let current:Contact|null=null;let version=false;
- for(const line of lines){if(!line.trim())continue;if(line.toUpperCase()==='BEGIN:VCARD'){if(current)throw new Error('invalidFile');current={id:crypto.randomUUID(),name:'',email:'',phone:'',company:'',notes:''};version=false;continue}if(line.toUpperCase()==='END:VCARD'){if(!current||!version)throw new Error('invalidFile');contacts.push(current);current=null;continue}if(!current)throw new Error('invalidFile');const colon=line.indexOf(':');if(colon<0)throw new Error('invalidFile');const head=line.slice(0,colon).toUpperCase();const key=head.split(';')[0].split('.').pop();const value=vcUnescape(line.slice(colon+1));if(/ENCODING=|CHARSET=|VALUE=BINARY|VALUE=URI/.test(head)&&key!=='URL')throw new Error('unsupportedVcard');if(key==='VERSION'){if(!['3.0','4.0'].includes(value))throw new Error('unsupportedVcard');version=true;}else {const field=key==='FN'?'name':key==='EMAIL'?'email':key==='TEL'?'phone':key==='ORG'?'company':key==='NOTE'?'notes':null;if(field)current[field]=[current[field],value.replace(/^tel:/i,key==='TEL'?'':'tel:')].filter(Boolean).join('\n');else if(['PHOTO','LOGO','SOUND','KEY'].includes(key??''))throw new Error('unsupportedVcard');}}
- if(current||!contacts.length||!validateContacts(contacts))throw new Error('invalidFile');return contacts;
+export type Contact = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  notes: string;
+};
+export const CONTACT_FIELDS = [
+  'name',
+  'email',
+  'phone',
+  'company',
+  'notes',
+] as const;
+export function validateContacts(value: unknown): value is Contact[] {
+  return (
+    Array.isArray(value) &&
+    backupFits(value) &&
+    value.length <= PRODUCTIVITY_LIMIT &&
+    new Set(value.map((x: unknown) => (record(x) ? x.id : ''))).size ===
+      value.length &&
+    value.every(
+      (x: unknown) =>
+        record(x) &&
+        short(x.id) &&
+        !!x.id &&
+        CONTACT_FIELDS.every((key) => short(x[key], 10000)),
+    )
+  );
 }
-export function exportVcard(contacts:Contact[]):string {
- if(!validateContacts(contacts))throw new Error('invalid');
- // vCard 的 75 字节折行，避免截断 UTF-8 字符。
- const fold=(line:string)=>{const parts:string[]=[];let part='';let bytes=0;for(const char of line){const length=new TextEncoder().encode(char).length;if(bytes+length>75){parts.push(part);part=' ';bytes=1}part+=char;bytes+=length}parts.push(part);return parts.join('\r\n')};
- return contacts.map(c=>['BEGIN:VCARD','VERSION:3.0',`FN:${vcEscape(c.name)}`,`ORG:${vcEscape(c.company)}`,...c.email.split('\n').filter(Boolean).map(v=>`EMAIL:${vcEscape(v)}`),...c.phone.split('\n').filter(Boolean).map(v=>`TEL:${vcEscape(v)}`),`NOTE:${vcEscape(c.notes)}`,'END:VCARD'].map(fold).join('\r\n')).join('\r\n')+'\r\n';
+const vcEscape = (value: string) =>
+  value
+    .replaceAll('\\', '\\\\')
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n')
+    .replaceAll('\n', '\\n')
+    .replaceAll(';', '\\;')
+    .replaceAll(',', '\\,');
+const vcUnescape = (value: string) =>
+  value.replace(/\\([nN,;\\])/g, (_, c: string) =>
+    c.toLowerCase() === 'n' ? '\n' : c,
+  );
+export function parseVcard(text: string): Contact[] {
+  if (text.length > 2_000_000) throw new Error('invalidFile');
+  const lines = text
+    .replace(/^\uFEFF/, '')
+    .replace(/\r\n[ \t]|\n[ \t]/g, '')
+    .split(/\r?\n/);
+  const contacts: Contact[] = [];
+  let current: Contact | null = null;
+  let version = false;
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    if (line.toUpperCase() === 'BEGIN:VCARD') {
+      if (current) throw new Error('invalidFile');
+      current = {
+        id: crypto.randomUUID(),
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        notes: '',
+      };
+      version = false;
+      continue;
+    }
+    if (line.toUpperCase() === 'END:VCARD') {
+      if (!current || !version) throw new Error('invalidFile');
+      contacts.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) throw new Error('invalidFile');
+    const colon = line.indexOf(':');
+    if (colon < 0) throw new Error('invalidFile');
+    const head = line.slice(0, colon).toUpperCase();
+    const key = head.split(';')[0].split('.').pop();
+    const value = vcUnescape(line.slice(colon + 1));
+    if (
+      /ENCODING=|CHARSET=|VALUE=BINARY/.test(head) ||
+      (/VALUE=URI/.test(head) && !['URL', 'TEL'].includes(key ?? ''))
+    )
+      throw new Error('unsupportedVcard');
+    if (key === 'VERSION') {
+      if (!['3.0', '4.0'].includes(value)) throw new Error('unsupportedVcard');
+      version = true;
+    } else {
+      const field =
+        key === 'FN'
+          ? 'name'
+          : key === 'EMAIL'
+            ? 'email'
+            : key === 'TEL'
+              ? 'phone'
+              : key === 'ORG'
+                ? 'company'
+                : key === 'NOTE'
+                  ? 'notes'
+                  : null;
+      if (field)
+        current[field] = [
+          current[field],
+          key === 'TEL' ? value.replace(/^tel:/i, '') : value,
+        ]
+          .filter(Boolean)
+          .join('\n');
+      else if (['PHOTO', 'LOGO', 'SOUND', 'KEY'].includes(key ?? ''))
+        throw new Error('unsupportedVcard');
+    }
+  }
+  if (current || !contacts.length || !validateContacts(contacts))
+    throw new Error('invalidFile');
+  return contacts;
 }
-export async function parseContactsCsv(text:string):Promise<Contact[]> { if(text.length>2_000_000)throw new Error('invalidFile');const {default:Papa}=await import('papaparse');const parsed=Papa.parse<Record<string,string>>(text,{header:true,skipEmptyLines:'greedy',transformHeader:h=>h.trim().toLowerCase()});if(parsed.errors.length||!parsed.meta.fields?.some(f=>CONTACT_FIELDS.includes(f as typeof CONTACT_FIELDS[number])))throw new Error('invalidFile');const contacts=parsed.data.map(row=>({id:crypto.randomUUID(),...Object.fromEntries(CONTACT_FIELDS.map(key=>[key,row[key]??'']))})) as Contact[];if(!validateContacts(contacts))throw new Error('invalidFile');return contacts;}
-export async function exportContactsCsv(contacts:Contact[]):Promise<string> {const {default:Papa}=await import('papaparse');return Papa.unparse(contacts.map(c=>Object.fromEntries(CONTACT_FIELDS.map(key=>[key,c[key]]))),{columns:[...CONTACT_FIELDS],escapeFormulae:true});}
-export function mergeContacts(contacts:Contact[]):Contact[] {
- if(!validateContacts(contacts))throw new Error('invalid');const parent=contacts.map((_,i)=>i);const find=(i:number):number=>parent[i]===i?i:(parent[i]=find(parent[i]));const known=new Map<string,number>();
- contacts.forEach((c,i)=>{const keys=[...c.email.split('\n').map(v=>v.trim().toLowerCase()).filter(Boolean).map(v=>'e:'+v),...c.phone.split('\n').map(v=>v.replace(/[^\d+]/g,'').replace(/^00/,'+')).filter(v=>v.replace(/\D/g,'').length>=5).map(v=>'p:'+v)];for(const key of keys){const before=known.get(key);if(before!==undefined)parent[find(i)]=find(before);else known.set(key,i)}});
- const groups=new Map<number,Contact>();contacts.forEach((contact,i)=>{const root=find(i);const existing=groups.get(root);if(!existing)groups.set(root,{...contact});else for(const field of CONTACT_FIELDS)existing[field]=[...new Set([...existing[field].split('\n'),...contact[field].split('\n')].filter(Boolean))].join('\n')});const result=[...groups.values()];if(!validateContacts(result))throw new Error('invalid');return result;
+export function exportVcard(contacts: Contact[]): string {
+  if (!validateContacts(contacts)) throw new Error('invalid');
+  // vCard 的 75 字节折行，避免截断 UTF-8 字符。
+  const fold = (line: string) => {
+    const parts: string[] = [];
+    let part = '';
+    let bytes = 0;
+    for (const char of line) {
+      const length = new TextEncoder().encode(char).length;
+      if (bytes + length > 75) {
+        parts.push(part);
+        part = ' ';
+        bytes = 1;
+      }
+      part += char;
+      bytes += length;
+    }
+    parts.push(part);
+    return parts.join('\r\n');
+  };
+  return (
+    contacts
+      .map((c) =>
+        [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          `FN:${vcEscape(c.name)}`,
+          `ORG:${vcEscape(c.company)}`,
+          ...c.email
+            .split('\n')
+            .filter(Boolean)
+            .map((v) => `EMAIL:${vcEscape(v)}`),
+          ...c.phone
+            .split('\n')
+            .filter(Boolean)
+            .map((v) => `TEL:${vcEscape(v)}`),
+          `NOTE:${vcEscape(c.notes)}`,
+          'END:VCARD',
+        ]
+          .map(fold)
+          .join('\r\n'),
+      )
+      .join('\r\n') + '\r\n'
+  );
 }
-export type BookmarkFolder={id:string;name:string;parent:string};
-export type Bookmark={id:string;title:string;url:string;folder:string};
-export type BookmarkData={folders:BookmarkFolder[];bookmarks:Bookmark[]};
-export function safeBookmarkUrl(value:string):boolean {try{return ['https:','http:','ftp:','mailto:','file:'].includes(new URL(value).protocol)}catch{return false}}
-export function validateBookmarks(value:unknown):value is BookmarkData {
- if(!record(value)||!Array.isArray(value.folders)||!Array.isArray(value.bookmarks)||value.folders.length>500||value.bookmarks.length>PRODUCTIVITY_LIMIT)return false;
- if(!value.folders.every((x:unknown)=>record(x)&&short(x.id)&&!!x.id&&short(x.name)&&!!x.name.trim()&&short(x.parent)))return false;const folders=value.folders as BookmarkFolder[];const ids=new Set(folders.map(f=>f.id));if(ids.size!==folders.length)return false;const map=new Map(folders.map(f=>[f.id,f]));for(const f of folders){const seen=new Set<string>([f.id]);let id=f.parent;while(id){if(seen.has(id)||!map.has(id))return false;seen.add(id);id=map.get(id)!.parent}}
- return new Set(value.bookmarks.map((x:unknown)=>record(x)?x.id:'')).size===value.bookmarks.length && value.bookmarks.every((x:unknown)=>record(x)&&short(x.id)&&!!x.id&&short(x.title,1000)&&short(x.url,10000)&&safeBookmarkUrl(x.url)&&short(x.folder)&&(!x.folder||ids.has(x.folder)));
+export async function parseContactsCsv(text: string): Promise<Contact[]> {
+  if (text.length > 2_000_000) throw new Error('invalidFile');
+  const { default: Papa } = await import('papaparse');
+  const parsed = Papa.parse<Record<string, string>>(text, {
+    header: true,
+    skipEmptyLines: 'greedy',
+    transformHeader: (h) => h.trim().toLowerCase(),
+  });
+  if (
+    parsed.errors.length ||
+    !parsed.meta.fields?.some((f) =>
+      CONTACT_FIELDS.includes(f as (typeof CONTACT_FIELDS)[number]),
+    )
+  )
+    throw new Error('invalidFile');
+  const contacts = parsed.data.map((row) => ({
+    id: crypto.randomUUID(),
+    ...Object.fromEntries(CONTACT_FIELDS.map((key) => [key, row[key] ?? ''])),
+  })) as Contact[];
+  if (!validateContacts(contacts)) throw new Error('invalidFile');
+  return contacts;
 }
-export function parseBookmarks(source:string):BookmarkData {
- if(source.length>2_000_000)throw new Error('invalidFile');const doc=new DOMParser().parseFromString(source,'text/html');const data:BookmarkData={folders:[],bookmarks:[]};const top=doc.querySelector('dl');if(!top)throw new Error('invalidFile');
- function walk(dl:Element,parent:string,depth:number){if(depth>30)throw new Error('invalidFile');let pending=parent;for(const child of Array.from(dl.children)){if(child.tagName==='P'){walk(child,parent,depth+1);continue}if(child.tagName==='DT'){const header=Array.from(child.children).find(e=>e.tagName==='H3');const link=Array.from(child.children).find(e=>e.tagName==='A');if(header){pending=crypto.randomUUID();data.folders.push({id:pending,name:header.textContent?.trim()||'Folder',parent})}else if(link){const url=link.getAttribute('href')??'';if(!safeBookmarkUrl(url))throw new Error('invalidFile');data.bookmarks.push({id:crypto.randomUUID(),title:link.textContent??'',url,folder:parent});pending=parent}for(const nested of Array.from(child.children).filter(e=>e.tagName==='DL'))walk(nested,pending,depth+1)}else if(child.tagName==='DL'){walk(child,pending,depth+1);pending=parent}if(data.folders.length>500||data.bookmarks.length>PRODUCTIVITY_LIMIT)throw new Error('invalidFile')}}walk(top,'',0);if(!validateBookmarks(data))throw new Error('invalidFile');return data;
+export async function exportContactsCsv(contacts: Contact[]): Promise<string> {
+  if (!validateContacts(contacts)) throw new Error('invalid');
+  const { default: Papa } = await import('papaparse');
+  return Papa.unparse(
+    contacts.map((c) =>
+      Object.fromEntries(CONTACT_FIELDS.map((key) => [key, c[key]])),
+    ),
+    { columns: [...CONTACT_FIELDS], escapeFormulae: true },
+  );
 }
-export function bookmarkKey(url:string):string {try{const value=new URL(url);value.hostname=value.hostname.toLowerCase();return value.href}catch{return url}}
-export function exportBookmarks(data:BookmarkData):string {if(!validateBookmarks(data))throw new Error('invalid');function walk(parent:string):string{return `<DL><p>\n${data.folders.filter(f=>f.parent===parent).map(f=>`<DT><H3>${escapeHtml(f.name)}</H3>\n${walk(f.id)}`).join('\n')}\n${data.bookmarks.filter(b=>b.folder===parent).map(b=>`<DT><A HREF="${escapeHtml(b.url)}">${escapeHtml(b.title)}</A>`).join('\n')}\n</DL><p>`}return `<!DOCTYPE NETSCAPE-Bookmark-file-1><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><TITLE>Bookmarks</TITLE><H1>Bookmarks</H1>\n${walk('')}`;}
+export function mergeContacts(contacts: Contact[]): Contact[] {
+  if (!validateContacts(contacts)) throw new Error('invalid');
+  const parent = contacts.map((_, i) => i);
+  const find = (i: number): number =>
+    parent[i] === i ? i : (parent[i] = find(parent[i]));
+  const known = new Map<string, number>();
+  contacts.forEach((c, i) => {
+    const keys = [
+      ...c.email
+        .split('\n')
+        .map((v) => v.trim().toLowerCase())
+        .filter(Boolean)
+        .map((v) => 'e:' + v),
+      ...c.phone
+        .split('\n')
+        .map((v) => v.replace(/[^\d+]/g, '').replace(/^00/, '+'))
+        .filter((v) => v.replace(/\D/g, '').length >= 5)
+        .map((v) => 'p:' + v),
+    ];
+    for (const key of keys) {
+      const before = known.get(key);
+      if (before !== undefined) parent[find(i)] = find(before);
+      else known.set(key, i);
+    }
+  });
+  const groups = new Map<number, Contact>();
+  contacts.forEach((contact, i) => {
+    const root = find(i);
+    const existing = groups.get(root);
+    if (!existing) groups.set(root, { ...contact });
+    else
+      for (const field of CONTACT_FIELDS)
+        existing[field] = [
+          ...new Set(
+            [
+              ...existing[field].split('\n'),
+              ...contact[field].split('\n'),
+            ].filter(Boolean),
+          ),
+        ].join('\n');
+  });
+  const result = [...groups.values()];
+  if (!validateContacts(result)) throw new Error('invalid');
+  return result;
+}
+export type BookmarkFolder = { id: string; name: string; parent: string };
+export type Bookmark = {
+  id: string;
+  title: string;
+  url: string;
+  folder: string;
+};
+export type BookmarkData = { folders: BookmarkFolder[]; bookmarks: Bookmark[] };
+export function safeBookmarkUrl(value: string): boolean {
+  try {
+    return ['https:', 'http:', 'ftp:', 'mailto:', 'file:'].includes(
+      new URL(value).protocol,
+    );
+  } catch {
+    return false;
+  }
+}
+export function validateBookmarks(value: unknown): value is BookmarkData {
+  if (
+    !record(value) ||
+    !backupFits(value) ||
+    !Array.isArray(value.folders) ||
+    !Array.isArray(value.bookmarks) ||
+    value.folders.length > 500 ||
+    value.bookmarks.length > PRODUCTIVITY_LIMIT
+  )
+    return false;
+  if (
+    !value.folders.every(
+      (x: unknown) =>
+        record(x) &&
+        short(x.id) &&
+        !!x.id &&
+        short(x.name) &&
+        !!x.name.trim() &&
+        short(x.parent),
+    )
+  )
+    return false;
+  const folders = value.folders as BookmarkFolder[];
+  const ids = new Set(folders.map((f) => f.id));
+  if (ids.size !== folders.length) return false;
+  const map = new Map(folders.map((f) => [f.id, f]));
+  for (const f of folders) {
+    const seen = new Set<string>([f.id]);
+    let id = f.parent;
+    while (id) {
+      if (seen.has(id) || !map.has(id)) return false;
+      seen.add(id);
+      id = map.get(id)!.parent;
+    }
+  }
+  return (
+    new Set(value.bookmarks.map((x: unknown) => (record(x) ? x.id : '')))
+      .size === value.bookmarks.length &&
+    value.bookmarks.every(
+      (x: unknown) =>
+        record(x) &&
+        short(x.id) &&
+        !!x.id &&
+        short(x.title, 1000) &&
+        short(x.url, 10000) &&
+        safeBookmarkUrl(x.url) &&
+        short(x.folder) &&
+        (!x.folder || ids.has(x.folder)),
+    )
+  );
+}
+export function parseBookmarks(source: string): BookmarkData {
+  if (source.length > 2_000_000) throw new Error('invalidFile');
+  const doc = new DOMParser().parseFromString(source, 'text/html');
+  const data: BookmarkData = { folders: [], bookmarks: [] };
+  const top = doc.querySelector('dl');
+  if (!top) throw new Error('invalidFile');
+  function walk(dl: Element, parent: string, depth: number) {
+    if (depth > 30) throw new Error('invalidFile');
+    let pending = parent;
+    for (const child of Array.from(dl.children)) {
+      if (child.tagName === 'P') {
+        walk(child, parent, depth + 1);
+        continue;
+      }
+      if (child.tagName === 'DT') {
+        const header = Array.from(child.children).find(
+          (e) => e.tagName === 'H3',
+        );
+        const link = Array.from(child.children).find((e) => e.tagName === 'A');
+        if (header) {
+          pending = crypto.randomUUID();
+          data.folders.push({
+            id: pending,
+            name: header.textContent?.trim() || 'Folder',
+            parent,
+          });
+        } else if (link) {
+          const url = link.getAttribute('href') ?? '';
+          if (!safeBookmarkUrl(url)) throw new Error('invalidFile');
+          data.bookmarks.push({
+            id: crypto.randomUUID(),
+            title: link.textContent ?? '',
+            url,
+            folder: parent,
+          });
+          pending = parent;
+        }
+        for (const nested of Array.from(child.children).filter(
+          (e) => e.tagName === 'DL',
+        ))
+          walk(nested, pending, depth + 1);
+      } else if (child.tagName === 'DL') {
+        walk(child, pending, depth + 1);
+        pending = parent;
+      }
+      if (
+        data.folders.length > 500 ||
+        data.bookmarks.length > PRODUCTIVITY_LIMIT
+      )
+        throw new Error('invalidFile');
+    }
+  }
+  walk(top, '', 0);
+  if (!validateBookmarks(data)) throw new Error('invalidFile');
+  return data;
+}
+export function bookmarkKey(url: string): string {
+  try {
+    const value = new URL(url);
+    value.hostname = value.hostname.toLowerCase();
+    return value.href;
+  } catch {
+    return url;
+  }
+}
+export function exportBookmarks(data: BookmarkData): string {
+  if (!validateBookmarks(data)) throw new Error('invalid');
+  function walk(parent: string): string {
+    return `<DL><p>\n${data.folders
+      .filter((f) => f.parent === parent)
+      .map((f) => `<DT><H3>${escapeHtml(f.name)}</H3>\n${walk(f.id)}`)
+      .join('\n')}\n${data.bookmarks
+      .filter((b) => b.folder === parent)
+      .map(
+        (b) => `<DT><A HREF="${escapeHtml(b.url)}">${escapeHtml(b.title)}</A>`,
+      )
+      .join('\n')}\n</DL><p>`;
+  }
+  return `<!DOCTYPE NETSCAPE-Bookmark-file-1><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"><TITLE>Bookmarks</TITLE><H1>Bookmarks</H1>\n${walk('')}`;
+}
+export function mergeBookmarks(
+  existing: BookmarkData,
+  incoming: BookmarkData,
+): BookmarkData {
+  if (!validateBookmarks(existing) || !validateBookmarks(incoming))
+    throw new Error('invalid');
+  const folders = [...existing.folders];
+  const mapped = new Map<string, string>([['', '']]);
+  const source = new Map(incoming.folders.map((f) => [f.id, f]));
+  function resolve(id: string): string {
+    const known = mapped.get(id);
+    if (known !== undefined) return known;
+    const f = source.get(id)!;
+    const parent = resolve(f.parent);
+    const found = folders.find((x) => x.name === f.name && x.parent === parent);
+    const result = found?.id ?? f.id;
+    if (!found) folders.push({ ...f, parent });
+    mapped.set(id, result);
+    return result;
+  }
+  for (const f of incoming.folders) resolve(f.id);
+  const result = {
+    folders,
+    bookmarks: [
+      ...existing.bookmarks,
+      ...incoming.bookmarks.map((b) => ({ ...b, folder: resolve(b.folder) })),
+    ],
+  };
+  if (!validateBookmarks(result)) throw new Error('invalid');
+  return result;
+}

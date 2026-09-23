@@ -2,7 +2,7 @@ export const mathToolsZh = {
   mathTools: {
     title: '数学工具箱',
     selectTool: '选择工具',
-    description: '分数、方程、矩阵、统计与概率等 20 种计算工具',
+    description: '分数、方程、矩阵、统计、概率与函数微积分',
     tools: {
       'fraction-calculator': {
         title: '分数计算器',
@@ -346,7 +346,7 @@ export const mathToolsEn = {
     title: 'Math toolbox',
     selectTool: 'Choose a tool',
     description:
-      '20 tools for fractions, equations, matrices, statistics and probability',
+      'Fractions, equations, matrices, statistics, probability and calculus',
     tools: {
       'fraction-calculator': {
         title: 'Fraction calculator',

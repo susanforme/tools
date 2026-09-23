@@ -1,3 +1,4 @@
+import { PdfAdvancedPanel } from '@/components/pdf-advanced-panel';
 import { ChoiceField } from '@/components/calculator-ui';
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
 import { PdfSignaturePanel } from '@/components/recommended-tool-panels';
@@ -53,7 +54,9 @@ type Mode =
   | 'images'
   | 'watermark'
   | 'metadata'
-  | 'signature';
+  | 'signature'
+  | 'forms'
+  | 'bookmarks';
 
 const TOOLBAR: Array<{ mode: Mode; icon: typeof Pencil }> = [
   { mode: 'edit', icon: Pencil },
@@ -64,6 +67,8 @@ const TOOLBAR: Array<{ mode: Mode; icon: typeof Pencil }> = [
   { mode: 'watermark', icon: Stamp },
   { mode: 'metadata', icon: Eraser },
   { mode: 'signature', icon: ShieldCheck },
+  { mode: 'forms', icon: FileText },
+  { mode: 'bookmarks', icon: ListOrdered },
 ];
 
 function PdfToolkitPage() {
@@ -228,15 +233,19 @@ function PdfToolkitPage() {
             setImages([]);
             setError(null);
           }}
-          aria-label={t(`pdfToolkit.${toolMode}`)}
+          aria-label={t(
+            `${['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
+          )}
         >
           <Icon className="h-4 w-4" />
           <span className="hidden sm:inline">
-            {t(`pdfToolkit.${toolMode}`)}
+            {t(
+              `${['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
+            )}
           </span>
         </Button>
       ))}
-      {!!activeFile && mode !== 'signature' && (
+      {!!activeFile && !['signature', 'forms', 'bookmarks'].includes(mode) && (
         <Button
           className="ml-auto"
           size="sm"
@@ -263,7 +272,9 @@ function PdfToolkitPage() {
         </p>
       </div>
       {toolbar}
-      {!activeFile ? (
+      {mode === 'forms' || mode === 'bookmarks' ? (
+        <PdfAdvancedPanel key={mode} mode={mode} />
+      ) : !activeFile ? (
         <FileDropzone
           accept="application/pdf,.pdf"
           multiple={mode === 'merge'}

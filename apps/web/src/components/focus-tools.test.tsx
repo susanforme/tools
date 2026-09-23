@@ -30,6 +30,7 @@ const { query, setQuery } = vi.hoisted(() => ({
   setQuery: vi.fn(),
 }));
 vi.mock('@/hooks/useQueryParams', () => ({
+  ArrayParam: {},
   NumberParam: {},
   StringParam: {},
   useQueryParams: () => [query, setQuery],

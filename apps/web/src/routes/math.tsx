@@ -1,3 +1,4 @@
+import { FunctionWorkbench } from '@/components/function-workbench';
 import { ChoiceField } from '@/components/calculator-ui';
 import { MathToolPage } from '@/components/math-tool-page';
 import {
@@ -33,11 +34,14 @@ function MathPage() {
       <h1 className="text-2xl font-bold">{t('mathTools.title')}</h1>
       <ChoiceField
         label={t('mathTools.selectTool')}
-        value={selected.id}
-        options={MATH_TOOLS.map(({ id }) => ({
-          value: id,
-          label: t(`mathTools.tools.${id}.title`),
-        }))}
+        value={query.tool === 'functions' ? 'functions' : selected.id}
+        options={[
+          { value: 'functions', label: t('batch3Calc.functions') },
+          ...MATH_TOOLS.map(({ id }) => ({
+            value: id,
+            label: t(`mathTools.tools.${id}.title`),
+          })),
+        ]}
         onChange={(tool) =>
           setQuery({
             tool,
@@ -47,7 +51,11 @@ function MathPage() {
           })
         }
       />
-      <MathToolPage key={selected.id} tool={selected.id} />
+      {query.tool === 'functions' ? (
+        <FunctionWorkbench />
+      ) : (
+        <MathToolPage key={selected.id} tool={selected.id} />
+      )}
     </div>
   );
 }

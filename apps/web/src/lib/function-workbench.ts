@@ -1,26 +1,290 @@
 export type Expression = (variable: number, parameter: number) => number;
-const FUNCTIONS: Record<string, (n: number) => number> = {sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,sqrt:Math.sqrt,abs:Math.abs,exp:Math.exp,ln:Math.log,log:Math.log10,floor:Math.floor,ceil:Math.ceil};
+const FUNCTIONS: Record<string, (n: number) => number> = {
+  sin: Math.sin,
+  cos: Math.cos,
+  tan: Math.tan,
+  asin: Math.asin,
+  acos: Math.acos,
+  atan: Math.atan,
+  sqrt: Math.sqrt,
+  abs: Math.abs,
+  exp: Math.exp,
+  ln: Math.log,
+  log: Math.log10,
+  floor: Math.floor,
+  ceil: Math.ceil,
+};
 /** 仅接受数值表达式，禁止属性访问、赋值与执行脚本。 */
-export function compileExpression(source:string):Expression {
- if(!source.trim()||source.length>1000)throw new Error('expression');
- const tokens=source.match(/(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?|[a-zA-Z]+|[^\s]/g)??[];if(tokens.length>256)throw new Error('expression');let at=0,depth=0;
- const primary=():Expression=>{if(++depth>32)throw new Error('expression');const token=tokens[at++];let expression:Expression;if(token==='('){expression=sum();if(tokens[at++]!==')')throw new Error('expression');}else if(token==='x'||token==='t')expression=x=>x;else if(token==='a')expression=(_,a)=>a;else if(token==='pi')expression=()=>Math.PI;else if(token==='e')expression=()=>Math.E;else if(token&&Object.hasOwn(FUNCTIONS,token)){if(tokens[at++]!=='(')throw new Error('expression');const value=sum();if(tokens[at++]!==')')throw new Error('expression');expression=(x,a)=>FUNCTIONS[token](value(x,a));}else if(token&&/^(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(token)){const number=Number(token);if(!Number.isFinite(number))throw new Error('expression');expression=()=>number;}else throw new Error('expression');depth--;return expression;};
- const power=():Expression=>{const base=primary();if(tokens[at]==='^'){at++;const exponent=unary();return(x,a)=>base(x,a)**exponent(x,a);}return base;};
- const unary=():Expression=>{if(tokens[at]==='+'||tokens[at]==='-'){const sign=tokens[at++];const value=unary();return(x,a)=>sign==='-'?-value(x,a):value(x,a);}return power();};
- const product=():Expression=>{let left=unary();while(['*','/','%'].includes(tokens[at])){const op=tokens[at++],before=left,right=unary();left=(x,a)=>op==='*'?before(x,a)*right(x,a):op==='/'?before(x,a)/right(x,a):before(x,a)%right(x,a);}return left;};
- const sum=():Expression=>{let left=product();while(tokens[at]==='+'||tokens[at]==='-'){const op=tokens[at++],before=left,right=product();left=(x,a)=>op==='+'?before(x,a)+right(x,a):before(x,a)-right(x,a);}return left;};
- const expression=sum();if(at!==tokens.length)throw new Error('expression');return expression;
+export function compileExpression(source: string): Expression {
+  if (!source.trim() || source.length > 1000) throw new Error('expression');
+  const tokens =
+    source.match(/(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?|[a-zA-Z]+|[^\s]/g) ?? [];
+  if (tokens.length > 256) throw new Error('expression');
+  let at = 0,
+    depth = 0;
+  const primary = (): Expression => {
+    if (++depth > 32) throw new Error('expression');
+    const token = tokens[at++];
+    let expression: Expression;
+    if (token === '(') {
+      expression = sum();
+      if (tokens[at++] !== ')') throw new Error('expression');
+    } else if (token === 'x' || token === 't') expression = (x) => x;
+    else if (token === 'a') expression = (_, a) => a;
+    else if (token === 'pi') expression = () => Math.PI;
+    else if (token === 'e') expression = () => Math.E;
+    else if (token && Object.hasOwn(FUNCTIONS, token)) {
+      if (tokens[at++] !== '(') throw new Error('expression');
+      const value = sum();
+      if (tokens[at++] !== ')') throw new Error('expression');
+      expression = (x, a) => FUNCTIONS[token](value(x, a));
+    } else if (token && /^(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(token)) {
+      const number = Number(token);
+      if (!Number.isFinite(number)) throw new Error('expression');
+      expression = () => number;
+    } else throw new Error('expression');
+    depth--;
+    return expression;
+  };
+  const power = (): Expression => {
+    const base = primary();
+    if (tokens[at] === '^') {
+      at++;
+      const exponent = unary();
+      return (x, a) => base(x, a) ** exponent(x, a);
+    }
+    return base;
+  };
+  const unary = (): Expression => {
+    if (tokens[at] === '+' || tokens[at] === '-') {
+      const sign = tokens[at++];
+      const value = unary();
+      return (x, a) => (sign === '-' ? -value(x, a) : value(x, a));
+    }
+    return power();
+  };
+  const product = (): Expression => {
+    let left = unary();
+    while (['*', '/', '%'].includes(tokens[at])) {
+      const op = tokens[at++],
+        before = left,
+        right = unary();
+      left = (x, a) =>
+        op === '*'
+          ? before(x, a) * right(x, a)
+          : op === '/'
+            ? before(x, a) / right(x, a)
+            : before(x, a) % right(x, a);
+    }
+    return left;
+  };
+  const sum = (): Expression => {
+    let left = product();
+    while (tokens[at] === '+' || tokens[at] === '-') {
+      const op = tokens[at++],
+        before = left,
+        right = product();
+      left = (x, a) =>
+        op === '+' ? before(x, a) + right(x, a) : before(x, a) - right(x, a);
+    }
+    return left;
+  };
+  const expression = sum();
+  if (at !== tokens.length) throw new Error('expression');
+  return expression;
 }
-export function finite(value:number):number {if(!Number.isFinite(value))throw new Error('domain');return value;}
-export function derivative(f:(x:number)=>number,x:number):number {const h=Math.cbrt(Number.EPSILON)*Math.max(1,Math.abs(x));return finite((f(x+h)-f(x-h))/(2*h));}
-export function integrate(f:(x:number)=>number,from:number,to:number,tolerance=1e-7):number {if(from===to)return 0;if(from>to)return -integrate(f,to,from,tolerance);let calls=0;const evalAt=(x:number)=>{if(++calls>100000)throw new Error('convergence');return finite(f(x));};
- const recurse=(a:number,b:number,fa:number,fm:number,fb:number,whole:number,epsilon:number,depth:number):number=>{const mid=(a+b)/2,l=evalAt((a+mid)/2),r=evalAt((mid+b)/2),left=(mid-a)/6*(fa+4*l+fm),right=(b-mid)/6*(fm+4*r+fb),delta=left+right-whole;if(Math.abs(delta)<=15*epsilon)return left+right+delta/15;if(depth===0)throw new Error('convergence');return recurse(a,mid,fa,l,fm,left,epsilon/2,depth-1)+recurse(mid,b,fm,r,fb,right,epsilon/2,depth-1);};const fa=evalAt(from),fm=evalAt((from+to)/2),fb=evalAt(to);return finite(recurse(from,to,fa,fm,fb,(to-from)/6*(fa+4*fm+fb),tolerance,20));}
-export function intersections(f:(x:number)=>number,from:number,to:number):number[]{const roots:number[]=[];const add=(x:number)=>{if(Number.isFinite(x)&&x>=from&&x<=to&&Math.abs(f(x))<1e-6&&!roots.some(r=>Math.abs(r-x)<1e-5))roots.push(x);};const steps=1000;let previous=from,value=f(previous);for(let i=1;i<=steps;i++){const x=from+(to-from)*i/steps,next=f(x);if(Number.isFinite(value)&&Number.isFinite(next)){if(Math.abs(value)<1e-8)add(previous);if(value*next<0){let low=previous,high=x,lv=value;for(let j=0;j<60;j++){const mid=(low+high)/2,mv=f(mid);if(!Number.isFinite(mv))break;if(lv*mv<=0)high=mid;else {low=mid;lv=mv;}}add((low+high)/2);}}previous=x;value=next;}
- // ponytail: 有界数值搜索可能遗漏重根；需要完备根集合时再增加符号求解。
- for(let i=0;i<=100;i++){let x=from+(to-from)*i/100;for(let n=0;n<20;n++){const y=f(x);let slope:number;try{slope=derivative(f,x);}catch{break;}if(Math.abs(slope)<1e-12)break;const next=x-y/slope;if(!Number.isFinite(next)||next<from||next>to)break;if(Math.abs(next-x)<1e-10){x=next;break;}x=next;}add(x);}add(to);return roots.sort((a,b)=>a-b).slice(0,100);}
-export type FunctionRequest={mode:string;f:string;g:string;from:number;to:number;parameter:number;at:number};
-export function calculateFunctions(request:FunctionRequest){const {from,to,parameter,at}=request;if(![from,to,parameter,at].every(Number.isFinite)||from>=to||[from,to,parameter,at].some(n=>Math.abs(n)>1e6))throw new Error('invalid');const first=compileExpression(request.f),second=compileExpression(request.g),f=(x:number)=>first(x,parameter),g=(x:number)=>second(x,parameter);const points=Array.from({length:1001},(_,i)=>{const x=from+(to-from)*i/1000;const px=request.mode==='parametric'?f(x):x,py=request.mode==='derivative'?derivative(f,x):request.mode==='difference'?f(x)-g(x):request.mode==='parametric'?g(x):f(x);return Number.isFinite(px)&&Number.isFinite(py)?[px,py] as [number,number]:null;});
- let slope:number|null=null,value:number|null=null,area:number|null=null,roots:number[]=[];
- if(request.mode==='tangent'){value=finite(f(at));slope=derivative(f,at);}if(request.mode==='integral')area=integrate(f,from,to);if(request.mode==='difference')roots=intersections(x=>f(x)-g(x),from,to);
- return {points,second:request.mode==='difference'?Array.from({length:1001},(_,i)=>{const x=from+(to-from)*i/1000,y=g(x);return Number.isFinite(y)?[x,y] as [number,number]:null;}):[],slope,value,area,roots};
+export function finite(value: number): number {
+  if (!Number.isFinite(value)) throw new Error('domain');
+  return value;
+}
+export function derivative(f: (x: number) => number, x: number): number {
+  const h = Math.cbrt(Number.EPSILON) * Math.max(1, Math.abs(x));
+  return finite((f(x + h) - f(x - h)) / (2 * h));
+}
+export function integrate(
+  f: (x: number) => number,
+  from: number,
+  to: number,
+  tolerance = 1e-7,
+): number {
+  if (from === to) return 0;
+  if (from > to) return -integrate(f, to, from, tolerance);
+  let calls = 0;
+  const evalAt = (x: number) => {
+    if (++calls > 100000) throw new Error('convergence');
+    return finite(f(x));
+  };
+  const recurse = (
+    a: number,
+    b: number,
+    fa: number,
+    fm: number,
+    fb: number,
+    whole: number,
+    epsilon: number,
+    depth: number,
+  ): number => {
+    const mid = (a + b) / 2,
+      l = evalAt((a + mid) / 2),
+      r = evalAt((mid + b) / 2),
+      left = ((mid - a) / 6) * (fa + 4 * l + fm),
+      right = ((b - mid) / 6) * (fm + 4 * r + fb),
+      delta = left + right - whole;
+    if (Math.abs(delta) <= 15 * epsilon) return left + right + delta / 15;
+    if (depth === 0) throw new Error('convergence');
+    return (
+      recurse(a, mid, fa, l, fm, left, epsilon / 2, depth - 1) +
+      recurse(mid, b, fm, r, fb, right, epsilon / 2, depth - 1)
+    );
+  };
+  const fa = evalAt(from),
+    fm = evalAt((from + to) / 2),
+    fb = evalAt(to);
+  return finite(
+    recurse(
+      from,
+      to,
+      fa,
+      fm,
+      fb,
+      ((to - from) / 6) * (fa + 4 * fm + fb),
+      tolerance,
+      20,
+    ),
+  );
+}
+export function intersections(
+  f: (x: number) => number,
+  from: number,
+  to: number,
+): number[] {
+  const roots: number[] = [];
+  const add = (x: number) => {
+    if (
+      Number.isFinite(x) &&
+      x >= from &&
+      x <= to &&
+      Math.abs(f(x)) < 1e-6 &&
+      !roots.some((r) => Math.abs(r - x) < 1e-5)
+    )
+      roots.push(x);
+  };
+  const steps = 1000;
+  let previous = from,
+    value = f(previous);
+  for (let i = 1; i <= steps; i++) {
+    const x = from + ((to - from) * i) / steps,
+      next = f(x);
+    if (Number.isFinite(value) && Number.isFinite(next)) {
+      if (Math.abs(value) < 1e-8) add(previous);
+      if (value * next < 0) {
+        let low = previous,
+          high = x,
+          lv = value;
+        for (let j = 0; j < 60; j++) {
+          const mid = (low + high) / 2,
+            mv = f(mid);
+          if (!Number.isFinite(mv)) break;
+          if (lv * mv <= 0) high = mid;
+          else {
+            low = mid;
+            lv = mv;
+          }
+        }
+        add((low + high) / 2);
+      }
+    }
+    previous = x;
+    value = next;
+  }
+  // ponytail: 有界数值搜索可能遗漏重根；需要完备根集合时再增加符号求解。
+  for (let i = 0; i <= 100; i++) {
+    let x = from + ((to - from) * i) / 100;
+    for (let n = 0; n < 20; n++) {
+      const y = f(x);
+      let slope: number;
+      try {
+        slope = derivative(f, x);
+      } catch {
+        break;
+      }
+      if (Math.abs(slope) < 1e-12) break;
+      const next = x - y / slope;
+      if (!Number.isFinite(next) || next < from || next > to) break;
+      if (Math.abs(next - x) < 1e-10) {
+        x = next;
+        break;
+      }
+      x = next;
+    }
+    add(x);
+  }
+  add(to);
+  return roots.sort((a, b) => a - b).slice(0, 100);
+}
+export type FunctionRequest = {
+  mode: string;
+  f: string;
+  g: string;
+  from: number;
+  to: number;
+  parameter: number;
+  at: number;
+};
+export function calculateFunctions(request: FunctionRequest) {
+  const { from, to, parameter, at } = request;
+  if (
+    ![from, to, parameter, at].every(Number.isFinite) ||
+    from >= to ||
+    [from, to, parameter, at].some((n) => Math.abs(n) > 1e6)
+  )
+    throw new Error('invalid');
+  const first = compileExpression(request.f),
+    second = compileExpression(request.g),
+    f = (x: number) => first(x, parameter),
+    g = (x: number) => second(x, parameter);
+  const points = Array.from({ length: 1001 }, (_, i) => {
+    const x = from + ((to - from) * i) / 1000;
+    try {
+      const px = request.mode === 'parametric' ? f(x) : x,
+        py =
+          request.mode === 'derivative'
+            ? derivative(f, x)
+            : request.mode === 'parametric'
+              ? g(x)
+              : f(x);
+      return Number.isFinite(px) && Number.isFinite(py)
+        ? ([px, py] as [number, number])
+        : null;
+    } catch {
+      return null;
+    }
+  });
+  if (!points.some((point) => point !== null)) throw new Error('domain');
+  let slope: number | null = null,
+    value: number | null = null,
+    area: number | null = null,
+    roots: number[] = [];
+  if (request.mode === 'tangent') {
+    value = finite(f(at));
+    slope = derivative(f, at);
+  }
+  if (request.mode === 'integral') area = integrate(f, from, to);
+  if (request.mode === 'difference')
+    roots = intersections((x) => f(x) - g(x), from, to);
+  return {
+    points,
+    second:
+      request.mode === 'difference'
+        ? Array.from({ length: 1001 }, (_, i) => {
+            const x = from + ((to - from) * i) / 1000,
+              y = g(x);
+            return Number.isFinite(y) ? ([x, y] as [number, number]) : null;
+          })
+        : [],
+    slope,
+    value,
+    area,
+    roots,
+  };
 }

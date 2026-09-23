@@ -16,6 +16,11 @@ const crossOriginIsolationHeaders = {
 
 // 非组件运行时依赖固定版本外置；组件及 Monaco 扩展保持本地构建。
 const CDN_MODULE_VERSIONS = {
+  '@citation-js/core': '0.9.0',
+  '@citation-js/plugin-bibtex': '0.9.0',
+  '@citation-js/plugin-ris': '0.9.0',
+  '@citation-js/plugin-csl': '0.9.0',
+  '@pdf-lib/fontkit': '1.1.1',
   '@asyncapi/parser': '3.6.3',
   '@babel/parser': '8.0.5',
   '@bufbuild/cel': '0.6.1',

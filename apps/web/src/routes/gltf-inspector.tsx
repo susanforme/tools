@@ -1,3 +1,5 @@
+import { NumberField } from '@/components/calculator-ui';
+import type { ModelMeasurement } from '@/lib/media-model';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -9,7 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StringParam, useQueryParams } from '@/hooks/useQueryParams';
+import {
+  NumberParam,
+  StringParam,
+  useQueryParams,
+} from '@/hooks/useQueryParams';
 import { sampleGltf } from '@/lib/gltf-inspector';
 import { createFileRoute } from '@tanstack/react-router';
 import { lazy, Suspense, useState } from 'react';
@@ -22,9 +28,12 @@ export const Route = createFileRoute('/gltf-inspector')({
 });
 function GltfInspectorPage() {
   const { t } = useTranslation();
-  const [query, setQuery] = useQueryParams<{ wireframe: string; play: string }>(
-    { wireframe: StringParam, play: StringParam },
-  );
+  const [query, setQuery] = useQueryParams<{
+    wireframe: string;
+    play: string;
+    scale: number;
+  }>({ wireframe: StringParam, play: StringParam, scale: NumberParam });
+  const [measurement, setMeasurement] = useState<ModelMeasurement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [main, setMain] = useState('');
   const [active, setActive] = useState<{ files: File[]; main: string } | null>(
@@ -35,6 +44,7 @@ function GltfInspectorPage() {
   function choose(next: File[]) {
     setActive(null);
     setStats(null);
+    setMeasurement(null);
     setError(null);
     setFiles([]);
     setMain('');
@@ -51,15 +61,17 @@ function GltfInspectorPage() {
       return;
     }
     setFiles(next);
-    setMain(next.find((file) => /\.(glb|gltf)$/i.test(file.name))?.name ?? '');
+    setMain(
+      next.find((file) => /\.(glb|gltf|stl|obj)$/i.test(file.name))?.name ?? '',
+    );
   }
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
-      <h1 className="text-2xl font-bold">{t('communityVisual.model.title')}</h1>
+      <h1 className="text-2xl font-bold">{t('batch3Media.models')}</h1>
       <p className="text-sm text-muted-foreground">
-        {t('communityVisual.model.limit')}
+        {t('batch3Media.modelLimit')}
       </p>
-      <Label htmlFor="gltf-files">{t('communityVisual.model.drop')}</Label>
+      <Label htmlFor="gltf-files">{t('batch3Media.modelUpload')}</Label>
       <Input
         id="gltf-files"
         type="file"
@@ -77,6 +89,7 @@ function GltfInspectorPage() {
             onValueChange={(value) => {
               setActive(null);
               setStats(null);
+              setMeasurement(null);
               setMain(value);
             }}
           >
@@ -85,7 +98,7 @@ function GltfInspectorPage() {
             </SelectTrigger>
             <SelectContent>
               {files
-                .filter((file) => /\.(glb|gltf)$/i.test(file.name))
+                .filter((file) => /\.(glb|gltf|stl|obj)$/i.test(file.name))
                 .map((file) => (
                   <SelectItem value={file.name} key={file.name}>
                     {file.name}
@@ -141,6 +154,13 @@ function GltfInspectorPage() {
           })}
         </p>
       )}
+      <NumberField
+        label={t('batch3Media.scale')}
+        value={query.scale ?? 1}
+        min={0.000001}
+        max={1000000}
+        onChange={(scale) => setQuery({ scale })}
+      />
       {active && (
         <Suspense
           fallback={<p role="status">{t('communityVisual.loading')}</p>}
@@ -152,8 +172,25 @@ function GltfInspectorPage() {
             wireframe={query.wireframe === 'true'}
             play={query.play === 'true'}
             onStats={setStats}
+            scale={query.scale ?? 1}
+            onMeasure={setMeasurement}
           />
         </Suspense>
+      )}
+      {measurement && (
+        <div className="grid gap-3 md:grid-cols-3">
+          <p>
+            {t('batch3Media.dimensions')}:{' '}
+            {measurement.dimensions.map((n) => n.toPrecision(6)).join(' × ')}
+          </p>
+          <p>
+            {t('batch3Media.area')}: {measurement.area.toPrecision(6)}
+          </p>
+          <p>
+            {t('batch3Media.volume')}:{' '}
+            {measurement.volume?.toPrecision(6) ?? t('batch3Media.notClosed')}
+          </p>
+        </div>
       )}
       {stats && (
         <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">

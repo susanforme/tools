@@ -1,3 +1,4 @@
+import { BATCH3_TOOLS } from '@/lib/batch3-catalog';
 import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
 import { setAuthGuest, useAuthSession } from '@/hooks/useAuthSession';
@@ -429,7 +430,7 @@ const textNavItems: NavItem[] = [
     icon: <FileText className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.pdfToolkit',
     keywords:
-      'pdf merge split rotate reorder watermark metadata images signature byte range 合并 拆分 水印 签名',
+      'pdf merge split rotate reorder watermark metadata images signature byte range 合并 拆分 水印 签名 表单 填写 扁平化 书签 forms fill flatten bookmarks',
   },
   {
     to: '/batch-files',
@@ -512,7 +513,8 @@ const frontendNavItems: NavItem[] = [
     to: '/font',
     icon: <Type className="w-4 h-4 text-emerald-500" />,
     labelKey: 'nav.font',
-    keywords: 'font glyph ttf otf woff woff2 typeface typography',
+    keywords:
+      'font glyph ttf otf woff woff2 typeface typography 字体 搭配 可变轴 行高 排版 fluid variation',
   },
   {
     to: '/css-unit',
@@ -750,7 +752,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/gltf-inspector',
     icon: <Activity className="h-4 w-4 text-primary" />,
     labelKey: 'nav.communityModel',
-    keywords: 'gltf glb 3d model 模型 三维',
+    keywords:
+      'gltf glb stl obj 3d model 模型 三维 表面积 体积 缩放 dimensions volume surface',
   },
   {
     to: '/browser-capabilities',
@@ -793,7 +796,8 @@ const developerToolNavItems: NavItem[] = [
     to: '/geojson',
     icon: <Globe className="h-4 w-4 text-primary" />,
     labelKey: 'nav.geojson',
-    keywords: 'geojson geometry map coordinate 地理 坐标 地图',
+    keywords:
+      'geojson gpx kml geometry map coordinate 地理 坐标 地图 轨迹 海拔 距离 tracks elevation',
   },
 
   {
@@ -1022,7 +1026,8 @@ const videoNavItems: NavItem[] = [
     to: '/audio-editor',
     icon: <AudioLines className="h-4 w-4 text-violet-500" />,
     labelKey: 'nav.audioEditor',
-    keywords: '音频 裁剪 合并 波形 audio trim merge waveform',
+    keywords:
+      '音频 裁剪 合并 波形 归一化 淡入 淡出 静音 变速 声道 audio trim merge waveform normalize fade silence speed channels',
   },
   {
     to: '/subtitle-editor',
@@ -1032,18 +1037,24 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
+  ...BATCH3_TOOLS.map(({ id, icon: Icon, color, key, keywords }) => ({
+    to: `/${id}` as const,
+    icon: <Icon className={`h-4 w-4 ${color}`} />,
+    labelKey: `${key}.title`,
+    keywords,
+  })),
   ...PRACTICAL_TOOLS.map(({ id, icon: Icon, color }) => ({
     to: `/${id}` as const,
     icon: <Icon className={`h-4 w-4 ${color}`} />,
     labelKey: `studio20.tools.${id}.title`,
-    keywords: id.replaceAll('-', ' '),
+    keywords: `${id.replaceAll('-', ' ')} ${id === 'sprite-sheet' ? '像素画 动画 图层 洋葱皮 GIF pixel layers onion' : id === 'resistor-code' ? '电子 欧姆 串联 并联 分压 LED RC 电容 ohm circuit' : ''}`,
   })),
   {
     to: '/math',
     icon: <Calculator className="h-4 w-4 text-blue-500" />,
     labelKey: 'mathTools.title',
     keywords:
-      '数学 分数 百分比 公因数 公倍数 质数 科学计数 舍入 幂 开方 对数 方程 矩阵 统计 排列 组合 概率 分布 置信区间 样本 三角形 数列 math fraction percentage gcd lcm prime scientific rounding power root logarithm quadratic linear matrix statistics permutation combination probability binomial z-score confidence sample triangle sequence',
+      '函数 绘图 微积分 切线 交点 parametric calculus tangent integral derivative 数学 分数 百分比 公因数 公倍数 质数 科学计数 舍入 幂 开方 对数 方程 矩阵 统计 排列 组合 概率 分布 置信区间 样本 三角形 数列 math fraction percentage gcd lcm prime scientific rounding power root logarithm quadratic linear matrix statistics permutation combination probability binomial z-score confidence sample triangle sequence',
   },
   {
     to: '/screenshot-annotator',
@@ -1248,7 +1259,8 @@ const lifeNavItems: NavItem[] = [
     to: '/recipe-scale',
     icon: <ListOrdered className="h-4 w-4 text-rose-500" />,
     labelKey: 'nav.recipeScale',
-    keywords: '食谱 比例 份数 recipe servings scale',
+    keywords:
+      '食谱 比例 份数 烘焙 水合 模具 baker hydration mold recipe servings scale',
   },
   {
     to: '/size-converter',
@@ -1352,7 +1364,8 @@ const lifeNavItems: NavItem[] = [
     to: '/focus-timer',
     icon: <Timer className="h-4 w-4 text-red-500" />,
     labelKey: 'focusTimer.title',
-    keywords: '番茄钟 计时器 倒计时 秒表 专注 做饭 timer stopwatch pomodoro',
+    keywords:
+      '循环 训练 阶段 Tabata interval 番茄钟 计时器 倒计时 秒表 专注 做饭 timer stopwatch pomodoro',
   },
   {
     to: '/screen-ruler',

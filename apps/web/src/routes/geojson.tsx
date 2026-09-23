@@ -27,8 +27,18 @@ const createWorker = (): Worker =>
 
 function GeoJsonPage() {
   const { t } = useTranslation();
-  const [tab,setTab] = useQueryParam<string>('tab',StringParam,'inspect');
-  return <div className="mx-auto max-w-6xl px-4 py-6 space-y-4"><Tabs value={tab} onValueChange={setTab}><TabsList><TabsTrigger value="inspect">{t('geojson.title')}</TabsTrigger><TabsTrigger value="tracks">{t('batch3Media.tracks')}</TabsTrigger></TabsList></Tabs>{tab==='tracks'?<MediaTracks/>:<GeoJsonInspector/>}</div>;
+  const [tab, setTab] = useQueryParam<string>('tab', StringParam, 'inspect');
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-6 space-y-4">
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList>
+          <TabsTrigger value="inspect">{t('geojson.title')}</TabsTrigger>
+          <TabsTrigger value="tracks">{t('batch3Media.tracks')}</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === 'tracks' ? <MediaTracks /> : <GeoJsonInspector />}
+    </div>
+  );
 }
 function GeoJsonInspector() {
   const { t } = useTranslation();

@@ -1,3 +1,7 @@
+import { batch3AnalysisEn } from './batch3-analysis';
+import { batch3ProductivityEn } from './batch3-productivity';
+import { batch3MediaEn } from './batch3-media';
+import { batch3CalculatorsEn } from './batch3-calculators';
 import { practicalToolsEn } from './practical-tools';
 import { mathToolsEn } from './math-tools';
 import { personalToolsEn } from './personal-tools';
@@ -38,6 +42,10 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...batch3AnalysisEn,
+  ...batch3ProductivityEn,
+  ...batch3MediaEn,
+  ...batch3CalculatorsEn,
   ...practicalToolsEn,
   ...mathToolsEn,
   ...personalToolsEn,
