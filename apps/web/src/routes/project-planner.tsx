@@ -1,4 +1,5 @@
 import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { RunSheetPanel } from '@/components/event-run-sheet-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -370,8 +371,16 @@ function ProjectPlanner() {
 
 function ExpandedPage() {
   return (
-    <LifeWorkspace label="lifeWorkspace.run.title" panel={<RunSheetPanel />}>
-      <ProjectPlanner />
-    </LifeWorkspace>
+    <ToolExtensionSelector
+      panels={['capacity']}
+      base={
+        <LifeWorkspace
+          label="lifeWorkspace.run.title"
+          panel={<RunSheetPanel />}
+        >
+          <ProjectPlanner />
+        </LifeWorkspace>
+      }
+    />
   );
 }

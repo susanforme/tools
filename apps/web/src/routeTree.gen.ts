@@ -13,11 +13,13 @@ import { Route as YamlRouteImport } from './routes/yaml'
 import { Route as XmlJsonRouteImport } from './routes/xml-json'
 import { Route as XmlRouteImport } from './routes/xml'
 import { Route as WorldClockRouteImport } from './routes/world-clock'
+import { Route as WorkflowReviewRouteImport } from './routes/workflow-review'
 import { Route as WordSearchRouteImport } from './routes/word-search'
 import { Route as WhiteboardRouteImport } from './routes/whiteboard'
 import { Route as WebrtcDiagnosticsRouteImport } from './routes/webrtc-diagnostics'
 import { Route as WebpGifRouteImport } from './routes/webp-gif'
 import { Route as WebauthnDebuggerRouteImport } from './routes/webauthn-debugger'
+import { Route as WebDiagnosticsRouteImport } from './routes/web-diagnostics'
 import { Route as VideoTrimmerRouteImport } from './routes/video-trimmer'
 import { Route as VideoEditorRouteImport } from './routes/video-editor'
 import { Route as VideoAnimationRouteImport } from './routes/video-animation'
@@ -61,6 +63,7 @@ import { Route as SewingPatternRouteImport } from './routes/sewing-pattern'
 import { Route as SettingsPreferencesRouteImport } from './routes/settings-preferences'
 import { Route as SettingsDataRouteImport } from './routes/settings-data'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SerialMonitorRouteImport } from './routes/serial-monitor'
 import { Route as SeoFilesRouteImport } from './routes/seo-files'
 import { Route as SeatingChartRouteImport } from './routes/seating-chart'
 import { Route as ScreenshotAnnotatorRouteImport } from './routes/screenshot-annotator'
@@ -89,6 +92,7 @@ import { Route as PrintablePaperRouteImport } from './routes/printable-paper'
 import { Route as PprofRouteImport } from './routes/pprof'
 import { Route as PosterPrintRouteImport } from './routes/poster-print'
 import { Route as PlaywrightTraceRouteImport } from './routes/playwright-trace'
+import { Route as PlanningCalculatorsRouteImport } from './routes/planning-calculators'
 import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as PinyinAnnotatorRouteImport } from './routes/pinyin-annotator'
 import { Route as PianoRouteImport } from './routes/piano'
@@ -119,6 +123,7 @@ import { Route as MortgageRouteImport } from './routes/mortgage'
 import { Route as MockDataRouteImport } from './routes/mock-data'
 import { Route as MindMapRouteImport } from './routes/mind-map'
 import { Route as MetronomeRouteImport } from './routes/metronome'
+import { Route as MediaFinishingRouteImport } from './routes/media-finishing'
 import { Route as MealPlannerRouteImport } from './routes/meal-planner'
 import { Route as McpTraceRouteImport } from './routes/mcp-trace'
 import { Route as MathWorksheetRouteImport } from './routes/math-worksheet'
@@ -188,6 +193,7 @@ import { Route as DrumMachineRouteImport } from './routes/drum-machine'
 import { Route as DocumentSearchRouteImport } from './routes/document-search'
 import { Route as DocumentScannerRouteImport } from './routes/document-scanner'
 import { Route as DocumentMakerRouteImport } from './routes/document-maker'
+import { Route as DockerfileReviewRouteImport } from './routes/dockerfile-review'
 import { Route as DockerComposeRouteImport } from './routes/docker-compose'
 import { Route as DnsRouteImport } from './routes/dns'
 import { Route as DiffRouteImport } from './routes/diff'
@@ -197,6 +203,7 @@ import { Route as DecisionMatrixRouteImport } from './routes/decision-matrix'
 import { Route as DatetimeRouteImport } from './routes/datetime'
 import { Route as DateCalculatorRouteImport } from './routes/date-calculator'
 import { Route as DataRedactorRouteImport } from './routes/data-redactor'
+import { Route as DataPrepRouteImport } from './routes/data-prep'
 import { Route as DataChartsRouteImport } from './routes/data-charts'
 import { Route as CutPlannerRouteImport } from './routes/cut-planner'
 import { Route as CurlConverterRouteImport } from './routes/curl-converter'
@@ -268,6 +275,11 @@ const WorldClockRoute = WorldClockRouteImport.update({
   path: '/world-clock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkflowReviewRoute = WorkflowReviewRouteImport.update({
+  id: '/workflow-review',
+  path: '/workflow-review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WordSearchRoute = WordSearchRouteImport.update({
   id: '/word-search',
   path: '/word-search',
@@ -291,6 +303,11 @@ const WebpGifRoute = WebpGifRouteImport.update({
 const WebauthnDebuggerRoute = WebauthnDebuggerRouteImport.update({
   id: '/webauthn-debugger',
   path: '/webauthn-debugger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WebDiagnosticsRoute = WebDiagnosticsRouteImport.update({
+  id: '/web-diagnostics',
+  path: '/web-diagnostics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideoTrimmerRoute = VideoTrimmerRouteImport.update({
@@ -508,6 +525,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SerialMonitorRoute = SerialMonitorRouteImport.update({
+  id: '/serial-monitor',
+  path: '/serial-monitor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SeoFilesRoute = SeoFilesRouteImport.update({
   id: '/seo-files',
   path: '/seo-files',
@@ -646,6 +668,11 @@ const PosterPrintRoute = PosterPrintRouteImport.update({
 const PlaywrightTraceRoute = PlaywrightTraceRouteImport.update({
   id: '/playwright-trace',
   path: '/playwright-trace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanningCalculatorsRoute = PlanningCalculatorsRouteImport.update({
+  id: '/planning-calculators',
+  path: '/planning-calculators',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PipelineRoute = PipelineRouteImport.update({
@@ -796,6 +823,11 @@ const MindMapRoute = MindMapRouteImport.update({
 const MetronomeRoute = MetronomeRouteImport.update({
   id: '/metronome',
   path: '/metronome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaFinishingRoute = MediaFinishingRouteImport.update({
+  id: '/media-finishing',
+  path: '/media-finishing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MealPlannerRoute = MealPlannerRouteImport.update({
@@ -1143,6 +1175,11 @@ const DocumentMakerRoute = DocumentMakerRouteImport.update({
   path: '/document-maker',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DockerfileReviewRoute = DockerfileReviewRouteImport.update({
+  id: '/dockerfile-review',
+  path: '/dockerfile-review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DockerComposeRoute = DockerComposeRouteImport.update({
   id: '/docker-compose',
   path: '/docker-compose',
@@ -1186,6 +1223,11 @@ const DateCalculatorRoute = DateCalculatorRouteImport.update({
 const DataRedactorRoute = DataRedactorRouteImport.update({
   id: '/data-redactor',
   path: '/data-redactor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataPrepRoute = DataPrepRouteImport.update({
+  id: '/data-prep',
+  path: '/data-prep',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DataChartsRoute = DataChartsRouteImport.update({
@@ -1490,6 +1532,7 @@ export interface FileRoutesByFullPath {
   '/curl-converter': typeof CurlConverterRoute
   '/cut-planner': typeof CutPlannerRoute
   '/data-charts': typeof DataChartsRoute
+  '/data-prep': typeof DataPrepRoute
   '/data-redactor': typeof DataRedactorRoute
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
@@ -1499,6 +1542,7 @@ export interface FileRoutesByFullPath {
   '/diff': typeof DiffRoute
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
+  '/dockerfile-review': typeof DockerfileReviewRoute
   '/document-maker': typeof DocumentMakerRoute
   '/document-scanner': typeof DocumentScannerRoute
   '/document-search': typeof DocumentSearchRoute
@@ -1568,6 +1612,7 @@ export interface FileRoutesByFullPath {
   '/math-worksheet': typeof MathWorksheetRoute
   '/mcp-trace': typeof McpTraceRoute
   '/meal-planner': typeof MealPlannerRoute
+  '/media-finishing': typeof MediaFinishingRoute
   '/metronome': typeof MetronomeRoute
   '/mind-map': typeof MindMapRoute
   '/mock-data': typeof MockDataRoute
@@ -1598,6 +1643,7 @@ export interface FileRoutesByFullPath {
   '/piano': typeof PianoRoute
   '/pinyin-annotator': typeof PinyinAnnotatorRoute
   '/pipeline': typeof PipelineRoute
+  '/planning-calculators': typeof PlanningCalculatorsRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
   '/poster-print': typeof PosterPrintRoute
   '/pprof': typeof PprofRoute
@@ -1626,6 +1672,7 @@ export interface FileRoutesByFullPath {
   '/screenshot-annotator': typeof ScreenshotAnnotatorRoute
   '/seating-chart': typeof SeatingChartRoute
   '/seo-files': typeof SeoFilesRoute
+  '/serial-monitor': typeof SerialMonitorRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
@@ -1669,11 +1716,13 @@ export interface FileRoutesByFullPath {
   '/video-animation': typeof VideoAnimationRoute
   '/video-editor': typeof VideoEditorRoute
   '/video-trimmer': typeof VideoTrimmerRoute
+  '/web-diagnostics': typeof WebDiagnosticsRoute
   '/webauthn-debugger': typeof WebauthnDebuggerRoute
   '/webp-gif': typeof WebpGifRoute
   '/webrtc-diagnostics': typeof WebrtcDiagnosticsRoute
   '/whiteboard': typeof WhiteboardRoute
   '/word-search': typeof WordSearchRoute
+  '/workflow-review': typeof WorkflowReviewRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
@@ -1730,6 +1779,7 @@ export interface FileRoutesByTo {
   '/curl-converter': typeof CurlConverterRoute
   '/cut-planner': typeof CutPlannerRoute
   '/data-charts': typeof DataChartsRoute
+  '/data-prep': typeof DataPrepRoute
   '/data-redactor': typeof DataRedactorRoute
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
@@ -1739,6 +1789,7 @@ export interface FileRoutesByTo {
   '/diff': typeof DiffRoute
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
+  '/dockerfile-review': typeof DockerfileReviewRoute
   '/document-maker': typeof DocumentMakerRoute
   '/document-scanner': typeof DocumentScannerRoute
   '/document-search': typeof DocumentSearchRoute
@@ -1808,6 +1859,7 @@ export interface FileRoutesByTo {
   '/math-worksheet': typeof MathWorksheetRoute
   '/mcp-trace': typeof McpTraceRoute
   '/meal-planner': typeof MealPlannerRoute
+  '/media-finishing': typeof MediaFinishingRoute
   '/metronome': typeof MetronomeRoute
   '/mind-map': typeof MindMapRoute
   '/mock-data': typeof MockDataRoute
@@ -1838,6 +1890,7 @@ export interface FileRoutesByTo {
   '/piano': typeof PianoRoute
   '/pinyin-annotator': typeof PinyinAnnotatorRoute
   '/pipeline': typeof PipelineRoute
+  '/planning-calculators': typeof PlanningCalculatorsRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
   '/poster-print': typeof PosterPrintRoute
   '/pprof': typeof PprofRoute
@@ -1866,6 +1919,7 @@ export interface FileRoutesByTo {
   '/screenshot-annotator': typeof ScreenshotAnnotatorRoute
   '/seating-chart': typeof SeatingChartRoute
   '/seo-files': typeof SeoFilesRoute
+  '/serial-monitor': typeof SerialMonitorRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
@@ -1909,11 +1963,13 @@ export interface FileRoutesByTo {
   '/video-animation': typeof VideoAnimationRoute
   '/video-editor': typeof VideoEditorRoute
   '/video-trimmer': typeof VideoTrimmerRoute
+  '/web-diagnostics': typeof WebDiagnosticsRoute
   '/webauthn-debugger': typeof WebauthnDebuggerRoute
   '/webp-gif': typeof WebpGifRoute
   '/webrtc-diagnostics': typeof WebrtcDiagnosticsRoute
   '/whiteboard': typeof WhiteboardRoute
   '/word-search': typeof WordSearchRoute
+  '/workflow-review': typeof WorkflowReviewRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
@@ -1971,6 +2027,7 @@ export interface FileRoutesById {
   '/curl-converter': typeof CurlConverterRoute
   '/cut-planner': typeof CutPlannerRoute
   '/data-charts': typeof DataChartsRoute
+  '/data-prep': typeof DataPrepRoute
   '/data-redactor': typeof DataRedactorRoute
   '/date-calculator': typeof DateCalculatorRoute
   '/datetime': typeof DatetimeRoute
@@ -1980,6 +2037,7 @@ export interface FileRoutesById {
   '/diff': typeof DiffRoute
   '/dns': typeof DnsRoute
   '/docker-compose': typeof DockerComposeRoute
+  '/dockerfile-review': typeof DockerfileReviewRoute
   '/document-maker': typeof DocumentMakerRoute
   '/document-scanner': typeof DocumentScannerRoute
   '/document-search': typeof DocumentSearchRoute
@@ -2049,6 +2107,7 @@ export interface FileRoutesById {
   '/math-worksheet': typeof MathWorksheetRoute
   '/mcp-trace': typeof McpTraceRoute
   '/meal-planner': typeof MealPlannerRoute
+  '/media-finishing': typeof MediaFinishingRoute
   '/metronome': typeof MetronomeRoute
   '/mind-map': typeof MindMapRoute
   '/mock-data': typeof MockDataRoute
@@ -2079,6 +2138,7 @@ export interface FileRoutesById {
   '/piano': typeof PianoRoute
   '/pinyin-annotator': typeof PinyinAnnotatorRoute
   '/pipeline': typeof PipelineRoute
+  '/planning-calculators': typeof PlanningCalculatorsRoute
   '/playwright-trace': typeof PlaywrightTraceRoute
   '/poster-print': typeof PosterPrintRoute
   '/pprof': typeof PprofRoute
@@ -2107,6 +2167,7 @@ export interface FileRoutesById {
   '/screenshot-annotator': typeof ScreenshotAnnotatorRoute
   '/seating-chart': typeof SeatingChartRoute
   '/seo-files': typeof SeoFilesRoute
+  '/serial-monitor': typeof SerialMonitorRoute
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
@@ -2150,11 +2211,13 @@ export interface FileRoutesById {
   '/video-animation': typeof VideoAnimationRoute
   '/video-editor': typeof VideoEditorRoute
   '/video-trimmer': typeof VideoTrimmerRoute
+  '/web-diagnostics': typeof WebDiagnosticsRoute
   '/webauthn-debugger': typeof WebauthnDebuggerRoute
   '/webp-gif': typeof WebpGifRoute
   '/webrtc-diagnostics': typeof WebrtcDiagnosticsRoute
   '/whiteboard': typeof WhiteboardRoute
   '/word-search': typeof WordSearchRoute
+  '/workflow-review': typeof WorkflowReviewRoute
   '/world-clock': typeof WorldClockRoute
   '/xml': typeof XmlRoute
   '/xml-json': typeof XmlJsonRoute
@@ -2213,6 +2276,7 @@ export interface FileRouteTypes {
     | '/curl-converter'
     | '/cut-planner'
     | '/data-charts'
+    | '/data-prep'
     | '/data-redactor'
     | '/date-calculator'
     | '/datetime'
@@ -2222,6 +2286,7 @@ export interface FileRouteTypes {
     | '/diff'
     | '/dns'
     | '/docker-compose'
+    | '/dockerfile-review'
     | '/document-maker'
     | '/document-scanner'
     | '/document-search'
@@ -2291,6 +2356,7 @@ export interface FileRouteTypes {
     | '/math-worksheet'
     | '/mcp-trace'
     | '/meal-planner'
+    | '/media-finishing'
     | '/metronome'
     | '/mind-map'
     | '/mock-data'
@@ -2321,6 +2387,7 @@ export interface FileRouteTypes {
     | '/piano'
     | '/pinyin-annotator'
     | '/pipeline'
+    | '/planning-calculators'
     | '/playwright-trace'
     | '/poster-print'
     | '/pprof'
@@ -2349,6 +2416,7 @@ export interface FileRouteTypes {
     | '/screenshot-annotator'
     | '/seating-chart'
     | '/seo-files'
+    | '/serial-monitor'
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
@@ -2392,11 +2460,13 @@ export interface FileRouteTypes {
     | '/video-animation'
     | '/video-editor'
     | '/video-trimmer'
+    | '/web-diagnostics'
     | '/webauthn-debugger'
     | '/webp-gif'
     | '/webrtc-diagnostics'
     | '/whiteboard'
     | '/word-search'
+    | '/workflow-review'
     | '/world-clock'
     | '/xml'
     | '/xml-json'
@@ -2453,6 +2523,7 @@ export interface FileRouteTypes {
     | '/curl-converter'
     | '/cut-planner'
     | '/data-charts'
+    | '/data-prep'
     | '/data-redactor'
     | '/date-calculator'
     | '/datetime'
@@ -2462,6 +2533,7 @@ export interface FileRouteTypes {
     | '/diff'
     | '/dns'
     | '/docker-compose'
+    | '/dockerfile-review'
     | '/document-maker'
     | '/document-scanner'
     | '/document-search'
@@ -2531,6 +2603,7 @@ export interface FileRouteTypes {
     | '/math-worksheet'
     | '/mcp-trace'
     | '/meal-planner'
+    | '/media-finishing'
     | '/metronome'
     | '/mind-map'
     | '/mock-data'
@@ -2561,6 +2634,7 @@ export interface FileRouteTypes {
     | '/piano'
     | '/pinyin-annotator'
     | '/pipeline'
+    | '/planning-calculators'
     | '/playwright-trace'
     | '/poster-print'
     | '/pprof'
@@ -2589,6 +2663,7 @@ export interface FileRouteTypes {
     | '/screenshot-annotator'
     | '/seating-chart'
     | '/seo-files'
+    | '/serial-monitor'
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
@@ -2632,11 +2707,13 @@ export interface FileRouteTypes {
     | '/video-animation'
     | '/video-editor'
     | '/video-trimmer'
+    | '/web-diagnostics'
     | '/webauthn-debugger'
     | '/webp-gif'
     | '/webrtc-diagnostics'
     | '/whiteboard'
     | '/word-search'
+    | '/workflow-review'
     | '/world-clock'
     | '/xml'
     | '/xml-json'
@@ -2693,6 +2770,7 @@ export interface FileRouteTypes {
     | '/curl-converter'
     | '/cut-planner'
     | '/data-charts'
+    | '/data-prep'
     | '/data-redactor'
     | '/date-calculator'
     | '/datetime'
@@ -2702,6 +2780,7 @@ export interface FileRouteTypes {
     | '/diff'
     | '/dns'
     | '/docker-compose'
+    | '/dockerfile-review'
     | '/document-maker'
     | '/document-scanner'
     | '/document-search'
@@ -2771,6 +2850,7 @@ export interface FileRouteTypes {
     | '/math-worksheet'
     | '/mcp-trace'
     | '/meal-planner'
+    | '/media-finishing'
     | '/metronome'
     | '/mind-map'
     | '/mock-data'
@@ -2801,6 +2881,7 @@ export interface FileRouteTypes {
     | '/piano'
     | '/pinyin-annotator'
     | '/pipeline'
+    | '/planning-calculators'
     | '/playwright-trace'
     | '/poster-print'
     | '/pprof'
@@ -2829,6 +2910,7 @@ export interface FileRouteTypes {
     | '/screenshot-annotator'
     | '/seating-chart'
     | '/seo-files'
+    | '/serial-monitor'
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
@@ -2872,11 +2954,13 @@ export interface FileRouteTypes {
     | '/video-animation'
     | '/video-editor'
     | '/video-trimmer'
+    | '/web-diagnostics'
     | '/webauthn-debugger'
     | '/webp-gif'
     | '/webrtc-diagnostics'
     | '/whiteboard'
     | '/word-search'
+    | '/workflow-review'
     | '/world-clock'
     | '/xml'
     | '/xml-json'
@@ -2934,6 +3018,7 @@ export interface RootRouteChildren {
   CurlConverterRoute: typeof CurlConverterRoute
   CutPlannerRoute: typeof CutPlannerRoute
   DataChartsRoute: typeof DataChartsRoute
+  DataPrepRoute: typeof DataPrepRoute
   DataRedactorRoute: typeof DataRedactorRoute
   DateCalculatorRoute: typeof DateCalculatorRoute
   DatetimeRoute: typeof DatetimeRoute
@@ -2943,6 +3028,7 @@ export interface RootRouteChildren {
   DiffRoute: typeof DiffRoute
   DnsRoute: typeof DnsRoute
   DockerComposeRoute: typeof DockerComposeRoute
+  DockerfileReviewRoute: typeof DockerfileReviewRoute
   DocumentMakerRoute: typeof DocumentMakerRoute
   DocumentScannerRoute: typeof DocumentScannerRoute
   DocumentSearchRoute: typeof DocumentSearchRoute
@@ -3012,6 +3098,7 @@ export interface RootRouteChildren {
   MathWorksheetRoute: typeof MathWorksheetRoute
   McpTraceRoute: typeof McpTraceRoute
   MealPlannerRoute: typeof MealPlannerRoute
+  MediaFinishingRoute: typeof MediaFinishingRoute
   MetronomeRoute: typeof MetronomeRoute
   MindMapRoute: typeof MindMapRoute
   MockDataRoute: typeof MockDataRoute
@@ -3042,6 +3129,7 @@ export interface RootRouteChildren {
   PianoRoute: typeof PianoRoute
   PinyinAnnotatorRoute: typeof PinyinAnnotatorRoute
   PipelineRoute: typeof PipelineRoute
+  PlanningCalculatorsRoute: typeof PlanningCalculatorsRoute
   PlaywrightTraceRoute: typeof PlaywrightTraceRoute
   PosterPrintRoute: typeof PosterPrintRoute
   PprofRoute: typeof PprofRoute
@@ -3070,6 +3158,7 @@ export interface RootRouteChildren {
   ScreenshotAnnotatorRoute: typeof ScreenshotAnnotatorRoute
   SeatingChartRoute: typeof SeatingChartRoute
   SeoFilesRoute: typeof SeoFilesRoute
+  SerialMonitorRoute: typeof SerialMonitorRoute
   SettingsRoute: typeof SettingsRoute
   SettingsDataRoute: typeof SettingsDataRoute
   SettingsPreferencesRoute: typeof SettingsPreferencesRoute
@@ -3113,11 +3202,13 @@ export interface RootRouteChildren {
   VideoAnimationRoute: typeof VideoAnimationRoute
   VideoEditorRoute: typeof VideoEditorRoute
   VideoTrimmerRoute: typeof VideoTrimmerRoute
+  WebDiagnosticsRoute: typeof WebDiagnosticsRoute
   WebauthnDebuggerRoute: typeof WebauthnDebuggerRoute
   WebpGifRoute: typeof WebpGifRoute
   WebrtcDiagnosticsRoute: typeof WebrtcDiagnosticsRoute
   WhiteboardRoute: typeof WhiteboardRoute
   WordSearchRoute: typeof WordSearchRoute
+  WorkflowReviewRoute: typeof WorkflowReviewRoute
   WorldClockRoute: typeof WorldClockRoute
   XmlRoute: typeof XmlRoute
   XmlJsonRoute: typeof XmlJsonRoute
@@ -3154,6 +3245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldClockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workflow-review': {
+      id: '/workflow-review'
+      path: '/workflow-review'
+      fullPath: '/workflow-review'
+      preLoaderRoute: typeof WorkflowReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/word-search': {
       id: '/word-search'
       path: '/word-search'
@@ -3187,6 +3285,13 @@ declare module '@tanstack/react-router' {
       path: '/webauthn-debugger'
       fullPath: '/webauthn-debugger'
       preLoaderRoute: typeof WebauthnDebuggerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/web-diagnostics': {
+      id: '/web-diagnostics'
+      path: '/web-diagnostics'
+      fullPath: '/web-diagnostics'
+      preLoaderRoute: typeof WebDiagnosticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/video-trimmer': {
@@ -3490,6 +3595,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/serial-monitor': {
+      id: '/serial-monitor'
+      path: '/serial-monitor'
+      fullPath: '/serial-monitor'
+      preLoaderRoute: typeof SerialMonitorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/seo-files': {
       id: '/seo-files'
       path: '/seo-files'
@@ -3684,6 +3796,13 @@ declare module '@tanstack/react-router' {
       path: '/playwright-trace'
       fullPath: '/playwright-trace'
       preLoaderRoute: typeof PlaywrightTraceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planning-calculators': {
+      id: '/planning-calculators'
+      path: '/planning-calculators'
+      fullPath: '/planning-calculators'
+      preLoaderRoute: typeof PlanningCalculatorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pipeline': {
@@ -3894,6 +4013,13 @@ declare module '@tanstack/react-router' {
       path: '/metronome'
       fullPath: '/metronome'
       preLoaderRoute: typeof MetronomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-finishing': {
+      id: '/media-finishing'
+      path: '/media-finishing'
+      fullPath: '/media-finishing'
+      preLoaderRoute: typeof MediaFinishingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/meal-planner': {
@@ -4379,6 +4505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocumentMakerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dockerfile-review': {
+      id: '/dockerfile-review'
+      path: '/dockerfile-review'
+      fullPath: '/dockerfile-review'
+      preLoaderRoute: typeof DockerfileReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docker-compose': {
       id: '/docker-compose'
       path: '/docker-compose'
@@ -4440,6 +4573,13 @@ declare module '@tanstack/react-router' {
       path: '/data-redactor'
       fullPath: '/data-redactor'
       preLoaderRoute: typeof DataRedactorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-prep': {
+      id: '/data-prep'
+      path: '/data-prep'
+      fullPath: '/data-prep'
+      preLoaderRoute: typeof DataPrepRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/data-charts': {
@@ -4846,6 +4986,7 @@ const rootRouteChildren: RootRouteChildren = {
   CurlConverterRoute: CurlConverterRoute,
   CutPlannerRoute: CutPlannerRoute,
   DataChartsRoute: DataChartsRoute,
+  DataPrepRoute: DataPrepRoute,
   DataRedactorRoute: DataRedactorRoute,
   DateCalculatorRoute: DateCalculatorRoute,
   DatetimeRoute: DatetimeRoute,
@@ -4855,6 +4996,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiffRoute: DiffRoute,
   DnsRoute: DnsRoute,
   DockerComposeRoute: DockerComposeRoute,
+  DockerfileReviewRoute: DockerfileReviewRoute,
   DocumentMakerRoute: DocumentMakerRoute,
   DocumentScannerRoute: DocumentScannerRoute,
   DocumentSearchRoute: DocumentSearchRoute,
@@ -4924,6 +5066,7 @@ const rootRouteChildren: RootRouteChildren = {
   MathWorksheetRoute: MathWorksheetRoute,
   McpTraceRoute: McpTraceRoute,
   MealPlannerRoute: MealPlannerRoute,
+  MediaFinishingRoute: MediaFinishingRoute,
   MetronomeRoute: MetronomeRoute,
   MindMapRoute: MindMapRoute,
   MockDataRoute: MockDataRoute,
@@ -4954,6 +5097,7 @@ const rootRouteChildren: RootRouteChildren = {
   PianoRoute: PianoRoute,
   PinyinAnnotatorRoute: PinyinAnnotatorRoute,
   PipelineRoute: PipelineRoute,
+  PlanningCalculatorsRoute: PlanningCalculatorsRoute,
   PlaywrightTraceRoute: PlaywrightTraceRoute,
   PosterPrintRoute: PosterPrintRoute,
   PprofRoute: PprofRoute,
@@ -4982,6 +5126,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScreenshotAnnotatorRoute: ScreenshotAnnotatorRoute,
   SeatingChartRoute: SeatingChartRoute,
   SeoFilesRoute: SeoFilesRoute,
+  SerialMonitorRoute: SerialMonitorRoute,
   SettingsRoute: SettingsRoute,
   SettingsDataRoute: SettingsDataRoute,
   SettingsPreferencesRoute: SettingsPreferencesRoute,
@@ -5025,11 +5170,13 @@ const rootRouteChildren: RootRouteChildren = {
   VideoAnimationRoute: VideoAnimationRoute,
   VideoEditorRoute: VideoEditorRoute,
   VideoTrimmerRoute: VideoTrimmerRoute,
+  WebDiagnosticsRoute: WebDiagnosticsRoute,
   WebauthnDebuggerRoute: WebauthnDebuggerRoute,
   WebpGifRoute: WebpGifRoute,
   WebrtcDiagnosticsRoute: WebrtcDiagnosticsRoute,
   WhiteboardRoute: WhiteboardRoute,
   WordSearchRoute: WordSearchRoute,
+  WorkflowReviewRoute: WorkflowReviewRoute,
   WorldClockRoute: WorldClockRoute,
   XmlRoute: XmlRoute,
   XmlJsonRoute: XmlJsonRoute,

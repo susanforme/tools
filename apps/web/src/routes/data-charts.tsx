@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import ImageAnalysis from '@/components/image-analysis-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useRef, useState } from 'react';
@@ -19,7 +20,9 @@ import {
 } from '@/lib/analysis-charts';
 export const Route = createFileRoute('/data-charts')({
   validateSearch: (search: Record<string, unknown>) => search,
-  component: DataChartModes,
+  component: () => (
+    <ToolExtensionSelector base={<DataChartModes />} panels={['profile']} />
+  ),
 });
 const PALETTE = [
   '#2563eb',
@@ -260,7 +263,10 @@ function DataCharts() {
     }
   }, [data, x, y, aggregate, type]);
   const options = (items: string[]) =>
-    items.map((value) => ({ value, label: t(`analysisTools.charts.${value}`) }));
+    items.map((value) => ({
+      value,
+      label: t(`analysisTools.charts.${value}`),
+    }));
   return (
     <AnalysisFrame tool="charts" error={error ?? job.error ?? derived.error}>
       <p className="text-sm text-muted-foreground">
@@ -415,7 +421,10 @@ function DataChartModes() {
           value={q.workspace === 'digitizer' ? 'digitizer' : 'charts'}
           options={[
             { value: 'charts', label: t('scienceExpansion.originalChart') },
-            { value: 'digitizer', label: t('scienceExpansion.image.digitizer') },
+            {
+              value: 'digitizer',
+              label: t('scienceExpansion.image.digitizer'),
+            },
           ]}
           onChange={(workspace) => set({ workspace })}
         />

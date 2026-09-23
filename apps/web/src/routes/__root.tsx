@@ -1,5 +1,12 @@
-import { EXPANSION_TOOLS, EXPANSION_KEYWORDS } from '@/lib/tool-expansion-catalog';
-import { PRACTICAL_SCIENCE_TOOLS, PRACTICAL_SCIENCE_KEYWORDS } from '@/lib/practical-science-catalog';
+import {
+  EXPANSION_TOOLS,
+  EXPANSION_KEYWORDS,
+} from '@/lib/tool-expansion-catalog';
+import { NEXT_WORKBENCHES } from '@/lib/next-tool-catalog';
+import {
+  PRACTICAL_SCIENCE_TOOLS,
+  PRACTICAL_SCIENCE_KEYWORDS,
+} from '@/lib/practical-science-catalog';
 import { ANALYSIS_PRODUCTIVITY_TOOLS } from '@/lib/analysis-productivity-catalog';
 import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
@@ -112,6 +119,9 @@ import {
   Table,
   Tag,
   Terminal,
+  GitBranch,
+  Container,
+  Cable,
   Thermometer,
   Type,
   Video,
@@ -641,6 +651,32 @@ const designNavItems = frontendNavItems.filter(
     item.to !== '/og-preview',
 );
 const developerToolNavItems: NavItem[] = [
+  ...NEXT_WORKBENCHES.filter((tool) => tool.category === 'developer').map(
+    ({ id, icon: Icon, color, titleKey, keywords }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-4 w-4 ${color}`} />,
+      labelKey: titleKey,
+      keywords,
+    }),
+  ),
+  {
+    to: '/workflow-review',
+    icon: <GitBranch className="h-4 w-4 text-indigo-500" />,
+    labelKey: 'newTools.workflow',
+    keywords: 'github actions workflow DAG matrix CI 工作流 依赖',
+  },
+  {
+    to: '/dockerfile-review',
+    icon: <Container className="h-4 w-4 text-orange-500" />,
+    labelKey: 'newTools.dockerfile',
+    keywords: 'dockerfile image layer cache 缓存 层',
+  },
+  {
+    to: '/serial-monitor',
+    icon: <Cable className="h-4 w-4 text-teal-500" />,
+    labelKey: 'newTools.serial',
+    keywords: 'serial port baud UART 串口 波特率',
+  },
   {
     to: '/chrome-coverage',
     icon: <Activity className="h-4 w-4 text-sky-500" />,
@@ -993,6 +1029,14 @@ const conversionNavItems = [
   ...textNavItems,
 ];
 const videoNavItems: NavItem[] = [
+  ...NEXT_WORKBENCHES.filter((tool) => tool.category === 'video').map(
+    ({ id, icon: Icon, color, titleKey, keywords }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-4 w-4 ${color}`} />,
+      labelKey: titleKey,
+      keywords,
+    }),
+  ),
   {
     to: '/audio-recorder',
     icon: <AudioLines className="h-4 w-4 text-emerald-500" />,
@@ -1039,6 +1083,14 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
+  ...NEXT_WORKBENCHES.filter((tool) => tool.category === 'life').map(
+    ({ id, icon: Icon, color, titleKey, keywords }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-4 w-4 ${color}`} />,
+      labelKey: titleKey,
+      keywords,
+    }),
+  ),
   ...[...EXPANSION_TOOLS, ...PRACTICAL_SCIENCE_TOOLS].map(
     ({ id, icon: Icon, color, titleKey, keywords }) => ({
       to: `/${id}` as const,
@@ -1047,12 +1099,14 @@ const lifeNavItems: NavItem[] = [
       keywords,
     }),
   ),
-  ...ANALYSIS_PRODUCTIVITY_TOOLS.map(({ id, icon: Icon, color, key, keywords }) => ({
-    to: `/${id}` as const,
-    icon: <Icon className={`h-4 w-4 ${color}`} />,
-    labelKey: `${key}.title`,
-    keywords,
-  })),
+  ...ANALYSIS_PRODUCTIVITY_TOOLS.map(
+    ({ id, icon: Icon, color, key, keywords }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-4 w-4 ${color}`} />,
+      labelKey: `${key}.title`,
+      keywords,
+    }),
+  ),
   ...PRACTICAL_TOOLS.map(({ id, icon: Icon, color }) => ({
     to: `/${id}` as const,
     icon: <Icon className={`h-4 w-4 ${color}`} />,

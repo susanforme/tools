@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -16,7 +17,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/data-redactor')({
-  component: DataRedactorPage,
+  component: () => (
+    <ToolExtensionSelector base={<DataRedactorPage />} panels={['secrets']} />
+  ),
 });
 function DataRedactorPage() {
   const { t } = useTranslation();

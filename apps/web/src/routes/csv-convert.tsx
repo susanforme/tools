@@ -1,4 +1,5 @@
 import { DocumentSection } from '@/components/document-workspace-ui';
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { TableCleaner } from '@/components/document-data-cleaner';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { profileTable } from '@/lib/developer-tools';
@@ -20,11 +21,16 @@ import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/csv-convert')({
   component: () => (
-    <DocumentSection
-      original="csvConvert.title"
-      name="cleanTitle"
-      base={<CsvConvertPage />}
-      extra={<TableCleaner />}
+    <ToolExtensionSelector
+      panels={['join']}
+      base={
+        <DocumentSection
+          original="csvConvert.title"
+          name="cleanTitle"
+          base={<CsvConvertPage />}
+          extra={<TableCleaner />}
+        />
+      }
     />
   ),
 });

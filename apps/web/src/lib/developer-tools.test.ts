@@ -17,6 +17,7 @@ import {
   formatEnv,
   generateEnvExample,
   inferJsonSchema,
+  inferJsonSchemaFromSamples,
   mergeGitignore,
   parseCreateTable,
   inspectRobotsTxt,
@@ -55,6 +56,26 @@ describe('developer tools', () => {
     expect(mergeGitignore(['dist\n!dist/keep', 'dist\n.env'])).toBe(
       'dist\n!dist/keep\n.env',
     );
+  });
+
+  it('infers optional and mixed fields across JSON samples', () => {
+    expect(
+      inferJsonSchemaFromSamples([
+        { id: 1, meta: { name: 'A' } },
+        { id: 2, meta: { age: 3 } },
+      ]),
+    ).toEqual({
+      type: 'object',
+      properties: {
+        id: { type: 'integer' },
+        meta: {
+          type: 'object',
+          properties: { name: { type: 'string' }, age: { type: 'integer' } },
+          required: [],
+        },
+      },
+      required: ['id', 'meta'],
+    });
   });
 
   it('profiles tables, dependencies, and OpenAPI responses', () => {

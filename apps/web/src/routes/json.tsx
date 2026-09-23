@@ -9,6 +9,7 @@ import { useToolPreference } from '@/hooks/useToolPreference';
 import {
   exampleFromSchema,
   inferJsonSchema,
+  inferJsonSchemaFromSamples,
   jsonSchemaToInterface,
   jsonSchemaToTypeScript,
   jsonSchemaToZod,
@@ -369,6 +370,11 @@ function resolveSchema(
 
 function SchemaPanel() {
   const { t } = useTranslation();
+  const [sampleMode, setSampleMode] = useQueryParam<'single' | 'lines'>(
+    'samples',
+    StringParam,
+    'single',
+  );
   const [mode, setMode] = useQueryParam<SchemaMode>(
     'mode',
     StringParam,
@@ -417,7 +423,18 @@ function SchemaPanel() {
     setError(null);
     try {
       if (activeMode === 'infer') {
-        const next = JSON.stringify(inferJsonSchema(JSON.parse(data)), null, 2);
+        const next = JSON.stringify(
+          sampleMode === 'lines'
+            ? inferJsonSchemaFromSamples(
+                data
+                  .split(/\r?\n/)
+                  .filter((line) => line.trim())
+                  .map((line) => JSON.parse(line) as unknown),
+              )
+            : inferJsonSchema(JSON.parse(data)),
+          null,
+          2,
+        );
         setSchema(next);
         setOutput(next);
         return;
@@ -558,6 +575,24 @@ function SchemaPanel() {
         </div>
       )}
 
+      {activeMode === 'infer' && (
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={sampleMode === 'single' ? 'default' : 'outline'}
+            onClick={() => setSampleMode('single')}
+          >
+            {t('newTools.singleSample')}
+          </Button>
+          <Button
+            size="sm"
+            variant={sampleMode === 'lines' ? 'default' : 'outline'}
+            onClick={() => setSampleMode('lines')}
+          >
+            {t('newTools.lineSamples')}
+          </Button>
+        </div>
+      )}
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-2">
           {showData && (

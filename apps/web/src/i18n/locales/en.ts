@@ -46,11 +46,15 @@ import { workflowProfileEn } from './workflow-profile';
 import { workflowAccessibilityEn } from './workflow-accessibility';
 import { workflowDataEn } from './workflow-data';
 import { workflowGraphqlEn } from './workflow-graphql';
+import { newToolsEn } from './new-tools';
+import { nextToolsEn } from './next-tools';
 import { en as inspectionData } from './inspection-data';
 import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...newToolsEn,
+  ...nextToolsEn,
   ...practicalWorkbenchesEn,
   ...lifeWorkspaceEn,
   ...mediaWorkspaceEn,

@@ -39,6 +39,48 @@ export function inferJsonSchema(value: unknown): JsonObject {
   };
 }
 
+/** Merge several records so only fields present in every sample are required. */
+export function inferJsonSchemaFromSamples(samples: unknown[]): JsonObject {
+  return mergeInferred(samples.map(inferJsonSchema));
+}
+
+function mergeInferred(schemas: JsonObject[]): JsonObject {
+  if (!schemas.length) return {};
+  if (schemas.length === 1) return schemas[0]!;
+  const samples = schemas.map((schema) => schema);
+  if (samples.every((schema) => schema.type === 'object')) {
+    const properties = new Map<string, JsonObject[]>();
+    for (const schema of samples)
+      for (const [key, value] of Object.entries(
+        schema.properties as JsonObject,
+      ))
+        properties.set(key, [
+          ...(properties.get(key) ?? []),
+          value as JsonObject,
+        ]);
+    return {
+      type: 'object',
+      properties: Object.fromEntries(
+        [...properties].map(([key, values]) => [key, mergeInferred(values)]),
+      ),
+      required: [...properties]
+        .filter(([, values]) => values.length === samples.length)
+        .map(([key]) => key),
+    };
+  }
+  if (samples.every((schema) => schema.type === 'array'))
+    return {
+      type: 'array',
+      items: mergeInferred(samples.map((schema) => schema.items as JsonObject)),
+    };
+  const unique = [
+    ...new Map(
+      samples.map((schema) => [JSON.stringify(schema), schema]),
+    ).values(),
+  ];
+  return unique.length === 1 ? unique[0]! : { anyOf: unique };
+}
+
 function tsPropertyName(value: string): string {
   return /^[A-Za-z_$][\w$]*$/.test(value) ? value : JSON.stringify(value);
 }

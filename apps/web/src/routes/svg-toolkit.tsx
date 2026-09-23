@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { VisualSvgEditor } from '@/components/visual-svg-editor-workspace';
 import { CodePanel } from '@/components/code-panel';
 import { FileDropzone } from '@/components/file-dropzone';
@@ -16,7 +17,9 @@ import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/svg-toolkit')({
-  component: SvgToolkitPage,
+  component: () => (
+    <ToolExtensionSelector base={<SvgToolkitPage />} panels={['morph']} />
+  ),
 });
 const SvgPathPanel = lazy(() => import('@/components/svg-path-panel'));
 type Mode = 'optimize' | 'data-uri' | 'react' | 'sprite' | 'path' | 'visual';

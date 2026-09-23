@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { PdfLayoutPanel } from '@/components/pdf-layout-editor';
 import { PdfAdvancedPanel } from '@/components/pdf-advanced-panel';
 import { ChoiceField } from '@/components/calculator-ui';
@@ -44,7 +45,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/pdf-toolkit')({
-  component: PdfToolkitPage,
+  component: () => (
+    <ToolExtensionSelector base={<PdfToolkitPage />} panels={['pdfAccess']} />
+  ),
 });
 
 type Mode =

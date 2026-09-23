@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { FileDropzone } from '@/components/file-dropzone';
 import { HttpLogPanel } from '@/components/extra-tool-panels';
 import { StructuredLogPanel } from '@/components/protocol-tool-panels';
@@ -19,7 +20,9 @@ import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/har-analyzer')({
-  component: HarAnalyzerPage,
+  component: () => (
+    <ToolExtensionSelector base={<HarAnalyzerPage />} panels={['thirdParty']} />
+  ),
 });
 
 type View = 'waterfall' | 'failures' | 'slow' | 'size' | 'domains';

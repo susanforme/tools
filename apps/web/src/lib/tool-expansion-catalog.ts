@@ -78,22 +78,38 @@ export const EXPANSION_TOOLS = [
   },
 ] as const;
 export const EXPANSION_KEYWORDS: Record<string, string> = {
+  '/json': '多份 样例 推断 Schema JSON lines',
+  '/openapi': 'response validate 实际响应 校验 schema',
+  '/csv-convert': 'CSV join 多表 关联 unmatched',
+  '/data-redactor': 'git diff ZIP secret scanner 密钥 泄露',
+  '/har-analyzer': '第三方 域名 请求 Cookie 隐私 HAR',
+  '/font': '字体 子集 glyph subset export',
+  '/subtitle-editor': '字幕 质检 CPS CPL overlap 重叠',
+  '/pdf-toolkit': 'PDF 无障碍 标签 替代文本 accessibility',
+  '/ebook-reader': 'EPUB 无障碍 目录 标题 accessibility',
+  '/geojson': 'GPX 坡度 爬升 海拔 UTM WGS84 坐标',
   '/document-scanner': 'OCR 可搜索 扫描件 文字层 searchable scan',
   '/audio-recorder': '语音 转写 Whisper transcript timestamps SRT VTT',
-  '/audio-editor': '音乐 标签 MP3 ID3 封面 title artist album tags',
-  '/piano': '乐谱 MusicXML 移调 分谱 sheet music score transpose',
+  '/audio-editor':
+    '音乐 标签 MP3 ID3 封面 title artist album tags LUFS 响度 true peak',
+  '/piano':
+    '乐谱 MusicXML 移调 分谱 sheet music score transpose MIDI 输入 监视 音符 力度 controller',
   '/image-collage': '照片书 相册 排版 出血 photobook pages bleed',
   '/video-animation': '定格 延时 帧 洋葱皮 stop motion timelapse onion',
-  '/svg-toolkit': '可视化 编辑 图层 对齐 组合 节点 visual layers nodes',
+  '/svg-toolkit':
+    '可视化 编辑 图层 对齐 组合 节点 visual layers nodes path morph 形变',
   '/packaging-designer': '激光 切割 榫卯 隔板 切缝 DXF laser kerf',
-  '/data-charts': '图表 取数 标定 对数 坐标 digitize calibrate logarithmic',
+  '/data-charts':
+    '图表 取数 标定 对数 坐标 digitize calibrate logarithmic 分布 异常值 missing outlier',
   '/math':
     '检验 t 卡方 方差 回归 残差 相关 t-test chi square ANOVA regression correlation',
   '/logic-workbench':
     '数字 电路 门 触发器 时钟 波形 digital circuit gates DFF clock waveform',
   '/home-inventory': '保修 借还 维修 凭证 warranty loan receipt repair',
   '/recipe-scale': '成本 损耗 出品 包装 定价 recipe cost yield margin',
-  '/project-planner': '活动 台本 分钟 人员 设备 顺延 event run sheet cue',
-  '/form-builder': '题库 试卷 单选 多选 判断 填空 判分 quiz question grading',
+  '/project-planner':
+    '活动 台本 分钟 人员 设备 顺延 event run sheet cue 团队 产能 工时 capacity',
+  '/form-builder':
+    '题库 试卷 单选 多选 判断 填空 判分 quiz question grading 问卷 回答 CSV 分布 survey',
   '/kinship': '家谱 家庭 树 亲属 GEDCOM family tree',
 };

@@ -1,4 +1,5 @@
 import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { ExamBuilderPanel } from '@/components/quiz-bank-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -412,8 +413,16 @@ function FormBuilder() {
 
 function ExpandedPage() {
   return (
-    <LifeWorkspace label="lifeWorkspace.exam.title" panel={<ExamBuilderPanel />}>
-      <FormBuilder />
-    </LifeWorkspace>
+    <ToolExtensionSelector
+      panels={['survey']}
+      base={
+        <LifeWorkspace
+          label="lifeWorkspace.exam.title"
+          panel={<ExamBuilderPanel />}
+        >
+          <FormBuilder />
+        </LifeWorkspace>
+      }
+    />
   );
 }

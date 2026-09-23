@@ -46,11 +46,15 @@ import { workflowProfileZh } from './workflow-profile';
 import { workflowAccessibilityZh } from './workflow-accessibility';
 import { workflowDataZh } from './workflow-data';
 import { workflowGraphqlZh } from './workflow-graphql';
+import { newToolsZh } from './new-tools';
+import { nextToolsZh } from './next-tools';
 import { zh as inspectionData } from './inspection-data';
 import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...newToolsZh,
+  ...nextToolsZh,
   ...practicalWorkbenchesZh,
   ...lifeWorkspaceZh,
   ...mediaWorkspaceZh,

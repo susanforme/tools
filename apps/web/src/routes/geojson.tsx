@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { MediaTracks } from '@/components/media-tracks';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createFileRoute } from '@tanstack/react-router';
@@ -18,7 +19,14 @@ import {
   type GeoResult,
 } from '@/lib/geojson-tool';
 
-export const Route = createFileRoute('/geojson')({ component: GeoJsonPage });
+export const Route = createFileRoute('/geojson')({
+  component: () => (
+    <ToolExtensionSelector
+      base={<GeoJsonPage />}
+      panels={['elevation', 'coordinates']}
+    />
+  ),
+});
 const GeoJsonMap = lazy(() => import('../components/geojson-map'));
 const createWorker = (): Worker =>
   new Worker(new URL('../workers/geojson-tool.worker.ts', import.meta.url), {

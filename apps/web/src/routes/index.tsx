@@ -1,4 +1,5 @@
 import { EXPANSION_TOOLS } from '@/lib/tool-expansion-catalog';
+import { NEXT_WORKBENCHES } from '@/lib/next-tool-catalog';
 import { PRACTICAL_SCIENCE_TOOLS } from '@/lib/practical-science-catalog';
 import { ANALYSIS_PRODUCTIVITY_TOOLS } from '@/lib/analysis-productivity-catalog';
 import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
@@ -106,6 +107,9 @@ import {
   Table,
   Tag,
   Terminal,
+  GitBranch,
+  Container,
+  Cable,
   Thermometer,
   Type,
   Upload,
@@ -298,6 +302,44 @@ const encodeTools = [
 ];
 
 const developerExtraTools = [
+  ...NEXT_WORKBENCHES.filter((tool) => tool.category === 'developer').map(
+    ({ id, icon: Icon, color, titleKey, descKey }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-8 w-8 ${color}`} />,
+      titleKey,
+      descKey,
+      tagKeys: [],
+      gradient: 'hover:bg-muted/50',
+      border: 'hover:border-primary/40',
+    }),
+  ),
+  {
+    to: '/workflow-review' as const,
+    icon: <GitBranch className="h-8 w-8 text-indigo-500" />,
+    titleKey: 'newTools.workflow',
+    descKey: 'newTools.workflowDesc',
+    tagKeys: [],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  },
+  {
+    to: '/dockerfile-review' as const,
+    icon: <Container className="h-8 w-8 text-orange-500" />,
+    titleKey: 'newTools.dockerfile',
+    descKey: 'newTools.dockerfileDesc',
+    tagKeys: [],
+    gradient: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-300 dark:hover:border-orange-700',
+  },
+  {
+    to: '/serial-monitor' as const,
+    icon: <Cable className="h-8 w-8 text-teal-500" />,
+    titleKey: 'newTools.serial',
+    descKey: 'newTools.serialDesc',
+    tagKeys: [],
+    gradient: 'hover:bg-teal-50 dark:hover:bg-teal-950/20',
+    border: 'hover:border-teal-300 dark:hover:border-teal-700',
+  },
   {
     to: '/chrome-coverage' as const,
     icon: <Activity className="h-8 w-8 text-sky-500" />,
@@ -1491,6 +1533,17 @@ const frontendTools = [
 ];
 
 const videoTools = [
+  ...NEXT_WORKBENCHES.filter((tool) => tool.category === 'video').map(
+    ({ id, icon: Icon, color, titleKey, descKey }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-8 w-8 ${color}`} />,
+      titleKey,
+      descKey,
+      tagKeys: [],
+      gradient: 'hover:bg-muted/50',
+      border: 'hover:border-primary/40',
+    }),
+  ),
   {
     to: '/audio-recorder' as const,
     icon: <AudioLines className="h-8 w-8 text-emerald-500" />,
@@ -1582,6 +1635,17 @@ const videoTools = [
 ];
 
 const lifeTools = [
+  ...NEXT_WORKBENCHES.filter((tool) => tool.category === 'life').map(
+    ({ id, icon: Icon, color, titleKey, descKey }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-8 w-8 ${color}`} />,
+      titleKey,
+      descKey,
+      tagKeys: [],
+      gradient: 'hover:bg-muted/50',
+      border: 'hover:border-primary/40',
+    }),
+  ),
   ...[...EXPANSION_TOOLS, ...PRACTICAL_SCIENCE_TOOLS].map(
     ({ id, icon: Icon, color, titleKey, descKey }) => ({
       to: `/${id}` as const,

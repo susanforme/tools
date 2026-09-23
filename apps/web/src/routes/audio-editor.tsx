@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import {
   NumberParam,
   StringParam,
@@ -25,7 +26,12 @@ import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/audio-editor')({
   component: () => (
-    <MediaWorkspaceSelector kind="tags" original={<AudioEditorPage />} />
+    <ToolExtensionSelector
+      panels={['loudness']}
+      base={
+        <MediaWorkspaceSelector kind="tags" original={<AudioEditorPage />} />
+      }
+    />
   ),
 });
 

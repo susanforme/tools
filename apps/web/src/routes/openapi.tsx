@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { OpenApiDiffPanel } from '@/components/modern-web-tool-panels';
 import {
@@ -21,7 +22,11 @@ import {
 } from '../components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
-export const Route = createFileRoute('/openapi')({ component: OpenApiPage });
+export const Route = createFileRoute('/openapi')({
+  component: () => (
+    <ToolExtensionSelector base={<OpenApiPage />} panels={['response']} />
+  ),
+});
 
 type Mode = 'endpoints' | 'schemas' | 'mock' | 'diff';
 

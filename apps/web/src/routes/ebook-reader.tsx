@@ -1,4 +1,5 @@
 import { DocumentSection } from '@/components/document-workspace-ui';
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { EpubMaker } from '@/components/epub-authoring';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,11 +19,16 @@ import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/ebook-reader')({
   component: () => (
-    <DocumentSection
-      original="ebookReader.title"
-      name="epubTitle"
-      base={<EbookReaderPage />}
-      extra={<EpubMaker />}
+    <ToolExtensionSelector
+      panels={['epubAccess']}
+      base={
+        <DocumentSection
+          original="ebookReader.title"
+          name="epubTitle"
+          base={<EbookReaderPage />}
+          extra={<EpubMaker />}
+        />
+      }
     />
   ),
 });

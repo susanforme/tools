@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { MediaFont } from '@/components/media-font';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -36,7 +37,11 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 
-export const Route = createFileRoute('/font')({ component: FontPage });
+export const Route = createFileRoute('/font')({
+  component: () => (
+    <ToolExtensionSelector base={<FontPage />} panels={['subset']} />
+  ),
+});
 
 const PREVIEW_FONT_FAMILY = 'ToolsFontInspector';
 const DEFAULT_PREVIEW_TEXT = '字体预览 Font Preview 0123456789';

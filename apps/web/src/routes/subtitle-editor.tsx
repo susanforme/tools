@@ -1,3 +1,4 @@
+import { ToolExtensionSelector } from '@/components/tool-extension-selector';
 import { FileDropzone } from '@/components/file-dropzone';
 import { MediaResult } from '@/components/media-result';
 import { Button } from '@/components/ui/button';
@@ -29,7 +30,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/subtitle-editor')({
-  component: SubtitleEditorPage,
+  component: () => (
+    <ToolExtensionSelector
+      base={<SubtitleEditorPage />}
+      panels={['subtitleQc']}
+    />
+  ),
 });
 
 type SubtitleTab = 'convert' | 'burn';
