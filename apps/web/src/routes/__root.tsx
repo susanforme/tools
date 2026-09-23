@@ -1,3 +1,4 @@
+import { MATH_TOOLS } from '@/lib/math-tool-catalog';
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
 import { setAuthGuest, useAuthSession } from '@/hooks/useAuthSession';
 import { useOptionalAuthMutation } from '@/hooks/useOptionalAuth';
@@ -1031,6 +1032,12 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
+  ...MATH_TOOLS.map(({ id, iconClassName }) => ({
+    to: `/${id}`,
+    icon: <Calculator className={`h-4 w-4 ${iconClassName}`} />,
+    labelKey: `mathTools.tools.${id}.title`,
+    keywords: `数学 计算 math calculator ${id}`,
+  })),
   {
     to: '/screenshot-annotator',
     icon: <PencilRuler className="h-4 w-4 text-blue-500" />,

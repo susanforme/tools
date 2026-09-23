@@ -1,3 +1,4 @@
+import { MATH_TOOLS } from '@/lib/math-tool-catalog';
 import { useFavorites } from '@/hooks/useFavorites';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
@@ -1578,6 +1579,15 @@ const videoTools = [
 ];
 
 const lifeTools = [
+  ...MATH_TOOLS.map(({ id, iconClassName }) => ({
+    to: `/${id}` as const,
+    icon: <Calculator className={`h-8 w-8 ${iconClassName}`} />,
+    titleKey: `mathTools.tools.${id}.title`,
+    descKey: `mathTools.tools.${id}.description`,
+    tagKeys: ['mathTools.tag'],
+    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
+    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+  })),
   {
     to: '/screenshot-annotator' as const,
     icon: <PencilRuler className="h-8 w-8 text-blue-500" />,
