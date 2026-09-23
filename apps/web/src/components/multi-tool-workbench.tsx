@@ -46,9 +46,13 @@ export function MultiToolWorkbench({
     <div className="mx-auto max-w-6xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{title}</h1>
       <Tabs value={active.id} onValueChange={setMode}>
-        <TabsList className="h-auto max-w-full flex-wrap">
+        <TabsList className="max-w-full flex-wrap group-data-[orientation=horizontal]/tabs:h-auto">
           {tools.map((tool) => (
-            <TabsTrigger key={tool.id} value={tool.id}>
+            <TabsTrigger
+              key={tool.id}
+              value={tool.id}
+              className="h-auto flex-none"
+            >
               {t(`nextTools.${tool.id}`)}
             </TabsTrigger>
           ))}

@@ -1,4 +1,5 @@
 import { MultiToolWorkbench } from '@/components/multi-tool-workbench';
+import { DEVELOPER_AUDITS } from '@/lib/developer-audits';
 import { DEVELOPER_TOOLS } from '@/lib/next-developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,7 @@ function WebDiagnosticsPage() {
   return (
     <MultiToolWorkbench
       title={t('nextTools.webTitle')}
-      tools={DEVELOPER_TOOLS}
+      tools={[...DEVELOPER_TOOLS, ...DEVELOPER_AUDITS]}
     />
   );
 }

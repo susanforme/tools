@@ -1,7 +1,10 @@
 import type { WorkbenchTool } from '@/components/multi-tool-workbench';
 import Papa from 'papaparse';
 
-function rows(text: string, columns: string[]): Record<string, string>[] {
+export function rows(
+  text: string,
+  columns: string[],
+): Record<string, string>[] {
   if (text.length > 500_000) throw new Error('Input exceeds 500 KB');
   const parsed = Papa.parse<Record<string, string>>(text, {
     header: true,
@@ -117,7 +120,7 @@ export function decisionSensitivity(text: string): Record<string, unknown> {
   };
 }
 
-function isoDate(text: string): Date {
+export function isoDate(text: string): Date {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) throw new Error('Use YYYY-MM-DD');
   const date = new Date(`${text}T00:00:00Z`);
   if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== text)

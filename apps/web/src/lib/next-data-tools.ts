@@ -1,12 +1,15 @@
 import type { WorkbenchTool } from '@/components/multi-tool-workbench';
 import Papa from 'papaparse';
 
-type Table = { headers: string[]; rows: Record<string, string>[] };
+export type Table = { headers: string[]; rows: Record<string, string>[] };
 
-function parseTable(text: string): Table {
+export function parseTable(text: string): Table {
   if (new TextEncoder().encode(text).length > 2_000_000)
     throw new Error('CSV exceeds 2 MB');
-  const parsed = Papa.parse<string[]>(text, { skipEmptyLines: 'greedy' });
+  const parsed = Papa.parse<string[]>(text, {
+    delimiter: ',',
+    skipEmptyLines: 'greedy',
+  });
   if (parsed.errors.length) throw new Error(parsed.errors[0]!.message);
   const [headers, ...data] = parsed.data;
   if (!headers?.length || new Set(headers).size !== headers.length)
