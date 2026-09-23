@@ -1,4 +1,4 @@
-import { MATH_TOOLS } from '@/lib/math-tool-catalog';
+import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { useFavorites } from '@/hooks/useFavorites';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import {
@@ -1579,15 +1579,24 @@ const videoTools = [
 ];
 
 const lifeTools = [
-  ...MATH_TOOLS.map(({ id, iconClassName }) => ({
+  ...PRACTICAL_TOOLS.map(({ id, icon: Icon, color }) => ({
     to: `/${id}` as const,
-    icon: <Calculator className={`h-8 w-8 ${iconClassName}`} />,
-    titleKey: `mathTools.tools.${id}.title`,
-    descKey: `mathTools.tools.${id}.description`,
-    tagKeys: ['mathTools.tag'],
-    gradient: 'hover:bg-indigo-50 dark:hover:bg-indigo-950/20',
-    border: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+    icon: <Icon className={`h-8 w-8 ${color}`} />,
+    titleKey: `studio20.tools.${id}.title`,
+    descKey: `studio20.tools.${id}.description`,
+    tagKeys: [],
+    gradient: 'hover:bg-muted/50',
+    border: 'hover:border-primary/40',
   })),
+  {
+    to: '/math' as const,
+    icon: <Calculator className="h-8 w-8 text-blue-500" />,
+    titleKey: 'mathTools.title',
+    descKey: 'mathTools.description',
+    tagKeys: ['mathTools.tag'],
+    gradient: 'hover:bg-blue-50 dark:hover:bg-blue-950/20',
+    border: 'hover:border-blue-300 dark:hover:border-blue-700',
+  },
   {
     to: '/screenshot-annotator' as const,
     icon: <PencilRuler className="h-8 w-8 text-blue-500" />,

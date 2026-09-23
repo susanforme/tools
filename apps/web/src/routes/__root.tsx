@@ -1,4 +1,4 @@
-import { MATH_TOOLS } from '@/lib/math-tool-catalog';
+import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
 import { setAuthGuest, useAuthSession } from '@/hooks/useAuthSession';
 import { useOptionalAuthMutation } from '@/hooks/useOptionalAuth';
@@ -1032,12 +1032,19 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
-  ...MATH_TOOLS.map(({ id, iconClassName }) => ({
-    to: `/${id}`,
-    icon: <Calculator className={`h-4 w-4 ${iconClassName}`} />,
-    labelKey: `mathTools.tools.${id}.title`,
-    keywords: `数学 计算 math calculator ${id}`,
+  ...PRACTICAL_TOOLS.map(({ id, icon: Icon, color }) => ({
+    to: `/${id}` as const,
+    icon: <Icon className={`h-4 w-4 ${color}`} />,
+    labelKey: `studio20.tools.${id}.title`,
+    keywords: id.replaceAll('-', ' '),
   })),
+  {
+    to: '/math',
+    icon: <Calculator className="h-4 w-4 text-blue-500" />,
+    labelKey: 'mathTools.title',
+    keywords:
+      '数学 分数 百分比 公因数 公倍数 质数 科学计数 舍入 幂 开方 对数 方程 矩阵 统计 排列 组合 概率 分布 置信区间 样本 三角形 数列 math fraction percentage gcd lcm prime scientific rounding power root logarithm quadratic linear matrix statistics permutation combination probability binomial z-score confidence sample triangle sequence',
+  },
   {
     to: '/screenshot-annotator',
     icon: <PencilRuler className="h-4 w-4 text-blue-500" />,

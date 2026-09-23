@@ -94,10 +94,12 @@ export function DocumentUpload({
   disabled,
   onFiles,
   camera = false,
+  multiple = true,
 }: {
   disabled: boolean;
   onFiles: (files: File[]) => void;
   camera?: boolean;
+  multiple?: boolean;
 }) {
   const { t } = useTranslation();
   const capture = useRef<HTMLInputElement>(null);
@@ -105,7 +107,7 @@ export function DocumentUpload({
     <div className="space-y-2">
       <FileDropzone
         accept="image/*"
-        multiple
+        multiple={multiple}
         disabled={disabled}
         onFiles={(files) => {
           if (!disabled) onFiles(files.map(({ file }) => file));
@@ -115,7 +117,7 @@ export function DocumentUpload({
         <span>{t('imageDocumentCommon.upload')}</span>
       </FileDropzone>
       <p className="text-xs text-muted-foreground">
-        {t('imageDocumentCommon.limitHint')}
+        {multiple ? t('imageDocumentCommon.limitHint') : '20 MB'}
       </p>
       {camera && (
         <>

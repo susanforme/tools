@@ -72,6 +72,8 @@ export async function renderPdfPage(
     const document = await loading.promise;
     const page = await document.getPage(pageNumber);
     const viewport = page.getViewport({ scale: 1.25 });
+    if (viewport.width * viewport.height > 16_000_000)
+      throw new Error('PDF 页面尺寸过大');
     const canvas = window.document.createElement('canvas');
     canvas.width = Math.ceil(viewport.width);
     canvas.height = Math.ceil(viewport.height);

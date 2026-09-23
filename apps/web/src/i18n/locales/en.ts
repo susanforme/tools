@@ -1,3 +1,4 @@
+import { practicalToolsEn } from './practical-tools';
 import { mathToolsEn } from './math-tools';
 import { personalToolsEn } from './personal-tools';
 import { organizerToolsEn } from './organizer-tools';
@@ -37,6 +38,7 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...practicalToolsEn,
   ...mathToolsEn,
   ...personalToolsEn,
   ...organizerToolsEn,

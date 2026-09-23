@@ -1,3 +1,4 @@
+import { practicalToolsZh } from './practical-tools';
 import { mathToolsZh } from './math-tools';
 import { personalToolsZh } from './personal-tools';
 import { organizerToolsZh } from './organizer-tools';
@@ -37,6 +38,7 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...practicalToolsZh,
   ...mathToolsZh,
   ...personalToolsZh,
   ...organizerToolsZh,

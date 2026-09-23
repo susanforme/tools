@@ -14,12 +14,14 @@ export function NumberField({
   value,
   onChange,
   min = 0,
+  max,
   step = 'any',
 }: {
   label: string;
   value: number;
   onChange: (value: number) => void;
   min?: number;
+  max?: number;
   step?: number | 'any';
 }) {
   const id = useId();
@@ -30,6 +32,7 @@ export function NumberField({
         id={id}
         type="number"
         min={min}
+        max={max}
         step={step}
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}

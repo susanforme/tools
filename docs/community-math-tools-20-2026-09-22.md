@@ -10,30 +10,32 @@
 - [比例样本量](https://www.calculator.net/sample-size-calculator.html)：正态近似与有限总体校正。
 - [社区对样本量工具的使用讨论](https://www.reddit.com/r/learnmath/comments/16sl2hh)：按总体人数估算抽样数量的实际需求。
 
-## 新增页面
+## 数学工具箱子工具
+
+2026-09-23：合并为 `/math?tool=<子工具标识>`，首页与搜索仅保留数学工具箱。原独立路由已删除，不保留跳转。
 
 | 路由                      | 工具                   | 功能                                 |
 | ------------------------- | ---------------------- | ------------------------------------ |
-| `/fraction-calculator`    | 分数计算器             | 分数四则运算与约分                   |
-| `/percentage-calculator`  | 百分比计算器           | 百分比、占比与变化率                 |
-| `/gcd-lcm`                | 最大公因数与最小公倍数 | 多个整数的公因数与公倍数             |
-| `/prime-factorization`    | 质因数分解             | 正整数分解与素数判断                 |
-| `/scientific-notation`    | 科学计数法             | 十进制、科学计数法与工程计数法       |
-| `/rounding-calculator`    | 数字舍入               | 按小数位或十、百位舍入               |
-| `/power-root`             | 幂与开方               | 幂运算与实数 n 次根                  |
-| `/logarithm-calculator`   | 对数计算器             | 任意底数、自然对数与常用对数         |
-| `/quadratic-equation`     | 一元二次方程           | 求解 ax² + bx + c = 0                |
-| `/linear-system`          | 线性方程组             | 用增广矩阵求解 2–8 元方程组          |
-| `/matrix-calculator`      | 矩阵计算器             | 矩阵加减、乘法、转置、行列式与逆矩阵 |
-| `/statistics-calculator`  | 描述统计               | 均值、中位数、众数、方差与标准差     |
-| `/combinatorics`          | 排列组合               | 精确计算 n!、P(n,r) 与 C(n,r)        |
-| `/probability-calculator` | 独立事件概率           | 两个独立事件的交集、并集与补集       |
-| `/binomial-distribution`  | 二项分布               | 独立重复试验的精确与累计概率         |
-| `/z-score`                | Z 分数计算器           | 原始数值与标准分数互换               |
-| `/confidence-interval`    | 均值置信区间           | 已知总体标准差的正态均值 Z 区间      |
-| `/sample-size`            | 比例样本量             | 简单随机抽样的比例估计样本量         |
-| `/triangle-calculator`    | 三角形计算器           | 由三边计算角度、面积、周长与高       |
-| `/sequence-calculator`    | 数列计算器             | 等差与等比数列的项、前缀与求和       |
+| `/math?tool=fraction-calculator`    | 分数计算器             | 分数四则运算与约分                   |
+| `/math?tool=percentage-calculator`  | 百分比计算器           | 百分比、占比与变化率                 |
+| `/math?tool=gcd-lcm`                | 最大公因数与最小公倍数 | 多个整数的公因数与公倍数             |
+| `/math?tool=prime-factorization`    | 质因数分解             | 正整数分解与素数判断                 |
+| `/math?tool=scientific-notation`    | 科学计数法             | 十进制、科学计数法与工程计数法       |
+| `/math?tool=rounding-calculator`    | 数字舍入               | 按小数位或十、百位舍入               |
+| `/math?tool=power-root`             | 幂与开方               | 幂运算与实数 n 次根                  |
+| `/math?tool=logarithm-calculator`   | 对数计算器             | 任意底数、自然对数与常用对数         |
+| `/math?tool=quadratic-equation`     | 一元二次方程           | 求解 ax² + bx + c = 0                |
+| `/math?tool=linear-system`          | 线性方程组             | 用增广矩阵求解 2–8 元方程组          |
+| `/math?tool=matrix-calculator`      | 矩阵计算器             | 矩阵加减、乘法、转置、行列式与逆矩阵 |
+| `/math?tool=statistics-calculator`  | 描述统计               | 均值、中位数、众数、方差与标准差     |
+| `/math?tool=combinatorics`          | 排列组合               | 精确计算 n!、P(n,r) 与 C(n,r)        |
+| `/math?tool=probability-calculator` | 独立事件概率           | 两个独立事件的交集、并集与补集       |
+| `/math?tool=binomial-distribution`  | 二项分布               | 独立重复试验的精确与累计概率         |
+| `/math?tool=z-score`                | Z 分数计算器           | 原始数值与标准分数互换               |
+| `/math?tool=confidence-interval`    | 均值置信区间           | 已知总体标准差的正态均值 Z 区间      |
+| `/math?tool=sample-size`            | 比例样本量             | 简单随机抽样的比例估计样本量         |
+| `/math?tool=triangle-calculator`    | 三角形计算器           | 由三边计算角度、面积、周长与高       |
+| `/math?tool=sequence-calculator`    | 数列计算器             | 等差与等比数列的项、前缀与求和       |
 
 所有页面均进入首页生活工具分类、全局搜索和现有收藏流程；包含中英翻译、示例、计算、复制结果和错误提示。计算模式、舍入位数和有效数字通过 URL 保存；输入内容与结果为临时状态，修改输入或 URL 后隐藏旧结果。
 

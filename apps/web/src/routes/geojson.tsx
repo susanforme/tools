@@ -1,3 +1,5 @@
+import { MediaTracks } from '@/components/media-tracks';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createFileRoute } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +26,11 @@ const createWorker = (): Worker =>
   });
 
 function GeoJsonPage() {
+  const { t } = useTranslation();
+  const [tab,setTab] = useQueryParam<string>('tab',StringParam,'inspect');
+  return <div className="mx-auto max-w-6xl px-4 py-6 space-y-4"><Tabs value={tab} onValueChange={setTab}><TabsList><TabsTrigger value="inspect">{t('geojson.title')}</TabsTrigger><TabsTrigger value="tracks">{t('batch3Media.tracks')}</TabsTrigger></TabsList></Tabs>{tab==='tracks'?<MediaTracks/>:<GeoJsonInspector/>}</div>;
+}
+function GeoJsonInspector() {
   const { t } = useTranslation();
   const [query, setQuery] = useQueryParam<string>('q', StringParam, '');
   const [input, setInput] = useState('');

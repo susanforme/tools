@@ -60,9 +60,9 @@ export function MathToolPage({ tool }: { tool: MathToolId }) {
       ),
   );
   return (
-    <div className="mx-auto max-w-5xl space-y-5 px-4 py-6">
+    <div className="space-y-5">
       <header>
-        <h1 className="text-2xl font-bold">{t(`${prefix}.title`)}</h1>
+        <h2 className="text-xl font-semibold">{t(`${prefix}.title`)}</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {t(`${prefix}.description`)}
         </p>

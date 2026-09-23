@@ -66,6 +66,8 @@ const CDN_MODULE_VERSIONS = {
   hyparquet: '1.31.0',
   'hyparquet-compressors': '1.1.1',
   i18next: '25.8.13',
+  'iconv-lite': '0.7.2',
+  imagetracerjs: '1.2.6',
   'ical.js': '2.2.1',
   ignore: '7.0.9',
   'intl-messageformat': '12.1.0',
