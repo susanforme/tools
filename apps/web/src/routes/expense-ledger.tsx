@@ -21,7 +21,7 @@ import {
   validLedger,
   type Ledger,
   type LedgerEntry,
-} from '@/lib/batch4-organizer-tools';
+} from '@/lib/organizer-records';
 import { localDay } from '@/lib/organizer-tools';
 import { downloadBlob } from '@/lib/download';
 import { createFileRoute } from '@tanstack/react-router';
@@ -33,7 +33,7 @@ export const Route = createFileRoute('/expense-ledger')({
 const INITIAL: Ledger = { entries: [], budgets: [] };
 function ExpenseLedgerPage() {
   const { t } = useTranslation();
-  const tr = (k: string) => t(`batch4Organizers.${k}`);
+  const tr = (k: string) => t(`organizerTools.${k}`);
   const store = useOrganizerStore(
     'tools.expense-ledger.v1',
     INITIAL,

@@ -1,5 +1,6 @@
-import { BATCH4_TOOLS, BATCH4_KEYWORDS } from '@/lib/batch4-catalog';
-import { BATCH3_TOOLS } from '@/lib/batch3-catalog';
+import { EXPANSION_TOOLS, EXPANSION_KEYWORDS } from '@/lib/tool-expansion-catalog';
+import { PRACTICAL_SCIENCE_TOOLS, PRACTICAL_SCIENCE_KEYWORDS } from '@/lib/practical-science-catalog';
+import { ANALYSIS_PRODUCTIVITY_TOOLS } from '@/lib/analysis-productivity-catalog';
 import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
 import { setAuthGuest, useAuthSession } from '@/hooks/useAuthSession';
@@ -494,7 +495,7 @@ const frontendNavItems: NavItem[] = [
   },
   {
     to: '/design-tokens',
-    icon: <Palette className="h-4 w-4 text-primary" />,
+    icon: <Palette className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.designTokens',
     keywords: 'design tokens dtcg css variables 设计 变量 令牌',
   },
@@ -642,160 +643,160 @@ const designNavItems = frontendNavItems.filter(
 const developerToolNavItems: NavItem[] = [
   {
     to: '/chrome-coverage',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-sky-500" />,
     labelKey: 'communityNext.chromeCoverage.title',
     keywords: 'coverage unused js css 覆盖 未使用 体积',
   },
   {
     to: '/react-profiler',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-rose-500" />,
     labelKey: 'communityNext.reactProfiler.title',
     keywords: 'react profiler commit 渲染 组件 性能',
   },
   {
     to: '/pprof',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-amber-500" />,
     labelKey: 'communityNext.pprof.title',
     keywords: 'pprof golang cpu memory flamegraph 采样',
   },
   {
     to: '/prometheus',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-emerald-500" />,
     labelKey: 'communityNext.prometheus.title',
     keywords: 'prometheus openmetrics promql 指标 监控',
   },
   {
     to: '/binary-data',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-violet-500" />,
     labelKey: 'communityNext.binaryData.title',
     keywords: 'bson ejson mongodb amazon ion 二进制',
   },
   {
     to: '/arrow-viewer',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-orange-500" />,
     labelKey: 'communityNext.arrowViewer.title',
     keywords: 'arrow ipc feather 数据 列',
   },
   {
     to: '/hcl-inspector',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-cyan-500" />,
     labelKey: 'communityNext.hclInspector.title',
     keywords: 'hcl terraform syntax 资源 配置',
   },
   {
     to: '/openpgp',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-fuchsia-500" />,
     labelKey: 'communityNext.openpgp.title',
     keywords: 'openpgp pgp gpg 加密 签名',
   },
   {
     to: '/pcap-viewer',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-lime-500" />,
     labelKey: 'communityNext.pcapViewer.title',
     keywords: 'pcap pcapng wireshark 抓包 协议',
   },
 
   {
     to: '/heap-snapshot',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-indigo-500" />,
     labelKey: 'nav.communityHeap',
     keywords: 'heap snapshot memory 内存 泄漏 对比',
   },
   {
     to: '/chrome-trace',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.communityTrace',
     keywords: 'chrome trace performance timeline 长任务 线程',
   },
   {
     to: '/netlog-viewer',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.communityNetlog',
     keywords: 'chrome netlog dns socket 网络 日志',
   },
   {
     to: '/playwright-trace',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-pink-500" />,
     labelKey: 'nav.communityPlaywright',
     keywords: 'playwright trace zip test 测试 截图',
   },
   {
     to: '/asyncapi',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-blue-500" />,
     labelKey: 'nav.communityAsyncapi',
     keywords: 'asyncapi schema event 消息 事件',
   },
   {
     to: '/cel',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-yellow-500" />,
     labelKey: 'nav.communityCel',
     keywords: 'cel expression rule 表达式 规则',
   },
   {
     to: '/spdx-expression',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-purple-500" />,
     labelKey: 'nav.communitySpdx',
     keywords: 'spdx license expression 许可证',
   },
   {
     to: '/mqtt-packet',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-sky-500" />,
     labelKey: 'nav.communityMqtt',
     keywords: 'mqtt packet binary 报文 协议',
   },
   {
     to: '/feed-inspector',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-rose-500" />,
     labelKey: 'nav.communityFeed',
     keywords: 'rss atom feed 订阅',
   },
   {
     to: '/gltf-inspector',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-amber-500" />,
     labelKey: 'nav.communityModel',
     keywords:
       'gltf glb stl obj 3d model 模型 三维 表面积 体积 缩放 dimensions volume surface',
   },
   {
     to: '/browser-capabilities',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-emerald-500" />,
     labelKey: 'nav.communityCapabilities',
     keywords: 'webgpu webcodecs codec gpu 编解码 能力',
   },
   {
     to: '/lighthouse-report',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-violet-500" />,
     labelKey: 'nav.lighthouseReport',
     keywords: 'lighthouse lcp cls tbt performance 性能 报告 对比',
   },
   {
     to: '/otel-viewer',
-    icon: <Network className="h-4 w-4 text-primary" />,
+    icon: <Network className="h-4 w-4 text-orange-500" />,
     labelKey: 'nav.otelViewer',
     keywords: 'opentelemetry otlp span trace waterfall 链路 瀑布图',
   },
   {
     to: '/rrweb-player',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-cyan-500" />,
     labelKey: 'nav.rrwebPlayer',
     keywords: 'rrweb replay session recording 回放 录制',
   },
   {
     to: '/sbom-viewer',
-    icon: <ShieldAlert className="h-4 w-4 text-primary" />,
+    icon: <ShieldAlert className="h-4 w-4 text-fuchsia-500" />,
     labelKey: 'nav.sbomViewer',
     keywords: 'sbom cyclonedx spdx dependency license 组件 依赖 许可证',
   },
   {
     to: '/browser-compat',
-    icon: <Globe className="h-4 w-4 text-primary" />,
+    icon: <Globe className="h-4 w-4 text-lime-500" />,
     labelKey: 'nav.browserCompat',
     keywords:
       'browserslist caniuse compatibility browser css webapi 兼容 浏览器 支持',
   },
   {
     to: '/geojson',
-    icon: <Globe className="h-4 w-4 text-primary" />,
+    icon: <Globe className="h-4 w-4 text-indigo-500" />,
     labelKey: 'nav.geojson',
     keywords:
       'geojson gpx kml geometry map coordinate 地理 坐标 地图 轨迹 海拔 距离 tracks elevation',
@@ -803,70 +804,70 @@ const developerToolNavItems: NavItem[] = [
 
   {
     to: '/test-report',
-    icon: <FileText className="h-4 w-4 text-primary" />,
+    icon: <FileText className="h-4 w-4 text-red-500" />,
     labelKey: 'nav.testReport',
     keywords: 'junit lcov coverage test report 测试 报告 覆盖率',
   },
 
   {
     to: '/sarif-viewer',
-    icon: <ShieldAlert className="h-4 w-4 text-primary" />,
+    icon: <ShieldAlert className="h-4 w-4 text-teal-500" />,
     labelKey: 'nav.sarifViewer',
     keywords: 'sarif security scan static findings 扫描 静态 检查 报告',
   },
   {
     to: '/graphql-diff',
-    icon: <Network className="h-4 w-4 text-primary" />,
+    icon: <Network className="h-4 w-4 text-pink-500" />,
     labelKey: 'nav.graphqlDiff',
     keywords: 'graphql schema sdl introspection breaking diff 对比 破坏性',
   },
   {
     to: '/cpu-profile',
-    icon: <Activity className="h-4 w-4 text-primary" />,
+    icon: <Activity className="h-4 w-4 text-blue-500" />,
     labelKey: 'nav.cpuProfile',
     keywords:
       'cpu profile cpuprofile flamegraph performance 性能 火焰图 调用栈',
   },
   {
     to: '/i18n-checker',
-    icon: <Globe className="h-4 w-4 text-muted-foreground" />,
+    icon: <Globe className="h-4 w-4 text-yellow-500" />,
     labelKey: 'nav.i18nChecker',
     keywords:
       'icu plural messageformat i18n translation locale placeholder 翻译 校验 多语言 复数',
   },
   {
     to: '/table-diff',
-    icon: <Table className="h-4 w-4 text-muted-foreground" />,
+    icon: <Table className="h-4 w-4 text-purple-500" />,
     labelKey: 'nav.tableDiff',
     keywords: 'csv json diff key sku 表格 主键 对比',
   },
   {
     to: '/data-redactor',
-    icon: <ShieldAlert className="h-4 w-4 text-muted-foreground" />,
+    icon: <ShieldAlert className="h-4 w-4 text-sky-500" />,
     labelKey: 'nav.dataRedactor',
     keywords: 'redact pii secret token 脱敏 隐私',
   },
   {
     to: '/log-explorer',
-    icon: <Activity className="h-4 w-4 text-muted-foreground" />,
+    icon: <Activity className="h-4 w-4 text-rose-500" />,
     labelKey: 'nav.logExplorer',
     keywords: 'log jsonl ndjson error 日志 筛选',
   },
   {
     to: '/parquet-viewer',
-    icon: <Database className="h-4 w-4 text-muted-foreground" />,
+    icon: <Database className="h-4 w-4 text-amber-500" />,
     labelKey: 'nav.parquetViewer',
     keywords: 'parquet arrow schema data 数据 列式',
   },
   {
     to: '/mcp-trace',
-    icon: <Network className="h-4 w-4 text-muted-foreground" />,
+    icon: <Network className="h-4 w-4 text-emerald-500" />,
     labelKey: 'nav.mcpTrace',
     keywords: 'mcp jsonrpc trace replay agent 记录 调用',
   },
   {
     to: '/ocr',
-    icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+    icon: <FileText className="h-4 w-4 text-violet-500" />,
     labelKey: 'nav.ocr',
     keywords: 'ocr image pdf text scan 文字 识别 扫描',
   },
@@ -1038,13 +1039,15 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
-  ...BATCH4_TOOLS.map(({ id, icon: Icon, color, titleKey, keywords }) => ({
-    to: `/${id}` as const,
-    icon: <Icon className={`h-4 w-4 ${color}`} />,
-    labelKey: titleKey,
-    keywords,
-  })),
-  ...BATCH3_TOOLS.map(({ id, icon: Icon, color, key, keywords }) => ({
+  ...[...EXPANSION_TOOLS, ...PRACTICAL_SCIENCE_TOOLS].map(
+    ({ id, icon: Icon, color, titleKey, keywords }) => ({
+      to: `/${id}` as const,
+      icon: <Icon className={`h-4 w-4 ${color}`} />,
+      labelKey: titleKey,
+      keywords,
+    }),
+  ),
+  ...ANALYSIS_PRODUCTIVITY_TOOLS.map(({ id, icon: Icon, color, key, keywords }) => ({
     to: `/${id}` as const,
     icon: <Icon className={`h-4 w-4 ${color}`} />,
     labelKey: `${key}.title`,
@@ -1450,7 +1453,7 @@ function ToolSearch() {
       ALL_CATEGORIES.flatMap((category) =>
         category.items.map((item) => ({
           ...item,
-          keywords: `${item.keywords ?? ''} ${BATCH4_KEYWORDS[item.to] ?? ''}`,
+          keywords: `${item.keywords ?? ''} ${PRACTICAL_SCIENCE_KEYWORDS[item.to] ?? ''} ${EXPANSION_KEYWORDS[item.to] ?? ''}`,
           category: t(category.labelKey),
           label: t(item.labelKey),
         })),

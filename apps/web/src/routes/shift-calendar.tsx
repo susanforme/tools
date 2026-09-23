@@ -1,4 +1,4 @@
-import { WorkRecords } from '@/components/batch4-organizer-work';
+import { WorkRecords } from '@/components/work-time-workspace';
 import {
   OrganizerFrame,
   OrganizerInput,

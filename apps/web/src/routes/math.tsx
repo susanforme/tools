@@ -1,3 +1,4 @@
+import StatisticalTests from '@/components/statistical-tests-workspace';
 import { FunctionWorkbench } from '@/components/function-workbench';
 import { ChoiceField } from '@/components/calculator-ui';
 import { MathToolPage } from '@/components/math-tool-page';
@@ -34,9 +35,14 @@ function MathPage() {
       <h1 className="text-2xl font-bold">{t('mathTools.title')}</h1>
       <ChoiceField
         label={t('mathTools.selectTool')}
-        value={query.tool === 'functions' ? 'functions' : selected.id}
+        value={
+          ['functions', 'tests'].includes(query.tool ?? '')
+            ? query.tool!
+            : selected.id
+        }
         options={[
-          { value: 'functions', label: t('batch3Calc.functions') },
+          { value: 'functions', label: t('calculatorUtilities.functions') },
+          { value: 'tests', label: t('scienceExpansion.stats.title') },
           ...MATH_TOOLS.map(({ id }) => ({
             value: id,
             label: t(`mathTools.tools.${id}.title`),
@@ -51,7 +57,9 @@ function MathPage() {
           })
         }
       />
-      {query.tool === 'functions' ? (
+      {query.tool === 'tests' ? (
+        <StatisticalTests />
+      ) : query.tool === 'functions' ? (
         <FunctionWorkbench />
       ) : (
         <MathToolPage key={selected.id} tool={selected.id} />

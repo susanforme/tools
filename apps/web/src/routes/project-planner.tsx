@@ -1,3 +1,5 @@
+import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { RunSheetPanel } from '@/components/event-run-sheet-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export const Route = createFileRoute('/project-planner')({
-  component: ProjectPlanner,
+  component: ExpandedPage,
 });
 const INITIAL: ProjectTask[] = [];
 const STATUSES = ['todo', 'doing', 'done'] as const;
@@ -363,5 +365,13 @@ function ProjectPlanner() {
       </div>
       <ProductivityError error={error} />
     </OrganizerFrame>
+  );
+}
+
+function ExpandedPage() {
+  return (
+    <LifeWorkspace label="lifeWorkspace.run.title" panel={<RunSheetPanel />}>
+      <ProjectPlanner />
+    </LifeWorkspace>
   );
 }

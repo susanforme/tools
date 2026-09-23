@@ -11,7 +11,7 @@ import {
   validGarden,
   type Garden,
   type Planting,
-} from '@/lib/batch4-organizer-tools';
+} from '@/lib/organizer-records';
 import { localDay } from '@/lib/organizer-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -26,7 +26,7 @@ const INITIAL: Garden = {
 };
 function GardenPlannerPage() {
   const { t } = useTranslation();
-  const tr = (k: string) => t(`batch4Organizers.${k}`);
+  const tr = (k: string) => t(`organizerTools.${k}`);
   const store = useOrganizerStore(
     'tools.garden-planner.v1',
     INITIAL,

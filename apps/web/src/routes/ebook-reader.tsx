@@ -1,5 +1,5 @@
-import { DocumentSection } from '@/components/batch4-document-ui';
-import { EpubMaker } from '@/components/batch4-document-epub';
+import { DocumentSection } from '@/components/document-workspace-ui';
+import { EpubMaker } from '@/components/epub-authoring';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

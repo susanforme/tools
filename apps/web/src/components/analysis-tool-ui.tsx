@@ -14,15 +14,15 @@ export function AnalysisFrame({
   const { t } = useTranslation();
   return (
     <main className="mx-auto max-w-6xl space-y-5 px-4 py-6">
-      <h1 className="text-2xl font-bold">{t(`analysis3.${tool}.title`)}</h1>
+      <h1 className="text-2xl font-bold">{t(`analysisTools.${tool}.title`)}</h1>
       {children}
       {error && (
         <p
           role="alert"
           className="rounded border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
         >
-          {t('analysis3.error', {
-            message: t(`analysis3.${error}`, { defaultValue: error }),
+          {t('analysisTools.error', {
+            message: t(`analysisTools.${error}`, { defaultValue: error }),
           })}
         </p>
       )}

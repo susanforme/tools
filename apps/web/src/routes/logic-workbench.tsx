@@ -1,3 +1,6 @@
+import DigitalCircuit from '@/components/digital-circuit-workspace';
+import { ChoiceField } from '@/components/calculator-ui';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -5,7 +8,8 @@ import { AnalysisFrame } from '@/components/analysis-tool-ui';
 import { PracticalText, ExportText } from '@/components/practical-ui';
 import { analyzeLogic, karnaughRows } from '@/lib/analysis-logic';
 export const Route = createFileRoute('/logic-workbench')({
-  component: LogicWorkbench,
+  component: LogicModes,
+  validateSearch: (search: Record<string, unknown>) => search,
 });
 function LogicWorkbench() {
   const { t } = useTranslation();
@@ -23,17 +27,17 @@ function LogicWorkbench() {
   return (
     <AnalysisFrame tool="logic" error={result.error}>
       <p className="text-sm text-muted-foreground">
-        {t('analysis3.logic.syntax')}
+        {t('analysisTools.logic.syntax')}
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         <PracticalText
-          label={t('analysis3.logic.expression')}
+          label={t('analysisTools.logic.expression')}
           value={input}
           onChange={setInput}
           maxLength={1000}
         />
         <PracticalText
-          label={t('analysis3.logic.compare')}
+          label={t('analysisTools.logic.compare')}
           value={compare}
           onChange={setCompare}
           maxLength={1000}
@@ -42,17 +46,17 @@ function LogicWorkbench() {
       {data && (
         <>
           <section className="space-y-2 rounded border p-4">
-            <h2 className="font-semibold">{t('analysis3.logic.simplified')}</h2>
+            <h2 className="font-semibold">{t('analysisTools.logic.simplified')}</h2>
             <code className="break-all">{data.simplified}</code>
             <p className="text-sm text-muted-foreground">
-              {t('analysis3.logic.coverNote')}
+              {t('analysisTools.logic.coverNote')}
             </p>
             {data.equivalent !== null && (
               <p>
                 {t(
                   data.equivalent
-                    ? 'analysis3.logic.equivalent'
-                    : 'analysis3.logic.different',
+                    ? 'analysisTools.logic.equivalent'
+                    : 'analysisTools.logic.different',
                 )}
               </p>
             )}
@@ -63,7 +67,7 @@ function LogicWorkbench() {
             />
           </section>
           <section className="overflow-auto">
-            <h2 className="mb-2 font-semibold">{t('analysis3.logic.truth')}</h2>
+            <h2 className="mb-2 font-semibold">{t('analysisTools.logic.truth')}</h2>
             <table className="w-full text-center text-sm">
               <thead>
                 <tr>
@@ -105,7 +109,7 @@ function LogicWorkbench() {
           {map && data.variables.length >= 2 && data.variables.length <= 4 && (
             <section className="overflow-auto">
               <h2 className="mb-2 font-semibold">
-                {t('analysis3.logic.kmap')}
+                {t('analysisTools.logic.kmap')}
               </h2>
               <table className="w-full text-center">
                 <thead>
@@ -148,5 +152,30 @@ function LogicWorkbench() {
         </>
       )}
     </AnalysisFrame>
+  );
+}
+
+function LogicModes() {
+  const { t } = useTranslation();
+  const [workspace, set] = useQueryParam<string>(
+    'workspace',
+    StringParam,
+    'logic',
+  );
+  return (
+    <>
+      <div className="mx-auto max-w-6xl px-4 pt-6">
+        <ChoiceField
+          label={t('scienceExpansion.mode')}
+          value={workspace === 'circuit' ? 'circuit' : 'logic'}
+          options={[
+            { value: 'logic', label: t('scienceExpansion.originalLogic') },
+            { value: 'circuit', label: t('scienceExpansion.circuit.title') },
+          ]}
+          onChange={set}
+        />
+      </div>
+      {workspace === 'circuit' ? <DigitalCircuit /> : <LogicWorkbench />}
+    </>
   );
 }

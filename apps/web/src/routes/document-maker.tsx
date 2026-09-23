@@ -1,5 +1,5 @@
-import { DocumentSection } from '@/components/batch4-document-ui';
-import { BatchDocuments } from '@/components/batch4-document-batch';
+import { DocumentSection } from '@/components/document-workspace-ui';
+import { BatchDocuments } from '@/components/document-mail-merge';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

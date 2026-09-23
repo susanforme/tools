@@ -74,7 +74,7 @@ function CitationTool() {
       value,
       label:
         value === 'bibliography'
-          ? t('analysis3.citations.bibliography')
+          ? t('analysisTools.citations.bibliography')
           : value === 'json'
             ? 'CSL-JSON'
             : value === 'bibtex'
@@ -85,23 +85,23 @@ function CitationTool() {
   return (
     <AnalysisFrame tool="citations" error={error ?? worker.error}>
       <p className="text-sm text-muted-foreground">
-        {t('analysis3.citations.limit')}
+        {t('analysisTools.citations.limit')}
       </p>
       <div className="grid gap-4 md:grid-cols-3">
         <ChoiceField
-          label={t('analysis3.citations.input')}
+          label={t('analysisTools.citations.input')}
           value={input}
           options={formatOptions(['bibtex', 'ris', 'json'])}
           onChange={(input) => setQuery({ input })}
         />
         <ChoiceField
-          label={t('analysis3.citations.output')}
+          label={t('analysisTools.citations.output')}
           value={output}
           options={formatOptions(['bibtex', 'ris', 'json', 'bibliography'])}
           onChange={(output) => setQuery({ output })}
         />
         <ChoiceField
-          label={t('analysis3.citations.style')}
+          label={t('analysisTools.citations.style')}
           value={style}
           options={[
             { value: 'apa', label: 'APA 7' },
@@ -111,7 +111,7 @@ function CitationTool() {
           onChange={(style) => setQuery({ style })}
         />
         <ChoiceField
-          label={t('analysis3.citations.locale')}
+          label={t('analysisTools.citations.locale')}
           value={locale}
           options={['en-US', 'fr-FR', 'de-DE', 'es-ES', 'nl-NL'].map(
             (value) => ({ value, label: value }),
@@ -119,16 +119,16 @@ function CitationTool() {
           onChange={(locale) => setQuery({ locale })}
         />
         <ChoiceField
-          label={t('analysis3.citations.deduplicate')}
+          label={t('analysisTools.citations.deduplicate')}
           value={deduplicate ? 'yes' : 'no'}
           options={['yes', 'no'].map((value) => ({
             value,
-            label: t(`analysis3.${value}`),
+            label: t(`analysisTools.${value}`),
           }))}
           onChange={(deduplicate) => setQuery({ deduplicate })}
         />
         <NumberField
-          label={t('analysis3.citations.entry')}
+          label={t('analysisTools.citations.entry')}
           value={entry}
           min={0}
           max={300}
@@ -139,7 +139,7 @@ function CitationTool() {
       <Input
         type="file"
         accept=".bib,.ris,.json,text/plain,application/json"
-        aria-label={t('analysis3.import')}
+        aria-label={t('analysisTools.import')}
         onChange={async (event) => {
           const file = event.target.files?.[0];
           event.target.value = '';
@@ -160,14 +160,14 @@ function CitationTool() {
         }}
       />
       <PracticalText
-        label={t('analysis3.source')}
+        label={t('analysisTools.source')}
         value={source}
         onChange={setSource}
         multiline
         maxLength={500000}
       />
       <p className="text-sm text-muted-foreground">
-        {t('analysis3.citations.dedupNote')}
+        {t('analysisTools.citations.dedupNote')}
       </p>
       <div className="flex gap-2">
         <Button
@@ -184,31 +184,31 @@ function CitationTool() {
             })
           }
         >
-          {t(worker.busy ? 'analysis3.busy' : 'analysis3.run')}
+          {t(worker.busy ? 'analysisTools.busy' : 'analysisTools.run')}
         </Button>
         {worker.busy && (
           <Button variant="outline" onClick={worker.cancel}>
-            {t('analysis3.cancel')}
+            {t('analysisTools.cancel')}
           </Button>
         )}
       </div>
       {result && (
         <>
           <p>
-            {t('analysis3.citations.count', {
+            {t('analysisTools.citations.count', {
               count: result.count,
               removed: result.removed.length,
             })}
           </p>
           <section className="space-y-2 rounded border p-4">
             <h2 className="font-semibold">
-              {t('analysis3.citations.citation')}
+              {t('analysisTools.citations.citation')}
             </h2>
             <p className="break-words">{result.citation}</p>
             <ExportText value={result.citation} name="citation.txt" />
           </section>
           <section className="space-y-3">
-            <h2 className="font-semibold">{t('analysis3.citations.output')}</h2>
+            <h2 className="font-semibold">{t('analysisTools.citations.output')}</h2>
             <pre className="max-h-96 overflow-auto whitespace-pre-wrap break-words rounded border bg-muted p-4 text-sm">
               {result.output}
             </pre>
@@ -219,7 +219,7 @@ function CitationTool() {
           </section>
           {output !== 'bibliography' && (
             <details className="rounded border p-3">
-              <summary>{t('analysis3.citations.bibliography')}</summary>
+              <summary>{t('analysisTools.citations.bibliography')}</summary>
               <pre className="mt-3 whitespace-pre-wrap break-words text-sm">
                 {result.bibliography}
               </pre>
@@ -228,7 +228,7 @@ function CitationTool() {
           )}
           {result.removed.length > 0 && (
             <details className="rounded border p-3">
-              <summary>{t('analysis3.citations.removed')}</summary>
+              <summary>{t('analysisTools.citations.removed')}</summary>
               <ul className="list-inside list-disc">
                 {result.removed.map((title, i) => (
                   <li key={i}>{title}</li>

@@ -1,4 +1,4 @@
-import { MediaWorkspace } from '@/components/batch4-media-workspace';
+import { MediaWorkspace } from '@/components/media-workspace-switcher';
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
 import { Button } from '@/components/ui/button';
 import {

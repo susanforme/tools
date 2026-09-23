@@ -2,11 +2,11 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
-import { searchDocuments } from '@/lib/batch4-document-data';
-import { extractSearchDocument } from '@/lib/batch4-document-search';
+import { searchDocuments } from '@/lib/document-workspace-core';
+import { extractSearchDocument } from '@/lib/document-search-extraction';
 import { PracticalText, useLatestJob } from '@/components/practical-ui';
 import { ChoiceField } from '@/components/calculator-ui';
-import { DocumentError } from '@/components/batch4-document-ui';
+import { DocumentError } from '@/components/document-workspace-ui';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 export const Route = createFileRoute('/document-search')({
@@ -25,12 +25,12 @@ function DocumentSearch() {
   const hits = searchDocuments(job.result?.docs ?? [], query, type);
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
-      <h1 className="text-2xl font-bold">{t('batch4Documents.searchTitle')}</h1>
+      <h1 className="text-2xl font-bold">{t('documentWorkspaces.searchTitle')}</h1>
       <p className="text-sm text-muted-foreground">
-        {t('batch4Documents.searchLimit')}
+        {t('documentWorkspaces.searchLimit')}
       </p>
       <Input
-        aria-label={t('batch4Documents.files')}
+        aria-label={t('documentWorkspaces.files')}
         type="file"
         accept=".txt,.md,.pdf,.docx"
         multiple
@@ -62,13 +62,13 @@ function DocumentSearch() {
           })
         }
       >
-        {t(job.busy ? 'batch4Documents.processing' : 'batch4Documents.index')}
+        {t(job.busy ? 'documentWorkspaces.processing' : 'documentWorkspaces.index')}
       </Button>
       <DocumentError error={job.error} />
       {job.result && (
         <>
           <p>
-            {t('batch4Documents.indexed', { count: job.result.docs.length })}
+            {t('documentWorkspaces.indexed', { count: job.result.docs.length })}
           </p>
           {job.result.failures.map((failure, i) => (
             <div key={i}>
@@ -78,26 +78,26 @@ function DocumentSearch() {
           ))}
           <div className="grid gap-3 md:grid-cols-2">
             <PracticalText
-              label={t('batch4Documents.keyword')}
+              label={t('documentWorkspaces.keyword')}
               value={query}
               onChange={setQuery}
               maxLength={200}
             />
             <ChoiceField
-              label={t('batch4Documents.fileType')}
+              label={t('documentWorkspaces.fileType')}
               value={type}
               onChange={setType}
               options={['all', 'txt', 'md', 'pdf', 'docx'].map((value) => ({
                 value,
                 label:
                   value === 'all'
-                    ? t('batch4Documents.all')
+                    ? t('documentWorkspaces.all')
                     : value.toUpperCase(),
               }))}
             />
           </div>
           {query.trim() && (
-            <p>{t('batch4Documents.hits', { count: hits.length })}</p>
+            <p>{t('documentWorkspaces.hits', { count: hits.length })}</p>
           )}
           <div className="space-y-3">
             {hits.map((hit, i) => (

@@ -86,7 +86,7 @@ export function MediaAudio() {
   return (
     <section className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        {t('batch3Media.audioLimit')}
+        {t('mediaWorkflow.audioLimit')}
       </p>
       <FileDropzone
         accept="audio/*"
@@ -138,12 +138,12 @@ export function MediaAudio() {
       {source && (
         <p>
           {source.name} · {source.duration.toFixed(2)} s · {source.sampleRate}{' '}
-          Hz · {source.channels.length} {t('batch3Media.channels')}
+          Hz · {source.channels.length} {t('mediaWorkflow.channels')}
         </p>
       )}
       <div className="grid gap-3 md:grid-cols-3">
         <ChoiceField
-          label={t('batch3Media.normalize')}
+          label={t('mediaWorkflow.normalize')}
           value={query.normalize ?? 'true'}
           options={['true', 'false'].map((value) => ({
             value,
@@ -152,54 +152,54 @@ export function MediaAudio() {
           onChange={(normalize) => setQuery({ normalize })}
         />
         <NumberField
-          label={t('batch3Media.peak')}
+          label={t('mediaWorkflow.peak')}
           value={query.peak ?? -1}
           min={-30}
           max={0}
           onChange={(peak) => setQuery({ peak })}
         />
         <NumberField
-          label={t('batch3Media.speed')}
+          label={t('mediaWorkflow.speed')}
           value={query.speed ?? 1}
           min={0.25}
           max={4}
           onChange={(speed) => setQuery({ speed })}
         />
         <NumberField
-          label={t('batch3Media.fadeIn')}
+          label={t('mediaWorkflow.fadeIn')}
           value={query.fadeIn ?? 0}
           onChange={(fadeIn) => setQuery({ fadeIn })}
         />
         <NumberField
-          label={t('batch3Media.fadeOut')}
+          label={t('mediaWorkflow.fadeOut')}
           value={query.fadeOut ?? 0}
           onChange={(fadeOut) => setQuery({ fadeOut })}
         />
         <ChoiceField
-          label={t('batch3Media.channels')}
+          label={t('mediaWorkflow.channels')}
           value={query.channels ?? 'keep'}
           options={['keep', 'mono', 'left', 'right', 'swap'].map((value) => ({
             value,
-            label: t(`batch3Media.${value}`),
+            label: t(`mediaWorkflow.${value}`),
           }))}
           onChange={(channels) => setQuery({ channels })}
         />
         <NumberField
-          label={t('batch3Media.silenceDb')}
+          label={t('mediaWorkflow.silenceDb')}
           value={query.silence ?? -45}
           min={-100}
           max={0}
           onChange={(silence) => setQuery({ silence })}
         />
         <NumberField
-          label={t('batch3Media.minSilence')}
+          label={t('mediaWorkflow.minSilence')}
           value={query.minimum ?? 0.5}
           min={0.02}
           onChange={(minimum) => setQuery({ minimum })}
         />
       </div>
       <p className="text-xs text-muted-foreground">
-        {t('batch3Media.speedNote')}
+        {t('mediaWorkflow.speedNote')}
       </p>
       <div className="flex gap-2">
         <Button
@@ -249,10 +249,10 @@ export function MediaAudio() {
             {t('studio20.download')} WAV
           </Button>
           <p>
-            {t('batch3Media.sourcePeak')}:{' '}
+            {t('mediaWorkflow.sourcePeak')}:{' '}
             {task.result.peakDb?.toFixed(2) ?? '−∞'} dBFS
           </p>
-          <h3>{t('batch3Media.silenceRanges')}</h3>
+          <h3>{t('mediaWorkflow.silenceRanges')}</h3>
           <div className="max-h-60 overflow-auto font-mono text-sm">
             {task.result.silence.length
               ? task.result.silence.map((range, i) => (
@@ -266,8 +266,8 @@ export function MediaAudio() {
       )}
       {(error || task.error) && (
         <p className="text-destructive" role="alert">
-          {t('batch3Media.failed', {
-            message: t(`batch3Media.${error ?? task.error}`, {
+          {t('mediaWorkflow.failed', {
+            message: t(`mediaWorkflow.${error ?? task.error}`, {
               defaultValue: error ?? task.error ?? '',
             }),
           })}

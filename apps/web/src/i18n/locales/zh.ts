@@ -1,11 +1,16 @@
-import { batch4ScienceZh } from './batch4-science';
-import { batch4OrganizersZh } from './batch4-organizers';
-import { batch4MediaZh } from './batch4-media';
-import { batch4DocumentsZh } from './batch4-documents';
-import { batch3AnalysisZh } from './batch3-analysis';
-import { batch3ProductivityZh } from './batch3-productivity';
-import { batch3MediaZh } from './batch3-media';
-import { batch3CalculatorsZh } from './batch3-calculators';
+import { practicalWorkbenchesZh } from './practical-workbenches';
+import { lifeWorkspaceZh } from './life-workspace';
+import { mediaWorkspaceZh } from './media-workspaces';
+import { visualDesignZh } from './visual-design';
+import { scienceExpansionZh } from './science-expansion';
+import { scienceWorkspacesZh } from './science-workspaces';
+import { organizerWorkspacesZh } from './organizer-workspaces';
+import { mediaEditingToolsZh } from './media-editing-tools';
+import { documentWorkspacesZh } from './document-workspaces';
+import { analysisToolsZh } from './analysis-tools';
+import { productivityToolsZh } from './productivity-tools';
+import { mediaWorkflowZh } from './media-tools';
+import { calculatorUtilitiesZh } from './calculator-utilities';
 import { practicalToolsZh } from './practical-tools';
 import { mathToolsZh } from './math-tools';
 import { personalToolsZh } from './personal-tools';
@@ -46,14 +51,19 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
-  ...batch4DocumentsZh,
-  ...batch4MediaZh,
-  ...batch4OrganizersZh,
-  ...batch4ScienceZh,
-  ...batch3AnalysisZh,
-  ...batch3ProductivityZh,
-  ...batch3MediaZh,
-  ...batch3CalculatorsZh,
+  ...practicalWorkbenchesZh,
+  ...lifeWorkspaceZh,
+  ...mediaWorkspaceZh,
+  ...visualDesignZh,
+  ...scienceExpansionZh,
+  ...documentWorkspacesZh,
+  ...mediaEditingToolsZh,
+  ...organizerWorkspacesZh,
+  ...scienceWorkspacesZh,
+  ...analysisToolsZh,
+  ...productivityToolsZh,
+  ...mediaWorkflowZh,
+  ...calculatorUtilitiesZh,
   ...practicalToolsZh,
   ...mathToolsZh,
   ...personalToolsZh,

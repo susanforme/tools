@@ -33,7 +33,7 @@ function GeoJsonPage() {
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="inspect">{t('geojson.title')}</TabsTrigger>
-          <TabsTrigger value="tracks">{t('batch3Media.tracks')}</TabsTrigger>
+          <TabsTrigger value="tracks">{t('mediaWorkflow.tracks')}</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === 'tracks' ? <MediaTracks /> : <GeoJsonInspector />}

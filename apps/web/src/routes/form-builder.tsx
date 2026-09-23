@@ -1,3 +1,5 @@
+import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { ExamBuilderPanel } from '@/components/quiz-bank-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +32,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
 export const Route = createFileRoute('/form-builder')({
-  component: FormBuilder,
+  component: ExpandedPage,
 });
 const INITIAL: FormDesign = { title: '', fields: [] };
 function FormBuilder() {
@@ -405,5 +407,13 @@ function FormBuilder() {
       </Button>
       <ProductivityError error={error} />
     </OrganizerFrame>
+  );
+}
+
+function ExpandedPage() {
+  return (
+    <LifeWorkspace label="lifeWorkspace.exam.title" panel={<ExamBuilderPanel />}>
+      <FormBuilder />
+    </LifeWorkspace>
   );
 }

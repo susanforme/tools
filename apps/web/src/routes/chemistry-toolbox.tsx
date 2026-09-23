@@ -1,4 +1,4 @@
-import { ScienceFrame } from '@/components/batch4-science-ui';
+import { ScienceFrame } from '@/components/science-workspace-ui';
 import { ChoiceField, Metric, NumberField } from '@/components/calculator-ui';
 import { PracticalText } from '@/components/practical-ui';
 import { Button } from '@/components/ui/button';
@@ -12,8 +12,8 @@ import {
   balanceEquation,
   molarMass,
   solutionCalculation,
-} from '@/lib/batch4-chemistry';
-import { ELEMENTS } from '@/lib/batch4-elements';
+} from '@/lib/chemistry-calculations';
+import { ELEMENTS } from '@/lib/chemistry-elements';
 import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,13 +23,13 @@ export const Route = createFileRoute('/chemistry-toolbox')({
 });
 const worker = () =>
   new Worker(
-    new URL('../workers/batch4-chemistry.worker.ts', import.meta.url),
+    new URL('../workers/chemistry-calculations.worker.ts', import.meta.url),
     { type: 'module' },
   );
 const MODES = ['elements', 'formula', 'balance', 'solution', 'dilution'];
 function Chemistry() {
   const { t, i18n } = useTranslation();
-  const label = (key: string) => t(`batch4Science.${key}`);
+  const label = (key: string) => t(`scienceTools.${key}`);
   const [q, set] = useQueryParams<{
     mode: string;
     a: number;

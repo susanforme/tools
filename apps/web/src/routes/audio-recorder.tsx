@@ -1,3 +1,4 @@
+import { MediaWorkspaceSelector } from '@/components/media-workspace-selector';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { db, type ScreenRecording } from '@/lib/db';
@@ -23,7 +24,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/audio-recorder')({
-  component: AudioRecorderPage,
+  component: () => (
+    <MediaWorkspaceSelector kind="transcript" original={<AudioRecorderPage />} />
+  ),
 });
 
 function AudioRecorderPage() {

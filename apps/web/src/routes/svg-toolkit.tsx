@@ -1,3 +1,4 @@
+import { VisualSvgEditor } from '@/components/visual-svg-editor-workspace';
 import { CodePanel } from '@/components/code-panel';
 import { FileDropzone } from '@/components/file-dropzone';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/svg-toolkit')({
   component: SvgToolkitPage,
 });
 const SvgPathPanel = lazy(() => import('@/components/svg-path-panel'));
-type Mode = 'optimize' | 'data-uri' | 'react' | 'sprite' | 'path';
+type Mode = 'optimize' | 'data-uri' | 'react' | 'sprite' | 'path' | 'visual';
 type SvgFile = { name: string; source: string };
 
 const SAMPLE =
@@ -87,9 +88,14 @@ function SvgToolkitPage() {
           <TabsTrigger value="path">
             {t('communityVisual.path.title')}
           </TabsTrigger>
+          <TabsTrigger value="visual">
+            {t('visualDesign.editorTitle')}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
-      {mode === 'path' ? (
+      {mode === 'visual' ? (
+        <VisualSvgEditor />
+      ) : mode === 'path' ? (
         <Suspense
           fallback={<p role="status">{t('communityVisual.loading')}</p>}
         >

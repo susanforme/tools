@@ -1,3 +1,5 @@
+import { VisualSection } from '@/components/visual-design-ui';
+import { LaserDesigner } from '@/components/laser-design-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +15,14 @@ import { packagingPlan, packagingPdf } from '@/lib/analysis-packaging';
 import { downloadBytes } from '@/lib/download';
 export const Route = createFileRoute('/packaging-designer')({
   validateSearch: (search: Record<string, unknown>) => search,
-  component: PackagingDesigner,
+  component: () => (
+    <VisualSection
+      original="analysisTools.packaging.title"
+      title="laserTitle"
+      base={<PackagingDesigner />}
+      extra={<LaserDesigner />}
+    />
+  ),
 });
 function PackagingDesigner() {
   const { t } = useTranslation();
@@ -58,23 +67,23 @@ function PackagingDesigner() {
     <AnalysisFrame tool="packaging" error={error ?? calculation.error}>
       <div className="grid gap-4 md:grid-cols-3">
         <ChoiceField
-          label={t('analysis3.packaging.kind')}
+          label={t('analysisTools.packaging.kind')}
           value={kind}
           options={['box', 'envelope', 'bag'].map((value) => ({
             value,
-            label: t(`analysis3.packaging.${value}`),
+            label: t(`analysisTools.packaging.${value}`),
           }))}
           onChange={(kind) => setQuery({ kind })}
         />
         <NumberField
-          label={t('analysis3.packaging.width')}
+          label={t('analysisTools.packaging.width')}
           value={width}
           min={10}
           max={400}
           onChange={(width) => setQuery({ width })}
         />
         <NumberField
-          label={t('analysis3.packaging.height')}
+          label={t('analysisTools.packaging.height')}
           value={height}
           min={10}
           max={500}
@@ -82,7 +91,7 @@ function PackagingDesigner() {
         />
         {kind !== 'envelope' && (
           <NumberField
-            label={t('analysis3.packaging.depth')}
+            label={t('analysisTools.packaging.depth')}
             value={depth}
             min={5}
             max={250}
@@ -90,33 +99,33 @@ function PackagingDesigner() {
           />
         )}
         <NumberField
-          label={t('analysis3.packaging.glue')}
+          label={t('analysisTools.packaging.glue')}
           value={glue}
           min={3}
           max={40}
           onChange={(glue) => setQuery({ glue })}
         />
         <ChoiceField
-          label={t('analysis3.packaging.paper')}
+          label={t('analysisTools.packaging.paper')}
           value={paper}
           options={['a4', 'actual'].map((value) => ({
             value,
-            label: t(`analysis3.packaging.${value}`),
+            label: t(`analysisTools.packaging.${value}`),
           }))}
           onChange={(paper) => setQuery({ paper })}
         />
       </div>
       <p className="text-sm text-muted-foreground">
-        {t('analysis3.packaging.note')}
+        {t('analysisTools.packaging.note')}
       </p>
       <p className="text-sm">
-        <span className="text-red-600">{t('analysis3.packaging.cut')}</span> ·{' '}
-        <span className="text-blue-600">{t('analysis3.packaging.fold')}</span>
+        <span className="text-red-600">{t('analysisTools.packaging.cut')}</span> ·{' '}
+        <span className="text-blue-600">{t('analysisTools.packaging.fold')}</span>
       </p>
       {plan && (
         <>
           <p className="text-sm">
-            {t('analysis3.packaging.sheet')}: {plan.width.toFixed(1)} ×{' '}
+            {t('analysisTools.packaging.sheet')}: {plan.width.toFixed(1)} ×{' '}
             {plan.height.toFixed(1)} mm
           </p>
           <svg
@@ -127,9 +136,9 @@ function PackagingDesigner() {
             viewBox={`0 0 ${plan.width} ${plan.height}`}
             className="h-auto max-h-[65vh] w-full rounded border bg-white"
             role="img"
-            aria-label={t('analysis3.packaging.title')}
+            aria-label={t('analysisTools.packaging.title')}
           >
-            <title>{t('analysis3.packaging.title')}</title>
+            <title>{t('analysisTools.packaging.title')}</title>
             <rect width={plan.width} height={plan.height} fill="white" />
             {plan.lines.map((line, index) => (
               <line
@@ -181,7 +190,7 @@ function PackagingDesigner() {
                 }
               }}
             >
-              {t(busy ? 'analysis3.busy' : 'analysis3.packaging.exportPdf')}
+              {t(busy ? 'analysisTools.busy' : 'analysisTools.packaging.exportPdf')}
             </Button>
           </div>
         </>

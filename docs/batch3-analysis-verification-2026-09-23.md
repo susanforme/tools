@@ -11,8 +11,8 @@
 | `/packaging-designer` | 开槽盒、信封、开口袋；宽高深/胶边参数；裁线与折线；SVG / PNG、原尺寸 PDF 和 A4 拼接 PDF                  | 毫米尺寸，PDF 为矢量。A4 拼接使用 190×277 mm 内容区和页坐标，打印需 100%。按薄纸计算，厚板须自行预留厚度；未做实体裁切装配验证。                                                                                                                |
 
 模式与绘图/打印选项通过 URL 保存；输入正文为临时状态。中英文文案在
-`apps/web/src/i18n/locales/batch3-analysis.ts`，namespace 为
-`analysis3`。没有拆成子功能路由。
+`apps/web/src/i18n/locales/analysis-tools.ts`，namespace 为
+`analysisTools`。没有拆成子功能路由。
 
 ## 验证
 

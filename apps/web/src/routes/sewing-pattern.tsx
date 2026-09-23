@@ -1,4 +1,4 @@
-import { ScienceFrame } from '@/components/batch4-science-ui';
+import { ScienceFrame } from '@/components/science-workspace-ui';
 import { ChoiceField, NumberField } from '@/components/calculator-ui';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,7 +7,7 @@ import {
   useQueryParams,
 } from '@/hooks/useQueryParams';
 import { packagingPdf } from '@/lib/analysis-packaging';
-import { sewingPattern } from '@/lib/batch4-sewing';
+import { sewingPattern } from '@/lib/sewing-patterns';
 import { downloadBytes } from '@/lib/download';
 import { createFileRoute } from '@tanstack/react-router';
 import { useLatestJob } from '@/components/practical-ui';
@@ -28,7 +28,7 @@ const FIELDS = {
 };
 function SewingPattern() {
   const { t } = useTranslation(),
-    label = (key: string) => t(`batch4Science.${key}`);
+    label = (key: string) => t(`scienceTools.${key}`);
   const [q, set] = useQueryParams<{
     kind: string;
     paper: string;

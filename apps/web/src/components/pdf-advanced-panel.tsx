@@ -25,7 +25,7 @@ export function PdfAdvancedPanel({ mode }: { mode: 'forms' | 'bookmarks' }) {
   }>(String(revision));
   return (
     <div className="space-y-4">
-      <Label htmlFor="advanced-pdf-file">{t('batch3Calc.pdfFile')}</Label>
+      <Label htmlFor="advanced-pdf-file">{t('calculatorUtilities.pdfFile')}</Label>
       <Input
         id="advanced-pdf-file"
         type="file"
@@ -46,12 +46,12 @@ export function PdfAdvancedPanel({ mode }: { mode: 'forms' | 'bookmarks' }) {
           })
         }
       >
-        {t(job.busy ? 'batch3Calc.working' : 'batch3Calc.read')}
+        {t(job.busy ? 'calculatorUtilities.working' : 'calculatorUtilities.read')}
       </Button>
       {job.error && (
         <p role="alert" className="text-destructive">
-          {t('batch3Calc.error', {
-            message: t(`batch3Calc.${job.error}`, { defaultValue: job.error }),
+          {t('calculatorUtilities.error', {
+            message: t(`calculatorUtilities.${job.error}`, { defaultValue: job.error }),
           })}
         </p>
       )}
@@ -76,7 +76,7 @@ function PdfDocumentEditor({
   data: Awaited<ReturnType<typeof inspectPdfAdvanced>>;
 }) {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch3Calc.${key}`);
+  const label = (key: string) => t(`calculatorUtilities.${key}`);
   const [fields, setFields] = useState(data.fields),
     [marks, setMarks] = useState(data.bookmarks),
     [font, setFont] = useState<File | null>(null),
@@ -102,7 +102,7 @@ function PdfDocumentEditor({
   );
   return (
     <div className="space-y-4">
-      <p className="text-sm">{t('batch3Calc.pages', { count: data.pages })}</p>
+      <p className="text-sm">{t('calculatorUtilities.pages', { count: data.pages })}</p>
       {mode === 'forms' ? (
         <>
           {!fields.length && <p>{label('noFields')}</p>}
@@ -325,8 +325,8 @@ function PdfDocumentEditor({
       </div>
       {(error || job.error) && (
         <p role="alert" className="text-destructive">
-          {t('batch3Calc.error', {
-            message: t(`batch3Calc.${error ?? job.error}`, {
+          {t('calculatorUtilities.error', {
+            message: t(`calculatorUtilities.${error ?? job.error}`, {
               defaultValue: error ?? job.error ?? '',
             }),
           })}

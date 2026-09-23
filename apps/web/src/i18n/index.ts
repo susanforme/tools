@@ -18,6 +18,8 @@ function detectLanguage(): Locale {
 
 // 同步检测，在 init 时直接传入正确语言，避免首屏闪烁
 const initialLang = detectLanguage();
+if (typeof document !== 'undefined')
+  document.documentElement.lang = initialLang === 'zh' ? 'zh-CN' : 'en';
 
 i18n.use(initReactI18next).init({
   debug: false,

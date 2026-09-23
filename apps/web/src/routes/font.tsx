@@ -57,7 +57,7 @@ function FontPage() {
         <TabsList>
           <TabsTrigger value="inspect">{t('fontTool.title')}</TabsTrigger>
           <TabsTrigger value="layout">
-            {t('batch3Media.typesetting')}
+            {t('mediaWorkflow.typesetting')}
           </TabsTrigger>
         </TabsList>
       </Tabs>

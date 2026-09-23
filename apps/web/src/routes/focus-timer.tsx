@@ -427,7 +427,7 @@ function FocusTimerPage() {
           <TabsTrigger value="stopwatch">
             {t('focusTimer.stopwatch')}
           </TabsTrigger>
-          <TabsTrigger value="interval">{t('batch3Calc.interval')}</TabsTrigger>
+          <TabsTrigger value="interval">{t('calculatorUtilities.interval')}</TabsTrigger>
         </TabsList>
         <TabsContent
           value="countdown"

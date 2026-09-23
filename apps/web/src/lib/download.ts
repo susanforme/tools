@@ -3,8 +3,12 @@ export function downloadBlob(blob: Blob, name: string): void {
   const link = document.createElement('a');
   link.href = url;
   link.download = name;
+  document.body.append(link);
   link.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    link.remove();
+    URL.revokeObjectURL(url);
+  }, 1000);
 }
 
 export function downloadBytes(

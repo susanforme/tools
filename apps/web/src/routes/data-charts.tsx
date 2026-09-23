@@ -1,3 +1,4 @@
+import ImageAnalysis from '@/components/image-analysis-workspace';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,7 @@ import {
 } from '@/lib/analysis-charts';
 export const Route = createFileRoute('/data-charts')({
   validateSearch: (search: Record<string, unknown>) => search,
-  component: DataCharts,
+  component: DataChartModes,
 });
 const PALETTE = [
   '#2563eb',
@@ -259,15 +260,15 @@ function DataCharts() {
     }
   }, [data, x, y, aggregate, type]);
   const options = (items: string[]) =>
-    items.map((value) => ({ value, label: t(`analysis3.charts.${value}`) }));
+    items.map((value) => ({ value, label: t(`analysisTools.charts.${value}`) }));
   return (
     <AnalysisFrame tool="charts" error={error ?? job.error ?? derived.error}>
       <p className="text-sm text-muted-foreground">
-        {t('analysis3.charts.limit')}
+        {t('analysisTools.charts.limit')}
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         <ChoiceField
-          label={t('analysis3.format')}
+          label={t('analysisTools.format')}
           value={format}
           options={[
             { value: 'csv', label: 'CSV' },
@@ -278,7 +279,7 @@ function DataCharts() {
         <Input
           type="file"
           accept=".csv,.json,.tsv,text/csv,application/json"
-          aria-label={t('analysis3.import')}
+          aria-label={t('analysisTools.import')}
           onChange={async (event) => {
             const file = event.target.files?.[0];
             event.target.value = '';
@@ -299,7 +300,7 @@ function DataCharts() {
         />
       </div>
       <PracticalText
-        label={t('analysis3.source')}
+        label={t('analysisTools.source')}
         value={input}
         onChange={(value) => {
           setInput(value);
@@ -312,32 +313,32 @@ function DataCharts() {
         onClick={() => job.run(() => parseChartData(input, format))}
         disabled={job.busy}
       >
-        {t(job.busy ? 'analysis3.busy' : 'analysis3.import')}
+        {t(job.busy ? 'analysisTools.busy' : 'analysisTools.import')}
       </Button>
       {data && (
         <>
           <div className="grid gap-4 md:grid-cols-4">
             <ChoiceField
-              label={t('analysis3.charts.type')}
+              label={t('analysisTools.charts.type')}
               value={type}
               options={options(['bar', 'line', 'scatter', 'pie'])}
               onChange={(type) => setQuery({ type })}
             />
             <ChoiceField
-              label={t('analysis3.charts.x')}
+              label={t('analysisTools.charts.x')}
               value={x}
               options={data.columns.map((value) => ({ value, label: value }))}
               onChange={(x) => setQuery({ x })}
             />
             <ChoiceField
-              label={t('analysis3.charts.y')}
+              label={t('analysisTools.charts.y')}
               value={y}
               options={data.columns.map((value) => ({ value, label: value }))}
               onChange={(y) => setQuery({ y })}
             />
             {type !== 'scatter' && (
               <ChoiceField
-                label={t('analysis3.charts.aggregate')}
+                label={t('analysisTools.charts.aggregate')}
                 value={aggregate}
                 options={options(['sum', 'mean', 'count', 'min', 'max'])}
                 onChange={(aggregate) => setQuery({ aggregate })}
@@ -345,7 +346,7 @@ function DataCharts() {
             )}
           </div>
           <PracticalText
-            label={t('analysis3.charts.caption')}
+            label={t('analysisTools.charts.caption')}
             value={title}
             onChange={setTitle}
             maxLength={100}
@@ -364,14 +365,14 @@ function DataCharts() {
                 onError={setError}
               />
               <details className="rounded border p-3">
-                <summary>{t('analysis3.charts.pivot')}</summary>
+                <summary>{t('analysisTools.charts.pivot')}</summary>
                 <div className="max-h-80 overflow-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr>
                         <th className="p-2 text-left">{x}</th>
                         <th>{y}</th>
-                        <th>{t('analysis3.charts.count')}</th>
+                        <th>{t('analysisTools.charts.count')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -398,5 +399,32 @@ function DataCharts() {
         </>
       )}
     </AnalysisFrame>
+  );
+}
+
+function DataChartModes() {
+  const { t } = useTranslation();
+  const [q, set] = useQueryParams<{ workspace: string }>({
+    workspace: StringParam,
+  });
+  return (
+    <>
+      <div className="mx-auto max-w-6xl px-4 pt-4">
+        <ChoiceField
+          label={t('scienceExpansion.mode')}
+          value={q.workspace === 'digitizer' ? 'digitizer' : 'charts'}
+          options={[
+            { value: 'charts', label: t('scienceExpansion.originalChart') },
+            { value: 'digitizer', label: t('scienceExpansion.image.digitizer') },
+          ]}
+          onChange={(workspace) => set({ workspace })}
+        />
+      </div>
+      {q.workspace === 'digitizer' ? (
+        <ImageAnalysis digitize />
+      ) : (
+        <DataCharts />
+      )}
+    </>
   );
 }

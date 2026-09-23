@@ -26,7 +26,7 @@ END:VCALENDAR`;
 
 type Tab = 'generate' | 'inspect' | 'recurrence' | 'merge';
 const CalendarMergePanel = lazy(
-  () => import('@/components/batch4-organizer-calendar'),
+  () => import('@/components/calendar-availability-workspace'),
 );
 const CalendarRecurrencePanel = lazy(
   () => import('@/components/calendar-recurrence-panel'),
@@ -92,7 +92,7 @@ function IcsGeneratorPage() {
           </TabsTrigger>
           <TabsTrigger value="inspect">{t('icsGenerator.inspect')}</TabsTrigger>
           <TabsTrigger value="merge">
-            {t('batch4Organizers.calendar.tab')}
+            {t('organizerTools.calendar.tab')}
           </TabsTrigger>
           <TabsTrigger value="recurrence">
             {t('calendarRecurrence.tab')}

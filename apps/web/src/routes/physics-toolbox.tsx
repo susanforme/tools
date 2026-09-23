@@ -1,11 +1,11 @@
 import { ChoiceField, Metric, NumberField } from '@/components/calculator-ui';
-import { ScienceFrame } from '@/components/batch4-science-ui';
+import { ScienceFrame } from '@/components/science-workspace-ui';
 import {
   NumberParam,
   StringParam,
   useQueryParams,
 } from '@/hooks/useQueryParams';
-import { physics } from '@/lib/batch4-science';
+import { physics } from '@/lib/science-calculations';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 export const Route = createFileRoute('/physics-toolbox')({
@@ -61,7 +61,7 @@ const MODES: Record<string, Field[]> = {
 };
 function PhysicsToolbox() {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch4Science.${key}`);
+  const label = (key: string) => t(`scienceTools.${key}`);
   const [q, set] = useQueryParams<{
     mode: string;
     a: number;

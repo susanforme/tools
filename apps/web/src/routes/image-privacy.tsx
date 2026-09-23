@@ -1,4 +1,4 @@
-import { PhotoMetadataEditor } from '@/components/batch4-organizer-photo';
+import { PhotoMetadataEditor } from '@/components/photo-metadata-workspace';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDropzone } from '@/components/file-dropzone';
@@ -263,7 +263,7 @@ function ImagePrivacyPage() {
         <TabsList>
           <TabsTrigger value="privacy">{t('imagePrivacy.title')}</TabsTrigger>
           <TabsTrigger value="metadata">
-            {t('batch4Organizers.photo.tab')}
+            {t('organizerTools.photo.tab')}
           </TabsTrigger>
         </TabsList>
       </Tabs>

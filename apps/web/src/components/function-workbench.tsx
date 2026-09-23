@@ -27,7 +27,7 @@ const MODES = [
 ];
 export function FunctionWorkbench() {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch3Calc.${key}`);
+  const label = (key: string) => t(`calculatorUtilities.${key}`);
   const [q, set] = useQueryParams<{
     mode: string;
     from: number;
@@ -128,7 +128,7 @@ export function FunctionWorkbench() {
       )}
       {job.error && (
         <p role="alert" className="text-destructive">
-          {t('batch3Calc.error', { message: label(job.error) })}
+          {t('calculatorUtilities.error', { message: label(job.error) })}
         </p>
       )}
       {result && (
@@ -194,7 +194,7 @@ export function FunctionWorkbench() {
             </text>
           </svg>
           <p className="text-xs text-muted-foreground">
-            {t('batch3Calc.bounds', {
+            {t('calculatorUtilities.bounds', {
               min: yMin.toPrecision(5),
               max: yMax.toPrecision(5),
             })}

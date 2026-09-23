@@ -1,4 +1,4 @@
-import { MediaWorkspace } from '@/components/batch4-media-workspace';
+import { MediaWorkspaceSelector } from '@/components/media-workspace-selector';
 import { MediaAudio } from '@/components/media-audio';
 import { FileDropzone } from '@/components/file-dropzone';
 import { MediaResult } from '@/components/media-result';
@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/audio-editor')({
   component: () => (
-    <MediaWorkspace kind="analysis" original={<AudioEditorPage />} />
+    <MediaWorkspaceSelector kind="tags" original={<AudioEditorPage />} />
   ),
 });
 
@@ -148,7 +148,7 @@ function AudioEditorPage() {
           <TabsTrigger value="trim">{t('audioEditor.trim')}</TabsTrigger>
           <TabsTrigger value="merge">{t('audioEditor.merge')}</TabsTrigger>
           <TabsTrigger value="repair">
-            {t('batch3Media.audioRepair')}
+            {t('mediaWorkflow.audioRepair')}
           </TabsTrigger>
         </TabsList>
       </Tabs>

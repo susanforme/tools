@@ -80,7 +80,7 @@ export function MediaFont() {
   return (
     <section className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        {t('batch3Media.fontLimit')}
+        {t('mediaWorkflow.fontLimit')}
       </p>
       <FileDropzone
         accept=".ttf,.otf,.woff,.woff2"
@@ -95,7 +95,7 @@ export function MediaFont() {
           task.run(files.map((f) => f.file));
         }}
       >
-        {t('batch3Media.fontUpload')}
+        {t('mediaWorkflow.fontUpload')}
       </FileDropzone>
       {task.busy && (
         <Button variant="outline" onClick={task.cancel}>
@@ -104,13 +104,13 @@ export function MediaFont() {
       )}
       <div className="grid gap-3 md:grid-cols-2">
         <ChoiceField
-          label={t('batch3Media.headingFont')}
+          label={t('mediaWorkflow.headingFont')}
           value={query.heading ?? 'serif'}
           options={options}
           onChange={(heading) => setQuery({ heading })}
         />
         <ChoiceField
-          label={t('batch3Media.bodyFont')}
+          label={t('mediaWorkflow.bodyFont')}
           value={query.body ?? 'sans-serif'}
           options={options}
           onChange={(body) => setQuery({ body })}
@@ -120,7 +120,7 @@ export function MediaFont() {
         ).map((key, i) => (
           <NumberField
             key={key}
-            label={t(`batch3Media.${key}`)}
+            label={t(`mediaWorkflow.${key}`)}
             value={query[key] ?? [16, 22, 0, 1.6, 800][i]}
             min={[8, 8, -5, 0.8, 240][i]}
             max={[120, 120, 20, 3, 1600][i]}
@@ -148,13 +148,13 @@ export function MediaFont() {
         )),
       )}
       <PracticalText
-        label={t('batch3Media.heading')}
+        label={t('mediaWorkflow.heading')}
         value={heading}
         onChange={setHeading}
         maxLength={500}
       />
       <PracticalText
-        label={t('batch3Media.paragraph')}
+        label={t('mediaWorkflow.paragraph')}
         value={paragraph}
         onChange={setParagraph}
         multiline
@@ -163,7 +163,7 @@ export function MediaFont() {
       {css && (
         <>
           <iframe
-            title={t('batch3Media.typesetting')}
+            title={t('mediaWorkflow.typesetting')}
             sandbox=""
             className="h-96 max-w-full rounded border bg-white"
             width={Math.max(240, Math.min(1600, query.viewport ?? 800))}
@@ -174,8 +174,8 @@ export function MediaFont() {
       )}
       {(error || task.error) && (
         <p role="alert" className="text-destructive">
-          {t('batch3Media.failed', {
-            message: t(`batch3Media.${error ?? task.error}`, {
+          {t('mediaWorkflow.failed', {
+            message: t(`mediaWorkflow.${error ?? task.error}`, {
               defaultValue: error ?? task.error ?? '',
             }),
           })}

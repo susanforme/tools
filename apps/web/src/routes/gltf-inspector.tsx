@@ -1,4 +1,4 @@
-import { MediaWorkspace } from '@/components/batch4-media-workspace';
+import { MediaWorkspace } from '@/components/media-workspace-switcher';
 import { NumberField } from '@/components/calculator-ui';
 import type { ModelMeasurement } from '@/lib/media-model';
 import { Button } from '@/components/ui/button';
@@ -70,11 +70,11 @@ function GltfInspectorPage() {
   }
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
-      <h1 className="text-2xl font-bold">{t('batch3Media.models')}</h1>
+      <h1 className="text-2xl font-bold">{t('mediaWorkflow.models')}</h1>
       <p className="text-sm text-muted-foreground">
-        {t('batch3Media.modelLimit')}
+        {t('mediaWorkflow.modelLimit')}
       </p>
-      <Label htmlFor="gltf-files">{t('batch3Media.modelUpload')}</Label>
+      <Label htmlFor="gltf-files">{t('mediaWorkflow.modelUpload')}</Label>
       <Input
         id="gltf-files"
         type="file"
@@ -158,7 +158,7 @@ function GltfInspectorPage() {
         </p>
       )}
       <NumberField
-        label={t('batch3Media.scale')}
+        label={t('mediaWorkflow.scale')}
         value={query.scale ?? 1}
         min={0.000001}
         max={1000000}
@@ -183,15 +183,15 @@ function GltfInspectorPage() {
       {measurement && (
         <div className="grid gap-3 md:grid-cols-3">
           <p>
-            {t('batch3Media.dimensions')}:{' '}
+            {t('mediaWorkflow.dimensions')}:{' '}
             {measurement.dimensions.map((n) => n.toPrecision(6)).join(' × ')}
           </p>
           <p>
-            {t('batch3Media.area')}: {measurement.area.toPrecision(6)}
+            {t('mediaWorkflow.area')}: {measurement.area.toPrecision(6)}
           </p>
           <p>
-            {t('batch3Media.volume')}:{' '}
-            {measurement.volume?.toPrecision(6) ?? t('batch3Media.notClosed')}
+            {t('mediaWorkflow.volume')}:{' '}
+            {measurement.volume?.toPrecision(6) ?? t('mediaWorkflow.notClosed')}
           </p>
         </div>
       )}

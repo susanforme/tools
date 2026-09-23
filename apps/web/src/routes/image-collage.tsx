@@ -1,3 +1,4 @@
+import { MediaWorkspaceSelector } from '@/components/media-workspace-selector';
 import { boundedNumber } from '@/lib/focus-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
@@ -23,7 +24,9 @@ import {
 } from '@/lib/image-document-tools';
 
 export const Route = createFileRoute('/image-collage')({
-  component: ImageCollagePage,
+  component: () => (
+    <MediaWorkspaceSelector kind="book" original={<ImageCollagePage />} />
+  ),
 });
 
 function ImageCollagePage() {

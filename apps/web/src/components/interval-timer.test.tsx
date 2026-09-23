@@ -28,18 +28,18 @@ it('catches up delayed ticks, pauses and cleans up interval resources', () => {
   vi.setSystemTime(0);
   const complete = vi.fn();
   render(<IntervalTimer onStart={vi.fn()} onComplete={complete} />);
-  fireEvent.click(screen.getByRole('button', { name: 'batch3Calc.start' }));
+  fireEvent.click(screen.getByRole('button', { name: 'calculatorUtilities.start' }));
   act(() => vi.advanceTimersByTime(2100));
   expect(complete).toHaveBeenCalledWith('Rest');
-  fireEvent.click(screen.getByRole('button', { name: 'batch3Calc.pause' }));
+  fireEvent.click(screen.getByRole('button', { name: 'calculatorUtilities.pause' }));
   act(() => vi.advanceTimersByTime(10000));
   expect(complete).toHaveBeenCalledTimes(1);
-  fireEvent.click(screen.getByRole('button', { name: 'batch3Calc.start' }));
+  fireEvent.click(screen.getByRole('button', { name: 'calculatorUtilities.start' }));
   act(() => {
     vi.setSystemTime(50000);
     vi.advanceTimersByTime(100);
   });
-  expect(complete).toHaveBeenLastCalledWith('batch3Calc.done');
+  expect(complete).toHaveBeenLastCalledWith('calculatorUtilities.done');
   expect(complete).toHaveBeenCalledTimes(2);
   cleanup();
   expect(vi.getTimerCount()).toBe(0);

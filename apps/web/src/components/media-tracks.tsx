@@ -50,7 +50,7 @@ export function MediaTracks() {
   return (
     <section className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        {t('batch3Media.trackLimit')}
+        {t('mediaWorkflow.trackLimit')}
       </p>
       <FileDropzone
         accept=".gpx,.kml,.geojson,.json"
@@ -80,7 +80,7 @@ export function MediaTracks() {
           }
         }}
       >
-        {t('batch3Media.trackUpload')}
+        {t('mediaWorkflow.trackUpload')}
       </FileDropzone>
       {busy && (
         <Button
@@ -96,7 +96,7 @@ export function MediaTracks() {
       {track && (
         <>
           <ChoiceField
-            label={t('batch3Media.track')}
+            label={t('mediaWorkflow.track')}
             value={String(selected)}
             options={tracks.map((item, i) => ({
               value: String(i),
@@ -106,7 +106,7 @@ export function MediaTracks() {
           />
           <div className="grid gap-3 md:grid-cols-3">
             <NumberField
-              label={t('batch3Media.firstPoint')}
+              label={t('mediaWorkflow.firstPoint')}
               value={start}
               min={1}
               max={track.points.length}
@@ -114,7 +114,7 @@ export function MediaTracks() {
               onChange={setStart}
             />
             <NumberField
-              label={t('batch3Media.lastPoint')}
+              label={t('mediaWorkflow.lastPoint')}
               value={end}
               min={2}
               max={track.points.length}
@@ -122,7 +122,7 @@ export function MediaTracks() {
               onChange={setEnd}
             />
             <ChoiceField
-              label={t('batch3Media.format')}
+              label={t('mediaWorkflow.format')}
               value={format}
               options={['geojson', 'gpx', 'kml'].map((value) => ({
                 value,
@@ -151,7 +151,7 @@ export function MediaTracks() {
                 )
               }
             >
-              {t('batch3Media.crop')}
+              {t('mediaWorkflow.crop')}
             </Button>
             <Button
               variant="outline"
@@ -165,7 +165,7 @@ export function MediaTracks() {
                 ])
               }
             >
-              {t('batch3Media.joinTracks')}
+              {t('mediaWorkflow.joinTracks')}
             </Button>
             <Button
               variant="outline"
@@ -185,8 +185,8 @@ export function MediaTracks() {
             </Button>
           </div>
           <p>
-            {t('batch3Media.distance')}: {total.toFixed(3)} km ·{' '}
-            {track.points.length} {t('batch3Media.points')}
+            {t('mediaWorkflow.distance')}: {total.toFixed(3)} km ·{' '}
+            {track.points.length} {t('mediaWorkflow.points')}
           </p>
           <Suspense fallback={<p>{t('studio20.busy')}</p>}>
             <Map collection={trackCollection([track])} />
@@ -194,13 +194,13 @@ export function MediaTracks() {
           {altitude.length ? (
             <figure>
               <figcaption>
-                {t('batch3Media.elevation')} ({low.toFixed(1)}–{high.toFixed(1)}{' '}
+                {t('mediaWorkflow.elevation')} ({low.toFixed(1)}–{high.toFixed(1)}{' '}
                 m)
               </figcaption>
               <svg
                 viewBox="0 0 800 180"
                 role="img"
-                aria-label={t('batch3Media.elevation')}
+                aria-label={t('mediaWorkflow.elevation')}
                 className="h-44 w-full rounded border text-emerald-500"
               >
                 <polyline
@@ -223,14 +223,14 @@ export function MediaTracks() {
               </p>
             </figure>
           ) : (
-            <p>{t('batch3Media.noElevation')}</p>
+            <p>{t('mediaWorkflow.noElevation')}</p>
           )}
         </>
       )}
       {error && (
         <p role="alert" className="text-destructive">
-          {t('batch3Media.failed', {
-            message: t(`batch3Media.${error}`, { defaultValue: error }),
+          {t('mediaWorkflow.failed', {
+            message: t(`mediaWorkflow.${error}`, { defaultValue: error }),
           })}
         </p>
       )}

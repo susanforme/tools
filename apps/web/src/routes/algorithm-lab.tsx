@@ -93,27 +93,27 @@ function AlgorithmLab() {
     <AnalysisFrame tool="algorithms" error={calculation.error}>
       <div className="grid gap-4 md:grid-cols-3">
         <ChoiceField
-          label={t('analysis3.mode')}
+          label={t('analysisTools.mode')}
           value={mode}
           options={['sort', 'binary', 'path'].map((value) => ({
             value,
-            label: t(`analysis3.algorithms.${value}`),
+            label: t(`analysisTools.algorithms.${value}`),
           }))}
           onChange={(mode) => setQuery({ mode, algorithm: undefined })}
         />
         {mode !== 'binary' && (
           <ChoiceField
-            label={t('analysis3.algorithms.algorithm')}
+            label={t('analysisTools.algorithms.algorithm')}
             value={algorithm}
             options={choices.map((value) => ({
               value,
-              label: t(`analysis3.algorithms.${value}`),
+              label: t(`analysisTools.algorithms.${value}`),
             }))}
             onChange={(algorithm) => setQuery({ algorithm })}
           />
         )}
         <NumberField
-          label={t('analysis3.algorithms.speed')}
+          label={t('analysisTools.algorithms.speed')}
           value={speed}
           min={50}
           max={2000}
@@ -126,8 +126,8 @@ function AlgorithmLab() {
           <PracticalText
             label={t(
               mode === 'binary'
-                ? 'analysis3.algorithms.sorted'
-                : 'analysis3.algorithms.numbers',
+                ? 'analysisTools.algorithms.sorted'
+                : 'analysisTools.algorithms.numbers',
             )}
             value={source}
             onChange={setSource}
@@ -135,7 +135,7 @@ function AlgorithmLab() {
           />
           {mode === 'binary' && (
             <NumberField
-              label={t('analysis3.algorithms.target')}
+              label={t('analysisTools.algorithms.target')}
               value={target}
               min={-1000000}
               max={1000000}
@@ -145,7 +145,7 @@ function AlgorithmLab() {
         </>
       ) : (
         <p className="text-sm text-muted-foreground">
-          {t('analysis3.algorithms.gridHint')}
+          {t('analysisTools.algorithms.gridHint')}
         </p>
       )}
       {current && (
@@ -157,7 +157,7 @@ function AlgorithmLab() {
                 setPlaying(!playing);
               }}
             >
-              {t(playing ? 'analysis3.pause' : 'analysis3.play')}
+              {t(playing ? 'analysisTools.pause' : 'analysisTools.play')}
             </Button>
             <Button
               variant="outline"
@@ -167,7 +167,7 @@ function AlgorithmLab() {
                 setStep(Math.max(0, step - 1));
               }}
             >
-              {t('analysis3.previous')}
+              {t('analysisTools.previous')}
             </Button>
             <Button
               variant="outline"
@@ -177,7 +177,7 @@ function AlgorithmLab() {
                 setStep(step + 1);
               }}
             >
-              {t('analysis3.next')}
+              {t('analysisTools.next')}
             </Button>
             <Button
               variant="outline"
@@ -186,7 +186,7 @@ function AlgorithmLab() {
                 setStep(0);
               }}
             >
-              {t('analysis3.reset')}
+              {t('analysisTools.reset')}
             </Button>
             <span className="text-sm tabular-nums">
               {Math.min(step + 1, calculation.frames.length)} /{' '}
@@ -200,7 +200,7 @@ function AlgorithmLab() {
                   variant="outline"
                   key={index}
                   className={`aspect-square h-auto min-w-0 p-0 ${current.path.includes(index) ? 'bg-emerald-500 text-white' : current.active.includes(index) ? 'bg-orange-500 text-white' : cost === 0 ? 'bg-slate-700 text-white' : current.visited.includes(index) ? 'bg-blue-200 text-slate-900' : cost > 1 ? 'bg-amber-100 text-slate-900' : ''}`}
-                  aria-label={`${t('analysis3.algorithms.cell')} ${Math.floor(index / 8) + 1}, ${(index % 8) + 1}: ${cost}`}
+                  aria-label={`${t('analysisTools.algorithms.cell')} ${Math.floor(index / 8) + 1}, ${(index % 8) + 1}: ${cost}`}
                   disabled={index === 0 || index === 63}
                   onClick={() =>
                     setGrid((old) =>
@@ -240,11 +240,11 @@ function AlgorithmLab() {
             </div>
           )}
           <p role="status" className="text-sm">
-            {t('analysis3.algorithms.comparisons')}: {current.comparisons} ·{' '}
-            {t('analysis3.algorithms.writes')}: {current.writes}
+            {t('analysisTools.algorithms.comparisons')}: {current.comparisons} ·{' '}
+            {t('analysisTools.algorithms.writes')}: {current.writes}
             {done &&
               mode !== 'sort' &&
-              ` · ${current.found === null ? t('analysis3.algorithms.notFound') : mode === 'binary' ? `${t('analysis3.algorithms.index')}: ${current.found}` : `${t('analysis3.algorithms.cost')}: ${current.cost}`}`}
+              ` · ${current.found === null ? t('analysisTools.algorithms.notFound') : mode === 'binary' ? `${t('analysisTools.algorithms.index')}: ${current.found}` : `${t('analysisTools.algorithms.cost')}: ${current.cost}`}`}
           </p>
           {calculation.comparison.length > 0 && (
             <div className="overflow-auto">
@@ -252,14 +252,14 @@ function AlgorithmLab() {
                 <thead>
                   <tr>
                     <th className="p-2 text-left">
-                      {t('analysis3.algorithms.algorithm')}
+                      {t('analysisTools.algorithms.algorithm')}
                     </th>
-                    <th>{t('analysis3.algorithms.comparisons')}</th>
+                    <th>{t('analysisTools.algorithms.comparisons')}</th>
                     <th>
                       {t(
                         mode === 'path'
-                          ? 'analysis3.algorithms.cost'
-                          : 'analysis3.algorithms.writes',
+                          ? 'analysisTools.algorithms.cost'
+                          : 'analysisTools.algorithms.writes',
                       )}
                     </th>
                   </tr>
@@ -268,7 +268,7 @@ function AlgorithmLab() {
                   {calculation.comparison.map(({ name, result }) => (
                     <tr key={name} className="border-t">
                       <td className="p-2">
-                        {t(`analysis3.algorithms.${name}`)}
+                        {t(`analysisTools.algorithms.${name}`)}
                       </td>
                       <td className="text-center">{result.comparisons}</td>
                       <td className="text-center">
@@ -280,7 +280,7 @@ function AlgorithmLab() {
               </table>
               {mode === 'path' && (
                 <p className="mt-2 text-sm text-muted-foreground">
-                  {t('analysis3.algorithms.pathMetric')}
+                  {t('analysisTools.algorithms.pathMetric')}
                 </p>
               )}
             </div>

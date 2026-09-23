@@ -191,7 +191,7 @@ export function SpriteSheet() {
           <TabsTrigger value="sheet">
             {t('studio20.tools.sprite-sheet.title')}
           </TabsTrigger>
-          <TabsTrigger value="pixels">{t('batch3Media.pixels')}</TabsTrigger>
+          <TabsTrigger value="pixels">{t('mediaWorkflow.pixels')}</TabsTrigger>
         </TabsList>
       </Tabs>
       {query.studio === 'pixels' ? <MediaPixels /> : <SpriteSheetComposer />}

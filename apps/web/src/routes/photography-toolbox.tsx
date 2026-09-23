@@ -1,4 +1,4 @@
-import { ScienceFrame } from '@/components/batch4-science-ui';
+import { ScienceFrame } from '@/components/science-workspace-ui';
 import { ChoiceField, Metric, NumberField } from '@/components/calculator-ui';
 import { PracticalText, useLatestJob } from '@/components/practical-ui';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import {
   StringParam,
   useQueryParams,
 } from '@/hooks/useQueryParams';
-import { photoCalculation, photoSun } from '@/lib/batch4-science';
+import { photoCalculation, photoSun } from '@/lib/science-calculations';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 export const Route = createFileRoute('/photography-toolbox')({
@@ -38,7 +38,7 @@ const FIELDS: Record<string, Array<{ key: string; value: number }>> = {
 };
 function Photography() {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch4Science.${key}`);
+  const label = (key: string) => t(`scienceTools.${key}`);
   const [q, set] = useQueryParams<{
     mode: string;
     a: number;

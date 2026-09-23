@@ -210,9 +210,9 @@ export function MediaPixels() {
   };
   return (
     <section className="space-y-4">
-      <h2 className="text-xl font-semibold">{t('batch3Media.pixels')}</h2>
+      <h2 className="text-xl font-semibold">{t('mediaWorkflow.pixels')}</h2>
       <p className="text-sm text-muted-foreground">
-        {t('batch3Media.pixelLimit')}
+        {t('mediaWorkflow.pixelLimit')}
       </p>
       <div className="grid gap-3 md:grid-cols-4">
         <NumberField
@@ -273,7 +273,7 @@ export function MediaPixels() {
             });
           }}
         >
-          {t('batch3Media.resizeCanvas')}
+          {t('mediaWorkflow.resizeCanvas')}
         </Button>
       </div>
       <div className="flex flex-wrap items-center gap-2">
@@ -322,7 +322,7 @@ export function MediaPixels() {
             })
           }
         >
-          {t('batch3Media.clearLayer')}
+          {t('mediaWorkflow.clearLayer')}
         </Button>
       </div>
       <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_16rem]">
@@ -330,7 +330,7 @@ export function MediaPixels() {
           <canvas
             ref={canvas}
             tabIndex={0}
-            aria-label={t('batch3Media.drawHint')}
+            aria-label={t('mediaWorkflow.drawHint')}
             className="aspect-square w-full max-w-lg touch-none border bg-muted/30 outline-offset-2 [image-rendering:pixelated]"
             onPointerDown={(event) => {
               if (playing) return;
@@ -379,7 +379,7 @@ export function MediaPixels() {
             }}
           />
           <p className="text-xs text-muted-foreground">
-            {t('batch3Media.drawHint')} ({cursor[0] + 1}, {cursor[1] + 1})
+            {t('mediaWorkflow.drawHint')} ({cursor[0] + 1}, {cursor[1] + 1})
           </p>
         </div>
         <div className="space-y-3">
@@ -389,16 +389,16 @@ export function MediaPixels() {
             className="h-32 w-32 border [image-rendering:pixelated]"
           />
           <ChoiceField
-            label={t('batch3Media.brush')}
+            label={t('mediaWorkflow.brush')}
             value={query.brush ?? 'paint'}
             options={['paint', 'erase'].map((value) => ({
               value,
-              label: t(`batch3Media.${value}`),
+              label: t(`mediaWorkflow.${value}`),
             }))}
             onChange={(brush) => setQuery({ brush })}
           />
           <ChoiceField
-            label={t('batch3Media.onion')}
+            label={t('mediaWorkflow.onion')}
             value={query.onion ?? 'true'}
             options={['true', 'false'].map((value) => ({
               value,
@@ -433,13 +433,13 @@ export function MediaPixels() {
             disabled={palette.length >= 32 || palette.includes(color)}
             onClick={() => setPalette((p) => [...p, color])}
           >
-            {t('batch3Media.addColor')}
+            {t('mediaWorkflow.addColor')}
           </Button>
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <h3>{t('batch3Media.frames')}</h3>
+          <h3>{t('mediaWorkflow.frames')}</h3>
           <div className="flex flex-wrap gap-1">
             {project.frames.map((_, i) => (
               <Button
@@ -486,7 +486,7 @@ export function MediaPixels() {
                 setFrame(project.frames.length);
               }}
             >
-              {t('batch3Media.duplicateFrame')}
+              {t('mediaWorkflow.duplicateFrame')}
             </Button>
             <Button
               variant="outline"
@@ -517,9 +517,9 @@ export function MediaPixels() {
           </div>
         </div>
         <div className="space-y-2">
-          <h3>{t('batch3Media.layers')}</h3>
+          <h3>{t('mediaWorkflow.layers')}</h3>
           <ChoiceField
-            label={t('batch3Media.layer')}
+            label={t('mediaWorkflow.layer')}
             value={String(actualLayer)}
             options={project.layers.map((l, i) => ({
               value: String(i),
@@ -574,8 +574,8 @@ export function MediaPixels() {
             >
               {t(
                 project.layers[actualLayer].visible
-                  ? 'batch3Media.hide'
-                  : 'batch3Media.show',
+                  ? 'mediaWorkflow.hide'
+                  : 'mediaWorkflow.show',
               )}
             </Button>
             <Button
@@ -618,7 +618,7 @@ export function MediaPixels() {
                 setLayer(to);
               }}
             >
-              {t('batch3Media.raiseLayer')}
+              {t('mediaWorkflow.raiseLayer')}
             </Button>
           </div>
         </div>
@@ -628,7 +628,7 @@ export function MediaPixels() {
           onClick={() => task.run({ project, fps: query.fps ?? 8 })}
           disabled={task.busy}
         >
-          {t('batch3Media.makeGif')}
+          {t('mediaWorkflow.makeGif')}
         </Button>
         {task.busy && (
           <Button onClick={task.cancel} variant="outline">
@@ -664,7 +664,7 @@ export function MediaPixels() {
             )
           }
         >
-          {t('batch3Media.saveProject')}
+          {t('mediaWorkflow.saveProject')}
         </Button>
       </div>
       <FileDropzone
@@ -727,12 +727,12 @@ export function MediaPixels() {
           }
         }}
       >
-        {t('batch3Media.importPixel')}
+        {t('mediaWorkflow.importPixel')}
       </FileDropzone>
       {(error || task.error) && (
         <p role="alert" className="text-destructive">
-          {t('batch3Media.failed', {
-            message: t(`batch3Media.${error ?? task.error}`, {
+          {t('mediaWorkflow.failed', {
+            message: t(`mediaWorkflow.${error ?? task.error}`, {
               defaultValue: error ?? task.error ?? '',
             }),
           })}

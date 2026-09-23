@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 export function BakingPanel({ mode }: { mode: string }) {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch3Calc.${key}`);
+  const label = (key: string) => t(`calculatorUtilities.${key}`);
   const [q, set] = useQueryParams<{
     factor: number;
     shape1: string;

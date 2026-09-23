@@ -19,11 +19,11 @@ function ResistorToolbox() {
     <>
       <div className="mx-auto max-w-4xl px-4 pt-6">
         <ChoiceField
-          label={t('batch3Calc.mode')}
+          label={t('calculatorUtilities.mode')}
           value={section === 'electrical' ? 'electrical' : 'resistor'}
           options={['resistor', 'electrical'].map((value) => ({
             value,
-            label: t(`batch3Calc.${value}`),
+            label: t(`calculatorUtilities.${value}`),
           }))}
           onChange={set}
         />

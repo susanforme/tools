@@ -1,11 +1,16 @@
-import { batch4ScienceEn } from './batch4-science';
-import { batch4OrganizersEn } from './batch4-organizers';
-import { batch4MediaEn } from './batch4-media';
-import { batch4DocumentsEn } from './batch4-documents';
-import { batch3AnalysisEn } from './batch3-analysis';
-import { batch3ProductivityEn } from './batch3-productivity';
-import { batch3MediaEn } from './batch3-media';
-import { batch3CalculatorsEn } from './batch3-calculators';
+import { practicalWorkbenchesEn } from './practical-workbenches';
+import { lifeWorkspaceEn } from './life-workspace';
+import { mediaWorkspaceEn } from './media-workspaces';
+import { visualDesignEn } from './visual-design';
+import { scienceExpansionEn } from './science-expansion';
+import { scienceWorkspacesEn } from './science-workspaces';
+import { organizerWorkspacesEn } from './organizer-workspaces';
+import { mediaEditingToolsEn } from './media-editing-tools';
+import { documentWorkspacesEn } from './document-workspaces';
+import { analysisToolsEn } from './analysis-tools';
+import { productivityToolsEn } from './productivity-tools';
+import { mediaWorkflowEn } from './media-tools';
+import { calculatorUtilitiesEn } from './calculator-utilities';
 import { practicalToolsEn } from './practical-tools';
 import { mathToolsEn } from './math-tools';
 import { personalToolsEn } from './personal-tools';
@@ -46,14 +51,19 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
-  ...batch4DocumentsEn,
-  ...batch4MediaEn,
-  ...batch4OrganizersEn,
-  ...batch4ScienceEn,
-  ...batch3AnalysisEn,
-  ...batch3ProductivityEn,
-  ...batch3MediaEn,
-  ...batch3CalculatorsEn,
+  ...practicalWorkbenchesEn,
+  ...lifeWorkspaceEn,
+  ...mediaWorkspaceEn,
+  ...visualDesignEn,
+  ...scienceExpansionEn,
+  ...documentWorkspacesEn,
+  ...mediaEditingToolsEn,
+  ...organizerWorkspacesEn,
+  ...scienceWorkspacesEn,
+  ...analysisToolsEn,
+  ...productivityToolsEn,
+  ...mediaWorkflowEn,
+  ...calculatorUtilitiesEn,
   ...practicalToolsEn,
   ...mathToolsEn,
   ...personalToolsEn,

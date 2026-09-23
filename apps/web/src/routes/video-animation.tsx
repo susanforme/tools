@@ -1,3 +1,4 @@
+import { MediaWorkspaceSelector } from '@/components/media-workspace-selector';
 import { FileDropzone } from '@/components/file-dropzone';
 import { MediaResult } from '@/components/media-result';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/video-animation')({
-  component: VideoAnimationPage,
+  component: () => (
+    <MediaWorkspaceSelector kind="sequence" original={<VideoAnimationPage />} />
+  ),
 });
 
 type AnimationFormat = 'gif' | 'webp';

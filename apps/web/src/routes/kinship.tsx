@@ -1,3 +1,5 @@
+import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { FamilyTreePanel } from '@/components/family-tree-workspace';
 import { ChoiceField } from '@/components/calculator-ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +15,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export const Route = createFileRoute('/kinship')({ component: KinshipPage });
+export const Route = createFileRoute('/kinship')({ component: ExpandedPage });
 const PARAMS = { sex: NumberParam, direction: StringParam };
 const RELATIONS = [
   ['father', '爸爸'],
@@ -186,5 +188,13 @@ function KinshipPage() {
       )}
       <p className="text-sm text-muted-foreground">{t('kinship.regional')}</p>
     </div>
+  );
+}
+
+function ExpandedPage() {
+  return (
+    <LifeWorkspace label="lifeWorkspace.family.title" panel={<FamilyTreePanel />}>
+      <KinshipPage />
+    </LifeWorkspace>
   );
 }

@@ -1,3 +1,5 @@
+import { VisualSection } from '@/components/visual-design-ui';
+import { SearchableScanner } from '@/components/searchable-document-workspace';
 import { boundedNumber } from '@/lib/focus-tools';
 import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
@@ -25,7 +27,14 @@ import {
 } from '@/lib/image-document-tools';
 
 export const Route = createFileRoute('/document-scanner')({
-  component: DocumentScannerPage,
+  component: () => (
+    <VisualSection
+      original="documentScanner.title"
+      title="ocrTitle"
+      base={<DocumentScannerPage />}
+      extra={<SearchableScanner />}
+    />
+  ),
 });
 const CORNER_NAMES = [
   'topLeft',

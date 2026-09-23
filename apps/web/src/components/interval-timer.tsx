@@ -17,7 +17,7 @@ export function IntervalTimer({
   onComplete: (name: string) => void;
 }) {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch3Calc.${key}`);
+  const label = (key: string) => t(`calculatorUtilities.${key}`);
   const [q, set] = useQueryParams<{
     stageNames: string[];
     stageSeconds: string[];
@@ -27,7 +27,7 @@ export function IntervalTimer({
     (seconds, i) => ({
       seconds: Number(seconds),
       name:
-        q.stageNames?.[i] ?? t(i === 0 ? 'batch3Calc.work' : 'batch3Calc.rest'),
+        q.stageNames?.[i] ?? t(i === 0 ? 'calculatorUtilities.work' : 'calculatorUtilities.rest'),
     }),
   );
   const rounds = q.rounds ?? 8;
@@ -75,7 +75,7 @@ export function IntervalTimer({
       if (lastSignal.current && lastSignal.current !== signal)
         completeRef.current(
           current.done
-            ? t('batch3Calc.done')
+            ? t('calculatorUtilities.done')
             : snapshot.stages[current.index].name,
         );
       lastSignal.current = signal;
@@ -188,7 +188,7 @@ export function IntervalTimer({
             />
             <Metric
               label={label('rounds')}
-              value={t('batch3Calc.roundProgress', {
+              value={t('calculatorUtilities.roundProgress', {
                 round: position.round,
                 total: rounds,
               })}

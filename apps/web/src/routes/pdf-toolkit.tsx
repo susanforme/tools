@@ -1,4 +1,4 @@
-import { PdfLayoutPanel } from '@/components/batch4-document-pdf';
+import { PdfLayoutPanel } from '@/components/pdf-layout-editor';
 import { PdfAdvancedPanel } from '@/components/pdf-advanced-panel';
 import { ChoiceField } from '@/components/calculator-ui';
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
@@ -237,13 +237,13 @@ function PdfToolkitPage() {
             setError(null);
           }}
           aria-label={t(
-            `${toolMode === 'layout' ? 'batch4Documents' : ['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
+            `${toolMode === 'layout' ? 'documentWorkspaces' : ['forms', 'bookmarks'].includes(toolMode) ? 'calculatorUtilities' : 'pdfToolkit'}.${toolMode}`,
           )}
         >
           <Icon className="h-4 w-4" />
           <span className="hidden sm:inline">
             {t(
-              `${toolMode === 'layout' ? 'batch4Documents' : ['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
+              `${toolMode === 'layout' ? 'documentWorkspaces' : ['forms', 'bookmarks'].includes(toolMode) ? 'calculatorUtilities' : 'pdfToolkit'}.${toolMode}`,
             )}
           </span>
         </Button>

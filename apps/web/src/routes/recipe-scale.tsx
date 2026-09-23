@@ -1,3 +1,5 @@
+import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { RecipeCostPanel } from '@/components/recipe-cost-workspace';
 import { BakingPanel } from '@/components/baking-panel';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { ChoiceField, Metric, NumberField } from '@/components/calculator-ui';
@@ -8,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/recipe-scale')({
   validateSearch: (search: Record<string, unknown>) => search,
-  component: RecipeScalePage,
+  component: ExpandedPage,
 });
 
 function RecipeScalePage() {
@@ -21,11 +23,11 @@ function RecipeScalePage() {
     <div className="mx-auto max-w-3xl space-y-5 px-4 py-6">
       <h1 className="text-2xl font-bold">{t('recipeScale.title')}</h1>
       <ChoiceField
-        label={t('batch3Calc.mode')}
+        label={t('calculatorUtilities.mode')}
         value={['batch', 'mold'].includes(mode) ? mode : 'single'}
         options={['single', 'batch', 'mold'].map((value) => ({
           value,
-          label: t(`batch3Calc.${value}`),
+          label: t(`calculatorUtilities.${value}`),
         }))}
         onChange={setMode}
       />
@@ -59,5 +61,13 @@ function RecipeScalePage() {
         </>
       )}
     </div>
+  );
+}
+
+function ExpandedPage() {
+  return (
+    <LifeWorkspace label="lifeWorkspace.cost.title" panel={<RecipeCostPanel />}>
+      <RecipeScalePage />
+    </LifeWorkspace>
   );
 }

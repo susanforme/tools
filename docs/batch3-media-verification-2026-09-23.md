@@ -12,7 +12,7 @@
 
 ## 已运行的检查
 
-- `bunx vitest run apps/web/src/lib/batch3-media.test.ts apps/web/src/lib/geojson-tool.test.ts apps/web/src/lib/font-inspector.test.ts --maxWorkers=2`：3 文件、10 测试通过。
+- `bunx vitest run apps/web/src/lib/media-workflows.test.ts apps/web/src/lib/geojson-tool.test.ts apps/web/src/lib/font-inspector.test.ts --maxWorkers=2`：3 文件、10 测试通过。
 - 新增 6 个测试覆盖：GPX/KML/GeoJSON 往返及 XML 安全边界；封闭四面体面积/体积/缩放与开口拒绝；立体声 WAV 头/归一化/静音及单声道混合；字体轴范围与 CSS 输入校验；像素图层合成/工程校验/连续笔画。
 - `bun run --filter @tools/web typecheck`：通过。
 - 所属文件已 Prettier 格式化；`git diff --check` 通过。

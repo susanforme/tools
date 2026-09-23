@@ -1,3 +1,5 @@
+import { LifeWorkspace } from '@/components/life-workspace-ui';
+import { AssetWarrantyPanel } from '@/components/home-assets-workspace';
 import {
   OrganizerFrame,
   OrganizerInput,
@@ -19,7 +21,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 export const Route = createFileRoute('/home-inventory')({
-  component: HomeInventoryPage,
+  component: ExpandedPage,
 });
 const INITIAL: InventoryItem[] = [];
 const EMPTY: InventoryItem = {
@@ -304,5 +306,16 @@ function HomeInventoryPage() {
         ))}
       </div>
     </OrganizerFrame>
+  );
+}
+
+function ExpandedPage() {
+  return (
+    <LifeWorkspace
+      label="lifeWorkspace.assets.title"
+      panel={<AssetWarrantyPanel />}
+    >
+      <HomeInventoryPage />
+    </LifeWorkspace>
   );
 }

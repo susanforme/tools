@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 const MODES = ['ohm', 'network', 'divider', 'led', 'rc'];
 export function ElectricalPanel() {
   const { t } = useTranslation();
-  const label = (key: string) => t(`batch3Calc.${key}`);
+  const label = (key: string) => t(`calculatorUtilities.${key}`);
   const [q, set] = useQueryParams<{
     circuit: string;
     a: number;

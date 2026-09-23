@@ -30,6 +30,7 @@ import { Route as UnitConverterRouteImport } from './routes/unit-converter'
 import { Route as UnicodeRouteImport } from './routes/unicode'
 import { Route as TypingPracticeRouteImport } from './routes/typing-practice'
 import { Route as TunerRouteImport } from './routes/tuner'
+import { Route as TripPlannerRouteImport } from './routes/trip-planner'
 import { Route as TravelCostRouteImport } from './routes/travel-cost'
 import { Route as TraceContextRouteImport } from './routes/trace-context'
 import { Route as TournamentBracketRouteImport } from './routes/tournament-bracket'
@@ -46,6 +47,7 @@ import { Route as SvgToolkitRouteImport } from './routes/svg-toolkit'
 import { Route as SudokuRouteImport } from './routes/sudoku'
 import { Route as SubtitleEditorRouteImport } from './routes/subtitle-editor'
 import { Route as SubscriptionTrackerRouteImport } from './routes/subscription-tracker'
+import { Route as StudyPlannerRouteImport } from './routes/study-planner'
 import { Route as StreamingManifestRouteImport } from './routes/streaming-manifest'
 import { Route as SqlPlaygroundRouteImport } from './routes/sql-playground'
 import { Route as SqlDataRouteImport } from './routes/sql-data'
@@ -97,6 +99,7 @@ import { Route as PdfToolkitRouteImport } from './routes/pdf-toolkit'
 import { Route as PdfCompareRouteImport } from './routes/pdf-compare'
 import { Route as PdfBookletRouteImport } from './routes/pdf-booklet'
 import { Route as PcapViewerRouteImport } from './routes/pcap-viewer'
+import { Route as PatternDesignerRouteImport } from './routes/pattern-designer'
 import { Route as PasswordRouteImport } from './routes/password'
 import { Route as ParquetViewerRouteImport } from './routes/parquet-viewer'
 import { Route as PackingListRouteImport } from './routes/packing-list'
@@ -106,6 +109,7 @@ import { Route as OtelViewerRouteImport } from './routes/otel-viewer'
 import { Route as OpenpgpRouteImport } from './routes/openpgp'
 import { Route as OpenapiRouteImport } from './routes/openapi'
 import { Route as OgPreviewRouteImport } from './routes/og-preview'
+import { Route as OfficeWorkbenchRouteImport } from './routes/office-workbench'
 import { Route as OcrRouteImport } from './routes/ocr'
 import { Route as OauthRouteImport } from './routes/oauth'
 import { Route as NumberBaseRouteImport } from './routes/number-base'
@@ -137,6 +141,7 @@ import { Route as IpLookupRouteImport } from './routes/ip-lookup'
 import { Route as ImageVectorizerRouteImport } from './routes/image-vectorizer'
 import { Route as ImagePrivacyRouteImport } from './routes/image-privacy'
 import { Route as ImagePaletteRouteImport } from './routes/image-palette'
+import { Route as ImageMeasureRouteImport } from './routes/image-measure'
 import { Route as ImageCompareRouteImport } from './routes/image-compare'
 import { Route as ImageCollageRouteImport } from './routes/image-collage'
 import { Route as ImageRouteImport } from './routes/image'
@@ -146,6 +151,7 @@ import { Route as I18nCheckerRouteImport } from './routes/i18n-checker'
 import { Route as HttpStatusRouteImport } from './routes/http-status'
 import { Route as HttpRequestRouteImport } from './routes/http-request'
 import { Route as HtmlRouteImport } from './routes/html'
+import { Route as HomeProjectsRouteImport } from './routes/home-projects'
 import { Route as HomeInventoryRouteImport } from './routes/home-inventory'
 import { Route as HomeEnergyRouteImport } from './routes/home-energy'
 import { Route as HomeBudgetRouteImport } from './routes/home-budget'
@@ -220,6 +226,7 @@ import { Route as ChessClockRouteImport } from './routes/chess-clock'
 import { Route as ChemistryToolboxRouteImport } from './routes/chemistry-toolbox'
 import { Route as CertificateToolRouteImport } from './routes/certificate-tool'
 import { Route as CelRouteImport } from './routes/cel'
+import { Route as BusinessCalculatorsRouteImport } from './routes/business-calculators'
 import { Route as BundleInspectorRouteImport } from './routes/bundle-inspector'
 import { Route as BrowserCompatRouteImport } from './routes/browser-compat'
 import { Route as BrowserCapabilitiesRouteImport } from './routes/browser-capabilities'
@@ -233,6 +240,7 @@ import { Route as Base64RouteImport } from './routes/base64'
 import { Route as AudioRecorderRouteImport } from './routes/audio-recorder'
 import { Route as AudioEditorRouteImport } from './routes/audio-editor'
 import { Route as AsyncapiRouteImport } from './routes/asyncapi'
+import { Route as AstronomyToolboxRouteImport } from './routes/astronomy-toolbox'
 import { Route as AspectRatioRouteImport } from './routes/aspect-ratio'
 import { Route as ArrowViewerRouteImport } from './routes/arrow-viewer'
 import { Route as ArchiveRouteImport } from './routes/archive'
@@ -345,6 +353,11 @@ const TunerRoute = TunerRouteImport.update({
   path: '/tuner',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TripPlannerRoute = TripPlannerRouteImport.update({
+  id: '/trip-planner',
+  path: '/trip-planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TravelCostRoute = TravelCostRouteImport.update({
   id: '/travel-cost',
   path: '/travel-cost',
@@ -423,6 +436,11 @@ const SubtitleEditorRoute = SubtitleEditorRouteImport.update({
 const SubscriptionTrackerRoute = SubscriptionTrackerRouteImport.update({
   id: '/subscription-tracker',
   path: '/subscription-tracker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudyPlannerRoute = StudyPlannerRouteImport.update({
+  id: '/study-planner',
+  path: '/study-planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StreamingManifestRoute = StreamingManifestRouteImport.update({
@@ -680,6 +698,11 @@ const PcapViewerRoute = PcapViewerRouteImport.update({
   path: '/pcap-viewer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PatternDesignerRoute = PatternDesignerRouteImport.update({
+  id: '/pattern-designer',
+  path: '/pattern-designer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PasswordRoute = PasswordRouteImport.update({
   id: '/password',
   path: '/password',
@@ -723,6 +746,11 @@ const OpenapiRoute = OpenapiRouteImport.update({
 const OgPreviewRoute = OgPreviewRouteImport.update({
   id: '/og-preview',
   path: '/og-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficeWorkbenchRoute = OfficeWorkbenchRouteImport.update({
+  id: '/office-workbench',
+  path: '/office-workbench',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OcrRoute = OcrRouteImport.update({
@@ -880,6 +908,11 @@ const ImagePaletteRoute = ImagePaletteRouteImport.update({
   path: '/image-palette',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImageMeasureRoute = ImageMeasureRouteImport.update({
+  id: '/image-measure',
+  path: '/image-measure',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ImageCompareRoute = ImageCompareRouteImport.update({
   id: '/image-compare',
   path: '/image-compare',
@@ -923,6 +956,11 @@ const HttpRequestRoute = HttpRequestRouteImport.update({
 const HtmlRoute = HtmlRouteImport.update({
   id: '/html',
   path: '/html',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeProjectsRoute = HomeProjectsRouteImport.update({
+  id: '/home-projects',
+  path: '/home-projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeInventoryRoute = HomeInventoryRouteImport.update({
@@ -1295,6 +1333,11 @@ const CelRoute = CelRouteImport.update({
   path: '/cel',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BusinessCalculatorsRoute = BusinessCalculatorsRouteImport.update({
+  id: '/business-calculators',
+  path: '/business-calculators',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BundleInspectorRoute = BundleInspectorRouteImport.update({
   id: '/bundle-inspector',
   path: '/bundle-inspector',
@@ -1360,6 +1403,11 @@ const AsyncapiRoute = AsyncapiRouteImport.update({
   path: '/asyncapi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AstronomyToolboxRoute = AstronomyToolboxRouteImport.update({
+  id: '/astronomy-toolbox',
+  path: '/astronomy-toolbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AspectRatioRoute = AspectRatioRouteImport.update({
   id: '/aspect-ratio',
   path: '/aspect-ratio',
@@ -1398,6 +1446,7 @@ export interface FileRoutesByFullPath {
   '/archive': typeof ArchiveRoute
   '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
+  '/astronomy-toolbox': typeof AstronomyToolboxRoute
   '/asyncapi': typeof AsyncapiRoute
   '/audio-editor': typeof AudioEditorRoute
   '/audio-recorder': typeof AudioRecorderRoute
@@ -1411,6 +1460,7 @@ export interface FileRoutesByFullPath {
   '/browser-capabilities': typeof BrowserCapabilitiesRoute
   '/browser-compat': typeof BrowserCompatRoute
   '/bundle-inspector': typeof BundleInspectorRoute
+  '/business-calculators': typeof BusinessCalculatorsRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
   '/chemistry-toolbox': typeof ChemistryToolboxRoute
@@ -1485,6 +1535,7 @@ export interface FileRoutesByFullPath {
   '/home-budget': typeof HomeBudgetRoute
   '/home-energy': typeof HomeEnergyRoute
   '/home-inventory': typeof HomeInventoryRoute
+  '/home-projects': typeof HomeProjectsRoute
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
@@ -1494,6 +1545,7 @@ export interface FileRoutesByFullPath {
   '/image': typeof ImageRoute
   '/image-collage': typeof ImageCollageRoute
   '/image-compare': typeof ImageCompareRoute
+  '/image-measure': typeof ImageMeasureRoute
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/image-vectorizer': typeof ImageVectorizerRoute
@@ -1525,6 +1577,7 @@ export interface FileRoutesByFullPath {
   '/number-base': typeof NumberBaseRoute
   '/oauth': typeof OauthRoute
   '/ocr': typeof OcrRoute
+  '/office-workbench': typeof OfficeWorkbenchRoute
   '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
   '/openpgp': typeof OpenpgpRoute
@@ -1534,6 +1587,7 @@ export interface FileRoutesByFullPath {
   '/packing-list': typeof PackingListRoute
   '/parquet-viewer': typeof ParquetViewerRoute
   '/password': typeof PasswordRoute
+  '/pattern-designer': typeof PatternDesignerRoute
   '/pcap-viewer': typeof PcapViewerRoute
   '/pdf-booklet': typeof PdfBookletRoute
   '/pdf-compare': typeof PdfCompareRoute
@@ -1585,6 +1639,7 @@ export interface FileRoutesByFullPath {
   '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/streaming-manifest': typeof StreamingManifestRoute
+  '/study-planner': typeof StudyPlannerRoute
   '/subscription-tracker': typeof SubscriptionTrackerRoute
   '/subtitle-editor': typeof SubtitleEditorRoute
   '/sudoku': typeof SudokuRoute
@@ -1601,6 +1656,7 @@ export interface FileRoutesByFullPath {
   '/tournament-bracket': typeof TournamentBracketRoute
   '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
+  '/trip-planner': typeof TripPlannerRoute
   '/tuner': typeof TunerRoute
   '/typing-practice': typeof TypingPracticeRoute
   '/unicode': typeof UnicodeRoute
@@ -1630,6 +1686,7 @@ export interface FileRoutesByTo {
   '/archive': typeof ArchiveRoute
   '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
+  '/astronomy-toolbox': typeof AstronomyToolboxRoute
   '/asyncapi': typeof AsyncapiRoute
   '/audio-editor': typeof AudioEditorRoute
   '/audio-recorder': typeof AudioRecorderRoute
@@ -1643,6 +1700,7 @@ export interface FileRoutesByTo {
   '/browser-capabilities': typeof BrowserCapabilitiesRoute
   '/browser-compat': typeof BrowserCompatRoute
   '/bundle-inspector': typeof BundleInspectorRoute
+  '/business-calculators': typeof BusinessCalculatorsRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
   '/chemistry-toolbox': typeof ChemistryToolboxRoute
@@ -1717,6 +1775,7 @@ export interface FileRoutesByTo {
   '/home-budget': typeof HomeBudgetRoute
   '/home-energy': typeof HomeEnergyRoute
   '/home-inventory': typeof HomeInventoryRoute
+  '/home-projects': typeof HomeProjectsRoute
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
@@ -1726,6 +1785,7 @@ export interface FileRoutesByTo {
   '/image': typeof ImageRoute
   '/image-collage': typeof ImageCollageRoute
   '/image-compare': typeof ImageCompareRoute
+  '/image-measure': typeof ImageMeasureRoute
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/image-vectorizer': typeof ImageVectorizerRoute
@@ -1757,6 +1817,7 @@ export interface FileRoutesByTo {
   '/number-base': typeof NumberBaseRoute
   '/oauth': typeof OauthRoute
   '/ocr': typeof OcrRoute
+  '/office-workbench': typeof OfficeWorkbenchRoute
   '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
   '/openpgp': typeof OpenpgpRoute
@@ -1766,6 +1827,7 @@ export interface FileRoutesByTo {
   '/packing-list': typeof PackingListRoute
   '/parquet-viewer': typeof ParquetViewerRoute
   '/password': typeof PasswordRoute
+  '/pattern-designer': typeof PatternDesignerRoute
   '/pcap-viewer': typeof PcapViewerRoute
   '/pdf-booklet': typeof PdfBookletRoute
   '/pdf-compare': typeof PdfCompareRoute
@@ -1817,6 +1879,7 @@ export interface FileRoutesByTo {
   '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/streaming-manifest': typeof StreamingManifestRoute
+  '/study-planner': typeof StudyPlannerRoute
   '/subscription-tracker': typeof SubscriptionTrackerRoute
   '/subtitle-editor': typeof SubtitleEditorRoute
   '/sudoku': typeof SudokuRoute
@@ -1833,6 +1896,7 @@ export interface FileRoutesByTo {
   '/tournament-bracket': typeof TournamentBracketRoute
   '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
+  '/trip-planner': typeof TripPlannerRoute
   '/tuner': typeof TunerRoute
   '/typing-practice': typeof TypingPracticeRoute
   '/unicode': typeof UnicodeRoute
@@ -1863,6 +1927,7 @@ export interface FileRoutesById {
   '/archive': typeof ArchiveRoute
   '/arrow-viewer': typeof ArrowViewerRoute
   '/aspect-ratio': typeof AspectRatioRoute
+  '/astronomy-toolbox': typeof AstronomyToolboxRoute
   '/asyncapi': typeof AsyncapiRoute
   '/audio-editor': typeof AudioEditorRoute
   '/audio-recorder': typeof AudioRecorderRoute
@@ -1876,6 +1941,7 @@ export interface FileRoutesById {
   '/browser-capabilities': typeof BrowserCapabilitiesRoute
   '/browser-compat': typeof BrowserCompatRoute
   '/bundle-inspector': typeof BundleInspectorRoute
+  '/business-calculators': typeof BusinessCalculatorsRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
   '/chemistry-toolbox': typeof ChemistryToolboxRoute
@@ -1950,6 +2016,7 @@ export interface FileRoutesById {
   '/home-budget': typeof HomeBudgetRoute
   '/home-energy': typeof HomeEnergyRoute
   '/home-inventory': typeof HomeInventoryRoute
+  '/home-projects': typeof HomeProjectsRoute
   '/html': typeof HtmlRoute
   '/http-request': typeof HttpRequestRoute
   '/http-status': typeof HttpStatusRoute
@@ -1959,6 +2026,7 @@ export interface FileRoutesById {
   '/image': typeof ImageRoute
   '/image-collage': typeof ImageCollageRoute
   '/image-compare': typeof ImageCompareRoute
+  '/image-measure': typeof ImageMeasureRoute
   '/image-palette': typeof ImagePaletteRoute
   '/image-privacy': typeof ImagePrivacyRoute
   '/image-vectorizer': typeof ImageVectorizerRoute
@@ -1990,6 +2058,7 @@ export interface FileRoutesById {
   '/number-base': typeof NumberBaseRoute
   '/oauth': typeof OauthRoute
   '/ocr': typeof OcrRoute
+  '/office-workbench': typeof OfficeWorkbenchRoute
   '/og-preview': typeof OgPreviewRoute
   '/openapi': typeof OpenapiRoute
   '/openpgp': typeof OpenpgpRoute
@@ -1999,6 +2068,7 @@ export interface FileRoutesById {
   '/packing-list': typeof PackingListRoute
   '/parquet-viewer': typeof ParquetViewerRoute
   '/password': typeof PasswordRoute
+  '/pattern-designer': typeof PatternDesignerRoute
   '/pcap-viewer': typeof PcapViewerRoute
   '/pdf-booklet': typeof PdfBookletRoute
   '/pdf-compare': typeof PdfCompareRoute
@@ -2050,6 +2120,7 @@ export interface FileRoutesById {
   '/sql-data': typeof SqlDataRoute
   '/sql-playground': typeof SqlPlaygroundRoute
   '/streaming-manifest': typeof StreamingManifestRoute
+  '/study-planner': typeof StudyPlannerRoute
   '/subscription-tracker': typeof SubscriptionTrackerRoute
   '/subtitle-editor': typeof SubtitleEditorRoute
   '/sudoku': typeof SudokuRoute
@@ -2066,6 +2137,7 @@ export interface FileRoutesById {
   '/tournament-bracket': typeof TournamentBracketRoute
   '/trace-context': typeof TraceContextRoute
   '/travel-cost': typeof TravelCostRoute
+  '/trip-planner': typeof TripPlannerRoute
   '/tuner': typeof TunerRoute
   '/typing-practice': typeof TypingPracticeRoute
   '/unicode': typeof UnicodeRoute
@@ -2097,6 +2169,7 @@ export interface FileRouteTypes {
     | '/archive'
     | '/arrow-viewer'
     | '/aspect-ratio'
+    | '/astronomy-toolbox'
     | '/asyncapi'
     | '/audio-editor'
     | '/audio-recorder'
@@ -2110,6 +2183,7 @@ export interface FileRouteTypes {
     | '/browser-capabilities'
     | '/browser-compat'
     | '/bundle-inspector'
+    | '/business-calculators'
     | '/cel'
     | '/certificate-tool'
     | '/chemistry-toolbox'
@@ -2184,6 +2258,7 @@ export interface FileRouteTypes {
     | '/home-budget'
     | '/home-energy'
     | '/home-inventory'
+    | '/home-projects'
     | '/html'
     | '/http-request'
     | '/http-status'
@@ -2193,6 +2268,7 @@ export interface FileRouteTypes {
     | '/image'
     | '/image-collage'
     | '/image-compare'
+    | '/image-measure'
     | '/image-palette'
     | '/image-privacy'
     | '/image-vectorizer'
@@ -2224,6 +2300,7 @@ export interface FileRouteTypes {
     | '/number-base'
     | '/oauth'
     | '/ocr'
+    | '/office-workbench'
     | '/og-preview'
     | '/openapi'
     | '/openpgp'
@@ -2233,6 +2310,7 @@ export interface FileRouteTypes {
     | '/packing-list'
     | '/parquet-viewer'
     | '/password'
+    | '/pattern-designer'
     | '/pcap-viewer'
     | '/pdf-booklet'
     | '/pdf-compare'
@@ -2284,6 +2362,7 @@ export interface FileRouteTypes {
     | '/sql-data'
     | '/sql-playground'
     | '/streaming-manifest'
+    | '/study-planner'
     | '/subscription-tracker'
     | '/subtitle-editor'
     | '/sudoku'
@@ -2300,6 +2379,7 @@ export interface FileRouteTypes {
     | '/tournament-bracket'
     | '/trace-context'
     | '/travel-cost'
+    | '/trip-planner'
     | '/tuner'
     | '/typing-practice'
     | '/unicode'
@@ -2329,6 +2409,7 @@ export interface FileRouteTypes {
     | '/archive'
     | '/arrow-viewer'
     | '/aspect-ratio'
+    | '/astronomy-toolbox'
     | '/asyncapi'
     | '/audio-editor'
     | '/audio-recorder'
@@ -2342,6 +2423,7 @@ export interface FileRouteTypes {
     | '/browser-capabilities'
     | '/browser-compat'
     | '/bundle-inspector'
+    | '/business-calculators'
     | '/cel'
     | '/certificate-tool'
     | '/chemistry-toolbox'
@@ -2416,6 +2498,7 @@ export interface FileRouteTypes {
     | '/home-budget'
     | '/home-energy'
     | '/home-inventory'
+    | '/home-projects'
     | '/html'
     | '/http-request'
     | '/http-status'
@@ -2425,6 +2508,7 @@ export interface FileRouteTypes {
     | '/image'
     | '/image-collage'
     | '/image-compare'
+    | '/image-measure'
     | '/image-palette'
     | '/image-privacy'
     | '/image-vectorizer'
@@ -2456,6 +2540,7 @@ export interface FileRouteTypes {
     | '/number-base'
     | '/oauth'
     | '/ocr'
+    | '/office-workbench'
     | '/og-preview'
     | '/openapi'
     | '/openpgp'
@@ -2465,6 +2550,7 @@ export interface FileRouteTypes {
     | '/packing-list'
     | '/parquet-viewer'
     | '/password'
+    | '/pattern-designer'
     | '/pcap-viewer'
     | '/pdf-booklet'
     | '/pdf-compare'
@@ -2516,6 +2602,7 @@ export interface FileRouteTypes {
     | '/sql-data'
     | '/sql-playground'
     | '/streaming-manifest'
+    | '/study-planner'
     | '/subscription-tracker'
     | '/subtitle-editor'
     | '/sudoku'
@@ -2532,6 +2619,7 @@ export interface FileRouteTypes {
     | '/tournament-bracket'
     | '/trace-context'
     | '/travel-cost'
+    | '/trip-planner'
     | '/tuner'
     | '/typing-practice'
     | '/unicode'
@@ -2561,6 +2649,7 @@ export interface FileRouteTypes {
     | '/archive'
     | '/arrow-viewer'
     | '/aspect-ratio'
+    | '/astronomy-toolbox'
     | '/asyncapi'
     | '/audio-editor'
     | '/audio-recorder'
@@ -2574,6 +2663,7 @@ export interface FileRouteTypes {
     | '/browser-capabilities'
     | '/browser-compat'
     | '/bundle-inspector'
+    | '/business-calculators'
     | '/cel'
     | '/certificate-tool'
     | '/chemistry-toolbox'
@@ -2648,6 +2738,7 @@ export interface FileRouteTypes {
     | '/home-budget'
     | '/home-energy'
     | '/home-inventory'
+    | '/home-projects'
     | '/html'
     | '/http-request'
     | '/http-status'
@@ -2657,6 +2748,7 @@ export interface FileRouteTypes {
     | '/image'
     | '/image-collage'
     | '/image-compare'
+    | '/image-measure'
     | '/image-palette'
     | '/image-privacy'
     | '/image-vectorizer'
@@ -2688,6 +2780,7 @@ export interface FileRouteTypes {
     | '/number-base'
     | '/oauth'
     | '/ocr'
+    | '/office-workbench'
     | '/og-preview'
     | '/openapi'
     | '/openpgp'
@@ -2697,6 +2790,7 @@ export interface FileRouteTypes {
     | '/packing-list'
     | '/parquet-viewer'
     | '/password'
+    | '/pattern-designer'
     | '/pcap-viewer'
     | '/pdf-booklet'
     | '/pdf-compare'
@@ -2748,6 +2842,7 @@ export interface FileRouteTypes {
     | '/sql-data'
     | '/sql-playground'
     | '/streaming-manifest'
+    | '/study-planner'
     | '/subscription-tracker'
     | '/subtitle-editor'
     | '/sudoku'
@@ -2764,6 +2859,7 @@ export interface FileRouteTypes {
     | '/tournament-bracket'
     | '/trace-context'
     | '/travel-cost'
+    | '/trip-planner'
     | '/tuner'
     | '/typing-practice'
     | '/unicode'
@@ -2794,6 +2890,7 @@ export interface RootRouteChildren {
   ArchiveRoute: typeof ArchiveRoute
   ArrowViewerRoute: typeof ArrowViewerRoute
   AspectRatioRoute: typeof AspectRatioRoute
+  AstronomyToolboxRoute: typeof AstronomyToolboxRoute
   AsyncapiRoute: typeof AsyncapiRoute
   AudioEditorRoute: typeof AudioEditorRoute
   AudioRecorderRoute: typeof AudioRecorderRoute
@@ -2807,6 +2904,7 @@ export interface RootRouteChildren {
   BrowserCapabilitiesRoute: typeof BrowserCapabilitiesRoute
   BrowserCompatRoute: typeof BrowserCompatRoute
   BundleInspectorRoute: typeof BundleInspectorRoute
+  BusinessCalculatorsRoute: typeof BusinessCalculatorsRoute
   CelRoute: typeof CelRoute
   CertificateToolRoute: typeof CertificateToolRoute
   ChemistryToolboxRoute: typeof ChemistryToolboxRoute
@@ -2881,6 +2979,7 @@ export interface RootRouteChildren {
   HomeBudgetRoute: typeof HomeBudgetRoute
   HomeEnergyRoute: typeof HomeEnergyRoute
   HomeInventoryRoute: typeof HomeInventoryRoute
+  HomeProjectsRoute: typeof HomeProjectsRoute
   HtmlRoute: typeof HtmlRoute
   HttpRequestRoute: typeof HttpRequestRoute
   HttpStatusRoute: typeof HttpStatusRoute
@@ -2890,6 +2989,7 @@ export interface RootRouteChildren {
   ImageRoute: typeof ImageRoute
   ImageCollageRoute: typeof ImageCollageRoute
   ImageCompareRoute: typeof ImageCompareRoute
+  ImageMeasureRoute: typeof ImageMeasureRoute
   ImagePaletteRoute: typeof ImagePaletteRoute
   ImagePrivacyRoute: typeof ImagePrivacyRoute
   ImageVectorizerRoute: typeof ImageVectorizerRoute
@@ -2921,6 +3021,7 @@ export interface RootRouteChildren {
   NumberBaseRoute: typeof NumberBaseRoute
   OauthRoute: typeof OauthRoute
   OcrRoute: typeof OcrRoute
+  OfficeWorkbenchRoute: typeof OfficeWorkbenchRoute
   OgPreviewRoute: typeof OgPreviewRoute
   OpenapiRoute: typeof OpenapiRoute
   OpenpgpRoute: typeof OpenpgpRoute
@@ -2930,6 +3031,7 @@ export interface RootRouteChildren {
   PackingListRoute: typeof PackingListRoute
   ParquetViewerRoute: typeof ParquetViewerRoute
   PasswordRoute: typeof PasswordRoute
+  PatternDesignerRoute: typeof PatternDesignerRoute
   PcapViewerRoute: typeof PcapViewerRoute
   PdfBookletRoute: typeof PdfBookletRoute
   PdfCompareRoute: typeof PdfCompareRoute
@@ -2981,6 +3083,7 @@ export interface RootRouteChildren {
   SqlDataRoute: typeof SqlDataRoute
   SqlPlaygroundRoute: typeof SqlPlaygroundRoute
   StreamingManifestRoute: typeof StreamingManifestRoute
+  StudyPlannerRoute: typeof StudyPlannerRoute
   SubscriptionTrackerRoute: typeof SubscriptionTrackerRoute
   SubtitleEditorRoute: typeof SubtitleEditorRoute
   SudokuRoute: typeof SudokuRoute
@@ -2997,6 +3100,7 @@ export interface RootRouteChildren {
   TournamentBracketRoute: typeof TournamentBracketRoute
   TraceContextRoute: typeof TraceContextRoute
   TravelCostRoute: typeof TravelCostRoute
+  TripPlannerRoute: typeof TripPlannerRoute
   TunerRoute: typeof TunerRoute
   TypingPracticeRoute: typeof TypingPracticeRoute
   UnicodeRoute: typeof UnicodeRoute
@@ -3169,6 +3273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TunerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trip-planner': {
+      id: '/trip-planner'
+      path: '/trip-planner'
+      fullPath: '/trip-planner'
+      preLoaderRoute: typeof TripPlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/travel-cost': {
       id: '/travel-cost'
       path: '/travel-cost'
@@ -3279,6 +3390,13 @@ declare module '@tanstack/react-router' {
       path: '/subscription-tracker'
       fullPath: '/subscription-tracker'
       preLoaderRoute: typeof SubscriptionTrackerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/study-planner': {
+      id: '/study-planner'
+      path: '/study-planner'
+      fullPath: '/study-planner'
+      preLoaderRoute: typeof StudyPlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/streaming-manifest': {
@@ -3638,6 +3756,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PcapViewerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pattern-designer': {
+      id: '/pattern-designer'
+      path: '/pattern-designer'
+      fullPath: '/pattern-designer'
+      preLoaderRoute: typeof PatternDesignerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/password': {
       id: '/password'
       path: '/password'
@@ -3699,6 +3824,13 @@ declare module '@tanstack/react-router' {
       path: '/og-preview'
       fullPath: '/og-preview'
       preLoaderRoute: typeof OgPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/office-workbench': {
+      id: '/office-workbench'
+      path: '/office-workbench'
+      fullPath: '/office-workbench'
+      preLoaderRoute: typeof OfficeWorkbenchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ocr': {
@@ -3918,6 +4050,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImagePaletteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/image-measure': {
+      id: '/image-measure'
+      path: '/image-measure'
+      fullPath: '/image-measure'
+      preLoaderRoute: typeof ImageMeasureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/image-compare': {
       id: '/image-compare'
       path: '/image-compare'
@@ -3979,6 +4118,13 @@ declare module '@tanstack/react-router' {
       path: '/html'
       fullPath: '/html'
       preLoaderRoute: typeof HtmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home-projects': {
+      id: '/home-projects'
+      path: '/home-projects'
+      fullPath: '/home-projects'
+      preLoaderRoute: typeof HomeProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home-inventory': {
@@ -4499,6 +4645,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/business-calculators': {
+      id: '/business-calculators'
+      path: '/business-calculators'
+      fullPath: '/business-calculators'
+      preLoaderRoute: typeof BusinessCalculatorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bundle-inspector': {
       id: '/bundle-inspector'
       path: '/bundle-inspector'
@@ -4590,6 +4743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AsyncapiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/astronomy-toolbox': {
+      id: '/astronomy-toolbox'
+      path: '/astronomy-toolbox'
+      fullPath: '/astronomy-toolbox'
+      preLoaderRoute: typeof AstronomyToolboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/aspect-ratio': {
       id: '/aspect-ratio'
       path: '/aspect-ratio'
@@ -4642,6 +4802,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArchiveRoute: ArchiveRoute,
   ArrowViewerRoute: ArrowViewerRoute,
   AspectRatioRoute: AspectRatioRoute,
+  AstronomyToolboxRoute: AstronomyToolboxRoute,
   AsyncapiRoute: AsyncapiRoute,
   AudioEditorRoute: AudioEditorRoute,
   AudioRecorderRoute: AudioRecorderRoute,
@@ -4655,6 +4816,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrowserCapabilitiesRoute: BrowserCapabilitiesRoute,
   BrowserCompatRoute: BrowserCompatRoute,
   BundleInspectorRoute: BundleInspectorRoute,
+  BusinessCalculatorsRoute: BusinessCalculatorsRoute,
   CelRoute: CelRoute,
   CertificateToolRoute: CertificateToolRoute,
   ChemistryToolboxRoute: ChemistryToolboxRoute,
@@ -4729,6 +4891,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeBudgetRoute: HomeBudgetRoute,
   HomeEnergyRoute: HomeEnergyRoute,
   HomeInventoryRoute: HomeInventoryRoute,
+  HomeProjectsRoute: HomeProjectsRoute,
   HtmlRoute: HtmlRoute,
   HttpRequestRoute: HttpRequestRoute,
   HttpStatusRoute: HttpStatusRoute,
@@ -4738,6 +4901,7 @@ const rootRouteChildren: RootRouteChildren = {
   ImageRoute: ImageRoute,
   ImageCollageRoute: ImageCollageRoute,
   ImageCompareRoute: ImageCompareRoute,
+  ImageMeasureRoute: ImageMeasureRoute,
   ImagePaletteRoute: ImagePaletteRoute,
   ImagePrivacyRoute: ImagePrivacyRoute,
   ImageVectorizerRoute: ImageVectorizerRoute,
@@ -4769,6 +4933,7 @@ const rootRouteChildren: RootRouteChildren = {
   NumberBaseRoute: NumberBaseRoute,
   OauthRoute: OauthRoute,
   OcrRoute: OcrRoute,
+  OfficeWorkbenchRoute: OfficeWorkbenchRoute,
   OgPreviewRoute: OgPreviewRoute,
   OpenapiRoute: OpenapiRoute,
   OpenpgpRoute: OpenpgpRoute,
@@ -4778,6 +4943,7 @@ const rootRouteChildren: RootRouteChildren = {
   PackingListRoute: PackingListRoute,
   ParquetViewerRoute: ParquetViewerRoute,
   PasswordRoute: PasswordRoute,
+  PatternDesignerRoute: PatternDesignerRoute,
   PcapViewerRoute: PcapViewerRoute,
   PdfBookletRoute: PdfBookletRoute,
   PdfCompareRoute: PdfCompareRoute,
@@ -4829,6 +4995,7 @@ const rootRouteChildren: RootRouteChildren = {
   SqlDataRoute: SqlDataRoute,
   SqlPlaygroundRoute: SqlPlaygroundRoute,
   StreamingManifestRoute: StreamingManifestRoute,
+  StudyPlannerRoute: StudyPlannerRoute,
   SubscriptionTrackerRoute: SubscriptionTrackerRoute,
   SubtitleEditorRoute: SubtitleEditorRoute,
   SudokuRoute: SudokuRoute,
@@ -4845,6 +5012,7 @@ const rootRouteChildren: RootRouteChildren = {
   TournamentBracketRoute: TournamentBracketRoute,
   TraceContextRoute: TraceContextRoute,
   TravelCostRoute: TravelCostRoute,
+  TripPlannerRoute: TripPlannerRoute,
   TunerRoute: TunerRoute,
   TypingPracticeRoute: TypingPracticeRoute,
   UnicodeRoute: UnicodeRoute,
