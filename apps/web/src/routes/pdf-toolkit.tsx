@@ -1,3 +1,4 @@
+import { PdfLayoutPanel } from '@/components/batch4-document-pdf';
 import { PdfAdvancedPanel } from '@/components/pdf-advanced-panel';
 import { ChoiceField } from '@/components/calculator-ui';
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
@@ -56,7 +57,8 @@ type Mode =
   | 'metadata'
   | 'signature'
   | 'forms'
-  | 'bookmarks';
+  | 'bookmarks'
+  | 'layout';
 
 const TOOLBAR: Array<{ mode: Mode; icon: typeof Pencil }> = [
   { mode: 'edit', icon: Pencil },
@@ -69,6 +71,7 @@ const TOOLBAR: Array<{ mode: Mode; icon: typeof Pencil }> = [
   { mode: 'signature', icon: ShieldCheck },
   { mode: 'forms', icon: FileText },
   { mode: 'bookmarks', icon: ListOrdered },
+  { mode: 'layout', icon: FileText },
 ];
 
 function PdfToolkitPage() {
@@ -234,32 +237,33 @@ function PdfToolkitPage() {
             setError(null);
           }}
           aria-label={t(
-            `${['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
+            `${toolMode === 'layout' ? 'batch4Documents' : ['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
           )}
         >
           <Icon className="h-4 w-4" />
           <span className="hidden sm:inline">
             {t(
-              `${['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
+              `${toolMode === 'layout' ? 'batch4Documents' : ['forms', 'bookmarks'].includes(toolMode) ? 'batch3Calc' : 'pdfToolkit'}.${toolMode}`,
             )}
           </span>
         </Button>
       ))}
-      {!!activeFile && !['signature', 'forms', 'bookmarks'].includes(mode) && (
-        <Button
-          className="ml-auto"
-          size="sm"
-          disabled={loading}
-          onClick={() => void run()}
-        >
-          {loading ? (
-            <LoaderCircle className="h-4 w-4 animate-spin" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-          {t(mode === 'images' ? 'pdfToolkit.extract' : 'pdfToolkit.process')}
-        </Button>
-      )}
+      {!!activeFile &&
+        !['signature', 'forms', 'bookmarks', 'layout'].includes(mode) && (
+          <Button
+            className="ml-auto"
+            size="sm"
+            disabled={loading}
+            onClick={() => void run()}
+          >
+            {loading ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            {t(mode === 'images' ? 'pdfToolkit.extract' : 'pdfToolkit.process')}
+          </Button>
+        )}
     </div>
   );
 
@@ -272,7 +276,9 @@ function PdfToolkitPage() {
         </p>
       </div>
       {toolbar}
-      {mode === 'forms' || mode === 'bookmarks' ? (
+      {mode === 'layout' ? (
+        <PdfLayoutPanel />
+      ) : mode === 'forms' || mode === 'bookmarks' ? (
         <PdfAdvancedPanel key={mode} mode={mode} />
       ) : !activeFile ? (
         <FileDropzone

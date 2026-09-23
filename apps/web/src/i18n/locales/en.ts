@@ -1,3 +1,7 @@
+import { batch4ScienceEn } from './batch4-science';
+import { batch4OrganizersEn } from './batch4-organizers';
+import { batch4MediaEn } from './batch4-media';
+import { batch4DocumentsEn } from './batch4-documents';
 import { batch3AnalysisEn } from './batch3-analysis';
 import { batch3ProductivityEn } from './batch3-productivity';
 import { batch3MediaEn } from './batch3-media';
@@ -42,6 +46,10 @@ import { en as inspectionFiles } from './inspection-files';
 import { en as inspectionLogs } from './inspection-logs';
 import { en as inspectionMcp } from './inspection-mcp';
 const en = {
+  ...batch4DocumentsEn,
+  ...batch4MediaEn,
+  ...batch4OrganizersEn,
+  ...batch4ScienceEn,
   ...batch3AnalysisEn,
   ...batch3ProductivityEn,
   ...batch3MediaEn,

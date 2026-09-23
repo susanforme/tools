@@ -1,3 +1,5 @@
+import { DocumentSection } from '@/components/batch4-document-ui';
+import { BatchDocuments } from '@/components/batch4-document-batch';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +28,14 @@ import { StudyPreview } from '@/components/study-tools-ui';
 import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/document-maker')({
-  component: DocumentMaker,
+  component: () => (
+    <DocumentSection
+      original="productivity.tools.document-maker.title"
+      name="batchTitle"
+      base={<DocumentMaker />}
+      extra={<BatchDocuments />}
+    />
+  ),
 });
 const INITIAL: DocumentData = {
   number: '',

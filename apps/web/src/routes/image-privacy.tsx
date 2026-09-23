@@ -1,3 +1,6 @@
+import { PhotoMetadataEditor } from '@/components/batch4-organizer-photo';
+import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDropzone } from '@/components/file-dropzone';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,7 +17,7 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/image-privacy')({
@@ -120,6 +123,7 @@ function downloadBlob(blob: Blob, name: string): void {
 }
 
 function ImagePrivacyPage() {
+  const [tab, setTab] = useQueryParam<string>('tab', StringParam, 'privacy');
   const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -127,6 +131,15 @@ function ImagePrivacyPage() {
   const [loading, setLoading] = useState(false);
   const [cleaning, setCleaning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const operation = useRef(0);
+  useEffect(() => {
+    operation.current++;
+    setLoading(false);
+    setCleaning(false);
+    return () => {
+      operation.current++;
+    };
+  }, [tab]);
   const rows = useMemo(() => metadataRows(metadata), [metadata]);
   const latitude = firstMetadataValue(metadata, ['latitude', 'GPSLatitude']);
   const longitude = firstMetadataValue(metadata, ['longitude', 'GPSLongitude']);
@@ -150,6 +163,7 @@ function ImagePrivacyPage() {
   );
 
   const inspect = async (nextFile: File) => {
+    const ticket = ++operation.current;
     setError(null);
     if (!SUPPORTED_TYPES.has(nextFile.type)) {
       setError(t('imagePrivacy.unsupported'));
@@ -175,18 +189,37 @@ function ImagePrivacyPage() {
         mergeOutput: true,
         sanitize: true,
       });
+      // XP 字段固定为 UTF-16LE；exifr 对中文首字符的字节序猜测不可靠。
+      const xp = asMetadata(
+        await parse(nextFile, {
+          pick: ['XPAuthor', 'XPComment', 'XPTitle', 'XPKeywords', 'XPSubject'],
+          reviveValues: false,
+        }),
+      );
+      const decoded = asMetadata(parsed);
+      for (const [key, value] of Object.entries(xp)) {
+        if (value instanceof Uint8Array)
+          decoded[key] = new TextDecoder('utf-16le')
+            .decode(value)
+            .replace(/\0+$/, '');
+      }
+      if (ticket !== operation.current) return;
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setFile(nextFile);
       setPreviewUrl(URL.createObjectURL(nextFile));
-      setMetadata(asMetadata(parsed));
+      setMetadata(decoded);
     } catch (cause) {
-      setError(t('imagePrivacy.inspectError', { msg: String(cause) }));
+      if (ticket === operation.current)
+        setError(t('imagePrivacy.inspectError', { msg: String(cause) }));
     } finally {
-      setLoading(false);
+      if (ticket === operation.current) setLoading(false);
     }
   };
 
   const clear = () => {
+    operation.current++;
+    setLoading(false);
+    setCleaning(false);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setFile(null);
     setPreviewUrl(null);
@@ -196,11 +229,15 @@ function ImagePrivacyPage() {
 
   const removeMetadata = async () => {
     if (!file) return;
+    const ticket = ++operation.current;
     setCleaning(true);
     setError(null);
     try {
-      downloadBlob(await createCleanCopy(file), cleanFileName(file.name));
+      const blob = await createCleanCopy(file);
+      if (ticket === operation.current)
+        downloadBlob(blob, cleanFileName(file.name));
     } catch (cause) {
+      if (ticket !== operation.current) return;
       setError(
         t(
           cause instanceof Error && cause.message === 'IMAGE_TOO_LARGE'
@@ -209,7 +246,7 @@ function ImagePrivacyPage() {
         ),
       );
     } finally {
-      setCleaning(false);
+      if (ticket === operation.current) setCleaning(false);
     }
   };
 
@@ -222,119 +259,135 @@ function ImagePrivacyPage() {
         </h1>
       </div>
 
-      {error && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {error}
-        </div>
-      )}
-
-      {!file ? (
-        <FileDropzone
-          accept="image/jpeg,image/png,image/webp"
-          disabled={loading}
-          onFiles={(files) => {
-            const selected = files[0]?.file;
-            if (selected) void inspect(selected);
-          }}
-          className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-2xl bg-muted/20 p-8 text-center hover:border-emerald-400"
-        >
-          {loading ? (
-            <LoaderCircle className="h-10 w-10 animate-spin text-emerald-500" />
-          ) : (
-            <UploadCloud className="h-10 w-10 text-emerald-500" />
-          )}
-          <span className="font-medium">{t('imagePrivacy.select')}</span>
-          <span className="text-xs text-muted-foreground">
-            {t('imagePrivacy.supported')}
-          </span>
-        </FileDropzone>
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList>
+          <TabsTrigger value="privacy">{t('imagePrivacy.title')}</TabsTrigger>
+          <TabsTrigger value="metadata">
+            {t('batch4Organizers.photo.tab')}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === 'metadata' ? (
+        <PhotoMetadataEditor />
       ) : (
         <>
-          <Card>
-            <CardContent className="grid gap-5 py-6 md:grid-cols-[260px_1fr]">
-              <img
-                src={previewUrl ?? ''}
-                alt={file.name}
-                className="max-h-64 w-full rounded-xl bg-muted object-contain"
-              />
-              <div className="space-y-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="break-all font-medium">{file.name}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {formatBytes(file.size)} · {file.type}
+          {error && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
+          {!file ? (
+            <FileDropzone
+              accept="image/jpeg,image/png,image/webp"
+              disabled={loading}
+              onFiles={(files) => {
+                const selected = files[0]?.file;
+                if (selected) void inspect(selected);
+              }}
+              className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-2xl bg-muted/20 p-8 text-center hover:border-emerald-400"
+            >
+              {loading ? (
+                <LoaderCircle className="h-10 w-10 animate-spin text-emerald-500" />
+              ) : (
+                <UploadCloud className="h-10 w-10 text-emerald-500" />
+              )}
+              <span className="font-medium">{t('imagePrivacy.select')}</span>
+              <span className="text-xs text-muted-foreground">
+                {t('imagePrivacy.supported')}
+              </span>
+            </FileDropzone>
+          ) : (
+            <>
+              <Card>
+                <CardContent className="grid gap-5 py-6 md:grid-cols-[260px_1fr]">
+                  <img
+                    src={previewUrl ?? ''}
+                    alt={file.name}
+                    className="max-h-64 w-full rounded-xl bg-muted object-contain"
+                  />
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="break-all font-medium">{file.name}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {formatBytes(file.size)} · {file.type}
+                        </p>
+                      </div>
+                      <Button variant="ghost" size="icon" onClick={clear}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      <PrivacySignal
+                        icon={<MapPin className="h-4 w-4" />}
+                        label={t('imagePrivacy.gps')}
+                        value={
+                          latitude && longitude
+                            ? `${latitude}, ${longitude}`
+                            : null
+                        }
+                        danger
+                      />
+                      <PrivacySignal
+                        icon={<Camera className="h-4 w-4" />}
+                        label={t('imagePrivacy.device')}
+                        value={device || null}
+                      />
+                      <PrivacySignal
+                        icon={<CalendarClock className="h-4 w-4" />}
+                        label={t('imagePrivacy.capturedAt')}
+                        value={capturedAt}
+                      />
+                    </div>
+                    <Button onClick={removeMetadata} disabled={cleaning}>
+                      {cleaning ? (
+                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Download className="h-4 w-4" />
+                      )}
+                      {t('imagePrivacy.cleanAndDownload')}
+                    </Button>
+                    <p className="text-xs text-muted-foreground">
+                      {t('imagePrivacy.reencodeHint')}
                     </p>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={clear}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <PrivacySignal
-                    icon={<MapPin className="h-4 w-4" />}
-                    label={t('imagePrivacy.gps')}
-                    value={
-                      latitude && longitude ? `${latitude}, ${longitude}` : null
-                    }
-                    danger
-                  />
-                  <PrivacySignal
-                    icon={<Camera className="h-4 w-4" />}
-                    label={t('imagePrivacy.device')}
-                    value={device || null}
-                  />
-                  <PrivacySignal
-                    icon={<CalendarClock className="h-4 w-4" />}
-                    label={t('imagePrivacy.capturedAt')}
-                    value={capturedAt}
-                  />
-                </div>
-                <Button onClick={removeMetadata} disabled={cleaning}>
-                  {cleaning ? (
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4" />
-                  )}
-                  {t('imagePrivacy.cleanAndDownload')}
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  {t('imagePrivacy.reencodeHint')}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between gap-3">
-                <span>{t('imagePrivacy.metadata')}</span>
-                <Badge variant="secondary">
-                  {t('imagePrivacy.items', { count: rows.length })}
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {rows.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">
-                  {t('imagePrivacy.empty')}
-                </p>
-              ) : (
-                <div className="divide-y rounded-xl border">
-                  {rows.map((row) => (
-                    <div
-                      key={row.key}
-                      className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-[220px_1fr]"
-                    >
-                      <span className="font-mono text-xs text-muted-foreground">
-                        {row.key}
-                      </span>
-                      <span className="break-all">{row.value}</span>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between gap-3">
+                    <span>{t('imagePrivacy.metadata')}</span>
+                    <Badge variant="secondary">
+                      {t('imagePrivacy.items', { count: rows.length })}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {rows.length === 0 ? (
+                    <p className="py-8 text-center text-sm text-muted-foreground">
+                      {t('imagePrivacy.empty')}
+                    </p>
+                  ) : (
+                    <div className="divide-y rounded-xl border">
+                      {rows.map((row) => (
+                        <div
+                          key={row.key}
+                          className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-[220px_1fr]"
+                        >
+                          <span className="font-mono text-xs text-muted-foreground">
+                            {row.key}
+                          </span>
+                          <span className="break-all">{row.value}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
         </>
       )}
     </div>

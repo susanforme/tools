@@ -1,3 +1,4 @@
+import { WorkRecords } from '@/components/batch4-organizer-work';
 import {
   OrganizerFrame,
   OrganizerInput,
@@ -190,6 +191,7 @@ function ShiftCalendarPage() {
           {days.filter((day) => !day.shift.rest).length}
         </p>
       </div>
+      <WorkRecords month={month} planned={hours} />
       <details className="rounded-lg border p-4" open>
         <summary className="cursor-pointer font-medium">
           {t('shiftCalendar.shifts')}

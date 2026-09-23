@@ -1,3 +1,4 @@
+import { MediaWorkspace } from '@/components/batch4-media-workspace';
 import { NumberField } from '@/components/calculator-ui';
 import type { ModelMeasurement } from '@/lib/media-model';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,9 @@ import type { ModelStats } from '@/components/gltf-scene';
 
 const Scene = lazy(() => import('@/components/gltf-scene'));
 export const Route = createFileRoute('/gltf-inspector')({
-  component: GltfInspectorPage,
+  component: () => (
+    <MediaWorkspace kind="gcode" original={<GltfInspectorPage />} />
+  ),
 });
 function GltfInspectorPage() {
   const { t } = useTranslation();

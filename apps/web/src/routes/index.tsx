@@ -1,3 +1,4 @@
+import { BATCH4_TOOLS } from '@/lib/batch4-catalog';
 import { BATCH3_TOOLS } from '@/lib/batch3-catalog';
 import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -1580,6 +1581,15 @@ const videoTools = [
 ];
 
 const lifeTools = [
+  ...BATCH4_TOOLS.map(({ id, icon: Icon, color, titleKey, descKey }) => ({
+    to: `/${id}` as const,
+    icon: <Icon className={`h-8 w-8 ${color}`} />,
+    titleKey,
+    descKey,
+    tagKeys: [],
+    gradient: 'hover:bg-muted/50',
+    border: 'hover:border-primary/40',
+  })),
   ...BATCH3_TOOLS.map(({ id, icon: Icon, color, key }) => ({
     to: `/${id}` as const,
     icon: <Icon className={`h-8 w-8 ${color}`} />,

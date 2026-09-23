@@ -55,6 +55,7 @@ import { Route as SpdxExpressionRouteImport } from './routes/spdx-expression'
 import { Route as SocialInsuranceRouteImport } from './routes/social-insurance'
 import { Route as SizeConverterRouteImport } from './routes/size-converter'
 import { Route as ShiftCalendarRouteImport } from './routes/shift-calendar'
+import { Route as SewingPatternRouteImport } from './routes/sewing-pattern'
 import { Route as SettingsPreferencesRouteImport } from './routes/settings-preferences'
 import { Route as SettingsDataRouteImport } from './routes/settings-data'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -89,6 +90,8 @@ import { Route as PlaywrightTraceRouteImport } from './routes/playwright-trace'
 import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as PinyinAnnotatorRouteImport } from './routes/pinyin-annotator'
 import { Route as PianoRouteImport } from './routes/piano'
+import { Route as PhysicsToolboxRouteImport } from './routes/physics-toolbox'
+import { Route as PhotographyToolboxRouteImport } from './routes/photography-toolbox'
 import { Route as PhotoFrameRouteImport } from './routes/photo-frame'
 import { Route as PdfToolkitRouteImport } from './routes/pdf-toolkit'
 import { Route as PdfCompareRouteImport } from './routes/pdf-compare'
@@ -160,6 +163,7 @@ import { Route as GltfInspectorRouteImport } from './routes/gltf-inspector'
 import { Route as GitToolRouteImport } from './routes/git-tool'
 import { Route as GeometryCalculatorRouteImport } from './routes/geometry-calculator'
 import { Route as GeojsonRouteImport } from './routes/geojson'
+import { Route as GardenPlannerRouteImport } from './routes/garden-planner'
 import { Route as GamepadTestRouteImport } from './routes/gamepad-test'
 import { Route as FormBuilderRouteImport } from './routes/form-builder'
 import { Route as FontRouteImport } from './routes/font'
@@ -168,12 +172,14 @@ import { Route as FocusTimerRouteImport } from './routes/focus-timer'
 import { Route as FlashcardsRouteImport } from './routes/flashcards'
 import { Route as FinanceCalculatorRouteImport } from './routes/finance-calculator'
 import { Route as FeedInspectorRouteImport } from './routes/feed-inspector'
+import { Route as ExpenseLedgerRouteImport } from './routes/expense-ledger'
 import { Route as EnvRouteImport } from './routes/env'
 import { Route as EmojiPickerRouteImport } from './routes/emoji-picker'
 import { Route as EmailHeadersRouteImport } from './routes/email-headers'
 import { Route as EbookReaderRouteImport } from './routes/ebook-reader'
 import { Route as DuplicateFilesRouteImport } from './routes/duplicate-files'
 import { Route as DrumMachineRouteImport } from './routes/drum-machine'
+import { Route as DocumentSearchRouteImport } from './routes/document-search'
 import { Route as DocumentScannerRouteImport } from './routes/document-scanner'
 import { Route as DocumentMakerRouteImport } from './routes/document-maker'
 import { Route as DockerComposeRouteImport } from './routes/docker-compose'
@@ -211,6 +217,7 @@ import { Route as ChromeTraceRouteImport } from './routes/chrome-trace'
 import { Route as ChromeCoverageRouteImport } from './routes/chrome-coverage'
 import { Route as ChordToolRouteImport } from './routes/chord-tool'
 import { Route as ChessClockRouteImport } from './routes/chess-clock'
+import { Route as ChemistryToolboxRouteImport } from './routes/chemistry-toolbox'
 import { Route as CertificateToolRouteImport } from './routes/certificate-tool'
 import { Route as CelRouteImport } from './routes/cel'
 import { Route as BundleInspectorRouteImport } from './routes/bundle-inspector'
@@ -463,6 +470,11 @@ const ShiftCalendarRoute = ShiftCalendarRouteImport.update({
   path: '/shift-calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SewingPatternRoute = SewingPatternRouteImport.update({
+  id: '/sewing-pattern',
+  path: '/sewing-pattern',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsPreferencesRoute = SettingsPreferencesRouteImport.update({
   id: '/settings-preferences',
   path: '/settings-preferences',
@@ -631,6 +643,16 @@ const PinyinAnnotatorRoute = PinyinAnnotatorRouteImport.update({
 const PianoRoute = PianoRouteImport.update({
   id: '/piano',
   path: '/piano',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhysicsToolboxRoute = PhysicsToolboxRouteImport.update({
+  id: '/physics-toolbox',
+  path: '/physics-toolbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhotographyToolboxRoute = PhotographyToolboxRouteImport.update({
+  id: '/photography-toolbox',
+  path: '/photography-toolbox',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PhotoFrameRoute = PhotoFrameRouteImport.update({
@@ -988,6 +1010,11 @@ const GeojsonRoute = GeojsonRouteImport.update({
   path: '/geojson',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GardenPlannerRoute = GardenPlannerRouteImport.update({
+  id: '/garden-planner',
+  path: '/garden-planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GamepadTestRoute = GamepadTestRouteImport.update({
   id: '/gamepad-test',
   path: '/gamepad-test',
@@ -1028,6 +1055,11 @@ const FeedInspectorRoute = FeedInspectorRouteImport.update({
   path: '/feed-inspector',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpenseLedgerRoute = ExpenseLedgerRouteImport.update({
+  id: '/expense-ledger',
+  path: '/expense-ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnvRoute = EnvRouteImport.update({
   id: '/env',
   path: '/env',
@@ -1056,6 +1088,11 @@ const DuplicateFilesRoute = DuplicateFilesRouteImport.update({
 const DrumMachineRoute = DrumMachineRouteImport.update({
   id: '/drum-machine',
   path: '/drum-machine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentSearchRoute = DocumentSearchRouteImport.update({
+  id: '/document-search',
+  path: '/document-search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentScannerRoute = DocumentScannerRouteImport.update({
@@ -1243,6 +1280,11 @@ const ChessClockRoute = ChessClockRouteImport.update({
   path: '/chess-clock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChemistryToolboxRoute = ChemistryToolboxRouteImport.update({
+  id: '/chemistry-toolbox',
+  path: '/chemistry-toolbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificateToolRoute = CertificateToolRouteImport.update({
   id: '/certificate-tool',
   path: '/certificate-tool',
@@ -1371,6 +1413,7 @@ export interface FileRoutesByFullPath {
   '/bundle-inspector': typeof BundleInspectorRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/chemistry-toolbox': typeof ChemistryToolboxRoute
   '/chess-clock': typeof ChessClockRoute
   '/chord-tool': typeof ChordToolRoute
   '/chrome-coverage': typeof ChromeCoverageRoute
@@ -1408,12 +1451,14 @@ export interface FileRoutesByFullPath {
   '/docker-compose': typeof DockerComposeRoute
   '/document-maker': typeof DocumentMakerRoute
   '/document-scanner': typeof DocumentScannerRoute
+  '/document-search': typeof DocumentSearchRoute
   '/drum-machine': typeof DrumMachineRoute
   '/duplicate-files': typeof DuplicateFilesRoute
   '/ebook-reader': typeof EbookReaderRoute
   '/email-headers': typeof EmailHeadersRoute
   '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
+  '/expense-ledger': typeof ExpenseLedgerRoute
   '/feed-inspector': typeof FeedInspectorRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
   '/flashcards': typeof FlashcardsRoute
@@ -1422,6 +1467,7 @@ export interface FileRoutesByFullPath {
   '/font': typeof FontRoute
   '/form-builder': typeof FormBuilderRoute
   '/gamepad-test': typeof GamepadTestRoute
+  '/garden-planner': typeof GardenPlannerRoute
   '/geojson': typeof GeojsonRoute
   '/geometry-calculator': typeof GeometryCalculatorRoute
   '/git-tool': typeof GitToolRoute
@@ -1493,6 +1539,8 @@ export interface FileRoutesByFullPath {
   '/pdf-compare': typeof PdfCompareRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/photo-frame': typeof PhotoFrameRoute
+  '/photography-toolbox': typeof PhotographyToolboxRoute
+  '/physics-toolbox': typeof PhysicsToolboxRoute
   '/piano': typeof PianoRoute
   '/pinyin-annotator': typeof PinyinAnnotatorRoute
   '/pipeline': typeof PipelineRoute
@@ -1527,6 +1575,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
+  '/sewing-pattern': typeof SewingPatternRoute
   '/shift-calendar': typeof ShiftCalendarRoute
   '/size-converter': typeof SizeConverterRoute
   '/social-insurance': typeof SocialInsuranceRoute
@@ -1596,6 +1645,7 @@ export interface FileRoutesByTo {
   '/bundle-inspector': typeof BundleInspectorRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/chemistry-toolbox': typeof ChemistryToolboxRoute
   '/chess-clock': typeof ChessClockRoute
   '/chord-tool': typeof ChordToolRoute
   '/chrome-coverage': typeof ChromeCoverageRoute
@@ -1633,12 +1683,14 @@ export interface FileRoutesByTo {
   '/docker-compose': typeof DockerComposeRoute
   '/document-maker': typeof DocumentMakerRoute
   '/document-scanner': typeof DocumentScannerRoute
+  '/document-search': typeof DocumentSearchRoute
   '/drum-machine': typeof DrumMachineRoute
   '/duplicate-files': typeof DuplicateFilesRoute
   '/ebook-reader': typeof EbookReaderRoute
   '/email-headers': typeof EmailHeadersRoute
   '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
+  '/expense-ledger': typeof ExpenseLedgerRoute
   '/feed-inspector': typeof FeedInspectorRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
   '/flashcards': typeof FlashcardsRoute
@@ -1647,6 +1699,7 @@ export interface FileRoutesByTo {
   '/font': typeof FontRoute
   '/form-builder': typeof FormBuilderRoute
   '/gamepad-test': typeof GamepadTestRoute
+  '/garden-planner': typeof GardenPlannerRoute
   '/geojson': typeof GeojsonRoute
   '/geometry-calculator': typeof GeometryCalculatorRoute
   '/git-tool': typeof GitToolRoute
@@ -1718,6 +1771,8 @@ export interface FileRoutesByTo {
   '/pdf-compare': typeof PdfCompareRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/photo-frame': typeof PhotoFrameRoute
+  '/photography-toolbox': typeof PhotographyToolboxRoute
+  '/physics-toolbox': typeof PhysicsToolboxRoute
   '/piano': typeof PianoRoute
   '/pinyin-annotator': typeof PinyinAnnotatorRoute
   '/pipeline': typeof PipelineRoute
@@ -1752,6 +1807,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
+  '/sewing-pattern': typeof SewingPatternRoute
   '/shift-calendar': typeof ShiftCalendarRoute
   '/size-converter': typeof SizeConverterRoute
   '/social-insurance': typeof SocialInsuranceRoute
@@ -1822,6 +1878,7 @@ export interface FileRoutesById {
   '/bundle-inspector': typeof BundleInspectorRoute
   '/cel': typeof CelRoute
   '/certificate-tool': typeof CertificateToolRoute
+  '/chemistry-toolbox': typeof ChemistryToolboxRoute
   '/chess-clock': typeof ChessClockRoute
   '/chord-tool': typeof ChordToolRoute
   '/chrome-coverage': typeof ChromeCoverageRoute
@@ -1859,12 +1916,14 @@ export interface FileRoutesById {
   '/docker-compose': typeof DockerComposeRoute
   '/document-maker': typeof DocumentMakerRoute
   '/document-scanner': typeof DocumentScannerRoute
+  '/document-search': typeof DocumentSearchRoute
   '/drum-machine': typeof DrumMachineRoute
   '/duplicate-files': typeof DuplicateFilesRoute
   '/ebook-reader': typeof EbookReaderRoute
   '/email-headers': typeof EmailHeadersRoute
   '/emoji-picker': typeof EmojiPickerRoute
   '/env': typeof EnvRoute
+  '/expense-ledger': typeof ExpenseLedgerRoute
   '/feed-inspector': typeof FeedInspectorRoute
   '/finance-calculator': typeof FinanceCalculatorRoute
   '/flashcards': typeof FlashcardsRoute
@@ -1873,6 +1932,7 @@ export interface FileRoutesById {
   '/font': typeof FontRoute
   '/form-builder': typeof FormBuilderRoute
   '/gamepad-test': typeof GamepadTestRoute
+  '/garden-planner': typeof GardenPlannerRoute
   '/geojson': typeof GeojsonRoute
   '/geometry-calculator': typeof GeometryCalculatorRoute
   '/git-tool': typeof GitToolRoute
@@ -1944,6 +2004,8 @@ export interface FileRoutesById {
   '/pdf-compare': typeof PdfCompareRoute
   '/pdf-toolkit': typeof PdfToolkitRoute
   '/photo-frame': typeof PhotoFrameRoute
+  '/photography-toolbox': typeof PhotographyToolboxRoute
+  '/physics-toolbox': typeof PhysicsToolboxRoute
   '/piano': typeof PianoRoute
   '/pinyin-annotator': typeof PinyinAnnotatorRoute
   '/pipeline': typeof PipelineRoute
@@ -1978,6 +2040,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/settings-data': typeof SettingsDataRoute
   '/settings-preferences': typeof SettingsPreferencesRoute
+  '/sewing-pattern': typeof SewingPatternRoute
   '/shift-calendar': typeof ShiftCalendarRoute
   '/size-converter': typeof SizeConverterRoute
   '/social-insurance': typeof SocialInsuranceRoute
@@ -2049,6 +2112,7 @@ export interface FileRouteTypes {
     | '/bundle-inspector'
     | '/cel'
     | '/certificate-tool'
+    | '/chemistry-toolbox'
     | '/chess-clock'
     | '/chord-tool'
     | '/chrome-coverage'
@@ -2086,12 +2150,14 @@ export interface FileRouteTypes {
     | '/docker-compose'
     | '/document-maker'
     | '/document-scanner'
+    | '/document-search'
     | '/drum-machine'
     | '/duplicate-files'
     | '/ebook-reader'
     | '/email-headers'
     | '/emoji-picker'
     | '/env'
+    | '/expense-ledger'
     | '/feed-inspector'
     | '/finance-calculator'
     | '/flashcards'
@@ -2100,6 +2166,7 @@ export interface FileRouteTypes {
     | '/font'
     | '/form-builder'
     | '/gamepad-test'
+    | '/garden-planner'
     | '/geojson'
     | '/geometry-calculator'
     | '/git-tool'
@@ -2171,6 +2238,8 @@ export interface FileRouteTypes {
     | '/pdf-compare'
     | '/pdf-toolkit'
     | '/photo-frame'
+    | '/photography-toolbox'
+    | '/physics-toolbox'
     | '/piano'
     | '/pinyin-annotator'
     | '/pipeline'
@@ -2205,6 +2274,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
+    | '/sewing-pattern'
     | '/shift-calendar'
     | '/size-converter'
     | '/social-insurance'
@@ -2274,6 +2344,7 @@ export interface FileRouteTypes {
     | '/bundle-inspector'
     | '/cel'
     | '/certificate-tool'
+    | '/chemistry-toolbox'
     | '/chess-clock'
     | '/chord-tool'
     | '/chrome-coverage'
@@ -2311,12 +2382,14 @@ export interface FileRouteTypes {
     | '/docker-compose'
     | '/document-maker'
     | '/document-scanner'
+    | '/document-search'
     | '/drum-machine'
     | '/duplicate-files'
     | '/ebook-reader'
     | '/email-headers'
     | '/emoji-picker'
     | '/env'
+    | '/expense-ledger'
     | '/feed-inspector'
     | '/finance-calculator'
     | '/flashcards'
@@ -2325,6 +2398,7 @@ export interface FileRouteTypes {
     | '/font'
     | '/form-builder'
     | '/gamepad-test'
+    | '/garden-planner'
     | '/geojson'
     | '/geometry-calculator'
     | '/git-tool'
@@ -2396,6 +2470,8 @@ export interface FileRouteTypes {
     | '/pdf-compare'
     | '/pdf-toolkit'
     | '/photo-frame'
+    | '/photography-toolbox'
+    | '/physics-toolbox'
     | '/piano'
     | '/pinyin-annotator'
     | '/pipeline'
@@ -2430,6 +2506,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
+    | '/sewing-pattern'
     | '/shift-calendar'
     | '/size-converter'
     | '/social-insurance'
@@ -2499,6 +2576,7 @@ export interface FileRouteTypes {
     | '/bundle-inspector'
     | '/cel'
     | '/certificate-tool'
+    | '/chemistry-toolbox'
     | '/chess-clock'
     | '/chord-tool'
     | '/chrome-coverage'
@@ -2536,12 +2614,14 @@ export interface FileRouteTypes {
     | '/docker-compose'
     | '/document-maker'
     | '/document-scanner'
+    | '/document-search'
     | '/drum-machine'
     | '/duplicate-files'
     | '/ebook-reader'
     | '/email-headers'
     | '/emoji-picker'
     | '/env'
+    | '/expense-ledger'
     | '/feed-inspector'
     | '/finance-calculator'
     | '/flashcards'
@@ -2550,6 +2630,7 @@ export interface FileRouteTypes {
     | '/font'
     | '/form-builder'
     | '/gamepad-test'
+    | '/garden-planner'
     | '/geojson'
     | '/geometry-calculator'
     | '/git-tool'
@@ -2621,6 +2702,8 @@ export interface FileRouteTypes {
     | '/pdf-compare'
     | '/pdf-toolkit'
     | '/photo-frame'
+    | '/photography-toolbox'
+    | '/physics-toolbox'
     | '/piano'
     | '/pinyin-annotator'
     | '/pipeline'
@@ -2655,6 +2738,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/settings-data'
     | '/settings-preferences'
+    | '/sewing-pattern'
     | '/shift-calendar'
     | '/size-converter'
     | '/social-insurance'
@@ -2725,6 +2809,7 @@ export interface RootRouteChildren {
   BundleInspectorRoute: typeof BundleInspectorRoute
   CelRoute: typeof CelRoute
   CertificateToolRoute: typeof CertificateToolRoute
+  ChemistryToolboxRoute: typeof ChemistryToolboxRoute
   ChessClockRoute: typeof ChessClockRoute
   ChordToolRoute: typeof ChordToolRoute
   ChromeCoverageRoute: typeof ChromeCoverageRoute
@@ -2762,12 +2847,14 @@ export interface RootRouteChildren {
   DockerComposeRoute: typeof DockerComposeRoute
   DocumentMakerRoute: typeof DocumentMakerRoute
   DocumentScannerRoute: typeof DocumentScannerRoute
+  DocumentSearchRoute: typeof DocumentSearchRoute
   DrumMachineRoute: typeof DrumMachineRoute
   DuplicateFilesRoute: typeof DuplicateFilesRoute
   EbookReaderRoute: typeof EbookReaderRoute
   EmailHeadersRoute: typeof EmailHeadersRoute
   EmojiPickerRoute: typeof EmojiPickerRoute
   EnvRoute: typeof EnvRoute
+  ExpenseLedgerRoute: typeof ExpenseLedgerRoute
   FeedInspectorRoute: typeof FeedInspectorRoute
   FinanceCalculatorRoute: typeof FinanceCalculatorRoute
   FlashcardsRoute: typeof FlashcardsRoute
@@ -2776,6 +2863,7 @@ export interface RootRouteChildren {
   FontRoute: typeof FontRoute
   FormBuilderRoute: typeof FormBuilderRoute
   GamepadTestRoute: typeof GamepadTestRoute
+  GardenPlannerRoute: typeof GardenPlannerRoute
   GeojsonRoute: typeof GeojsonRoute
   GeometryCalculatorRoute: typeof GeometryCalculatorRoute
   GitToolRoute: typeof GitToolRoute
@@ -2847,6 +2935,8 @@ export interface RootRouteChildren {
   PdfCompareRoute: typeof PdfCompareRoute
   PdfToolkitRoute: typeof PdfToolkitRoute
   PhotoFrameRoute: typeof PhotoFrameRoute
+  PhotographyToolboxRoute: typeof PhotographyToolboxRoute
+  PhysicsToolboxRoute: typeof PhysicsToolboxRoute
   PianoRoute: typeof PianoRoute
   PinyinAnnotatorRoute: typeof PinyinAnnotatorRoute
   PipelineRoute: typeof PipelineRoute
@@ -2881,6 +2971,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SettingsDataRoute: typeof SettingsDataRoute
   SettingsPreferencesRoute: typeof SettingsPreferencesRoute
+  SewingPatternRoute: typeof SewingPatternRoute
   ShiftCalendarRoute: typeof ShiftCalendarRoute
   SizeConverterRoute: typeof SizeConverterRoute
   SocialInsuranceRoute: typeof SocialInsuranceRoute
@@ -3253,6 +3344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShiftCalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sewing-pattern': {
+      id: '/sewing-pattern'
+      path: '/sewing-pattern'
+      fullPath: '/sewing-pattern'
+      preLoaderRoute: typeof SewingPatternRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings-preferences': {
       id: '/settings-preferences'
       path: '/settings-preferences'
@@ -3489,6 +3587,20 @@ declare module '@tanstack/react-router' {
       path: '/piano'
       fullPath: '/piano'
       preLoaderRoute: typeof PianoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/physics-toolbox': {
+      id: '/physics-toolbox'
+      path: '/physics-toolbox'
+      fullPath: '/physics-toolbox'
+      preLoaderRoute: typeof PhysicsToolboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/photography-toolbox': {
+      id: '/photography-toolbox'
+      path: '/photography-toolbox'
+      fullPath: '/photography-toolbox'
+      preLoaderRoute: typeof PhotographyToolboxRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/photo-frame': {
@@ -3988,6 +4100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeojsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/garden-planner': {
+      id: '/garden-planner'
+      path: '/garden-planner'
+      fullPath: '/garden-planner'
+      preLoaderRoute: typeof GardenPlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gamepad-test': {
       id: '/gamepad-test'
       path: '/gamepad-test'
@@ -4044,6 +4163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeedInspectorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expense-ledger': {
+      id: '/expense-ledger'
+      path: '/expense-ledger'
+      fullPath: '/expense-ledger'
+      preLoaderRoute: typeof ExpenseLedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/env': {
       id: '/env'
       path: '/env'
@@ -4084,6 +4210,13 @@ declare module '@tanstack/react-router' {
       path: '/drum-machine'
       fullPath: '/drum-machine'
       preLoaderRoute: typeof DrumMachineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/document-search': {
+      id: '/document-search'
+      path: '/document-search'
+      fullPath: '/document-search'
+      preLoaderRoute: typeof DocumentSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/document-scanner': {
@@ -4345,6 +4478,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChessClockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chemistry-toolbox': {
+      id: '/chemistry-toolbox'
+      path: '/chemistry-toolbox'
+      fullPath: '/chemistry-toolbox'
+      preLoaderRoute: typeof ChemistryToolboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/certificate-tool': {
       id: '/certificate-tool'
       path: '/certificate-tool'
@@ -4517,6 +4657,7 @@ const rootRouteChildren: RootRouteChildren = {
   BundleInspectorRoute: BundleInspectorRoute,
   CelRoute: CelRoute,
   CertificateToolRoute: CertificateToolRoute,
+  ChemistryToolboxRoute: ChemistryToolboxRoute,
   ChessClockRoute: ChessClockRoute,
   ChordToolRoute: ChordToolRoute,
   ChromeCoverageRoute: ChromeCoverageRoute,
@@ -4554,12 +4695,14 @@ const rootRouteChildren: RootRouteChildren = {
   DockerComposeRoute: DockerComposeRoute,
   DocumentMakerRoute: DocumentMakerRoute,
   DocumentScannerRoute: DocumentScannerRoute,
+  DocumentSearchRoute: DocumentSearchRoute,
   DrumMachineRoute: DrumMachineRoute,
   DuplicateFilesRoute: DuplicateFilesRoute,
   EbookReaderRoute: EbookReaderRoute,
   EmailHeadersRoute: EmailHeadersRoute,
   EmojiPickerRoute: EmojiPickerRoute,
   EnvRoute: EnvRoute,
+  ExpenseLedgerRoute: ExpenseLedgerRoute,
   FeedInspectorRoute: FeedInspectorRoute,
   FinanceCalculatorRoute: FinanceCalculatorRoute,
   FlashcardsRoute: FlashcardsRoute,
@@ -4568,6 +4711,7 @@ const rootRouteChildren: RootRouteChildren = {
   FontRoute: FontRoute,
   FormBuilderRoute: FormBuilderRoute,
   GamepadTestRoute: GamepadTestRoute,
+  GardenPlannerRoute: GardenPlannerRoute,
   GeojsonRoute: GeojsonRoute,
   GeometryCalculatorRoute: GeometryCalculatorRoute,
   GitToolRoute: GitToolRoute,
@@ -4639,6 +4783,8 @@ const rootRouteChildren: RootRouteChildren = {
   PdfCompareRoute: PdfCompareRoute,
   PdfToolkitRoute: PdfToolkitRoute,
   PhotoFrameRoute: PhotoFrameRoute,
+  PhotographyToolboxRoute: PhotographyToolboxRoute,
+  PhysicsToolboxRoute: PhysicsToolboxRoute,
   PianoRoute: PianoRoute,
   PinyinAnnotatorRoute: PinyinAnnotatorRoute,
   PipelineRoute: PipelineRoute,
@@ -4673,6 +4819,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SettingsDataRoute: SettingsDataRoute,
   SettingsPreferencesRoute: SettingsPreferencesRoute,
+  SewingPatternRoute: SewingPatternRoute,
   ShiftCalendarRoute: ShiftCalendarRoute,
   SizeConverterRoute: SizeConverterRoute,
   SocialInsuranceRoute: SocialInsuranceRoute,

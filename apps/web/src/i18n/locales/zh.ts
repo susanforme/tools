@@ -1,3 +1,7 @@
+import { batch4ScienceZh } from './batch4-science';
+import { batch4OrganizersZh } from './batch4-organizers';
+import { batch4MediaZh } from './batch4-media';
+import { batch4DocumentsZh } from './batch4-documents';
 import { batch3AnalysisZh } from './batch3-analysis';
 import { batch3ProductivityZh } from './batch3-productivity';
 import { batch3MediaZh } from './batch3-media';
@@ -42,6 +46,10 @@ import { zh as inspectionFiles } from './inspection-files';
 import { zh as inspectionLogs } from './inspection-logs';
 import { zh as inspectionMcp } from './inspection-mcp';
 const zh = {
+  ...batch4DocumentsZh,
+  ...batch4MediaZh,
+  ...batch4OrganizersZh,
+  ...batch4ScienceZh,
   ...batch3AnalysisZh,
   ...batch3ProductivityZh,
   ...batch3MediaZh,

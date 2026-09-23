@@ -16,6 +16,9 @@ const crossOriginIsolationHeaders = {
 
 // 非组件运行时依赖固定版本外置；组件及 Monaco 扩展保持本地构建。
 const CDN_MODULE_VERSIONS = {
+  '@tonejs/midi': '2.0.28',
+  piexifjs: '1.0.6',
+  suncalc: '2.0.2',
   '@citation-js/core': '0.9.0',
   '@citation-js/plugin-bibtex': '0.9.0',
   '@citation-js/plugin-ris': '0.9.0',

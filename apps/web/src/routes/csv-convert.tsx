@@ -1,3 +1,5 @@
+import { DocumentSection } from '@/components/batch4-document-ui';
+import { TableCleaner } from '@/components/batch4-document-clean';
 import { StringParam, useQueryParam } from '@/hooks/useQueryParams';
 import { profileTable } from '@/lib/developer-tools';
 import { createFileRoute } from '@tanstack/react-router';
@@ -17,7 +19,14 @@ import { Separator } from '../components/ui/separator';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export const Route = createFileRoute('/csv-convert')({
-  component: CsvConvertPage,
+  component: () => (
+    <DocumentSection
+      original="csvConvert.title"
+      name="cleanTitle"
+      base={<CsvConvertPage />}
+      extra={<TableCleaner />}
+    />
+  ),
 });
 
 // ─── 示例数据 ──────────────────────────────────────────────────────────────────

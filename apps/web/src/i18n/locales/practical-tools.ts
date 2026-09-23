@@ -82,8 +82,8 @@ export const practicalToolsZh = {
         description: '唯一解题目、候选数与打印',
       },
       'word-search': {
-        title: '找词游戏生成器',
-        description: '自定义单词、方向与答案打印',
+        title: '益智题册',
+        description: '找词、填字、迷宫、数织与题目答案打印',
       },
     },
     run: '开始处理',
@@ -411,8 +411,9 @@ export const practicalToolsEn = {
         description: 'Unique puzzles, candidates, hints and printing',
       },
       'word-search': {
-        title: 'Word search generator',
-        description: 'Custom word lists, directions and printable answers',
+        title: 'Puzzle booklets',
+        description:
+          'Word searches, crosswords, mazes, nonograms and answer sheets',
       },
     },
     run: 'Run',

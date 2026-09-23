@@ -1,3 +1,4 @@
+import { MediaWorkspace } from '@/components/batch4-media-workspace';
 import { FileDropzone, type DroppedFile } from '@/components/file-dropzone';
 import { Button } from '@/components/ui/button';
 import {
@@ -138,7 +139,9 @@ export const Route = createFileRoute('/video-editor')({
       throw redirect({ to: '/streaming-manifest' });
     }
   },
-  component: VideoEditorPage,
+  component: () => (
+    <MediaWorkspace kind="storyboard" original={<VideoEditorPage />} />
+  ),
 });
 
 type EditorPanel = 'assets' | 'subtitles' | 'settings';

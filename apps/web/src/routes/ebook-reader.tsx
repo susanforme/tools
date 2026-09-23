@@ -1,3 +1,5 @@
+import { DocumentSection } from '@/components/batch4-document-ui';
+import { EpubMaker } from '@/components/batch4-document-epub';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +17,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/ebook-reader')({
-  component: EbookReaderPage,
+  component: () => (
+    <DocumentSection
+      original="ebookReader.title"
+      name="epubTitle"
+      base={<EbookReaderPage />}
+      extra={<EpubMaker />}
+    />
+  ),
 });
 type Position = { chapter: number; block: number };
 type Bookmark = Position & { label: string };

@@ -1,3 +1,4 @@
+import { BATCH4_TOOLS, BATCH4_KEYWORDS } from '@/lib/batch4-catalog';
 import { BATCH3_TOOLS } from '@/lib/batch3-catalog';
 import { PRACTICAL_TOOLS } from '@/lib/practical-tool-catalog';
 import { resetFavorites, useFavorites } from '@/hooks/useFavorites';
@@ -1037,6 +1038,12 @@ const videoNavItems: NavItem[] = [
   },
 ];
 const lifeNavItems: NavItem[] = [
+  ...BATCH4_TOOLS.map(({ id, icon: Icon, color, titleKey, keywords }) => ({
+    to: `/${id}` as const,
+    icon: <Icon className={`h-4 w-4 ${color}`} />,
+    labelKey: titleKey,
+    keywords,
+  })),
   ...BATCH3_TOOLS.map(({ id, icon: Icon, color, key, keywords }) => ({
     to: `/${id}` as const,
     icon: <Icon className={`h-4 w-4 ${color}`} />,
@@ -1443,6 +1450,7 @@ function ToolSearch() {
       ALL_CATEGORIES.flatMap((category) =>
         category.items.map((item) => ({
           ...item,
+          keywords: `${item.keywords ?? ''} ${BATCH4_KEYWORDS[item.to] ?? ''}`,
           category: t(category.labelKey),
           label: t(item.labelKey),
         })),

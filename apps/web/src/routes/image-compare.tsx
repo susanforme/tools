@@ -1,3 +1,4 @@
+import { MediaWorkspace } from '@/components/batch4-media-workspace';
 import { FileDropzone } from '@/components/file-dropzone';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -11,7 +12,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/image-compare')({
-  component: ImageComparePage,
+  component: () => (
+    <MediaWorkspace kind="photo" original={<ImageComparePage />} />
+  ),
 });
 type Mode = 'slider' | 'blink' | 'diff' | 'heatmap';
 

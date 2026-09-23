@@ -14,6 +14,8 @@ import { learningReadingZh } from '@/i18n/locales/learning-reading-tools';
 import { Route } from '@/routes/ebook-reader';
 vi.mock('@/hooks/useQueryParams', () => ({
   NumberParam: {},
+  StringParam: {},
+  useQueryParam: () => ['original', vi.fn()],
   useQueryParams: () => [{ font: 20, line: 1.8 }, vi.fn()],
 }));
 vi.mock('@/lib/ebook-reader', () => ({

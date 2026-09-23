@@ -1,3 +1,4 @@
+import { MediaWorkspace } from '@/components/batch4-media-workspace';
 import { MediaAudio } from '@/components/media-audio';
 import { FileDropzone } from '@/components/file-dropzone';
 import { MediaResult } from '@/components/media-result';
@@ -23,7 +24,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/audio-editor')({
-  component: AudioEditorPage,
+  component: () => (
+    <MediaWorkspace kind="analysis" original={<AudioEditorPage />} />
+  ),
 });
 
 type AudioTab = 'trim' | 'merge' | 'repair';
